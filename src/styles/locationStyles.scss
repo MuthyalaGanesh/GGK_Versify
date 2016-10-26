@@ -1,0 +1,35 @@
+.side-menu{
+    float: left;
+    width: 220px;
+    position: absolute;
+    min-height: 100%;
+    display: block;
+    z-index: 999;
+    padding: 10px 0px 0px 0px;
+}
+.side-menu .panel-heading{
+    text-align: left;
+    font-weight: bold;
+}
+
+.right_panel {
+    width: 90.5%;
+    float: right;
+    padding: 15px 15px 15px 15px!important;
+
+    // @media only screen and (min-width: 1200px)
+    // {
+    //  width: 85%;
+    // }
+    
+}
+
+.nav-locations{
+    width: 236px!important;
+}
+.locations-list.panel.panel-default .panel-heading{
+    background-color: none!important;
+}
+.fa.fa-chevron-down,.fa.fa-chevron-left{
+    float: right;
+}
