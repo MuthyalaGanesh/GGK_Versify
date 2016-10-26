@@ -49,91 +49,93 @@ export class BasicInfo extends React.Component {
             <div>
                 <Panel header={<ControlLabel>Basic Information</ControlLabel>}>
                         <form onSubmit={this.props.handleSubmit(this.logresults) }>
-                            <div className="row form-group">
-                                    <div className="col-sm-8 col-xs-12 col-md-6">
-                                        <Field name="locationName" component={SelectField} hintText="Select location" floatingLabelText="Select location">
-                                            {locationOptions}
-                                        </Field>
+                            <div className="row form-group" style={{marginBottom:'0px'}}>
+                                    <div className="col-sm-6 ">
+                                         <div className="col-sm-4 basic-form-input">
+                                                <Field name="locationName" component={SelectField} hintText="Select location" >
+                                                    {locationOptions}
+                                                </Field>
+                                        </div>
                                     </div>
-                                    <div className="col-sm-4 col-xs-12 col-md-6">
+                                    <div className="col-sm-6">
                                         <Field name="allowOutages" id="allowOutages" value={this.props.allowOutages} component={Checkbox} label="AllowOutages"/>
                                     </div>
                             </div>
-                            <div className="row form-group">
+                            <div className="row form-group" style={{marginBottom:'0px'}}>
                                 <div className="col-sm-6">
                                     <div className="col-sm-4 basic-form-input">
                                         <Field name="parentLocation"
                                             component={TextField} value={this.props.parentLocation}
-                                            hintText="Parent Location Name" floatingLabelText="Parent Location Name"/>
+                                            hintText="Parent Location Name" />
                                     </div>
                                 </div>
                                 <div className="col-sm-6">
                                     <div className="col-sm-4 basic-form-input">
-                                        <Field name="type" component={SelectField} hintText="Select Type" floatingLabelText="Select Type">
+                                        <Field name="type" component={SelectField} hintText="Select Type" >
                                             {typeOptions}
                                         </Field>
                                     </div>
                                 </div>
                             </div>
-                            <div className="row form-group">
+                            <div className="row form-group" style={{marginBottom:'0px'}}>
                                 <div className="col-sm-6">
                                     <div className="col-sm-4 basic-form-input">
                                         <Field name="technologytype"
                                             component={TextField} value={this.props.technologytype}
-                                            hintText="Technology type" floatingLabelText="Technology type"/>
+                                            hintText="Technology type" />
                                     </div>
                                 </div>
                                 <div className="col-sm-6">
                                     <div className="col-sm-4 basic-form-input">
                                         <Field name="primaryMarket"
                                             component={TextField} value={this.props.primarymarket}
-                                            hintText="Primary market" floatingLabelText="Primary market"/>
+                                            hintText="Primary market" />
                                     </div>
                                 </div>
                             </div>
-                            <div className="row form-group">
+                            <div className="row form-group" style={{marginBottom:'0px'}}>
                                 <div className="col-sm-6">
                                     <div className="col-sm-4 basic-form-input">
                                         <Field name="secondarytechnologytype"
                                             component={TextField} value={this.props.Sectechnologytype}
-                                            hintText="Secondary technology type" floatingLabelText="Secondary technology type"/>
+                                            hintText="Secondary technology type"/>
                                     </div>
                                 </div>
                                 <div className="col-sm-6">
                                     <div className="col-sm-4 basic-form-input">
                                         <Field name="owner"
                                             component={TextField} value={this.props.owner}
-                                            hintText="Owner" floatingLabelText="Owner"/>
+                                            hintText="Owner" />
                                     </div>
                                 </div>
                             </div>
-                            <div className="row form-group">
+                            <div className="row form-group" style={{marginBottom:'0px'}}>
                                 <div className="col-sm-6">
                                     <div className="col-sm-4 basic-form-input">
                                         <Field name="fuelclass"
                                             component={TextField} value={this.props.fuelclass}
-                                            hintText="Fuel class" floatingLabelText="Fuel Class"/>
+                                            hintText="Fuel class" />
                                     </div>
                                 </div>
                                 <div className="col-sm-6">
                                     <div className="col-sm-4 basic-form-input">
                                         <Field name="ownership"
                                             component={TextField} value={this.props.ownership}
-                                            hintText="Ownership" floatingLabelText="Ownership"/>
+                                            hintText="Ownership" />
                                     </div>
                                 </div>
                             </div>
-                            <div className="row form-group">
+                            <div className="row form-group" style={{marginBottom:'0px'}}>
                                 <div className="col-sm-6">
                                     <div className="col-sm-4 basic-form-input">
-                                        <Field name="timezone" component={SelectField} hintText="Select Timezone" floatingLabelText="Select Timezone">
+                                        <Field name="timezone" component={SelectField} hintText="Select Timezone" >
                                             {timezoneOptions}
                                         </Field>
                                     </div>
                                 </div>
                                 <div className="col-sm-6">
                                     <div className="col-sm-4 basic-form-input">
-                                        <Field name="physicalTimezone" component={SelectField} hintText="Select Physical Timezone" floatingLabelText="Select Physical Timezone">
+                                        <Field name="physicalTimezone" component={SelectField} hintText="Select Physical Timezone" >
                                             {timezoneOptions}
                                         </Field>
                                     </div>
