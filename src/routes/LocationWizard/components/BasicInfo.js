@@ -48,15 +48,14 @@ export class BasicInfo extends React.Component {
         return (
             <div>
                 <Panel header={<ControlLabel>Basic Information</ControlLabel>}>
-                    <div className="row">
                         <form onSubmit={this.props.handleSubmit(this.logresults) }>
                             <div className="row form-group">
-                                    <div className="col-sm-8">
+                                    <div className="col-sm-8 col-xs-12 col-md-6">
                                         <Field name="locationName" component={SelectField} hintText="Select location" floatingLabelText="Select location">
                                             {locationOptions}
                                         </Field>
                                     </div>
-                                    <div className="allow-outages-div">
+                                    <div className="col-sm-4 col-xs-12 col-md-6">
                                         <Field name="allowOutages" id="allowOutages" value={this.props.allowOutages} component={Checkbox} label="AllowOutages"/>
                                     </div>
                             </div>
@@ -142,7 +141,7 @@ export class BasicInfo extends React.Component {
                             </div>
                             <button type="submit" className="btn btn-success">Submit</button>
                         </form>
-                    </div>
+                  
                 </Panel>
             </div>
 
