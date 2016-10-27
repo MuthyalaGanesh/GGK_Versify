@@ -1,9 +1,6 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
 import {Panel, ControlLabel} from 'react-bootstrap/lib'
-import { Checkbox, RadioButtonGroup, SelectField, TextField, Toggle } from 'redux-form-material-ui'
-import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 export const CredentialsManagement = (props) => {
 

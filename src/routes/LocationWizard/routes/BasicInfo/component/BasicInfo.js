@@ -3,12 +3,6 @@ import { Field, reduxForm } from 'redux-form'
 import validate from '../validations/basicInfoValidation'
 import {Panel, ControlLabel} from 'react-bootstrap/lib'
 import 'styles/basicInfoStyles.scss'
-import { Checkbox, RadioButtonGroup, SelectField, TextField, Toggle } from 'redux-form-material-ui'
-import MenuItem from 'material-ui/MenuItem'
-import { RadioButton } from 'material-ui/RadioButton'
-import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 
 
 
