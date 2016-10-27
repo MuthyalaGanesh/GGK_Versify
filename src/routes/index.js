@@ -1,6 +1,7 @@
 // We only need to import the modules necessary for initial render
 import CoreLayout from '../layouts/CoreLayout/CoreLayout'
-import BodyLayout from '../routes/BodyLayout'
+import Home from '../routes/Home'
+import LocationWizardRoute from '../routes/LocationWizard'
 
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
@@ -8,10 +9,12 @@ import BodyLayout from '../routes/BodyLayout'
 export const createRoutes = (store) => ({
    path        : '/',
    component   : CoreLayout,
+   indexRoute	:Home(store),
   //LocationWizardRoute,
    childRoutes : [
     //LocationWizardRoute(store)
-     BodyLayout(store)
+     Home(store),
+     LocationWizardRoute(store)
   ]
 })
 

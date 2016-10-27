@@ -1,14 +1,21 @@
 import { connect } from 'react-redux'
 
 import LocationWizard from '../components/LocationWizard'
-import { showResults } from '../modules/locationWizard';
+import { saveCompleteLocationWizard } from '../modules/locationWizard';
 
-const mapDispatchToProps = {
-  showResults
+function submit (values){ 
+
  }
+function onchange(e){ 
+console.log(e.target.value,e.target.name)
+}
+const mapDispatchToProps = (dispatch)=>({
+ submit:(values)=>{ alert(JSON.stringify(values)) },
+ onchange:(e)=>{  console.log(e.target.value,e.target.name) }
+ })
 
 const mapStateToProps = (state) => ({
-  page:state.location.page
+  location:state.location
   })
 
 export default connect(mapStateToProps, mapDispatchToProps)(LocationWizard)
