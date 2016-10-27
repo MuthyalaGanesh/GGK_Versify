@@ -9,6 +9,7 @@ return (
     <div className="row" style={{paddingTop:'50px'}}>
                         <div className="col-md-2">
                             LeftMenu Space.
+                            {props.data}
                         </div>
                         <div className="col-md-10">
                         <Link to='/location/basic'> basic </Link>
