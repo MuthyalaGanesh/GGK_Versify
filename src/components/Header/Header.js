@@ -11,10 +11,10 @@ export const Header = () => (
         
         <a href="index.html" className="logo" style={{background:"transparent"}}>
           <span className="logo-mini hidden-md hidden-lg visible-xs visible-sm">
-            <img src="assets/images/logo-new.png" border="0" alt="Versify" title="Versify" />
+            <img src="assets/images/logo-new.png"  alt="Versify" title="Versify" />
           </span>
           <span className="logo-lg hidden-xs hidden-sm visible-md visible-lg">
-            <img src="assets/images/logo-new.png" border="0" alt="Versify" title="Versify" />
+            <img src="assets/images/logo-new.png"  alt="Versify" title="Versify" />
           </span>
         </a>
       </div>
@@ -102,7 +102,7 @@ export const Header = () => (
             </ul>
           </li>
           
-          <li className="dropdown user user-menu" style={{position:"relative",marginBottom:"-5px;"}}>
+          <li className="dropdown user user-menu" style={{position:"relative",marginBottom:"-5px"}}>
             <a href="#" className="dropdown-toggle" data-toggle="dropdown">
               <img src="assets/images/user2-160x160.jpg" className="user-image" alt="User Image" />
               <span className="hidden-xs hidden-sm">Koteswara Rao K</span>
@@ -142,7 +142,7 @@ export const Header = () => (
         </a>        
         <a href="index.html" id="headerbar_botlogo" className="logo" style={{width:'0px',background:'transparent'}}>
           <span className="logo-mini visible-md visible-lg visible-xs visible-sm">
-            <img src="assets/images/logo-new_symbol.png" border="0" alt="Versify" title="Versify" />
+            <img src="assets/images/logo-new_symbol.png"  alt="Versify" title="Versify" />
           </span>
         </a>
       </div>

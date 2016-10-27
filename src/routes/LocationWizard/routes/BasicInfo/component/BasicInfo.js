@@ -17,7 +17,7 @@ export const BasicInfo = (props) => {
 return (
             <div>
                 <Panel header={<ControlLabel>Basic Information</ControlLabel>}>
-                        <form onSubmit={(value)=>{alert(value)}} onChange={(Value)=>{console.log(Value)}} >
+                        <form onSubmit={props.basicInfoSubmit} onChange={props.onchange} >
                             <div className="row form-group" style={{marginBottom:'0px'}}>
                                     <div className="col-sm-6 ">
                                          <div className="col-sm-4 basic-form-input">
@@ -57,9 +57,6 @@ return (
 
         )
     
-}
-function handle (value){ 
-    console.log(value)
 }
 
 export default BasicInfo

@@ -15,8 +15,6 @@ const mapDispatchToProps = (dispatch)=>({
  })
 
 const mapStateToProps = (state) => ({
-  location:state.location,
-  //data :state.form.BasicInfoForm.values.parentLocation
-  })
-
+  location:state.location
+})
 export default connect(mapStateToProps, mapDispatchToProps)(LocationWizard)
