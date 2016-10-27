@@ -2,6 +2,7 @@ import axios from 'axios';
 
 
 export function axiosPost(url, data) {
+  
   return (
  axios({
       url,
@@ -19,12 +20,20 @@ export function axiosPost(url, data) {
 
   
 export function axiosGet(url, queryString= null) {
+   var config = { 
+     headers: 
+     { 
+       'Access-Control-Allow-Methods': 'GET,PUT,PATCH,POST,DELETE',
+      'Access-Control-Allow-Origin': '*', 
+      'Content-Type': 'application/json' 
+    }
+     };
     var getUrl = url;
-    if(!queryString){
+    if(!!queryString){
         getUrl = getUrl+"/"+ queryString;
     }
   return (
-axios.get(getUrl)
+axios.get(getUrl,config)
   .catch(function (error) {
     if (error.response) {
       // The request was made, but the server responded with a status code
