@@ -1,8 +1,8 @@
 import { injectReducer } from 'store/reducers'
 import { combineReducers } from 'redux'
-import {bindLocationTypes} from  './modules/locationWizard'
-import BasicInfoRoute from './components/BasicInfo.js'
-import CredentialsManagementRoute from './components/CredentialsManagement.js'
+import {bindLocationTypes} from  '../modules/locationWizard'
+import BasicInfoRoute from './BasicInfo'
+import CredentialsManagementRoute from './CredentialsManagement'
 
 export default (store) => ({
   path : 'location',
@@ -12,8 +12,8 @@ export default (store) => ({
 ],
   getComponent (nextState, cb) {
     require.ensure([], (require) => {
-      const LocationWizard = require('./containers/LocationWizardContainer').default
-     const reducer = require('./modules/locationWizard').default
+      const LocationWizard = require('../containers/LocationWizardContainer').default
+     const reducer = require('../modules/locationWizard').default
 
 
   store.dispatch(bindLocationTypes());

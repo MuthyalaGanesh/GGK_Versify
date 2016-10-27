@@ -1,7 +1,7 @@
 // We only need to import the modules necessary for initial render
 import CoreLayout from '../layouts/CoreLayout/CoreLayout'
 import Home from '../routes/Home'
-import LocationWizardRoute from '../routes/LocationWizard'
+import LocationWizardRoute from '../routes/LocationWizard/routes'
 
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */

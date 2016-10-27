@@ -1,22 +1,27 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
+import validate from '../validations/basicInfoValidation'
 import {Panel, ControlLabel} from 'react-bootstrap/lib'
+import 'styles/basicInfoStyles.scss'
 import { Checkbox, RadioButtonGroup, SelectField, TextField, Toggle } from 'redux-form-material-ui'
+import MenuItem from 'material-ui/MenuItem'
+import { RadioButton } from 'material-ui/RadioButton'
 import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 
-export const CredentialsManagement = (props) => {
 
-    
-        return (
+
+export const BasicInfo = (props) => {
+    const {locationTypes} = props
+return (
             <div>
-                
                 <Panel header={<ControlLabel>Basic Information</ControlLabel>}>
-                        <form onSubmit={props.handleSubmit} onChange={props.onChange} >
+                        <form onSubmit={(value)=>{alert(value)}} onChange={(Value)=>{console.log(Value)}} >
                             <div className="row form-group" style={{marginBottom:'0px'}}>
                                     <div className="col-sm-6 ">
                                          <div className="col-sm-4 basic-form-input">
-                                                <label htmlFor="locationNamelocationName">First Name</label>
+                                                <label htmlFor="locationNamelocationName">locationName</label>
                                              <Field name="locationName" component="input" type="text"/>
                                         </div>
                                     </div>
@@ -28,7 +33,7 @@ export const CredentialsManagement = (props) => {
                             <div className="row form-group" style={{marginBottom:'0px'}}>
                                 <div className="col-sm-6">
                                     <div className="col-sm-4 basic-form-input">
-                                            <label htmlFor="parentLocation">First Name</label>
+                                            <label htmlFor="parentLocation">parentLocation </label>
                                              <Field name="parentLocation" component="input" type="text"/>
                                     </div>
                                 </div>
@@ -48,42 +53,16 @@ export const CredentialsManagement = (props) => {
                         </form>
                   
                 </Panel>
-         
-
             </div>
 
         )
-    }
+    
+}
+function handle (value){ 
+    console.log(value)
+}
+
+export default BasicInfo
 
 
 
-
-/*
-
-export default reduxForm({
-    form: 'LocationWizard',  //Form name is first form
-    destroyOnUnmount: false,
-    //   validate
-})(CredentialsManagement)*/
-export const component = reduxForm({
-    form: 'LocationWizard',  //Form name is first form
-    destroyOnUnmount: false,
-    //   validate
-})(CredentialsManagement)
-
-
-export default (store) => ({
-  path : 'Credential',
-  getComponent (nextState, cb) {
-    require.ensure([], (require) => {
-      /*const LocationWizard = require('./containers/LocationWizardContainer').default
-     const reducer = require('./modules/locationWizard').default*/
-
-
-
-      cb(null, component)
-
-    /* Webpack named bundle   */
-    }, 'basic')
-  }
-})

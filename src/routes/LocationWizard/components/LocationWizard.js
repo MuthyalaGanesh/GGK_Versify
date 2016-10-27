@@ -1,6 +1,6 @@
 import React from 'react'
-import BasicInfo from '../components/BasicInfo'
-import CredentialsManagement from '../components/CredentialsManagement'
+import BasicInfo from '../routes/BasicInfo/component/BasicInfo'
+import CredentialsManagement from '../routes/CredentialsManagement/component/CredentialsManagement'
 import 'styles/locationStyles.scss'
 import {Panel, Nav, NavItem} from 'react-bootstrap'
 import {Link}from 'react-router'
@@ -17,7 +17,7 @@ return (
                                 {props.children}
                            {/* <BasicInfo  />*/}
                         </div>
-    {/*                    <div  className="col-xs-12">
+                         {/* <div  className="col-xs-12">
                           <CredentialsManagement onSubmit={props.submit} onChange={props.onchange} />
                         </div>*/}
                         </div>

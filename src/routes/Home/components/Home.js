@@ -1,5 +1,4 @@
 import React from 'react'
-import BasicInfo from '../../LocationWizard/components/BasicInfo'
 
 export class BodyLayout extends React.Component {
 
