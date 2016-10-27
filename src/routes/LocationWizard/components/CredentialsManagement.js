@@ -5,55 +5,85 @@ import { Checkbox, RadioButtonGroup, SelectField, TextField, Toggle } from 'redu
 import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
-export class CredentialsManagement extends React.Component {
-    constructor(props) {
-        super(props)
-    }
-    logresults(values) {
-        console.log("Values:", values);
-    }
-    getChildContext() {
-        return { muiTheme: getMuiTheme(baseTheme) }
-    }
-    render() {
+export const CredentialsManagement = (props) => {
+
+    
         return (
             <div>
-                <Panel header={<ControlLabel>Credentials and Identifiers</ControlLabel>}>
-                    <div className="row">
-                        <form onSubmit={this.props.handleSubmit(this.logresults) }>
-                            <div className="col-sm-12 form-group">
-                                <div className="col-sm-8">
-                                    <Field name="utility"
-                                        component={TextField} value={this.props.utility}
-                                        hintText="Utility" floatingLabelText="GADS Utility"/>
+                
+                <Panel header={<ControlLabel>Basic Information</ControlLabel>}>
+                        <form onSubmit={props.handleSubmit} onChange={props.onChange} >
+                            <div className="row form-group" style={{marginBottom:'0px'}}>
+                                    <div className="col-sm-6 ">
+                                         <div className="col-sm-4 basic-form-input">
+                                                <label htmlFor="locationNamelocationName">First Name</label>
+                                             <Field name="locationName" component="input" type="text"/>
+                                        </div>
+                                    </div>
+                                    <div className="col-sm-6">
+                                        
+                                        <Field name="allowOutages" id="allowOutages" component="input" type="checkbox" label="AllowOutages"/>
+                                    </div>
+                            </div>
+                            <div className="row form-group" style={{marginBottom:'0px'}}>
+                                <div className="col-sm-6">
+                                    <div className="col-sm-4 basic-form-input">
+                                            <label htmlFor="parentLocation">First Name</label>
+                                             <Field name="parentLocation" component="input" type="text"/>
+                                    </div>
+                                </div>
+                                <div className="col-sm-6">
+                                    <div className="col-sm-4 basic-form-input">
+                                        <Field name="type" component="select">
+                                            <option></option>
+                                            <option value="ff0000">Red</option>
+                                            <option value="00ff00">Green</option>
+                                            <option value="0000ff">Blue</option>
+                                        </Field>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="col-sm-12 form-group">
-                                <div className="col-sm-8">
-                                    <Field name="unitId"
-                                        component={TextField} value={this.props.unitId}
-                                        hintText="Unit ID" floatingLabelText="GADS Unit ID"/>
-                                </div>
-                            </div>
+
                             <button type="submit" className="btn btn-success">Submit</button>
                         </form>
-                    </div>
+                  
                 </Panel>
+         
+
             </div>
 
         )
     }
-}
 
-CredentialsManagement.childContextTypes = {
-    muiTheme: React.PropTypes.object.isRequired,
-}
+
+
+
+/*
 
 export default reduxForm({
+    form: 'LocationWizard',  //Form name is first form
+    destroyOnUnmount: false,
+    //   validate
+})(CredentialsManagement)*/
+export const component = reduxForm({
     form: 'LocationWizard',  //Form name is first form
     destroyOnUnmount: false,
     //   validate
 })(CredentialsManagement)
 
 
+export default (store) => ({
+  path : 'Credential',
+  getComponent (nextState, cb) {
+    require.ensure([], (require) => {
+      /*const LocationWizard = require('./containers/LocationWizardContainer').default
+     const reducer = require('./modules/locationWizard').default*/
 
+
+
+      cb(null, component)
+
+    /* Webpack named bundle   */
+    }, 'basic')
+  }
+})

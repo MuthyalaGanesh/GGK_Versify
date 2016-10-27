@@ -1,30 +1,43 @@
-export const SHOW_RESULTS = 'SHOW_RESULTS';
+import {getLocationTypes} from '../../../api/locationWizardApi'
 
-export const showResults = function(event){
-     console.log("locationWizard:", event);  
+
+export const SAVE_COMPLETE_LOCATIONWIZARD = 'SAVE_COMPLETE_LOCATIONWIZARD';
+export const BIND_LOCATION_TYPES = 'BIND_LOCATION_TYPES'
+export function saveCompleteLocationWizard(event) {
+  console.log("locationWizard:", event);
   return {
-    type: SHOW_RESULTS,
+    type: SAVE_COMPLETE_LOCATIONWIZARD,
     payload: event
   };
 };
-const ACTION_HANDLERS = {
-  [SHOW_RESULTS]: (state, action) => {
-     console.log("locationWizard AH:",action.payload);  
-    return {
-      page:state.page +2,
-      error:null,      
-      values : action.payload
-    };
+export function bindLocationTypes() {
+
+  return {
+    type: BIND_LOCATION_TYPES,
+    payload: getLocationTypes()
+  };
+
+};
+
+
+
+export const ACTION_HANDLERS = {
+  [SAVE_COMPLETE_LOCATIONWIZARD]: (state, action) => {
+    console.log("locationWizard AH:", action.payload);
+  return  Object.assign({},state)
   },
+  [BIND_LOCATION_TYPES]: (state, action) => {
+    return  Object.assign({},state,{locationTypes:action.payload})
+  }
 }
-const initialState = {  
+const initialState = {
   error: null,
-  page:1
+  locationTypes:{}
 };
 
 export default function locationWizardReducer(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
-  console.log("Reducer",state);
+
 
   return handler ? handler(state, action) : state;
 }

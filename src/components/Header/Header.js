@@ -155,8 +155,8 @@ export const Header = () => (
           <a href="#"><i className="fa fa-home"></i> <span className="hidden-xs hidden-sm"> Home </span></a>
         </li>
         <li className="dropdown">
-          <a href="#" className="dropdown-toggle" data-toggle="dropdown">
-            <i className="fa fa-group"></i> <span className="hidden-xs hidden-sm"> Master </span>
+          <a href="/location" className="dropdown-toggle" data-toggle="dropdown">
+            <i className="fa fa-group"></i> <span className="hidden-xs hidden-sm"> Location </span>
           </a>
           <ul className="dropdown-menu">
             <li>

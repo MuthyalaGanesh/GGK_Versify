@@ -27,7 +27,7 @@ export class BodyLayout extends React.Component {
 	    					LeftMenu Space.
 	    				</div>
 	    				<div className="col-md-8">
-	    	  				<BasicInfo timezones={timezones} types={types} locations={locations}/>
+	    	  				<h1>Welcome To Versify</h1>
 	    				</div>
 	    				<div className="col-md-2">
 	    					Right side gap
