@@ -2,7 +2,6 @@ import {getLocationTypes} from 'api/locationWizardApi'
 
 export const BIND_LOCATION_TYPES = 'BIND_LOCATION_TYPES'
 export function bindLocationTypes() {
-  console.log("Bind Locations");
   return {
     type: BIND_LOCATION_TYPES,
     payload: getLocationTypes()
@@ -23,10 +22,10 @@ export const ACTION_HANDLERS = {
 }
 const initialState = {
   error: null,
-  locationTypes:{}
+  locationTypes:[]
 };
 
 export default function basiInfoReducer(state = initialState, action) {
-  const handler = ACTION_HANDLERS[action.type];
+  const handler = ACTION_HANDLERS[action.type]; 
   return handler ? handler(state, action) : state;
 }

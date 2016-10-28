@@ -11,10 +11,10 @@ export const Header = () => (
         
         <a href="index.html" className="logo" style={{background:"transparent"}}>
           <span className="logo-mini hidden-md hidden-lg visible-xs visible-sm">
-            <img src="assets/images/logo-new.png"  alt="Versify" title="Versify" />
+            <img src={LogoImg}  alt="Versify" title="Versify" />
           </span>
           <span className="logo-lg hidden-xs hidden-sm visible-md visible-lg">
-            <img src="assets/images/logo-new.png"  alt="Versify" title="Versify" />
+            <img src={LogoImg}  alt="Versify" title="Versify" />
           </span>
         </a>
       </div>
@@ -35,7 +35,7 @@ export const Header = () => (
                   <li>
                     <a href="#">
                       <div className="pull-left">
-                        <img src="assets/images/user2-160x160.jpg" className="img-circle" alt="User Image" />
+                        <img src="/assets/images/user2-160x160.jpg" className="img-circle" alt="User Image" />
                       </div>
                       <h4> Support Team <small><i className="fa fa-clock-o"></i> 5 mins</small></h4>
                       <p>
@@ -104,12 +104,12 @@ export const Header = () => (
           
           <li className="dropdown user user-menu" style={{position:"relative",marginBottom:"-5px"}}>
             <a href="#" className="dropdown-toggle" data-toggle="dropdown">
-              <img src="assets/images/user2-160x160.jpg" className="user-image" alt="User Image" />
+              <img src="/assets/images/user2-160x160.jpg" className="user-image" alt="User Image" />
               <span className="hidden-xs hidden-sm">Koteswara Rao K</span>
             </a>
             <ul className="dropdown-menu">
               <li className="user-header">
-                <img src="assets/images/user2-160x160.jpg" className="img-circle" alt="User Image" />
+                <img src="/assets/images/user2-160x160.jpg" className="img-circle" alt="User Image" />
                 <p>
                   Koteswara Rao K <br />
                   Sr. UI Architect<small>Joined on : 12/02/2015</small>
@@ -142,7 +142,7 @@ export const Header = () => (
         </a>        
         <a href="index.html" id="headerbar_botlogo" className="logo" style={{width:'0px',background:'transparent'}}>
           <span className="logo-mini visible-md visible-lg visible-xs visible-sm">
-            <img src="assets/images/logo-new_symbol.png"  alt="Versify" title="Versify" />
+            <img src="/assets/images/logo-new_symbol.png"  alt="Versify" title="Versify" />
           </span>
         </a>
       </div>

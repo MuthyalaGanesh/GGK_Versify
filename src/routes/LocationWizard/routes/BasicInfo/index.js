@@ -6,13 +6,13 @@ export default (store) => ({
   path : 'basic',
   getComponent (nextState, cb) {
     require.ensure([], (require) => {
-      const Basic = require('./container/BasicContainer').default
-      cb(null, Basic)
+      const Basic = require('./container/BasicInfoContainer').default
        const reducer = require('./module/basicInfo').default
       /*  Add the reducer to the store on key 'counter'  */
       injectReducer(store, { key: 'basic', reducer })
-
 	  store.dispatch(bindLocationTypes());
+      cb(null, Basic)
+    
     /* Webpack named bundle   */
     }, 'basic')
   }

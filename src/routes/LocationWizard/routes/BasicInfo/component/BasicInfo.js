@@ -5,9 +5,9 @@ import {Panel, ControlLabel, Checkbox} from 'react-bootstrap/lib'
 import 'styles/basicInfoStyles.scss'
 
 export const BasicInfo = (props) => {
-    const {locationTypes} = props
+    const {locationTypes} = props.basic
 return (
-  <div className="row">
+  <div className="row tab-pane fade in active" id="home">
     <div className="col-xs-12">
         <div className="box">
             <div className="box-header">
@@ -23,7 +23,7 @@ return (
                             <div className="col-sm-12">
                                 <div className="row">
                                     <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-                                        <label className="control-label" for="locationName"> Name </label>
+                                        <label className="control-label"> Name </label>
                                         <Field name="locationName" component="input" className="form-control" type="text" />
                                     </div>
                                     <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3">
@@ -32,8 +32,8 @@ return (
                                         </Checkbox>
                                     </div>     
                                     <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                        <label className="control-label" for="type"> Parent Location </label>
-                                        <Field name="type" component="select" className="form-control">
+                                        <label className="control-label"> Parent Location </label>
+                                        <Field name="parentLocation" component="select" className="form-control">
                                             <option></option>
                                             <option value="ff0000">Red</option>
                                             <option value="00ff00">Green</option>
@@ -41,20 +41,26 @@ return (
                                         </Field>
                                     </div>
                                     <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-                                        <label className="control-label" for="locationName"> Name </label>
-                                        <Field name="locationName" component="input" className="form-control" type="text" />
+                                        <label className="control-label"> Type </label>
+                                        <Field name="type" component="select" className="form-control">
+                                          <option value="">Select a type...</option>
+                                             {
+                                                 locationTypes.map(locationType =>
+                                                <option value={locationType.id} key={locationType.id}>{locationType.displayName}</option>)
+                                            }
+                                        </Field>
                                     </div>
                                     <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-                                        <label className="control-label" for="locationName"> Name </label>
-                                        <Field name="locationName" component="input" className="form-control" type="text" />
+                                        <label className="control-label"> Name </label>
+                                        <Field name="locationName1" component="input" className="form-control" type="text" />
                                     </div>
                                     <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-                                        <label className="control-label" for="locationName"> Name </label>
-                                        <Field name="locationName" component="input" className="form-control" type="text" />
+                                        <label className="control-label"> Name </label>
+                                        <Field name="locationName2" component="input" className="form-control" type="text" />
                                     </div>
                                     <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-                                        <label className="control-label" for="locationName"> Name </label>
-                                        <Field name="locationName" component="input" className="form-control" type="text" />
+                                        <label className="control-label"> Name </label>
+                                        <Field name="locationName3" component="input" className="form-control" type="text" />
                                     </div>
                                 </div>
                             </div>

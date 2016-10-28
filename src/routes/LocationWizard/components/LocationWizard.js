@@ -1,9 +1,11 @@
 import React from 'react'
-import BasicInfo from '../routes/BasicInfo/component/BasicInfo'
-import CredentialsManagement from '../routes/CredentialsManagement/component/CredentialsManagement'
 import 'styles/locationStyles.scss'
 import {Panel, Nav, NavItem} from 'react-bootstrap'
 import {Link}from 'react-router'
+import BasicInfo from '../routes/BasicInfo/component/BasicInfo'
+import CredentialsManagement from '../routes/CredentialsManagement/component/CredentialsManagement'
+import WizardTabs from "./Wizardtabs"
+
 export const LocationWizard =(props)=> {
 return (
     <div className="row" style={{paddingTop:'50px'}}>
@@ -12,17 +14,14 @@ return (
                             {props.data}
                         </div>
                         <div className="col-md-10">
-                        <Link to='/location/basic'> basic </Link>
-                        <Link to='/location/Credential'> Credential </Link>
-                            <div className="col-xs-12">
-                                {props.children}
-                           {/* <BasicInfo  />*/}
+                         <div className="board">
+                        <WizardTabs/>
+                         <div className="tab-content">
+                            
+                                {props.children}                          
+                            </div>                        
                         </div>
-                         {/* <div  className="col-xs-12">
-                          <CredentialsManagement onSubmit={props.submit} onChange={props.onchange} />
-                        </div>*/}
                         </div>
-                        
                     </div>
 
             
