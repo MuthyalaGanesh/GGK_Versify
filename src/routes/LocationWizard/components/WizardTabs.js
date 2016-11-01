@@ -29,7 +29,7 @@ return (
               </Link>                
             </li>
             <li>
-            <Link to='/location/basic' data-toggle="tab" title="Credential Management"> 
+            <Link to='/location/basic' data-toggle="tab" title="Unit Characteristics"> 
              <span className="round-tabs three">
                         <i className="glyphicon glyphicon-user"></i>
                     </span> 
@@ -38,7 +38,7 @@ return (
                 
             </li>
             <li>
-                <a href="#settings" data-toggle="tab" title="blah blah">
+                <a href="#settings" data-toggle="tab" title="System Integration">
                     <span className="round-tabs four">
                         <i className="glyphicon glyphicon-comment"></i>
                     </span>
@@ -47,7 +47,7 @@ return (
                 </a>
             </li>
              <li>
-                <a href="#settings" data-toggle="tab" title="blah blah">
+                <a href="/location/workFlows" data-toggle="tab" title="WorkFlows">
                     <span className="round-tabs five">
                         <i className="glyphicon glyphicon-folder-open"></i>
                     </span>
@@ -56,7 +56,7 @@ return (
                 </a>
             </li>
              <li>
-                <a href="#settings" data-toggle="tab" title="blah blah">
+                <a href="/location/users" data-toggle="tab" title="Users">
                     <span className="round-tabs six">
                         <i className="glyphicon glyphicon-user"></i>
                     </span>
@@ -65,7 +65,7 @@ return (
                 </a>
             </li>
             <li>
-                <a href="#doner" data-toggle="tab" title="completed">
+                <a href="#doner" data-toggle="tab" title="Equipment">
                     <span className="round-tabs seven">
                         <i className="glyphicon glyphicon-indent-right"></i>
                     </span>
@@ -74,7 +74,7 @@ return (
                 </a>
             </li>
              <li>
-                <a href="#settings" data-toggle="tab" title="blah blah">
+                <a href="#settings" data-toggle="tab" title="Gateways">
                     <span className="round-tabs two">
                         <i className="glyphicon glyphicon-pencil"></i>
                     </span>
@@ -83,7 +83,7 @@ return (
                 </a>
             </li>
              <li>
-                <a href="#settings" data-toggle="tab" title="blah blah">
+                <a href="#settings" data-toggle="tab" title="Data Historian">
                     <span className="round-tabs three">
                         <i className="glyphicon glyphicon-pencil"></i>
                     </span>
