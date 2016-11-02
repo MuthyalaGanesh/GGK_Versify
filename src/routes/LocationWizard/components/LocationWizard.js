@@ -5,14 +5,14 @@ import {Link}from 'react-router'
 import BasicInfo from '../routes/BasicInfo/component/BasicInfo'
 import CredentialsManagement from '../routes/CredentialsManagement/component/CredentialsManagement'
 import WizardTabs from "./Wizardtabs"
+import LocationLeftMenu from "./LocationLeftMenu"
 
 export const LocationWizard =(props)=> {
 return (
 <div>
     <div className="row">
-        <div className="col-md-2 col-xs-12">
-            LeftMenu Space.
-            {props.data}
+        <div className="col-md-2 col-xs-12">           
+            <LocationLeftMenu Locations={props.location.allLocations}/>
         </div>
         <div className="col-md-10 col-xs-12">
             <section id="content_header" className="content-header">
@@ -32,7 +32,7 @@ return (
                     <li className="active"><strong>Location Wizard</strong></li>
                 </ol>
             </section>
-            <section className="content">
+            <section id='Location-wizard-tabs' className="content">
                 <div className="board">
                     <WizardTabs />
                     <div className="tab-content">

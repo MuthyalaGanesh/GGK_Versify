@@ -20,7 +20,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 	-moz-transition: -moz-transform 0.3s ease-in-out, margin 0.3s ease-in-out; 
 	-o-transition: -o-transform 0.3s ease-in-out, margin 0.3s ease-in-out; 
 	transition: transform 0.3s ease-in-out, margin 0.3s ease-in-out; 
-	margin-left: 230px; 
+	/*margin-left: 230px;*/
 	z-index: 820; }
 .sidebar-expanded-on-hover .content-wrapper, .right-side { 
 	-webkit-transition: -webkit-transform 0.3s ease-in-out, margin 0.3s ease-in-out; 
@@ -78,6 +78,8 @@ div.value { font-weight:bold; font-size:14px; height: 26px; padding: 3px 9px 3px
 
 @media (max-width: 767px) {
 .content-wrapper,  .right-side, .main-footer { margin-left: 0; }
+}
+@media (min-width: 768px) and (max-width:1024px) {
 }
 @media (min-width: 768px) {
 .sidebar-collapse .content-wrapper,  .sidebar-collapse .right-side,  .sidebar-collapse .main-footer { margin-left: 0; }

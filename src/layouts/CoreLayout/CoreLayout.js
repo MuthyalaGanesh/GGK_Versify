@@ -4,7 +4,7 @@ import Header from '../../components/Header'
 export const CoreLayout = ({ children }) => (
   <div>
     <Header />
-    <div  style={{paddingTop:'80px'}}>
+    <div className='content-wrapper'>
 		<div id="content_frame" className="content-frame" style={{width:"100%",position:'relative',display:"block"}}>
 			{children}
     </div>
