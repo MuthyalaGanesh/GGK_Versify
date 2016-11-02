@@ -1,9 +1,7 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
 import {Panel, Table, Popover, Button, Modal} from 'react-bootstrap/lib'
-// import 'react-widgets/dist/css/react-widgets.css'
 import 'styles/unitCharacteristicsStyles.scss'
-import 'public/assets/vendors/bootstrap/css/bootstrap.min.css'
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
 import DateTimePicker from 'react-widgets/lib/DateTimePicker'
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
@@ -183,8 +181,8 @@ const TODAY = moment();
                                             <option value="">Select Unit Character Name</option>
 
                                             {
-                                                unitCharacteristicsData.unitCharacteristics.map((uc,index)=>
-                                                                (<option value={uc.Name} key={uc.index}>{uc.Name}</option>))
+                                                unitCharacteristicsData.unitCharacteristics.map(uc=>
+                                                                (<option value={uc.Name} key={uc.Name}>{uc.Name}</option>))
                                             }
                                             </Field>
                                         </div>

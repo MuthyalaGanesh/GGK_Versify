@@ -9,12 +9,16 @@ import {
 } from '../modules/locationWizard'
 import BasicInfoRoute from './BasicInfo'
 import CredentialsManagementRoute from './CredentialsManagement'
+import UnitCharacteristicsRoute from './UnitCharacteristics'
+import SystemIntegrationRoute from './SystemIntegration'
 
 export default (store) => ({
   path: 'location',
   childRoutes: [
     BasicInfoRoute(store),
-    CredentialsManagementRoute(store)
+    CredentialsManagementRoute(store),
+    UnitCharacteristicsRoute(store),
+    SystemIntegrationRoute(store)
   ],
   getComponent(nextState, cb) {
     require.ensure([], (require) => {
