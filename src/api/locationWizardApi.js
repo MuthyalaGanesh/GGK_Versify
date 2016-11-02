@@ -5,6 +5,7 @@ import {
 } from "./serviceCall"
 var jsonObject = require('./testData.json');
 var allLocations = require('./allLocationsTestData.json');
+var workFlows = require('./workFlowData.json');
 
 
 export function getLocationTypes() {
@@ -122,3 +123,23 @@ export const basicInfoDropdowns = function() {
     }
 }
 export default basicInfoDropdowns;
+
+export function  getWorkFlows(){
+    
+var data = workFlows;                          
+        return data;
+}
+
+export function  getUserInfo(){
+    
+var UserInfo = {
+                 roles : [
+                          {Mane},
+                          {},
+                          {},
+                          {},
+
+                         ],};
+                          
+        return workFlows;
+}

@@ -11,6 +11,7 @@ import BasicInfoRoute from './BasicInfo'
 import CredentialsManagementRoute from './CredentialsManagement'
 import UnitCharacteristicsRoute from './UnitCharacteristics'
 import SystemIntegrationRoute from './SystemIntegration'
+import WorkFlowRoute from './WorkFlow'
 
 export default (store) => ({
   path: 'location',
@@ -18,7 +19,8 @@ export default (store) => ({
     BasicInfoRoute(store),
     CredentialsManagementRoute(store),
     UnitCharacteristicsRoute(store),
-    SystemIntegrationRoute(store)
+    SystemIntegrationRoute(store),
+    WorkFlowRoute(store)
   ],
   getComponent(nextState, cb) {
     require.ensure([], (require) => {
