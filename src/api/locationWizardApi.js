@@ -80,6 +80,35 @@ export function getTimezones() {
     return arrTimezones;
 }
 
+export function getUnitCharacteristics() {
+    var unitCharacteristicsJson = [
+        { Name: "Eco Min", DisplayName: "Eco Min", Description: "The lowest economic MW output level a unit can achieve system cost", Value: "", UCM: "MW", EffectiveStartDate: "", EffectiveEndDate: "" },
+        { Name: "Eco Max", DisplayName: "Eco Max", Description: "The lowest economic MW output level a unit can achieve system cost", Value: "", UCM: "MW", EffectiveStartDate: "", EffectiveEndDate: "" },
+        { Name: "Capacity", DisplayName: "Capacity", Description: "Capacity is the capability to produce energy", Value: "", UCM: "MW", EffectiveStartDate: "", EffectiveEndDate: "" }
+        // { Name: "Eco Min1", DisplayName: "Eco Min", Description: "The lowest economic MW output level a unit can achieve system cost", Value: "", UCM: "MW", EffectiveStartDate: "", EffectiveEndDate: "" },
+        // { Name: "Eco Max1", DisplayName: "Eco Max", Description: "The lowest economic MW output level a unit can achieve system cost", Value: "", UCM: "MW", EffectiveStartDate: "", EffectiveEndDate: "" },
+        // { Name: "Capacity1", DisplayName: "Capacity", Description: "Capacity is the capability to produce energy", Value: "", UCM: "MW", EffectiveStartDate: "", EffectiveEndDate: "" },
+        // { Name: "Eco Min2", DisplayName: "Eco Min", Description: "The lowest economic MW output level a unit can achieve system cost", Value: "", UCM: "MW", EffectiveStartDate: "", EffectiveEndDate: "" },
+        // { Name: "Eco Max2", DisplayName: "Eco Max", Description: "The lowest economic MW output level a unit can achieve system cost", Value: "", UCM: "MW", EffectiveStartDate: "", EffectiveEndDate: "" },
+        // { Name: "Capacity2", DisplayName: "Capacity", Description: "Capacity is the capability to produce energy", Value: "", UCM: "MW", EffectiveStartDate: "", EffectiveEndDate: "" },
+    ]
+    return unitCharacteristicsJson;
+}
+
+export function getSystemIntegrationTypes() {
+    var systemIntegrationTypes=[
+        {Id:1,Name:"Turbine Manufacturer",DisplayName:"Turbine Manufacturer"},
+        {Id:2,Name:"VTariff-Agency",DisplayName:"VTariff-Agency"},
+        {Id:3,Name:"EMS",DisplayName:"EMS"},
+        {Id:4,Name:"Gamesa Power",DisplayName:"Gamesa Power"},
+        {Id:5,Name:"CAISO_Name",DisplayName:"CAISO_Name"},
+        {Id:6,Name:"MISO Portal Meter view",DisplayName:"MISO Portal Meter view"},
+        {Id:7,Name:"MISO Gateway",DisplayName:"MISO Gateway"},
+        {Id:8,Name:"pjm_emtr",DisplayName:"pjm_emtr"}
+    ]
+    return systemIntegrationTypes;
+}
+
 export const basicInfoDropdowns = function() {
     return {
         getLocationTypes: getLocationTypes,

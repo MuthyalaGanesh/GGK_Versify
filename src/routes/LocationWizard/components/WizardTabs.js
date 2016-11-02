@@ -30,6 +30,7 @@ return (
             </li>
             <li>
             <Link to='/location/basic' data-toggle="tab" title="Unit Characteristics"> 
+            <Link to='/location/unitcharacteristics' data-toggle="tab" title="Unit Characteristics"> 
              <span className="round-tabs three">
                         <i className="glyphicon glyphicon-user"></i>
                     </span> 
@@ -39,6 +40,7 @@ return (
             </li>
             <li>
                 <a href="#settings" data-toggle="tab" title="System Integration">
+                <a href="/location/systemintegration" data-toggle="tab" title="System Integration">
                     <span className="round-tabs four">
                         <i className="glyphicon glyphicon-comment"></i>
                     </span>
