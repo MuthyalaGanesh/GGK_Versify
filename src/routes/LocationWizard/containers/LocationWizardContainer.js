@@ -4,7 +4,7 @@ import {
 
 import LocationWizard from '../components/LocationWizard'
 import {
-	saveCompleteLocationWizard,onLocationItemClick
+	saveCompleteLocationWizard,onLocationItemClick,leftMenuDropdownClickEvent
 } from '../modules/locationWizard';
 
 function submit(values) {
@@ -21,7 +21,8 @@ const mapDispatchToProps = (dispatch) => ({
 	},
 	onchange: (e) => {
 		console.log(e.target.value, e.target.name)
-	}
+	},
+	leftMenuDropdownClickEvent:leftMenuDropdownClickEvent,
 	
 })
 

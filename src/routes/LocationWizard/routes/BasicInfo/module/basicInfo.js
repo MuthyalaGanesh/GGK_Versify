@@ -12,6 +12,18 @@ export function bindBasicInfoDropdownValues() {
   };
 
 };
+
+export function bindLocationTypes() {
+  return (dispatch, getState) => {
+    console.log("state-", getState().form)
+    return new Promise((resolve) => {
+      basicInfoDropdowns().getLocationTypes().then((response) => {        
+           console.log("Location Types: ", response.data);
+       })
+    })
+  }
+};
+
 export function test() {
   return (dispatch, getState) => {
     console.log("state-", getState().form)
@@ -27,6 +39,7 @@ export const ACTION_HANDLERS = {
     })
   }
 }
+
 const initialState = {
   error: null,
   locationTypes: basicInfoDropdowns().getLocationTypes(),
@@ -36,8 +49,8 @@ const initialState = {
   owners: basicInfoDropdowns().getOwners(),
   technologyTypes: basicInfoDropdowns().getTechnologyTypes(),
   fuelClasses: basicInfoDropdowns().getFuelClasses(),
-  timezones: basicInfoDropdowns().getTimezones()
-
+  timezones: basicInfoDropdowns().getTimezones(),
+  initial:true
 };
 
 export default function basiInfoReducer(state = initialState, action) {

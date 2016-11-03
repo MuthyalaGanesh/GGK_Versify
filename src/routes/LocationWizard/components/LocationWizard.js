@@ -12,7 +12,7 @@ return (
 <div>
     <div className="row">
         <div className="col-md-2 col-xs-12">           
-            <LocationLeftMenu Locations={props.location.allLocations}/>
+            <LocationLeftMenu Locations={props.location.allLocations} leftMenuDropdownClickEvent={props.leftMenuDropdownClickEvent}/>
         </div>
         <div className="col-md-10 col-xs-12">
             <section id="content_header" className="content-header">

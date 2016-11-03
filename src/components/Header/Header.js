@@ -152,7 +152,7 @@ export const Header = () => (
         <ul className="nav navbar-nav">
         
         <li className="">
-          <a href="/"><i className="fa fa-home"></i> <span className="hidden-xs hidden-sm"> Home </span></a>
+          <Link to="/"><i className="fa fa-home"></i> <span className="hidden-xs hidden-sm"> Home </span></Link>
         </li>
         <li className="dropdown">
           <Link to="/location" className="dropdown-toggle" data-toggle="dropdown">

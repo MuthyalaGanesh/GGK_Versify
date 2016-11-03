@@ -10,9 +10,7 @@ export const createRoutes = (store) => ({
   path: '/',
   component: CoreLayout,
   indexRoute: Home(store),
-  //LocationWizardRoute,
   childRoutes: [
-    //LocationWizardRoute(store)
     Home(store),
     LocationWizardRoute(store)
   ]

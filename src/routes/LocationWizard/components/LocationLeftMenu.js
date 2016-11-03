@@ -31,14 +31,14 @@ export const LocationLeftMenu =(props)=> {
                 <section className="sidebar">
                     <ul className="sidebar-menu">
                         {props.Locations.map(location =>
-                            <li className="treeview">
-                                <Link to="#">
+                            <li key={location.Id} className= "treeview">
+                                <a onClick={(e)=>{props.leftMenuDropdownClickEvent(location.Id, e)}}>
                                     <span>{location.Name} </span>
                                     {location.Children.length > 0
                                     ? <i className="fa fa-angle-left pull-right"></i>
                                     : ''}
-                                    </Link>
-                                <LocationLeftMenuChild key={location.id} name={location.Name} currentLocation={location} />
+                                    </a>
+                                <LocationLeftMenuChild key={location.Id} name={location.Name} leftMenuDropdownClickEvent={props.leftMenuDropdownClickEvent} currentLocation={location} />
                             </li>)
                         }
                     </ul>
@@ -57,18 +57,18 @@ export const LocationLeftMenuChild =(props)=> {
           <ul className="treeview-menu">
 							<li>
                     {props.childnode 
-                        ? <Link to="#">
+                        ?  <a onClick={(e)=>{props.leftMenuDropdownClickEvent(props.key, e)}}>
                         <span>{ props.name} </span> 
                         {props.currentLocation.Children.length > 0
-                      ? <i className="fa fa-angle-left pull-right"></i>
+                      ? <i className="fa fa-angle-left pull-right" onClick={(e)=>{props.leftMenuDropdownClickEvent(props.key, e)}}></i>
                       : ''
                     }                           
-                </Link>
+                </a>
                     :''
                 }
                       
                  {props.currentLocation.Children.length > 0 
-                  ? props.currentLocation.Children.map(child => <LocationLeftMenuChild key={child.id} childnode={true} name={child.Name} currentLocation={child}/>)
+                  ? props.currentLocation.Children.map(child => <LocationLeftMenuChild key={child.Id} childnode={true} name={child.Name} leftMenuDropdownClickEvent={props.leftMenuDropdownClickEvent} currentLocation={child}/>)
                   : ''
                   }
             </li>
