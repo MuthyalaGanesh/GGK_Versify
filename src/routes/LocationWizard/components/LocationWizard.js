@@ -17,20 +17,7 @@ return (
         <div className="col-md-10 col-xs-12">
             <section id="content_header" className="content-header">
                 <h1>Location Wizard<small>OMS Location wizard</small></h1>
-                <ol className="breadcrumb">
-                    <li>
-                        <a href="#">
-                            <i className="fa fa-home"></i> Dashboard (Home)
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            OMS
-                        </a>
-                    </li>
-
-                    <li className="active"><strong>Location Wizard</strong></li>
-                </ol>
+               
             </section>
             <section id='Location-wizard-tabs' className="content">
                 <div className="board">
