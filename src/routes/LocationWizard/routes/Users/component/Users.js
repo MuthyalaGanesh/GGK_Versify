@@ -46,7 +46,7 @@ export const Users = (props) => {
                                         <div className="col-sm-5 col-md-5">
                                             <label className="control-label" for="contactsByRoles"> Contacts </label>
                                         </div>
-                                        <div className="col-sm-7 col-md-7">
+                                        <div className="col-sm-7 col-md-7 MultipleSelect">
                                             <Field
                                                         name = 'contactsByRoles'
                                                         component={renderMultiselect}
@@ -80,7 +80,7 @@ export const Users = (props) => {
                                         <div className="col-sm-5 col-md-5">
                                             <label className="control-label" for="RoleByContact">Roles </label>
                                         </div>
-                                        <div className="col-sm-7 col-md-7">
+                                        <div className="col-sm-7 col-md-7 MultipleSelect">
                                             <Field
                                                         name = 'RoleByContact'
                                                         component={renderMultiselect}

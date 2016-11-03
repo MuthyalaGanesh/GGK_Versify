@@ -32,7 +32,7 @@ export const WorkFlow = (props) => {
                                                     <div className="col-sm-5 col-md-5 col-lg-3">
                                                         <label className="control-label"> Assign WorkFlow </label>
                                                     </div>
-                                                    <div className="col-sm-7 col-md-7 col-lg-7">
+                                                    <div className="col-sm-7 col-md-7 col-lg-7 MultipleSelect">
                                                         <Field
                                                         component={renderMultiselect}
                                                         defaultValue={[]}
