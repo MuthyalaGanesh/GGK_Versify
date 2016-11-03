@@ -5,8 +5,7 @@ import { bindUserInfo} from '../module/user';
 
 
 const mapStateToProps = (state) => ({
-  contacts : state.contacts,
-  roles : state.roles
+  userInfo : state.users
 })
 
 const mapDispatchToProps = {

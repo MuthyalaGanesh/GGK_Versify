@@ -1,0 +1,82 @@
+  {
+      "Roles":[
+         {
+            "Id":1,
+            "Name":"Admin Roles",
+            "ContactIds":[
+            ]
+         },
+         {
+            "Id":14,
+            "Name":"Charles Temp",
+            "ContactIds":[
+
+            ]
+         },
+         {
+            "Id":8,
+            "Name":"Gen Outage Coordinator",
+            "ContactIds":[
+            ]
+         },
+         {
+            "Id":2,
+            "Name":"Admin",
+            "ContactIds":[
+            ]
+         },
+         {
+            "Id":5,
+            "Name":"Charles",
+            "ContactIds":[
+
+            ]
+         },
+         {
+            "Id":12,
+            "Name":"Gen Outage",
+            "ContactIds":[
+            ]
+         }
+      ],
+      "Contacts":[
+         {
+            "Id":1,
+            "Name":"Contact 1",
+            "RolesIds":[
+            ]
+         },
+         {
+            "Id":2,
+            "Name":"Contact 2",
+            "RolesIds":[
+
+            ]
+         },
+         {
+            "Id":3,
+            "Name":"Contact 3",
+            "RolesIds":[
+            ]
+         },
+         {
+            "Id":4,
+            "Name":"Contact 4",
+            "RolesIds":[
+            ]
+         },
+         {
+            "Id":5,
+            "Name":"Contact 5",
+            "RolesIds":[
+
+            ]
+         },
+         {
+            "Id":8,
+            "Name":"Contact 6",
+            "RolesIds":[
+            ]
+         }
+      ]
+}

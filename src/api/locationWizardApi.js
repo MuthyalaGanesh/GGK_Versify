@@ -6,6 +6,7 @@ import {
 var jsonObject = require('./testData.json');
 var allLocations = require('./allLocationsTestData.json');
 var workFlows = require('./workFlowData.json');
+var userInfo = require('./userData.json');
 
 
 export function getLocationTypes() {
@@ -130,15 +131,6 @@ var data = workFlows;
 }
 
 export function  getUserInfo(){
-    
-var UserInfo = {
-                 roles : [
-                          {Mane},
-                          {},
-                          {},
-                          {},
-
-                         ],};
-                          
-        return workFlows;
+  var data = userInfo;
+    return data;
 }

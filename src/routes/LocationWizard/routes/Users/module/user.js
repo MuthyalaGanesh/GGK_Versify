@@ -2,7 +2,7 @@ import {getUserInfo} from 'api/locationWizardApi'
 
 export const BIND_USER_INFO = 'BIND_USER_INFO'
 
-export function bindUserInformation() {	
+export function bindUserInformation() {	  
   return {
     type: BIND_USER_INFO,
     payload: getUserInfo()
@@ -17,7 +17,7 @@ export const ACTION_HANDLERS = {
 }
 const initialState = {
   error: null,
-  userInformation:[]
+  userInformation:getUserInfo()
 };
 
 export default function userInfoReducer(state = initialState, action) {
