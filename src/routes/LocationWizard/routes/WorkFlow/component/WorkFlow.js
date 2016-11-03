@@ -27,14 +27,19 @@ export const WorkFlow = (props) => {
                                 <div className="row">
                                     <form >
                                         <div className="col-sm-12">
-                                            <div className="row">
-                                                <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-                                                    <label className="control-label"> Assign WorkFlow </label>
-                                                    <Field
+                                            <div className="row">                                                
+                                                <div className="form-group">
+                                                    <div className="col-sm-5 col-md-5 col-lg-3">
+                                                        <label className="control-label"> Assign WorkFlow </label>
+                                                    </div>
+                                                    <div className="col-sm-7 col-md-7 col-lg-7">
+                                                        <Field
                                                         component={renderMultiselect}
                                                         defaultValue={[]}
+                                                        name = 'workFlowItem'
                                                         data={workFlowItems.map(workFlowItem =>workFlowItem.name)}
                                                         placeholder="Select WorkFlow"/>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -47,4 +52,5 @@ export const WorkFlow = (props) => {
             </div>
         )
 }
+
 export default WorkFlow
