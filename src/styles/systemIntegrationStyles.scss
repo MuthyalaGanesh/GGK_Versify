@@ -22,3 +22,20 @@ background-image:none!important;
 background-color:#f39c12!important;
 color: white!important;
 }
+.fa.fa-trash-o.fa-2x{
+    cursor:pointer;
+    color:red; 
+}
+.no-results-alert{
+    color:red;
+    text-align: center;
+}
+.show.table.table-striped.table-bordered.table-condensed.table-hover {
+    display: grid!important;
+}
+.align-text-col{
+    text-align: center;
+}
+table>thead>tr>th{
+    text-align: center;
+}

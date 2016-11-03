@@ -5,9 +5,9 @@ var DateTimePicker = require('react-widgets/lib/DateTimePicker')
 var FormField = require('./FormField')
 
 var DateInput = React.createClass({
-  // propTypes: {
-  //   field: PropTypes.object.isRequired
-  // },
+  propTypes: {
+    field: PropTypes.object.isRequired
+  },
   shouldComponentUpdate: FormField.shouldFormFieldUpdate,
   render() {
     var {field, help, label, afterChange, ...inputProps} = this.props

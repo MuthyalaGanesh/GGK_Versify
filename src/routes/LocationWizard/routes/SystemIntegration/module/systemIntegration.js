@@ -3,27 +3,35 @@ import {getSystemIntegrationTypes} from "api/locationWizardApi"
 export const ADD_MODAL = "ADD_MODAL"
 export const SYSTEM_INTEGRATION_TYPES = "SYSTEM_INTEGRATION_TYPES"
 export const ADD_SYSTEM_INTEGRATION = "ADD_SYSTEM_INTEGRATION"
-
-export function SystemIntegrationModal(){
+export const DELETE_SYS_INTEGRATION = "DELETE_SYS_INTEGRATION"
+export function SystemIntegrationModal() {
     return {
         type: ADD_MODAL,
         payload: true
     };
 };
 
-export function BindSystemIntegrationTypes(){
+export function BindSystemIntegrationTypes() {
     return {
         type: SYSTEM_INTEGRATION_TYPES,
         payload: getSystemIntegrationTypes()
     };
 };
 
-export function AddSystemIntegration(){
+export function deleteSystemIntegration(name) {
     return {
-        type: ADD_SYSTEM_INTEGRATION,
-        payload:true 
-    };
+        type: DELETE_SYS_INTEGRATION,
+        payload: name
+    }
+}
+export function AddSystemIntegration(event) {
+    event.preventDefault()
+    return (dispatch, getState) => {
+        return new Promise((resolve) => {
+            dispatch({ type: ADD_SYSTEM_INTEGRATION, payload: getState().form.SystemIntegrationForm.values.newSystemIntegration })
+        })
 
+    }
 };
 
 export const ACTION_HANDLERS = {
@@ -34,13 +42,42 @@ export const ACTION_HANDLERS = {
         return Object.assign({}, state, { systemIntegrationTypes: action.payload })
     },
     [ADD_SYSTEM_INTEGRATION]: (state, action) => {
-        if(action.payload) {
-            //ToDO: need to get ID of system integration and push into selectedSystemIntegrationTypes
-            state.selectedSystemIntegrationTypes.push(state.systemIntegrationTypes[action.payload]);
-        } 
-                return Object.assign({}, state, { selectedSystemIntegrationTypes: state.selectedSystemIntegrationTypes })
+        if (action.payload) {
+            var newstate = Object.assign({}, state, { showAddSysIntegrationModal: !state.showAddSysIntegrationModal })
+            var stateObject = state.systemIntegrationTypes[parseInt(action.payload) - 1];
+            var valuePresent = 1;
+            newstate.selectedSystemIntegrationTypes.map((ssit) => {
+                if (ssit.Name == stateObject.Name) {
+                    valuePresent++;
+                }
+            });
+            if (valuePresent == 1) {
+                newstate.selectedSystemIntegrationTypes.push(stateObject)
+            }
+        }
+        return newstate;
+    },
+    [DELETE_SYS_INTEGRATION]: (state, action) => {
+        if (action.payload) {
+            var newstate = Object.assign({}, state)
+            var valuePresence = 0;
+            // alert('b4:'+newstate.selectedSystemIntegrationTypes)
+            newstate.selectedSystemIntegrationTypes.map((ssit) => {
+                if (ssit.Name == action.payload) {
+                    newstate.selectedSystemIntegrationTypes.splice(valuePresence, 1);
+                }
+                valuePresence++;
+            });
+            // alert('after:'+newstate.selectedSystemIntegrationTypes)
+        }
+        var assignObject = {
+            showAddSysIntegrationModal: newstate.showAddSysIntegrationModal,
+            systemIntegrationTypes: newstate.systemIntegrationTypes,
+            selectedSystemIntegrationTypes: newstate.selectedSystemIntegrationTypes
+        }
+        return assignObject;
     }
-    
+
 }
 
 const initialState = {

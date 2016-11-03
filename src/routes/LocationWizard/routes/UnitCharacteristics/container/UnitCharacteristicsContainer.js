@@ -27,7 +27,6 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
     form: 'UnitCharacteristicsForm',  //Form name is first form
-    fields: ['effectiveEndDate', 'effectiveStartDate','ucvalue'],
     touchOnChange: true,
     destroyOnUnmount: false,  
 

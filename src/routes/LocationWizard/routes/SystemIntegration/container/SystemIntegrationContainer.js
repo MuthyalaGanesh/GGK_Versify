@@ -1,13 +1,19 @@
 import { reduxForm } from 'redux-form'
 import {connect,dispatch} from 'react-redux'
 import SystemIntegration from '../component/SystemIntegration'
-import {SystemIntegrationModal,BindSystemIntegrationTypes,SelectedSystemIntegrationType,AddSystemIntegration} from '../module/systemIntegration'
+import {
+            SystemIntegrationModal,
+            BindSystemIntegrationTypes,
+            SelectedSystemIntegrationType,
+            AddSystemIntegration,
+            deleteSystemIntegration} from '../module/systemIntegration'
 
 const mapDispatchToProps= {
     SystemIntegrationModal,
     BindSystemIntegrationTypes,
     AddSystemIntegration,
-    SelectedSystemIntegrationType
+    SelectedSystemIntegrationType,
+    deleteSystemIntegration
  }
 
 const mapStateToProps = (state) => ({

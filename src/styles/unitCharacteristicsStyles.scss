@@ -24,6 +24,7 @@ thead>tr>th{
 }
 .modal-content{
     border-radius: 6px;
+    overflow:visible;
 }
 .btn.btn-danger{
 float: left;
@@ -42,6 +43,13 @@ float: right;
 background-image:none!important;
 background-color:#f39c12!important;
 }
+.form-group.row .control-label.col-sm-4{
+    display: none;
+}
+.form-group.row .col-sm-8{
+    width: 100%;
+}
+
 /* Use Bootstrap error styles for widgets. */
 .has-error .rw-widget {
   border-color: #A94442;
