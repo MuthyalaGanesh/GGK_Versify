@@ -15,6 +15,7 @@ import WorkFlowRoute from './WorkFlow'
 
 export default (store) => ({
   path: 'location',
+  indexRoute: BasicInfoRoute(store),
   childRoutes: [
     BasicInfoRoute(store),
     CredentialsManagementRoute(store),

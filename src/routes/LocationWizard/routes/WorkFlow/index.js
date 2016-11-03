@@ -10,7 +10,6 @@ export default (store) => ({
       const reducer = require('./module/workFlow').default
       /*  Add the reducer to the store on key 'counter'  */
       injectReducer(store, { key: 'workFlows', reducer })
-	  store.dispatch(bindWorkflowItems());
       cb(null, WorkFlows)
     
     /* Webpack named bundle   */

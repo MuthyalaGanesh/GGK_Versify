@@ -17,7 +17,7 @@ export const ACTION_HANDLERS = {
 }
 const initialState = {
   error: null,
-  workFlowItems:[]
+  workFlowItems:getWorkFlows()
 };
 
 export default function workFlowReducer(state = initialState, action) {

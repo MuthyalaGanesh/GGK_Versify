@@ -20,20 +20,13 @@ export function axiosPost(url, data) {
 }
 
 
-export function axiosGet(url, queryString = null) {
-  var config = {
-    headers: {
-      'Access-Control-Allow-Methods': 'GET,PUT,PATCH,POST,DELETE',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Headers': 'Authorization, Lang',
-    }
-  };
+export function axiosGet(url, queryString = null) {  
   var getUrl = url;
   if (!!queryString) {
     getUrl = getUrl + "/" + queryString;
   }
   return (
-    axios.get(getUrl, config)
+    axios.get(getUrl)    
     .catch(function(error) {
       if (error.response) {
         // The request was made, but the server responded with a status code

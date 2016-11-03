@@ -79,7 +79,8 @@ div.value { font-weight:bold; font-size:14px; height: 26px; padding: 3px 9px 3px
 @media (max-width: 767px) {
 .content-wrapper,  .right-side, .main-footer { margin-left: 0; }
 }
-@media (min-width: 768px) and (max-width:1024px) {
+@media  (min-width:1024px) {
+	/*.content-wrapper, .right-side {margin-left:230px;}*/
 }
 @media (min-width: 768px) {
 .sidebar-collapse .content-wrapper,  .sidebar-collapse .right-side,  .sidebar-collapse .main-footer { margin-left: 0; }

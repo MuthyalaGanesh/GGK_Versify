@@ -12,11 +12,10 @@ export function getLocationTypes() {
     var data = jsonObject;
     return data.locationTypes;
 
-    //  axiosGet(Constants.LOCATION_TYPES)
-    //   .then((response) => response.json())
-    //    .then((responseJson) => {        
-    //        console.log("Location Types: ", responseJson);
-    //        return responseJson;
+    //  return axiosGet(Constants.LOCATION_TYPES)
+    //    .then((response) => {        
+    //        console.log("Location Types: ", response.data);
+    //        return response.data;
     //    })
     //    .catch((error) => {
     //      console.error("Location Types Error: ", error);

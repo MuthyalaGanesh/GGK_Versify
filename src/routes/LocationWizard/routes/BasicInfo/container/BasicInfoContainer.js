@@ -16,7 +16,6 @@ import {
 
 const mapDispatchToProps = (dispatch) => ({
 	basicInfoSubmit: (values) => {
-		debugger;
 		console.log("basicInfoSubmit-", values);
 		alert(JSON.stringify(values))
 	},

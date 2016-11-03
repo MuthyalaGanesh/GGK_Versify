@@ -42,7 +42,5 @@ const initialState = {
 
 export default function basiInfoReducer(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
-  console.log("basicInfoDropdowns- ", basicInfoDropdowns);
-
   return handler ? handler(state, action) : state;
 }
