@@ -2,9 +2,11 @@ import React from 'react'
 import 'styles/locationStyles.scss'
 import {Panel, Nav, NavItem} from 'react-bootstrap'
 import {Link}from 'react-router'
+import TreeView from './BootstrapTreeView';
 
 
 export const LocationLeftMenu =(props)=> {
+    
   return(   
       <div>
     <aside className="main-sidebar control-sidebar-dark">
@@ -28,21 +30,9 @@ export const LocationLeftMenu =(props)=> {
 
         <div className="tab-content">
             <div className="tab-pane active" id="control-sidebar-menutree-tab">
-                <section className="sidebar">
-                    <ul className="sidebar-menu">
-                        {props.Locations.map(location =>
-                            <li key={location.Id} className= "treeview">
-                                <a onClick={(e)=>{props.leftMenuDropdownClickEvent(location.Id, e)}}>
-                                    <span>{location.Name} </span>
-                                    {location.Children.length > 0
-                                    ? <i className="fa fa-angle-left pull-right"></i>
-                                    : ''}
-                                    </a>
-                                <LocationLeftMenuChild key={location.Id} name={location.Name} leftMenuDropdownClickEvent={props.leftMenuDropdownClickEvent} currentLocation={location} />
-                            </li>)
-                        }
-                    </ul>
-                </section>
+               
+                   <TreeView data={props.Locations} leftMenuDropdownClickEvent={props.leftMenuDropdownClickEvent}/>
+                
             </div>
         </div>
 

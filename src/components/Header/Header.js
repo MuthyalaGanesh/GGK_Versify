@@ -35,7 +35,7 @@ export const Header = () => (
                   <li>
                     <a href="#">
                       <div className="pull-left">
-                        <img src="/assets/images/user2-160x160.jpg" className="img-circle" alt="User Image" />
+                        <img src="/assets/images/user2-160x160.png" className="img-circle" alt="User Image" />
                       </div>
                       <h4> Support Team <small><i className="fa fa-clock-o"></i> 5 mins</small></h4>
                       <p>
@@ -104,15 +104,15 @@ export const Header = () => (
           
           <li className="dropdown user user-menu" style={{position:"relative",marginBottom:"-5px"}}>
             <a href="#" className="dropdown-toggle" data-toggle="dropdown">
-              <img src="/assets/images/user2-160x160.jpg" className="user-image" alt="User Image" />
-              <span className="hidden-xs hidden-sm">Koteswara Rao K</span>
+              <img src="/assets/images/user2-160x160.png" className="user-image" alt="User Image" />
+              <span className="hidden-xs hidden-sm">Versify User</span>
             </a>
             <ul className="dropdown-menu">
               <li className="user-header">
-                <img src="/assets/images/user2-160x160.jpg" className="img-circle" alt="User Image" />
+                <img src="/assets/images/user2-160x160.png" className="img-circle" alt="User Image" />
                 <p>
-                  Koteswara Rao K <br />
-                  Sr. UI Architect<small>Joined on : 12/02/2015</small>
+                  Versify User <br />
+                  Sr. Developer<small>Joined on : 12/02/2015</small>
                 </p>
               </li>
               <li className="user-body">
