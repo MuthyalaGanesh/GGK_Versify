@@ -15,9 +15,7 @@ import {
 
 
 const mapDispatchToProps = (dispatch) => ({
-	basicInfoSubmit: () => {
-		dispatch(test())
-	}
+	
 })
 
 const mapStateToProps = (state) => ({

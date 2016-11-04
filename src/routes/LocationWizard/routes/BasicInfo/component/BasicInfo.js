@@ -226,7 +226,6 @@ return (
                             </div>
 
                        
-                        <Button bsStyle="primary" onClick={props.basicInfoSubmit}>submit</Button>
                     </div>
                 </div>
             </div>
