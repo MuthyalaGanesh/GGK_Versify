@@ -7,7 +7,7 @@ import 'styles/widgetStyle.scss'
 const renderMultiselect = ({ input, ...rest }) =>
   <Multiselect {...input}
     onBlur={() => input.onBlur()}
-    value={input.value || []} // requires value to be an array
+    value={input.value || rest.defaultvalue} // requires value to be an array
     {...rest}/>
 
 export const Users = (props) => {    
@@ -33,11 +33,11 @@ export const Users = (props) => {
                                             <label className="control-label" for="RoleByRoles">Roles </label>
                                         </div>
                                         <div className="col-sm-7 col-md-7">
-                                            <Field component="select" className="form-control"  name = 'RoleByRoles'>
+                                            <Field component="select" className="form-control"  name = 'RoleByRoles' multi="true">
                                                 <option value="">Select a Role</option>
                                                 {
                                                 Roles.map(role =>
-                                                <option value={role.id} key={role.id}>{role.Name}</option>)
+                                                <option value={role.Id} key={role.Id}>{role.Name}</option>)
                                                 }
                                             </Field>
                                         </div>
@@ -50,8 +50,10 @@ export const Users = (props) => {
                                             <Field
                                                         name = 'contactsByRoles'
                                                         component={renderMultiselect}
-                                                        defaultValue={[]}
-                                                        data={Contacts.map(contact =>contact.Name)}
+                                                        defaultvalue={[]}
+                                                        data ={Contacts}                                                        
+                                                        textField='Name'                                             
+                                                        valueField='Id'
                                                         placeholder="Select contacts"/>
                                         </div>
                                     </div>
@@ -84,8 +86,10 @@ export const Users = (props) => {
                                             <Field
                                                         name = 'RoleByContact'
                                                         component={renderMultiselect}
-                                                        defaultValue={[]}
-                                                        data={Roles.map(role =>role.Name)}
+                                                        defaultvalue={[]}
+                                                        data={Roles}                                                       
+                                                        textField='Name'                                             
+                                                        valueField='Id'
                                                         placeholder="Select roles"/>
                                         </div>
                                     </div>
