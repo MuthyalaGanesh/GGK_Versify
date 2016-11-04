@@ -2,7 +2,6 @@ import axios from 'axios';
 
 
 export function axiosPost(url, data) {
-
   return (
     axios({
       url,
@@ -18,7 +17,6 @@ export function axiosPost(url, data) {
     })
   )
 }
-
 
 export function axiosGet(url, queryString = null) {  
   var getUrl = url;
@@ -42,3 +40,25 @@ export function axiosGet(url, queryString = null) {
     })
   )
 }
+
+export function XMLHttpRequestSyncGet(url, queryString = null) {  
+  var getUrl = url;
+  if (!!queryString) {
+    getUrl = getUrl + "/" + queryString;
+  }
+ try {
+        var request = new XMLHttpRequest();
+        request.open('GET', getUrl, false); // `false` makes the request synchronous
+        request.send(null);
+
+        if (request.status === 200) {
+            return JSON.parse(request.response);
+        } else {
+          console.error(getUrl, "Status: ", request.status);
+            return [];
+        }
+    } catch (error) {
+        console.error(getUrl,"Error: ", error);
+    };
+}
+
