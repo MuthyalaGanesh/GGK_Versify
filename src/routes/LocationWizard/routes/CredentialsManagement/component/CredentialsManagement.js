@@ -7,7 +7,7 @@ export const CredentialsManagement = (props) => {
             <div>
                 
                 <Panel header={<ControlLabel>Credentials Management</ControlLabel>}>
-                        <h2 style={{'text-align': 'center'}}> In Progress...</h2>                  
+                        <h2 style={{'textAlign': 'center'}}> In Progress...</h2>                  
                 </Panel>
          
 

@@ -15,19 +15,15 @@ import {
 
 
 const mapDispatchToProps = (dispatch) => ({
-	basicInfoSubmit: (values) => {
-		console.log("basicInfoSubmit-", values);
-		alert(JSON.stringify(values))
-	},
-	onchange: (e) => {
+	basicInfoSubmit: () => {
 		dispatch(test())
-	},
-	bindLocationTypes
+	}
 })
 
 const mapStateToProps = (state) => ({
 	location: state.location,
-	basic: state.basic
+	basic: state.basic,
+	formdata: state.form 
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({

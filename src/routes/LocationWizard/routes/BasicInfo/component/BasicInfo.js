@@ -1,7 +1,7 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
 import validate from '../validations/basicInfoValidation'
-import {Panel, ControlLabel, Checkbox} from 'react-bootstrap/lib'
+import {Panel, ControlLabel, Checkbox,Button} from 'react-bootstrap/lib'
 import 'styles/basicInfoStyles.scss'
 
 export const BasicInfo = (props) => {
@@ -13,7 +13,10 @@ export const BasicInfo = (props) => {
         owners,
         technologyTypes,
         fuelClasses,
-        timezones} = props.basic
+        timezones,
+        error
+    } = props.basic
+    const {formdata} = props
 return (
 <div className="row tab-pane fade in active" id="home">
     <div className="col-xs-12">
@@ -21,18 +24,31 @@ return (
             <div className="box-header">
                 <h3 className="box-title">Basic Information</h3>
                 <div className="box-tools pull-right">
-                    &nbsp;
+                    &nbsp; 
+
+
+
+
+
+                { /* dont use &nbsp*/}
+                
+
+
+
+
+
+
                 </div>
             </div>
             <div className="box-body">
                 <div className="margin-bottom-sm padding-top">
                     <div className="row">
-                        <form onSubmit={props.basicInfoSubmit} onChange={props.onchange}>
+                        
                             <div className="col-sm-12">
                                 <div className="row">
                                     <div className="col-sm-12 col-md-6 form-group">
                                         <div className="col-sm-5 col-md-5">
-                                            <label className="control-label" for="locationName"> Name </label>
+                                            <label className="control-label" > Name </label>
                                         </div>
                                         <div className="col-sm-7 col-md-7">
                                             <Field name="locationName" component="input" className="form-control" type="text" placeholder="Location Name" />
@@ -45,21 +61,29 @@ return (
                                     </div>
                                     <div className="col-sm-12 col-md-12 form-group">
                                         <div className="col-sm-5 col-md-5 parentLocation">
-                                            <label className="control-label" for="parentLocation"> Parent Location </label>
+                                            <label className="control-label" id="parentLocation"> Parent Location </label>
                                         </div>
                                         <div className="col-sm-7 col-md-7">
-                                            <Field name="parentLocation" component="select" className="form-control">
+                                          {error && !formdata.BasicInfoForm.values.hasOwnProperty('parentLocation')
+                                            ? <Field name="parentLocation" component="select" className="form-control error">
                                                 <option value="">Select a parent location</option>
                                                 {
                                                 parentLocations.map(parentLoc =>
                                                 <option value={parentLoc.id} key={parentLoc.id}>{parentLoc.displayName}</option>)
                                                 }
-                                            </Field>
+                                            </Field> 
+                                         :   <Field name="parentLocation" component="select" className="form-control">
+                                                <option value="">Select a parent location</option>
+                                                {
+                                                parentLocations.map(parentLoc =>
+                                                <option value={parentLoc.id} key={parentLoc.id}>{parentLoc.displayName}</option>)
+                                                }
+                                            </Field>}  
                                         </div>
                                     </div>
                                     <div className="col-sm-12 col-md-6 form-group">
                                         <div className="col-sm-5 col-md-5">
-                                            <label className="control-label" for="locationType"> Type </label>
+                                            <label className="control-label" id="locationType"> Type </label>
                                         </div>
                                         <div className="col-sm-7 col-md-7">
                                             <Field name="locationType" component="select" className="form-control">
@@ -73,7 +97,7 @@ return (
                                     </div>
                                     <div className="col-sm-12 col-md-6 form-group">
                                         <div className="col-sm-5 col-md-5">
-                                            <label className="control-label" for="technologyType"> Technology type </label>
+                                            <label className="control-label" id="technologyType"> Technology type </label>
                                         </div>
                                         <div className="col-sm-7 col-md-7">
                                             <Field name="technologyType" component="select" className="form-control">
@@ -87,9 +111,10 @@ return (
                                     </div>
                                     <div className="col-sm-12 col-md-6 form-group">
                                         <div className="col-sm-5 col-md-5">
-                                            <label className="control-label" for="primaryMarket"> Primary Market </label>
+                                            <label className="control-label" id="primaryMarket"> Primary Market </label>
                                         </div>
                                         <div className="col-sm-7 col-md-7">
+
                                             <Field name="primaryMarket" component="select" className="form-control">
                                                 <option value="">Select a Technology type...</option>
                                                 {
@@ -101,21 +126,41 @@ return (
                                     </div>
                                     <div className="col-sm-12 col-md-6 form-group">
                                         <div className="col-sm-5 col-md-5">
-                                            <label className="control-label" for="secondarytechnologyType"> Secondary Technology type </label>
+                                            <label className="control-label" id="secondarytechnologyType"> Secondary Technology type </label>
                                         </div>
                                         <div className="col-sm-7 col-md-7">
-                                            <Field name="secondarytechnologyType" component="select" className="form-control">
+                                        { error && (formdata.BasicInfoForm.values.secondarytechnologyType == formdata.BasicInfoForm.values.technologyType)
+                                            ?   <div className='errorMessage'> Please selct different technologyType </div> 
+                                            : null
+                                        }
+
+                                         { error && (!formdata.BasicInfoForm.values.hasOwnProperty('secondarytechnologyType') || (formdata.BasicInfoForm.values.secondarytechnologyType == formdata.BasicInfoForm.values.technologyType))
+                                     
+                                            ?
+
+                                             <Field name="secondarytechnologyType" component="select" className="form-control error">
                                                 <option value="">Select a Technology type...</option>
                                                 {
                                                 technologyTypes.map(technologyType =>
                                                 <option value={technologyType.id} key={technologyType.id}>{technologyType.name}</option>)
                                                 }
                                             </Field>
+                                            :
+                                             <Field name="secondarytechnologyType" component="select" className="form-control">
+                                                <option value="">Select a Technology type...</option>
+                                                {
+                                                technologyTypes.map(technologyType =>
+                                                <option value={technologyType.id} key={technologyType.id}>{technologyType.name}</option>)
+                                                }
+                                            </Field>
+
+                                            }
+                                           
                                         </div>
                                     </div>
                                     <div className="col-sm-12 col-md-6 form-group">
                                         <div className="col-sm-5 col-md-5">
-                                            <label className="control-label" for="owner"> Owner </label>
+                                            <label className="control-label" id="owner"> Owner </label>
                                         </div>
                                         <div className="col-sm-7 col-md-7">
                                             <Field name="owner" component="select" className="form-control">
@@ -129,7 +174,7 @@ return (
                                     </div>
                                     <div className="col-sm-12 col-md-6 form-group">
                                         <div className="col-sm-5 col-md-5">
-                                            <label className="control-label" for="fuelClass"> Fuel Class </label>
+                                            <label className="control-label" id="fuelClass"> Fuel Class </label>
                                         </div>
                                         <div className="col-sm-7 col-md-7">
                                             <Field name="fuelClass" component="select" className="form-control">
@@ -143,7 +188,7 @@ return (
                                     </div>
                                     <div className="col-sm-12 col-md-6 form-group">
                                         <div className="col-sm-5 col-md-5">
-                                            <label className="control-label" for="ownerShipPercentage"> Ownership % </label>
+                                            <label className="control-label" id="ownerShipPercentage"> Ownership % </label>
                                         </div>
                                         <div className="col-sm-7 col-md-7">
                                             <Field name="ownerShipPercentage" component="input" className="form-control" type="text" placeholder="OwnerShip Percentage" />
@@ -151,7 +196,7 @@ return (
                                     </div>
                                     <div className="col-sm-12 col-md-6 form-group">
                                         <div className="col-sm-5 col-md-5">
-                                            <label className="control-label" for="timezone"> Timezone </label>
+                                            <label className="control-label" id="timezone"> Timezone </label>
                                         </div>
                                         <div className="col-sm-7 col-md-7">
                                             <Field name="timezone" component="select" className="form-control">
@@ -165,7 +210,7 @@ return (
                                     </div>
                                     <div className="col-sm-12 col-md-6 form-group">
                                         <div className="col-sm-5 col-md-5">
-                                            <label className="control-label" for="physicalTimezone"> Physical Timezone </label>
+                                            <label className="control-label" id="physicalTimezone"> Physical Timezone </label>
                                         </div>
                                         <div className="col-sm-7 col-md-7">
                                             <Field name="physicalTimezone" component="select" className="form-control">
@@ -180,7 +225,8 @@ return (
                                 </div>
                             </div>
 
-                        </form>
+                       
+                        <Button bsStyle="primary" onClick={props.basicInfoSubmit}>submit</Button>
                     </div>
                 </div>
             </div>
