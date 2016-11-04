@@ -6,14 +6,16 @@ import {
             BindSystemIntegrationTypes,
             SelectedSystemIntegrationType,
             AddSystemIntegration,
-            deleteSystemIntegration} from '../module/systemIntegration'
+            deleteSystemIntegration,
+            showNoResults} from '../module/systemIntegration'
 
 const mapDispatchToProps= {
     SystemIntegrationModal,
     BindSystemIntegrationTypes,
     AddSystemIntegration,
     SelectedSystemIntegrationType,
-    deleteSystemIntegration
+    deleteSystemIntegration,
+    showNoResults
  }
 
 const mapStateToProps = (state) => ({
