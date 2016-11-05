@@ -1,10 +1,3 @@
-//import the files with exact name unix based machines are case sensitive 
-
-
-
-
-
-
 import React from 'react'
 import 'styles/locationStyles.scss'
 import {Panel, Nav, NavItem} from 'react-bootstrap'
@@ -13,6 +6,8 @@ import BasicInfo from '../routes/BasicInfo/component/BasicInfo'
 import CredentialsManagement from '../routes/CredentialsManagement/component/CredentialsManagement'
 import WizardTabs from "./WizardTabs"
 import LocationLeftMenu from "./LocationLeftMenu"
+import LocationWizardFooter from "./LocationWizardFooter"
+
 
 export const LocationWizard =(props)=> {
 return (
@@ -34,6 +29,7 @@ return (
                     </div>
                 </div>
             </section>
+            <LocationWizardFooter saveCompleteLocationWizard={props.saveCompleteLocationWizard}/>
         </div>
     </div>
 </div>

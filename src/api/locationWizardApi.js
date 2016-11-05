@@ -108,16 +108,36 @@ export function getUnitCharacteristics() {
             UCM: "MW",
             EffectiveStartDate: "",
             EffectiveEndDate: ""
+        },
+        {
+            Name: "Eco Min2",
+            DisplayName: "Eco Min",
+            Description: "The lowest economic MW output level a unit can achieve system cost",
+            Value: "",
+            UCM: "MW",
+            EffectiveStartDate: "",
+            EffectiveEndDate: ""
+        }, {
+            Name: "Eco Max2",
+            DisplayName: "Eco Max",
+            Description: "The lowest economic MW output level a unit can achieve system cost",
+            Value: "",
+            UCM: "MW",
+            EffectiveStartDate: "",
+            EffectiveEndDate: ""
         }
-        // { Name: "Eco Min1", DisplayName: "Eco Min", Description: "The lowest economic MW output level a unit can achieve system cost", Value: "", UCM: "MW", EffectiveStartDate: "", EffectiveEndDate: "" },
-        // { Name: "Eco Max1", DisplayName: "Eco Max", Description: "The lowest economic MW output level a unit can achieve system cost", Value: "", UCM: "MW", EffectiveStartDate: "", EffectiveEndDate: "" },
-        // { Name: "Capacity1", DisplayName: "Capacity", Description: "Capacity is the capability to produce energy", Value: "", UCM: "MW", EffectiveStartDate: "", EffectiveEndDate: "" },
-        // { Name: "Eco Min2", DisplayName: "Eco Min", Description: "The lowest economic MW output level a unit can achieve system cost", Value: "", UCM: "MW", EffectiveStartDate: "", EffectiveEndDate: "" },
-        // { Name: "Eco Max2", DisplayName: "Eco Max", Description: "The lowest economic MW output level a unit can achieve system cost", Value: "", UCM: "MW", EffectiveStartDate: "", EffectiveEndDate: "" },
-        // { Name: "Capacity2", DisplayName: "Capacity", Description: "Capacity is the capability to produce energy", Value: "", UCM: "MW", EffectiveStartDate: "", EffectiveEndDate: "" },
-    ]
+        ]
     return unitCharacteristicsJson;
 }
+export function getSelectedUnitCharacteristics() {
+    var unitCharacteristicsJson = [
+        { Name: "Eco Min", DisplayName: "Eco Min", Description: "The lowest economic MW output level a unit can achieve system cost", Value: "", UCM: "MW", EffectiveStartDate: "", EffectiveEndDate: "" },
+        { Name: "Eco Max", DisplayName: "Eco Max", Description: "The lowest economic MW output level a unit can achieve system cost", Value: "", UCM: "MW", EffectiveStartDate: "", EffectiveEndDate: "" },
+        { Name: "Capacity", DisplayName: "Capacity", Description: "Capacity is the capability to produce energy", Value: "", UCM: "MW", EffectiveStartDate: "", EffectiveEndDate: "" }
+        ]
+    return unitCharacteristicsJson;
+}
+
 
 export function getSystemIntegrationTypes() {
     var systemIntegrationTypes = [{

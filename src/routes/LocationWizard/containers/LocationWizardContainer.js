@@ -23,7 +23,9 @@ const mapDispatchToProps = (dispatch) => ({
 		console.log(e.target.value, e.target.name)
 	},
 	leftMenuDropdownClickEvent:leftMenuDropdownClickEvent,
-	
+	saveCompleteLocationWizard: () => {
+		dispatch(saveCompleteLocationWizard())
+	}
 })
 
 const mapStateToProps = (state, ownProps) => ({

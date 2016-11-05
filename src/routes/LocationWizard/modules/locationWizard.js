@@ -1,19 +1,8 @@
-// locationwizard actionhandlers is it incomplete?
-
-
-
-
-
-
-
-
-
 import {
   basicInfoDropdowns
 } from 'api/locationWizardApi'
 
 
-export const SAVE_COMPLETE_LOCATIONWIZARD = 'SAVE_COMPLETE_LOCATIONWIZARD';
 export const LOCATIONS_MENUITEM_CLICK = 'LOCATIONS_MENUITEM_CLICK';
 export const LOCATIONS_MENUITEM_DROPDOWN_CLICK = 'LOCATIONS_MENUITEM_DROPDOWN_CLICK';
 
@@ -26,34 +15,36 @@ export function onLocationItemClick(event) {
     payload: event
   };
 };
+
 export function leftMenuDropdownClickEvent(id, event) {
-  console.log("LOCATIONS_MENUITEM_DROPDOWN_CLICK:", id);
-  event.target.parentNode.className = 'treeview active';
-  if (event.target.parentElement.childNodes[1] != undefined) {
-     event.target.parentElement.childNodes[1].className = "treeview-menu menu open";
-  }
-  if (event.target.parentElement.childNodes[1].childNodes[0] != undefined) {
-    event.target.parentElement.childNodes[1].childNodes[0].className = 'active'
-  }
+  console.log("LOCATIONS_MENUITEM_DROPDOWN_CLICK:", id);  
   return {
     type: LOCATIONS_MENUITEM_DROPDOWN_CLICK,
     payload: event
   };
 };
+export function saveCompleteLocationWizard() {
+  return (dispatch, getState) => {
+    console.log("state-", getState().form)
+    return new Promise((resolve) => {
+      console.log("state pro-", getState().form)
+      getState().form.BasicInfoForm.hasOwnProperty('values') 
+      ? Object.keys(getState().form.BasicInfoForm.values).length < 11 
+        ? dispatch({
+        type: 'ERROR',
+        payload: 1
+        }) 
+        : console.log(Object.keys(getState().form.BasicInfoForm.values).length)/*(getState().form.BasicInfoForm.values.technologyType.name ==  getState().form.BasicInfoForm.values.secondarytechnologyType.name) 
+          ? dispatch({
+              type: 'ERROR',
+              payload: 1
+          }) : null*/
+      : null
+    })
+  }
+}
 
-export function saveCompleteLocationWizard(event) {
-  console.log("locationWizard:", event);
-  return {
-    type: SAVE_COMPLETE_LOCATIONWIZARD,
-    payload: event
-  };
-};
-
-export const ACTION_HANDLERS = {
-  [SAVE_COMPLETE_LOCATIONWIZARD]: (state, action) => {
-    console.log("locationWizard AH:", action.payload);
-    return Object.assign({}, state)
-  },
+export const ACTION_HANDLERS = {  
   [LOCATIONS_MENUITEM_CLICK]: (state, action) => {
     return Object.assign({}, state)
   },

@@ -25,26 +25,7 @@ export function bindLocationTypes() {
 };
 
 
-export function test() {
-  return (dispatch, getState) => {
-    console.log("state-", getState().form)
-    return new Promise((resolve) => {
-      console.log("state pro-", getState().form)
-      getState().form.BasicInfoForm.hasOwnProperty('values') 
-      ? Object.keys(getState().form.BasicInfoForm.values).length < 11 
-        ? dispatch({
-        type: 'ERROR',
-        payload: 1
-        }) 
-        : console.log(Object.keys(getState().form.BasicInfoForm.values).length)/*(getState().form.BasicInfoForm.values.technologyType.name ==  getState().form.BasicInfoForm.values.secondarytechnologyType.name) 
-          ? dispatch({
-              type: 'ERROR',
-              payload: 1
-          }) : null*/
-      : null
-    })
-  }
-}
+
 export const ACTION_HANDLERS = {
   [BIND_LOCATION_TYPES]: (state, action) => {
     return Object.assign({}, state, {

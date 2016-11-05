@@ -1,14 +1,17 @@
 import React from 'react'
 import Header from '../../components/Header'
+import Footer from '../../components/Footer'
+
 
 export const CoreLayout = ({ children }) => (
   <div>
     <Header />
     <div className='content-wrapper'>
-		<div id="content_frame" className="content-frame" style={{width:"100%",position:'relative',display:"block"}}>
-			{children}
+		  <div id="content_frame" className="content-frame" style={{width:"100%",position:'relative',display:"block"}}>
+			  {children}
+      </div>
     </div>
-    </div>
+    <Footer />
   </div>
 )
 
