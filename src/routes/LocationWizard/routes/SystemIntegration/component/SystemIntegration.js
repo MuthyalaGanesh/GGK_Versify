@@ -3,14 +3,8 @@ import { Field, reduxForm } from 'redux-form'
 import {Panel, Table, Popover, Button, Modal} from 'react-bootstrap/lib'
 import 'styles/systemIntegrationStyles.scss'
 import Typeahead from 'react-bootstrap-typeahead'
-
-// import TypeaheadField from '../../../src/components/TypeaheadField'
-
-const TypeaheadField = (props) => (
-    <div>
-        <Typeahead {...props.input} options={props.fieldOptions} value={props.input.value} labelKey={props.labelKey}/>
-    </div>
-)
+import systemIntegrationValidation from '../validation/systemIntegrationValidation'
+import TypeaheadField from '../../../../../components/Typeahead/TypeaheadField'
 export const SystemIntegration = (props) => {
     const systemIntegrationData = props.systemIntegration.systemIntegrationTypes;
 
@@ -19,12 +13,26 @@ export const SystemIntegration = (props) => {
             <Panel header = {
                 <div>
                     <label>System Integration</label>
-                    <span className="fa fa-plus-circle fa-2x" onClick={props.SystemIntegrationModal}></span>
                 </div>
             }>
+
+                <div className="row">
+                    <div className="col-xs-12">
+                        <div className="col-xs-4">
+                            <label>External System Name</label>
+                        </div>
+                        <div className="col-xs-4">
+                            <Field component={TypeaheadField} fieldOptions={systemIntegrationData}  name="newSystemIntegration" labelKey="Name"/>
+                        </div>
+                        <div className="col-xs-4">
+                            <button className="btn btn-success" type="button" onClick={props.AddSystemIntegration}>Add</button>
+                        </div>
+                    </div>
+                </div>
+
                 <div className={props.systemIntegration.selectedSystemIntegrationTypes &&
-                                props.systemIntegration.selectedSystemIntegrationTypes.length > 0?"show":"hide" }>
-                    <Table striped bordered condensed hover>
+                    props.systemIntegration.selectedSystemIntegrationTypes.length > 0 ? "show" : "hide" } id="resultsDiv">
+                    <Table striped bordered condensed hover responsive>
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -47,33 +55,7 @@ export const SystemIntegration = (props) => {
                         </tbody>
                     </Table>
                 </div>
-                <div className={props.systemIntegration.selectedSystemIntegrationTypes &&
-                                    props.systemIntegration.selectedSystemIntegrationTypes.length > 0?"hide":"show" }>
-                    <h4 className="no-results-alert">You have no System Integration information yet</h4>
-                </div>
             </Panel>
-
-            <Modal show={props.systemIntegration.showAddSysIntegrationModal}>
-                <Modal.Header>
-                    <Modal.Title>New System Integration Information</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <div className="row">
-                        <div className="col-xs-12">
-                            <div className="col-xs-6">
-                                <label>External System Name</label>
-                            </div>
-                            <div className="col-xs-6">
-                                <Field component={TypeaheadField} fieldOptions={systemIntegrationData}  name="newSystemIntegration" labelKey="Name"/>
-                            </div>
-                        </div>
-                    </div>
-                </Modal.Body>
-                <Modal.Footer>
-                    <button className="btn btn-warning" type="button" onClick={props.SystemIntegrationModal}>Close</button>
-                    <button className="btn btn-success" type="button" onClick={props.AddSystemIntegration}>Add</button>
-                </Modal.Footer>
-            </Modal>
         </div>
     )
 }

@@ -40,3 +40,12 @@ color: white!important;
 table>thead>tr>th{
     text-align: center;
 }
+.panel-body{
+    min-height: 500px!important;
+}
+.dropdown-menu{
+    overflow-y: scroll!important;
+}
+#resultsDiv{
+    margin-top: 2%;
+}

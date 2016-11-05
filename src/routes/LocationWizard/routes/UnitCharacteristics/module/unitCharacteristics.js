@@ -124,7 +124,7 @@ export const ACTION_HANDLERS = {
   //update edited row
   [UPDATE_ROW]: (state, action) => {
     var newState = Object.assign({}, state, { showEditModal: !state.showEditModal })
-    newState.editableUnitCharacter={}
+    newState.editableUnitCharacter = {}
     if (action.payload) {
       newState.selectedunitCharacteristics.map((uc) => {
         if (uc.Name == state.editableUnitCharacter.Name) {

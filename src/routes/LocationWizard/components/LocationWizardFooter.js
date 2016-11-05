@@ -7,7 +7,7 @@ export const LocationWizardFooter = (props) => {
         <div id="content_footer" className="content-footer">
 			<div className="col-md-10">
 				<div className="pull-right">
-					        <Button bsStyle="btn btn-primary" onClick={props.saveCompleteLocationWizard}>Save</Button>
+					        <Button bsStyle="primary" onClick={props.saveCompleteLocationWizard}>Save</Button>
 				</div>
 				
 			</div>

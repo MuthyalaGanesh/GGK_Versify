@@ -4,9 +4,9 @@ import {Panel, Table, Popover, Button, Modal} from 'react-bootstrap/lib'
 import 'styles/unitCharacteristicsStyles.scss'
 import 'styles/widgetStyle.scss'
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
-import DatePickerField from './DatePickerField'
-import InputField from './InputField'
-import TextAreaField from './TextAreaField'
+import DatePickerField from '../../../../../components/DatePicker/DatePickerField'
+import InputField from '../../../../../components/InputField/InputField'
+import TextAreaField from '../../../../../components/TextAreaField/TextAreaField'
 
 export const UnitCharacteristics = (props) => {
     const unitCharacteristicsData = props.unitCharacteristics;
@@ -21,40 +21,42 @@ export const UnitCharacteristics = (props) => {
                     </div>
                 }
                 >
-                <Table id="results" striped bordered condensed hover responsive>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Display name</th>
-                            <th>Description</th>
-                            <th>Value</th>
-                            <th>UCM</th>
-                            <th>Effective Start Date</th>
-                            <th>Effective End Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
 
-                    <tbody>
-                        {
-                            unitCharacteristicsData.selectedunitCharacteristics.map((uc, index) =>
-                                (<tr key={uc.Name}>
-                                    <td className="text-align-col">{uc.Name}</td>
-                                    <td className="text-align-col">{uc.DisplayName}</td>
-                                    <td>{uc.Description}</td>
-                                    <td>{uc.Value}</td>
-                                    <td className="text-align-col">{uc.UCM}</td>
-                                    <td>{uc.EffectiveStartDate}</td>
-                                    <td>{uc.EffectiveEndDate}</td>
-                                    <td className="text-align-col">
-                                        <i className="fa fa-edit fa-2x" onClick={() => { props.makeEditable(index) } }></i>
-                                        <i className="fa fa-trash-o fa-2x" onClick={() => { props.deleteConfirmation(index) } }></i>
-                                    </td>
-                                </tr>))
-                        }
-                    </tbody>
-                </Table>
+                <div className={unitCharacteristicsData.selectedunitCharacteristics && unitCharacteristicsData.selectedunitCharacteristics.length > 0 ? "show" : "hide"}>
+                    <Table id="results" striped bordered condensed hover responsive>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Display name</th>
+                                <th>Description</th>
+                                <th>Value</th>
+                                <th>UCM</th>
+                                <th>Effective Start Date</th>
+                                <th>Effective End Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
 
+                        <tbody>
+                            {
+                                unitCharacteristicsData.selectedunitCharacteristics.map((uc, index) =>
+                                    (<tr key={uc.Name}>
+                                        <td className="text-align-col">{uc.Name}</td>
+                                        <td className="text-align-col">{uc.DisplayName}</td>
+                                        <td>{uc.Description}</td>
+                                        <td>{uc.Value}</td>
+                                        <td className="text-align-col">{uc.UCM}</td>
+                                        <td>{uc.EffectiveStartDate}</td>
+                                        <td>{uc.EffectiveEndDate}</td>
+                                        <td className="text-align-col">
+                                            <i className="fa fa-edit fa-2x" onClick={() => { props.makeEditable(index) } }></i>
+                                            <i className="fa fa-trash-o fa-2x" onClick={() => { props.deleteConfirmation(index) } }></i>
+                                        </td>
+                                    </tr>))
+                            }
+                        </tbody>
+                    </Table>
+                </div>
             </Panel>
 
             <Modal show={props.unitCharacteristics.showEditModal}>
@@ -131,7 +133,7 @@ export const UnitCharacteristics = (props) => {
                                 </div>
                                 <div className="col-xs-6">
                                     <Field component={DatePickerField} name="effectiveStartDate"
-                                             defaultValue={props.unitCharacteristics.editableUnitCharacter.EffectiveStartDate}></Field>
+                                        defaultValue={props.unitCharacteristics.editableUnitCharacter.EffectiveStartDate}></Field>
                                 </div>
                             </div>
 
@@ -141,7 +143,7 @@ export const UnitCharacteristics = (props) => {
                                 </div>
                                 <div className="col-xs-6">
                                     <Field component={DatePickerField} name="effectiveEndDate"
-                                             defaultValue={props.unitCharacteristics.editableUnitCharacter.EffectiveEndDate}></Field>
+                                        defaultValue={props.unitCharacteristics.editableUnitCharacter.EffectiveEndDate}></Field>
                                 </div>
                             </div>
                         </div>
