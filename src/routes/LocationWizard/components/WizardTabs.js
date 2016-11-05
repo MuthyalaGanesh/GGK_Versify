@@ -63,13 +63,13 @@ return (
             </Link>
         </li>
         <li>
-            <a href="#doner" data-toggle="tab" title="Equipment">
+            <Link to="/location/equipments" data-toggle="tab" title="Equipment">
                 <span className="round-tabs seven">
                     <i className="glyphicon glyphicon-indent-right"></i>
                 </span>
                 <span className="tab-title"><small>&nbsp;&nbsp;&nbsp;Equipment</small></span>
 
-            </a>
+            </Link>
         </li>
         <li>
             <a href="#settings" data-toggle="tab" title="Gateways">

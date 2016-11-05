@@ -1,6 +1,6 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
-import {Panel, Table, Popover, Button, Modal} from 'react-bootstrap/lib'
+import {Panel, Table, Popover, Button, Modal, OverlayTrigger, Tooltip} from 'react-bootstrap/lib'
 import 'styles/unitCharacteristicsStyles.scss'
 import 'styles/widgetStyle.scss'
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
@@ -17,7 +17,13 @@ export const UnitCharacteristics = (props) => {
                 {
                     <div>
                         <label>Unit Characteristics</label>
-                        <span className="fa fa-plus-circle fa-2x" onClick={props.togglingAddModal}></span>
+                        <OverlayTrigger placement="top" overlay={
+                            <Tooltip id="tooltip">
+                                <strong>Add Unit Charateristic</strong>
+                            </Tooltip>}>
+                            <span className="fa fa-plus-circle fa-2x" onClick={props.togglingAddModal}>
+                            </span>
+                        </OverlayTrigger>
                     </div>
                 }
                 >
@@ -49,8 +55,18 @@ export const UnitCharacteristics = (props) => {
                                         <td>{uc.EffectiveStartDate}</td>
                                         <td>{uc.EffectiveEndDate}</td>
                                         <td className="text-align-col">
-                                            <i className="fa fa-edit fa-2x" onClick={() => { props.makeEditable(index) } }></i>
-                                            <i className="fa fa-trash-o fa-2x" onClick={() => { props.deleteConfirmation(index) } }></i>
+                                            <OverlayTrigger placement="left" overlay={
+                                                <Tooltip id="tooltip">
+                                                    <strong>Edit {uc.Name}</strong>
+                                                </Tooltip>}>
+                                                <i className="fa fa-edit fa-2x" onClick={() => { props.makeEditable(index) } }></i>
+                                            </OverlayTrigger>
+                                            <OverlayTrigger placement="top" overlay={
+                                                <Tooltip id="tooltip">
+                                                    <strong>Delete {uc.Name}</strong>
+                                                </Tooltip>}>
+                                                <i className="fa fa-trash-o fa-2x" onClick={() => { props.deleteConfirmation(index) } }></i>
+                                            </OverlayTrigger>
                                         </td>
                                     </tr>))
                             }

@@ -93,7 +93,7 @@ export const ACTION_HANDLERS = {
         return Object.assign({}, state, {
             selectedSystemIntegrationTypes: newSystemIntegrations
         });
-    },
+    }
 }
 
 const initialState = {

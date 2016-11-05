@@ -13,6 +13,7 @@ import UnitCharacteristicsRoute from './UnitCharacteristics'
 import SystemIntegrationRoute from './SystemIntegration'
 import WorkFlowRoute from './WorkFlow'
 import UsersRoute from './Users'
+import EquipmentsRoute from './Equipments'
 
 export default (store) => ({
   path: 'location',
@@ -23,7 +24,8 @@ export default (store) => ({
     UnitCharacteristicsRoute(store),
     SystemIntegrationRoute(store),
     WorkFlowRoute(store),
-    UsersRoute(store)
+    UsersRoute(store),
+    EquipmentsRoute(store)
   ],
   getComponent(nextState, cb) {
     require.ensure([], (require) => {

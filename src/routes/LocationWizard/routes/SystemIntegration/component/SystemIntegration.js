@@ -1,10 +1,10 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
-import {Panel, Table, Popover, Button, Modal} from 'react-bootstrap/lib'
+import {Panel, Table, Button, Modal} from 'react-bootstrap/lib'
 import 'styles/systemIntegrationStyles.scss'
-import Typeahead from 'react-bootstrap-typeahead'
 import systemIntegrationValidation from '../validation/systemIntegrationValidation'
 import TypeaheadField from '../../../../../components/Typeahead/TypeaheadField'
+
 export const SystemIntegration = (props) => {
     const systemIntegrationData = props.systemIntegration.systemIntegrationTypes;
 
