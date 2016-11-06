@@ -13,7 +13,7 @@ function changeObjectTypeOfLocations(allLocations){
          key: item.Id,
          value: item.Id,
          label: item.Name,
-         children: changeKeyofLocations(item.Children)
+         children: changeObjectTypeOfLocations(item.Children)
         });
     });
     return changedLocationsObject;
