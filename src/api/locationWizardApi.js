@@ -28,11 +28,13 @@ export function getLocationTypes() {
 export function getPrimaryMarkets() {
     var data = jsonObject;
     //return data.ISOMarkets;
+    
     return XMLHttpRequestSyncGet(Constants.ISO_MARKETS);
     
 }
 export function getLocations() {
     var data = allLocations;
+    console.log("Location data method is fired: ");
     //return data.GetAllLocationsResult;    
     return XMLHttpRequestSyncGet(Constants.LOCATIONS).GetAllLocationsResult;
     

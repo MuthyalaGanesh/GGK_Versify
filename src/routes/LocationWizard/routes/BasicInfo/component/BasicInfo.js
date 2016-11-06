@@ -13,6 +13,7 @@ function changeObjectTypeOfLocations(allLocations){
          key: item.Id,
          value: item.Id,
          label: item.Name,
+         disabled: !item.IsOutageLevel || false,
          children: changeObjectTypeOfLocations(item.Children)
         });
     });
