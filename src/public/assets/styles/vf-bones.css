@@ -460,7 +460,7 @@ border-bottom: 1px solid #dfe6eb; }
  }
 .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"], .radio input[type="radio"], .radio-inline input[type="radio"] { margin-top: 2px ; }
 .btn {padding:3px 12px 4px; line-height: normal; }
-.form-control { border-radius:2px; border-color: #d3d3d3; font-size:100%; outline:none; transition: border-color 0.4s ease 0s; height:26px; padding:3px 9px; }
+.form-control { border-radius:6px; border-color: #d3d3d3; font-size:100%; outline:none; transition: border-color 0.4s ease 0s; height:26px; padding:3px 9px; }
 .form-control:focus { border-color: #2c5c83 !important; box-shadow:none; transition: border-color 0.4s ease 0s; }
 .form-control::-moz-placeholder {
  color: #cdcdcd;

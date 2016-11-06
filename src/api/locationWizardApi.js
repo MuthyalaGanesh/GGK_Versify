@@ -27,53 +27,41 @@ export function getLocationTypes() {
 
 export function getPrimaryMarkets() {
     var data = jsonObject;
-    return data.ISOMarkets;
+    //return data.ISOMarkets;
+    return XMLHttpRequestSyncGet(Constants.ISO_MARKETS);
+    
 }
 export function getLocations() {
     var data = allLocations;
-    return data.GetAllLocationsResult;
-}
-
-export function getParentLocations() {
-    var data = allLocations.GetAllLocationsResult;
-    return [{
-        id: "UPL",
-        displayName: "Uppal"
-    }, {
-        id: "WR",
-        displayName: "Waverock"
-    }, {
-        id: "JH",
-        displayName: "Jubilee hills"
-    }, {
-        id: "AUS",
-        displayName: "Australia"
-    }, {
-        id: "USA",
-        displayName: "USA"
-    }]
-
+    //return data.GetAllLocationsResult;    
+    return XMLHttpRequestSyncGet(Constants.LOCATIONS).GetAllLocationsResult;
+    
 }
 
 export function getOwners() {
     var data = jsonObject;
-    return data.Organisations;
+    //return data.Organisations;
+    return XMLHttpRequestSyncGet(Constants.ORGANIZATIONS);   
 }
 
 export function getTechnologyTypes() {
     var data = jsonObject;
-    return data.TechnologyTypes;
+    //return data.TechnologyTypes;
+    return XMLHttpRequestSyncGet(Constants.TECHNOLOGYTYPES);    
 }
 
 export function getFuelClasses() {
     var data = jsonObject;
-    return data.FuelClasses;
+    //return data.FuelClasses;
+    return XMLHttpRequestSyncGet(Constants.FUEL_CLASSES);    
+    
 }
 
 export function getTimezones() {
-    var data = jsonObject;
+    //var data = jsonObject.Timezones;
+    var data = XMLHttpRequestSyncGet(Constants.TIME_ZONES);    
     var arrTimezones = [];
-    data.TimeZones.GetTimeZonesResult.forEach(function(item, index) {
+    data.GetTimeZonesResult.forEach(function(item, index) {
         arrTimezones.push({
             id: item,
             value: item
@@ -181,7 +169,6 @@ export const basicInfoDropdowns = function() {
         getLocationTypes: getLocationTypes,
         getPrimaryMarkets: getPrimaryMarkets,
         getLocations: getLocations,
-        getParentLocations: getParentLocations,
         getOwners: getOwners,
         getTechnologyTypes: getTechnologyTypes,
         getFuelClasses: getFuelClasses,

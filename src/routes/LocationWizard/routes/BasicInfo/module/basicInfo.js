@@ -1,36 +1,30 @@
 import {
   basicInfoDropdowns
 } from 'api/locationWizardApi'
+import {React, dispatch} from 'react'
 
-export const BIND_LOCATION_TYPES = 'BIND_LOCATION_TYPES'
-export function bindBasicInfoDropdownValues() {
-  return {
-    type: BIND_LOCATION_TYPES,
-    payload: {
-      locationTypes: basicInfoDropdowns().getLocationTypes()
-    }
-  };
-
-};
-
-export function bindLocationTypes() {
+export const ON_PARENT_LOCATION_SELECT = 'ON_PARENT_LOCATION_SELECT'
+export function onParentLoCationSelect(locationId) {
+   console.log("onParentLoCationSelect",locationId)
   return (dispatch, getState) => {
-    console.log("state-", getState().form)
     return new Promise((resolve) => {
-      basicInfoDropdowns().getLocationTypes().then((response) => {        
-           console.log("Location Types: ", response.data);
-       })
-    })
-  }
+      dispatch({
+         type: ON_PARENT_LOCATION_SELECT, 
+         payload: {
+           basicInfo:getState().form.BasicInfoForm,
+           locationId:locationId
+           }
+          });
+    });
+  }  
 };
-
-
 
 export const ACTION_HANDLERS = {
-  [BIND_LOCATION_TYPES]: (state, action) => {
-    return Object.assign({}, state, {
-      locationTypes: action.payload
-    })
+  [ON_PARENT_LOCATION_SELECT]:(state, action) => {
+   console.log("ON_PARENT_LOAD_DATA")
+   return Object.assign({}, state, {
+      parentLocation: action.payload
+    });
   },
   ['ERROR']: (state, action) => {
     return Object.assign({}, state, {
@@ -43,7 +37,6 @@ const initialState = {
   locationTypes: basicInfoDropdowns().getLocationTypes(),
   primaryMarkets: basicInfoDropdowns().getPrimaryMarkets(),
   locations: basicInfoDropdowns().getLocations(),
-  parentLocations: basicInfoDropdowns().getParentLocations(),
   owners: basicInfoDropdowns().getOwners(),
   technologyTypes: basicInfoDropdowns().getTechnologyTypes(),
   fuelClasses: basicInfoDropdowns().getFuelClasses(),

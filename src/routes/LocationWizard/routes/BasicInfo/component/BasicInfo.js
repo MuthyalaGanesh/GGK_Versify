@@ -1,22 +1,38 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
 import validate from '../validations/basicInfoValidation'
-import {Panel, ControlLabel, Checkbox,Button} from 'react-bootstrap/lib'
+import {Panel, ControlLabel, Checkbox, Button,FormGroup } from 'react-bootstrap/lib'
 import 'styles/basicInfoStyles.scss'
+import ParentLocationField from '../../../../../components/ParentLocationField/ParentLocationField'
+
+
+function changeObjectTypeOfLocations(allLocations){
+    var changedLocationsObject =[];
+    allLocations.forEach(function(item) {        
+     changedLocationsObject.push({
+         key: item.Id,
+         value: item.Id,
+         label: item.Name,
+         children: changeKeyofLocations(item.Children)
+        });
+    });
+    return changedLocationsObject;
+}
 
 export const BasicInfo = (props) => {
     const {
         locationTypes,
         primaryMarkets,
         locations,
-        parentLocations,
         owners,
         technologyTypes,
         fuelClasses,
         timezones,
         error
     } = props.basic
-    const {formdata} = props
+    
+const {formdata} = props;
+const parentLocations = changeObjectTypeOfLocations(locations);
 return (
 <div className="row tab-pane fade in active" id="home">
     <div className="col-xs-12">
@@ -25,19 +41,6 @@ return (
                 <h3 className="box-title">Basic Information</h3>
                 <div className="box-tools pull-right">
                     &nbsp; 
-
-
-
-
-
-                { /* dont use &nbsp*/}
-                
-
-
-
-
-
-
                 </div>
             </div>
             <div className="box-body">
@@ -45,7 +48,7 @@ return (
                     <div className="row">
                         
                             <div className="col-sm-12">
-                                <div className="row">
+                                <div className="row">                                 
                                     <div className="col-sm-12 col-md-6 form-group">
                                         <div className="col-sm-5 col-md-5">
                                             <label className="control-label" > Name </label>
@@ -54,31 +57,27 @@ return (
                                             <Field name="locationName" component="input" className="form-control" type="text" placeholder="Location Name" />
                                         </div>
                                     </div>
-                                    <div className="col-sm-12 col-md-6 form-group">
-                                        <Checkbox name="allowOutages">
-                                            Allow Outages at Location
-                                        </Checkbox>
-                                    </div>
+                                    <FormGroup  className="col-sm-12 col-md-6">
+                                            <Field name="allowOutages" 
+                                            component='input' type="checkbox"
+                                         text='Allow Outages at Location'/>
+                                            <label className="control-label" > &nbsp;&nbsp;Allow Outages at Location </label>
+                                         
+                                    </FormGroup>
+                                    <div className="col-sm-5 col-md-5">
+                                        </div>
                                     <div className="col-sm-12 col-md-12 form-group">
                                         <div className="col-sm-5 col-md-5 parentLocation">
                                             <label className="control-label" id="parentLocation"> Parent Location </label>
                                         </div>
                                         <div className="col-sm-7 col-md-7">
-                                          {error && !formdata.BasicInfoForm.values.hasOwnProperty('parentLocation')
-                                            ? <Field name="parentLocation" component="select" className="form-control error">
-                                                <option value="">Select a parent location</option>
-                                                {
-                                                parentLocations.map(parentLoc =>
-                                                <option value={parentLoc.id} key={parentLoc.id}>{parentLoc.displayName}</option>)
-                                                }
-                                            </Field> 
-                                         :   <Field name="parentLocation" component="select" className="form-control">
-                                                <option value="">Select a parent location</option>
-                                                {
-                                                parentLocations.map(parentLoc =>
-                                                <option value={parentLoc.id} key={parentLoc.id}>{parentLoc.displayName}</option>)
-                                                }
-                                            </Field>}  
+                                            <Field 
+                                            name="parentLocation" 
+                                            component={ParentLocationField} 
+                                            onParentLoCationSelect ={props.onParentLoCationSelect}
+                                            parentLocations={parentLocations}
+                                            className="form-control">                                                
+                                            </Field>
                                         </div>
                                     </div>
                                     <div className="col-sm-12 col-md-6 form-group">

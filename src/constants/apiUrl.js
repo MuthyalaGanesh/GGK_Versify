@@ -1,6 +1,7 @@
 const baseAddress = "https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc";
 
 export const ApiUrl = {
+    LOCATIONS:baseAddress +"/Locations",
 ATTRIBUTES : baseAddress +"/Attributes",
 UNITS_OF_MEASURE : baseAddress+"/UnitsOfMeasure",
 LOCATION_TYPES : baseAddress+"/LocationTypes",

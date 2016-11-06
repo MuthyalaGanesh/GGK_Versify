@@ -10,12 +10,12 @@ import {
 	test
 } from '../module/basicInfo'
 import {
-	bindLocationTypes
+	onParentLoCationSelect
 } from '../module/basicInfo';
 
 
 const mapDispatchToProps = (dispatch) => ({
-	
+	onParentLoCationSelect : onParentLoCationSelect
 })
 
 const mapStateToProps = (state) => ({
