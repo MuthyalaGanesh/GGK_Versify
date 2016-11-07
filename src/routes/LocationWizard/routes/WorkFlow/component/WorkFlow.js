@@ -7,7 +7,7 @@ import 'styles/widgetStyle.scss'
 const renderMultiselect = ({ input, ...rest }) =>
   <Multiselect {...input}
     onBlur={() => input.onBlur()}
-    value={input.value || rest.defaultvalue} // requires value to be an array
+    value={input.value || rest.defaultValue} // requires value to be an array
     {...rest}/>
 
 export const WorkFlow = (props) => { 
@@ -34,7 +34,7 @@ export const WorkFlow = (props) => {
                                                 <div className="col-sm-7 col-md-7 col-lg-7 MultipleSelect">
                                                     <Field
                                                         component={renderMultiselect}
-                                                        defaultvalue={[]}
+                                                        defaultValue={[]}
                                                         name = 'workFlowItem'
                                                         data={workFlowItems}                                                                                                              
                                                         textField='name'                                             

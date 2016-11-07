@@ -72,22 +72,22 @@ return (
             </Link>
         </li>
         <li>
-            <a href="#settings" data-toggle="tab" title="Gateways">
+            <Link to="/location/gateways" data-toggle="tab" title="Gateways">
                 <span className="round-tabs two">
                     <i className="glyphicon glyphicon-pencil"></i>
                 </span>
                 <span className="tab-title"><small>&nbsp;&nbsp;&nbsp;Gateways</small></span>
 
-            </a>
+            </Link>
         </li>
         <li>
-            <a href="#settings" data-toggle="tab" title="Data Historian">
+            <Link to="/location/dataHistorian" data-toggle="tab" title="Data Historian">
                 <span className="round-tabs three">
                     <i className="glyphicon glyphicon-pencil"></i>
                 </span>
                 <span className="tab-title"><small>Data Historian</small></span>
 
-            </a>
+            </Link>
         </li>
     </ul>
 </div>

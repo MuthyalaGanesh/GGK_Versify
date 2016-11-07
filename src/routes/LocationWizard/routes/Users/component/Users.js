@@ -7,7 +7,7 @@ import 'styles/widgetStyle.scss'
 const renderMultiselect = ({ input, ...rest }) =>
   <Multiselect {...input}
     onBlur={() => input.onBlur()}
-    value={input.value || rest.defaultvalue} // requires value to be an array
+    value={input.value || rest.defaultValue} // requires value to be an array
     {...rest}/>
 
 export const Users = (props) => {    
@@ -19,7 +19,7 @@ export const Users = (props) => {
                     <div className="box">
                         <div className="box-header">
                             <h3 className="box-title">Users</h3>
-                            <div className="box-tools pull-right">                           
+                            <div className="box-tools pull-right">
                             </div>
                         </div>
                         <div className="box-body"> 
@@ -30,10 +30,10 @@ export const Users = (props) => {
                                 <div className="panel-body">
                                 <div className="col-sm-6 col-md-6 form-group">
                                         <div className="col-sm-5 col-md-5 parentLocation">
-                                            <label className="control-label" for="RoleByRoles">Roles </label>
+                                            <label className="control-label" >Roles </label>
                                         </div>
                                         <div className="col-sm-7 col-md-7">
-                                            <Field component="select" className="form-control"  name = 'RoleByRoles' multi="true">
+                                            <Field component="select" className="form-control"  name = 'RoleByRoles'>
                                                 <option value="">Select a Role</option>
                                                 {
                                                 Roles.map(role =>
@@ -44,17 +44,18 @@ export const Users = (props) => {
                                     </div>
                                     <div className="col-sm-6 col-md-6 form-group">
                                         <div className="col-sm-5 col-md-5">
-                                            <label className="control-label" for="contactsByRoles"> Contacts </label>
+                                            <label className="control-label" > Contacts </label>
                                         </div>
                                         <div className="col-sm-7 col-md-7 MultipleSelect">
                                             <Field
                                                         name = 'contactsByRoles'
                                                         component={renderMultiselect}
-                                                        defaultvalue={[]}
+                                                        defaultValue={[]}
                                                         data ={Contacts}                                                        
                                                         textField='Name'                                             
                                                         valueField='Id'
-                                                        placeholder="Select contacts"/>
+                                                        placeholder="Select contacts"
+                                                        />
                                         </div>
                                     </div>
                                 </div>
@@ -66,27 +67,27 @@ export const Users = (props) => {
                                 <div className="panel-body">
                                 <div className="col-sm-6 col-md-6 form-group">
                                         <div className="col-sm-5 col-md-5 parentLocation">
-                                            <label className="control-label" for="ContactsByContact">Contacts </label>
+                                            <label className="control-label" >Contacts </label>
                                         </div>
                                         <div className="col-sm-7 col-md-7">
                                             <Field component="select" className="form-control" name = 'ContactsByContact'>
                                                 <option value="">Select a contact</option>
                                                 {
                                                 Contacts.map(contact =>
-                                                <option value={contact.id} key={contact.id}>{contact.Name}</option>)
+                                                <option value={contact.Id} key={contact.Id}>{contact.Name}</option>)
                                                 }
                                             </Field>
                                         </div>
                                     </div>
                                     <div className="col-sm-6 col-md-6 form-group">
                                         <div className="col-sm-5 col-md-5">
-                                            <label className="control-label" for="RoleByContact">Roles </label>
+                                            <label className="control-label">Roles </label>
                                         </div>
                                         <div className="col-sm-7 col-md-7 MultipleSelect">
                                             <Field
                                                         name = 'RoleByContact'
                                                         component={renderMultiselect}
-                                                        defaultvalue={[]}
+                                                        defaultValue={[]}
                                                         data={Roles}                                                       
                                                         textField='Name'                                             
                                                         valueField='Id'

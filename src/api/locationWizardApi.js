@@ -8,7 +8,7 @@ var jsonObject = require('./testData.json');
 var allLocations = require('./allLocationsTestData.json');
 var workFlows = require('./workFlowData.json');
 var userInfo = require('./userData.json');
-
+var gatewayInfo = require('./gatewayData.json');
 
 export function getLocationTypes() {
     var data = jsonObject;
@@ -170,5 +170,11 @@ export function getWorkFlows() {
 
 export function getUserInfo() {
     var data = userInfo;
+    return data;
+}
+
+export function getGatewayInfo()
+{
+    var data = gatewayInfo;
     return data;
 }

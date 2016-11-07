@@ -91,7 +91,7 @@ export const UnitCharacteristics = (props) => {
                                 <div className="col-xs-6">
                                     <Field component={InputField} type="text" readOnly={true}
                                         className="form-control" name="charateristicName"
-                                        defaultValue={props.unitCharacteristics.editableUnitCharacter.Name}>
+                                        defaultvalue={props.unitCharacteristics.editableUnitCharacter.Name}>
                                     </Field>
                                 </div>
                             </div>
@@ -103,7 +103,7 @@ export const UnitCharacteristics = (props) => {
                                 <div className="col-xs-6">
                                     <Field component={InputField} type="text" readOnly={true}
                                         className="form-control" name="displayNameLabel"
-                                        defaultValue={props.unitCharacteristics.editableUnitCharacter.DisplayName}>
+                                        defaultvalue={props.unitCharacteristics.editableUnitCharacter.DisplayName}>
                                     </Field>
                                 </div>
                             </div>
@@ -138,7 +138,7 @@ export const UnitCharacteristics = (props) => {
                                 <div className="col-xs-6">
                                     <Field component={InputField} type="text" readOnly={true}
                                         className="form-control" name="UCMLabel"
-                                        defaultValue={props.unitCharacteristics.editableUnitCharacter.UCM}>
+                                        defaultvalue={props.unitCharacteristics.editableUnitCharacter.UCM}>
                                     </Field>
                                 </div>
                             </div>

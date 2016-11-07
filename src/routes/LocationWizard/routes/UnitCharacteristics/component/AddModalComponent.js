@@ -40,7 +40,7 @@ export const AddModal = (props) => {
                                 <div className="col-xs-6">
                                     <Field component={InputField} type="text" readOnly={true}
                                         className="form-control" name="displayNameLabel"
-                                        defaultValue={props.unitCharacteristicsData.displayNameLabel}>
+                                        defaultvalue={props.unitCharacteristicsData.displayNameLabel}>
                                     </Field>
                                 </div>
                             </div>
@@ -72,7 +72,7 @@ export const AddModal = (props) => {
                                 <div className="col-xs-6">
                                     <Field component={InputField} type="text" readOnly={true}
                                         className="form-control" name="UCMLabel"
-                                        defaultValue={props.unitCharacteristicsData.UCMLabel}>
+                                        defaultvalue={props.unitCharacteristicsData.UCMLabel}>
                                     </Field>
                                 </div>
                             </div>

@@ -1,3 +1,37 @@
 .error{
 color: red;
 }
+span.fa.fa-plus-circle.fa-2x {
+    color: #64b448;
+    cursor: pointer;
+    float: right;
+}
+i.fa.fa-edit.fa-2x {
+    color: #6495ed;
+    margin: 5px;
+    cursor: pointer;
+}
+i.fa.fa-trash-o.fa-2x {
+    color: red;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.btn.btn-success,.btn.btn-success:hover {
+    background-color: rgb(0, 166, 90) !important;
+}
+
+.btn.btn-danger, .btn.btn-success {
+    float: left;
+    background-image: none;
+}
+
+.btn.btn-warning,.btn.btn-warning:hover  {
+    float: right;
+    background-image: none;
+    background-color: rgb(243, 156, 18) !important;
+}
+
+.btn-default:hover, .btn-default:active {
+    opacity: 0.8;
+}

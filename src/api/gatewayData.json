@@ -1,0 +1,46 @@
+{
+      "Gateways":[
+         {
+            "Id":1,
+            "Name":"Admin Roles",
+            "URL":"www.ggktech.com",
+            "Login":"Admin Roles",
+            "Password": "AdminRoles123"
+         },
+         {
+            "Id":14,
+            "Name":"Charles Temp",
+            "URL":"www.ggktech.com",
+            "Login":"Charles Temp",
+            "Password": "CharlesTemp123"
+         },
+         {
+            "Id":8,
+            "Name":"Gen Outage Coordinator",
+            "URL":"www.ggktech.com",
+            "Login":"Coordinator",
+            "Password": "Coordinator123"
+         },
+         {
+            "Id":2,
+            "Name":"Admin",
+            "URL":"www.ggktech.com",
+            "Login":"Admin",
+            "Password": "Admin123"
+         },
+         {
+            "Id":5,
+            "Name":"Charles",
+            "URL":"www.ggktech.com",
+            "Login":"Charles",
+            "Password": "Charles123"
+         },
+         {
+            "Id":12,
+            "Name":"Gen Outage",
+            "URL":"www.ggktech.com",
+            "Login":"Gen Outage",
+            "Password": "GenOutage123"
+         }
+      ]
+}

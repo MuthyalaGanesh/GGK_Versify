@@ -14,18 +14,22 @@ import SystemIntegrationRoute from './SystemIntegration'
 import WorkFlowRoute from './WorkFlow'
 import UsersRoute from './Users'
 import EquipmentsRoute from './Equipments'
+import GatewayRoute from './Gateway'
+import DataHistorianRoute from './DataHistorian'
 
 export default (store) => ({
   path: 'location',
   indexRoute: BasicInfoRoute(store),
   childRoutes: [
-    BasicInfoRoute(store),
+    BasicInfoRoute(store),    
+    GatewayRoute(store),
     CredentialsManagementRoute(store),
     UnitCharacteristicsRoute(store),
     SystemIntegrationRoute(store),
     WorkFlowRoute(store),
     UsersRoute(store),
-    EquipmentsRoute(store)
+    EquipmentsRoute(store),
+    DataHistorianRoute(store)
   ],
   getComponent(nextState, cb) {
     require.ensure([], (require) => {
