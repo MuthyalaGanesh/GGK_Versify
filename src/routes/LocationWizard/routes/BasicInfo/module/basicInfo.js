@@ -34,13 +34,13 @@ export const ACTION_HANDLERS = {
 }
 const initialState = {
   error: null,
-  locationTypes: basicInfoDropdowns().getLocationTypes(),
-  primaryMarkets: basicInfoDropdowns().getPrimaryMarkets(),
-  locations: basicInfoDropdowns().getLocations(),
-  owners: basicInfoDropdowns().getOwners(),
-  technologyTypes: basicInfoDropdowns().getTechnologyTypes(),
-  fuelClasses: basicInfoDropdowns().getFuelClasses(),
-  timezones: basicInfoDropdowns().getTimezones(),
+  locationTypes: basicInfoDropdowns.getLocationTypes,
+  primaryMarkets: basicInfoDropdowns.getPrimaryMarkets,
+  locations: basicInfoDropdowns.getLocations,
+  owners: basicInfoDropdowns.getOwners,
+  technologyTypes: basicInfoDropdowns.getTechnologyTypes,
+  fuelClasses: basicInfoDropdowns.getFuelClasses,
+  timezones: basicInfoDropdowns.getTimezones,
   initial:true
 };
 

@@ -149,16 +149,14 @@ export function getSystemIntegrationTypes() {
     return systemIntegrationTypes;
 }
 
-export const basicInfoDropdowns = function() {
-    return {
-        getLocationTypes: getLocationTypes,
-        getPrimaryMarkets: getPrimaryMarkets,
-        getLocations: getLocations,
-        getOwners: getOwners,
-        getTechnologyTypes: getTechnologyTypes,
-        getFuelClasses: getFuelClasses,
-        getTimezones: getTimezones
-    }
+export const basicInfoDropdowns = {
+        getLocationTypes: getLocationTypes(),
+        getPrimaryMarkets: getPrimaryMarkets(),
+        getLocations: getLocations(),
+        getOwners: getOwners(),
+        getTechnologyTypes: getTechnologyTypes(),
+        getFuelClasses: getFuelClasses(),
+        getTimezones: getTimezones()
 }
 export default basicInfoDropdowns;
 

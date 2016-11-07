@@ -54,7 +54,7 @@ export const ACTION_HANDLERS = {
 }
 const initialState = {
   error: null,
-  allLocations: basicInfoDropdowns().getLocations()
+  allLocations: basicInfoDropdowns.getLocations
 };
 
 export default function locationWizardReducer(state = initialState, action) {
