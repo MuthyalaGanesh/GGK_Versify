@@ -59,7 +59,7 @@ return (
                                         </div>
                                     </div>
                                     <FormGroup  className="col-sm-12 col-md-6">
-                                            <Field name="allowOutages" 
+                                            <Field name="isOutageLevel" 
                                             component='input' type="checkbox"
                                          text='Allow Outages at Location'/>
                                             <label className="control-label" > &nbsp;&nbsp;Allow Outages at Location </label>
@@ -69,11 +69,12 @@ return (
                                         </div>
                                     <div className="col-sm-12 col-md-12 form-group">
                                         <div className="col-sm-5 col-md-5 parentLocation">
-                                            <label className="control-label" id="parentLocation"> Parent Location </label>
+                                            <label className="control-label" id="parentLocation"> Parent Location</label>
                                         </div>
                                         <div className="col-sm-7 col-md-7">
                                             <Field 
                                             name="parentLocation" 
+                                            parentLocation = {props.basic.parentLocation}
                                             component={ParentLocationField} 
                                             onParentLoCationSelect ={props.onParentLoCationSelect}
                                             parentLocations={parentLocations}

@@ -23,7 +23,7 @@ export const ACTION_HANDLERS = {
   [ON_PARENT_LOCATION_SELECT]:(state, action) => {
    console.log("ON_PARENT_LOAD_DATA")
    return Object.assign({}, state, {
-      parentLocation: action.payload
+      parentLocation: action.payload.locationId
     });
   },
   ['ERROR']: (state, action) => {

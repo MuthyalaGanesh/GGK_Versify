@@ -1,8 +1,9 @@
 import React from 'react'
 import TreeSelect, { TreeNode, SHOW_PARENT } from 'rc-tree-select';
 import 'rc-tree-select/assets/index.css';
-
+ 
 export const ParentLocationField = (props) => (
+ 
     <TreeSelect
           style={{'width':'100%'}}
           transitionName="rc-tree-select-dropdown-slide-up"
@@ -10,8 +11,10 @@ export const ParentLocationField = (props) => (
           dropdownStyle={{ maxHeight: 200, overflow: 'auto' }}
           placeholder={<i>Select Parent Location</i>}
           value={props.parentLocation}
+          showSearch allowClear treeLine
+          inputValue= {null}
           treeData={props.parentLocations}
-          treeNodeFilterProp="Id"
+          treeNodeFilterProp="Name"
           open={props.tsOpen || false}
           onChange={(value) => {
             console.log('onChange', arguments);

@@ -14,9 +14,9 @@ import {
 } from '../module/basicInfo';
 
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = {
 	onParentLoCationSelect : onParentLoCationSelect
-})
+}
 
 const mapStateToProps = (state) => ({
 	location: state.location,
@@ -27,5 +27,6 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
 	form: 'BasicInfoForm', //Form name is first form
 	destroyOnUnmount: false,
+	initialValues: { locationName: 'Test Lcoation'},
 	validate
 })(BasicInfo));
