@@ -1,17 +1,14 @@
 i.fa.fa-trash-o.fa-2x{
     color: red;
-    margin: 5px;
     cursor: pointer; 
 }
 i.fa.fa-edit.fa-2x{
     color: cornflowerblue;
-    margin: 5px;
     cursor: pointer; 
 }
 span.fa.fa-plus-circle.fa-2x{
     color:#64b448;
     cursor:pointer;
-    float:right;
 }
 .text-align-col{
     text-align: center;
@@ -19,30 +16,12 @@ span.fa.fa-plus-circle.fa-2x{
 thead>tr>th{
     text-align: center;
 }
-.btn{
-    color:white;
-}
+
 .modal-content{
     border-radius: 6px;
     overflow:visible;
 }
-.btn.btn-danger{
-float: left;
-background-image:none!important;
-background-color: #dd4b39!important;
-}
 
-.btn.btn-success{
-float: left;
-background-image:none!important;
-background-color:#00a65a!important;
-}
-
-.btn.btn-warning{
-float: right;
-background-image:none!important;
-background-color:#f39c12!important;
-}
 .form-group.row .control-label.col-sm-4{
     display: none;
 }

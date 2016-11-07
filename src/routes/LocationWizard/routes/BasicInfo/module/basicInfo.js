@@ -4,16 +4,28 @@ import {
 import {React, dispatch} from 'react'
 
 export const ON_PARENT_LOCATION_SELECT = 'ON_PARENT_LOCATION_SELECT'
+export const BIND_LOCATIONS = 'BIND_LOCATIONS'
+
+export function BindLocations() {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      dispatch({
+         type: BIND_LOCATIONS, 
+         payload: {
+           locationState:getState().location,
+           }
+          });
+    });
+  }  
+};
+
 export function onParentLoCationSelect(locationId) {
    console.log("onParentLoCationSelect",locationId)
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       dispatch({
          type: ON_PARENT_LOCATION_SELECT, 
-         payload: {
-           basicInfo:getState().form.BasicInfoForm,
-           locationId:locationId
-           }
+         payload: locationId
           });
     });
   }  
@@ -21,10 +33,15 @@ export function onParentLoCationSelect(locationId) {
 
 export const ACTION_HANDLERS = {
   [ON_PARENT_LOCATION_SELECT]:(state, action) => {
-   console.log("ON_PARENT_LOAD_DATA")
    return Object.assign({}, state, {
-      parentLocation: action.payload.locationId
+      parentLocation: action.payload
     });
+  },
+  [BIND_LOCATIONS]: (state, action) => {
+    return Object.assign({}, state, {
+     locations:action.payload.locationState.allLocations,
+      parentLocations:changeObjectTypeOfLocations(action.payload.locationState.allLocations)
+    })
   },
   ['ERROR']: (state, action) => {
     return Object.assign({}, state, {
@@ -32,12 +49,28 @@ export const ACTION_HANDLERS = {
     })
   }
 }
+
+function changeObjectTypeOfLocations(allLocations){
+    var changedLocationsObject =[];
+    allLocations.forEach(function(item) {        
+     changedLocationsObject.push({
+         key: item.Id,
+         value: item.Id,
+         label: item.Name,
+         disabled: !item.IsOutageLevel || false,
+         children: changeObjectTypeOfLocations(item.Children)
+        });
+    });
+    return changedLocationsObject;
+}
+const allLocations = basicInfoDropdowns.getLocations;
 const initialState = {
   error: null,
+  locations:allLocations,
+  parentLocations:changeObjectTypeOfLocations(allLocations),
   locationTypes: basicInfoDropdowns.getLocationTypes,
-  primaryMarkets: basicInfoDropdowns.getPrimaryMarkets,
-  locations: basicInfoDropdowns.getLocations,
   owners: basicInfoDropdowns.getOwners,
+  primaryMarkets: basicInfoDropdowns.getPrimaryMarkets,
   technologyTypes: basicInfoDropdowns.getTechnologyTypes,
   fuelClasses: basicInfoDropdowns.getFuelClasses,
   timezones: basicInfoDropdowns.getTimezones,

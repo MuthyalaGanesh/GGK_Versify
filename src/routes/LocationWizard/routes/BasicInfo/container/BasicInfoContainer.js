@@ -1,32 +1,34 @@
 import {
-	reduxForm
+    reduxForm
 } from 'redux-form'
 import {
-	connect
+    connect
 } from 'react-redux'
 import BasicInfo from '../component/BasicInfo'
 import validate from '../validations/basicInfoValidation'
 import {
-	test
+    test
 } from '../module/basicInfo'
 import {
-	onParentLoCationSelect
+    onParentLoCationSelect,BindLocations
 } from '../module/basicInfo';
 
 
 const mapDispatchToProps = {
-	onParentLoCationSelect : onParentLoCationSelect
+    onParentLoCationSelect: onParentLoCationSelect,
+    BindLocations:BindLocations
 }
 
 const mapStateToProps = (state) => ({
-	location: state.location,
-	basic: state.basic,
-	formdata: state.form 
+    location: state.location,
+    basic: state.basic,
+    formdata: state.form
 })
 
+
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-	form: 'BasicInfoForm', //Form name is first form
-	destroyOnUnmount: false,
-	initialValues: { locationName: 'Test Lcoation'},
-	validate
+    form: 'BasicInfoForm', //Form name is first form
+    destroyOnUnmount: false,
+    initialValues: { locationName: 'Test Lcoation' },
+    validate
 })(BasicInfo));

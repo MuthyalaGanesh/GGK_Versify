@@ -96,8 +96,10 @@ export const AddModal = (props) => {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <button className="btn btn-warning" type="button" onClick={props.togglingAddModal}>Cancel</button>
-                        <button className="btn btn-success" type="button" onClick={props.AddUnitCharateristic}>Add</button>
+                        <div class="pull-right">
+                            <button className="btn btn-success" type="button" onClick={props.AddUnitCharateristic}>Add</button>                        
+                            <button className="btn btn-warning" type="button" onClick={props.togglingAddModal}>Cancel</button>
+                        </div>
                     </Modal.Footer>
                 </form>
 

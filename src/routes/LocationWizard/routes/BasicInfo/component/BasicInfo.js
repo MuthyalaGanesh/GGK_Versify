@@ -1,30 +1,16 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
 import validate from '../validations/basicInfoValidation'
-import {Panel, ControlLabel, Checkbox, Button,FormGroup } from 'react-bootstrap/lib'
+import {Panel, ControlLabel, Checkbox, Button,FormGroup, Tooltip,OverlayTrigger } from 'react-bootstrap/lib'
 import 'styles/basicInfoStyles.scss'
 import ParentLocationField from '../../../../../components/ParentLocationField/ParentLocationField'
-
-
-function changeObjectTypeOfLocations(allLocations){
-    var changedLocationsObject =[];
-    allLocations.forEach(function(item) {        
-     changedLocationsObject.push({
-         key: item.Id,
-         value: item.Id,
-         label: item.Name,
-         disabled: !item.IsOutageLevel || false,
-         children: changeObjectTypeOfLocations(item.Children)
-        });
-    });
-    return changedLocationsObject;
-}
 
 export const BasicInfo = (props) => {
     const {
         locationTypes,
         primaryMarkets,
         locations,
+        parentLocations,
         owners,
         technologyTypes,
         fuelClasses,
@@ -33,7 +19,6 @@ export const BasicInfo = (props) => {
     } = props.basic
     
 const {formdata} = props;
-const parentLocations = changeObjectTypeOfLocations(locations);
 return (
 <div className="row tab-pane fade in active" id="home">
     <div className="col-xs-12">
@@ -55,7 +40,21 @@ return (
                                             <label className="control-label" > Name </label>
                                         </div>
                                         <div className="col-sm-7 col-md-7">
-                                            <Field name="locationName" component="input" className="form-control" type="text" placeholder="Location Name" />
+                                        <OverlayTrigger placement="top" overlay={
+                                            error && formdata.BasicInfoForm.values.locationName === ''
+                                                       ? 
+                                                        <Tooltip placement="top" className="in" id="tooltip-top">
+                                                        Please Enter Location Name
+                                                        </Tooltip> 
+                                                       :<p></p>} >
+                                                       <Field name="locationName" 
+                                                   component="input" 
+                                                   className= {error && formdata.BasicInfoForm.values.locationName === ''
+                                                       ? "form-control error"
+                                                       :"form-control"} 
+                                                   type="text" 
+                                                   placeholder="Location Name" />
+                                        </OverlayTrigger>                                                   
                                         </div>
                                     </div>
                                     <FormGroup  className="col-sm-12 col-md-6">
@@ -64,11 +63,10 @@ return (
                                          text='Allow Outages at Location'/>
                                             <label className="control-label" > &nbsp;&nbsp;Allow Outages at Location </label>
                                          
-                                    </FormGroup>
-                                    <div className="col-sm-5 col-md-5">
-                                        </div>
-                                    <div className="col-sm-12 col-md-12 form-group">
-                                        <div className="col-sm-5 col-md-5 parentLocation">
+                                    </FormGroup>     
+                                    <div className='clear'></div>                              
+                                    <div className="col-sm-12 col-md-6 form-group">
+                                        <div className="col-sm-5 col-md-5">
                                             <label className="control-label" id="parentLocation"> Parent Location</label>
                                         </div>
                                         <div className="col-sm-7 col-md-7">
@@ -82,6 +80,7 @@ return (
                                             </Field>
                                         </div>
                                     </div>
+                                    <div className='clear'></div>
                                     <div className="col-sm-12 col-md-6 form-group">
                                         <div className="col-sm-5 col-md-5">
                                             <label className="control-label" id="locationType"> Type </label>

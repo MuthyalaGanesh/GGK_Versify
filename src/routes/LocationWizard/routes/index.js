@@ -37,7 +37,6 @@ export default (store) => ({
       const reducer = require('../modules/locationWizard').default
 
 
-      //store.dispatch(bindLocationTypes());
       /*  Add the reducer to the store on key 'BasicInfo'  */
       injectReducer(store, {
           key: 'location',
