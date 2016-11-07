@@ -57,7 +57,7 @@ export const Equipments = (props) => {
                     <Modal.Title>Edit</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Field component="input"
+                    <Field component={InputField}
                         type="text"
                         className="form-control"
                         name="editedEquipment"

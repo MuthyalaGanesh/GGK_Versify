@@ -76,7 +76,7 @@ export function getTimezones() {
 export function getUnitCharacteristics() {
     var unitCharacteristicsJson = [{
             Name: "Eco Min",
-            DisplayName: "Eco Min",
+            DisplayName: "Economic Minimum",
             Description: "The lowest economic MW output level a unit can achieve system cost",
             Value: "",
             UCM: "MW",
@@ -84,7 +84,7 @@ export function getUnitCharacteristics() {
             EffectiveEndDate: ""
         }, {
             Name: "Eco Max",
-            DisplayName: "Eco Max",
+            DisplayName: "Economic Maximum",
             Description: "The lowest economic MW output level a unit can achieve system cost",
             Value: "",
             UCM: "MW",
@@ -92,25 +92,8 @@ export function getUnitCharacteristics() {
             EffectiveEndDate: ""
         }, {
             Name: "Capacity",
-            DisplayName: "Capacity",
+            DisplayName: "Capacity to Produce",
             Description: "Capacity is the capability to produce energy",
-            Value: "",
-            UCM: "MW",
-            EffectiveStartDate: "",
-            EffectiveEndDate: ""
-        },
-        {
-            Name: "Eco Min2",
-            DisplayName: "Eco Min",
-            Description: "The lowest economic MW output level a unit can achieve system cost",
-            Value: "",
-            UCM: "MW",
-            EffectiveStartDate: "",
-            EffectiveEndDate: ""
-        }, {
-            Name: "Eco Max2",
-            DisplayName: "Eco Max",
-            Description: "The lowest economic MW output level a unit can achieve system cost",
             Value: "",
             UCM: "MW",
             EffectiveStartDate: "",

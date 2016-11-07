@@ -3,10 +3,10 @@ import { Field, reduxForm } from 'redux-form'
 import {Panel, Table, Popover, Button, Modal, OverlayTrigger, Tooltip} from 'react-bootstrap/lib'
 import 'styles/unitCharacteristicsStyles.scss'
 import 'styles/widgetStyle.scss'
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
 import DatePickerField from '../../../../../components/DatePicker/DatePickerField'
 import InputField from '../../../../../components/InputField/InputField'
 import TextAreaField from '../../../../../components/TextAreaField/TextAreaField'
+import AddModal from './AddModalComponent'
 
 export const UnitCharacteristics = (props) => {
     const unitCharacteristicsData = props.unitCharacteristics;
@@ -171,7 +171,15 @@ export const UnitCharacteristics = (props) => {
                     </Modal.Footer>
                 </form>
             </Modal>
-            <Modal show={props.unitCharacteristics.showDeleteModal}>
+   
+            <AddModal 
+                    unitCharacteristicsData={unitCharacteristicsData}
+                    showModal={props.unitCharacteristics.showModal} 
+                    onchange={props.characteristicNameSelected} 
+                    togglingAddModal={props.togglingAddModal} 
+                    AddUnitCharateristic={props.AddUnitCharateristic}/>
+   
+                    <Modal show={props.unitCharacteristics.showDeleteModal}>
                 <Modal.Header>
                     <Modal.Title>Are you sure?</Modal.Title>
                 </Modal.Header>
@@ -183,97 +191,7 @@ export const UnitCharacteristics = (props) => {
                     <Button className="btn btn-danger" type="button"  onClick={props.DeleteUnitCharateristic}>Delete</Button>
                 </Modal.Footer>
             </Modal>
-            <Modal show={props.unitCharacteristics.showModal}>
-                <form onChange={(event) => { props.characteristicNameSelected(event) } }>
-                    <Modal.Header>
-                        <Modal.Title>New Unit characteristic</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <div className="row">
-                            <div className="col-xs-12 form-group">
-                                <div className="col-xs-6">
-                                    <label>Unit Characteristic Name</label>
-                                </div>
-                                <div className="col-xs-6">
-                                    <Field component="select" name="charateristicName" className="form-control">
-                                        <option value="">Select Unit Charateristic</option>
-
-                                        {
-                                            unitCharacteristicsData.unSelectedUnitCharacteristics.map((uc, index) =>
-                                                (<option value={uc.Name} key={index}>{uc.Name}</option>))
-                                        }
-                                    </Field>
-                                </div>
-                            </div>
-
-                            <div className="col-xs-12 form-group">
-                                <div className="col-xs-6">
-                                    <label>Display name</label>
-                                </div>
-                                <div className="col-xs-6">
-                                    <Field component={InputField} type="text" readOnly={true}
-                                        className="form-control" name="displayNameLabel"
-                                        defaultValue={props.unitCharacteristics.displayNameLabel}>
-                                    </Field>
-                                </div>
-                            </div>
-                            <div className="col-xs-12 form-group">
-                                <div className="col-xs-6">
-                                    <label>Description</label>
-                                </div>
-                                <div className="col-xs-6">
-                                    <Field component={TextAreaField} readOnly={true}
-                                        className="form-control" name="descriptionLabel"
-                                        defaultValue={props.unitCharacteristics.descriptionLabel} rows="4">
-                                    </Field>
-                                </div>
-                            </div>
-
-                            <div className="col-xs-12 form-group">
-                                <div className="col-xs-6">
-                                    <label>Value</label>
-                                </div>
-                                <div className="col-xs-6">
-                                    <Field component="input" type="text" name="ucvalue" className="form-control"></Field>
-                                </div>
-                            </div>
-
-                            <div className="col-xs-12 form-group">
-                                <div className="col-xs-6">
-                                    <label>UCM</label>
-                                </div>
-                                <div className="col-xs-6">
-                                    <Field component={InputField} type="text" readOnly={true}
-                                        className="form-control" name="UCMLabel"
-                                        defaultValue={props.unitCharacteristics.UCMLabel}>
-                                    </Field>
-                                </div>
-                            </div>
-                            <div className="col-xs-12 form-group">
-                                <div className="col-xs-6">
-                                    <label>Effective start date</label>
-                                </div>
-                                <div className="col-xs-6">
-                                    <Field component={DatePickerField} name="effectiveStartDate"></Field>
-                                </div>
-                            </div>
-
-                            <div className="col-xs-12 form-group">
-                                <div className="col-xs-6">
-                                    <label>Effective end date</label>
-                                </div>
-                                <div className="col-xs-6">
-                                    <Field component={DatePickerField} name="effectiveEndDate"></Field>
-                                </div>
-                            </div>
-                        </div>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <button className="btn btn-warning" type="button" onClick={props.togglingAddModal}>Cancel</button>
-                        <button className="btn btn-success" type="button" onClick={props.AddUnitCharateristic}>Add</button>
-                    </Modal.Footer>
-                </form>
-            </Modal>
+            
         </div>
     )
 }
