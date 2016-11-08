@@ -162,7 +162,7 @@
     }
     .nav-tabs > li {
         width: 11%;
-        height: 140px;
+        height: 142px;
     }
     .nav-tabs .tab-title {
         /* top: 100px; */
@@ -213,6 +213,7 @@
         margin: 20px auto;
         border-radius: 100%;
         padding: 0;
+        cursor: pointer;
     }
     .nav-tabs > li a:hover {
         background: transparent;
