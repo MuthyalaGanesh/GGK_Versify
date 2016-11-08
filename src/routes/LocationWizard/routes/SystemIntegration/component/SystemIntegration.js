@@ -9,8 +9,7 @@ export const SystemIntegration = (props) => {
     const systemIntegrationData = props.systemIntegration.systemIntegrationTypes;
 
     return (
-<div>
-    <div className="row tab-pane fade in active" id="home">
+    <div className="row tab-pane fade in active" id="systemintegration">
         <div className="col-xs-12">
             <div className="box">
                 <div className="box-header">
@@ -65,10 +64,6 @@ export const SystemIntegration = (props) => {
             </div>
         </div>
     </div>
-</div>
-
-
-
 
     )
 }

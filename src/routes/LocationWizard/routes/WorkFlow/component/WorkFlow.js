@@ -13,7 +13,7 @@ const renderMultiselect = ({ input, ...rest }) =>
 export const WorkFlow = (props) => { 
        const {workFlowItems} = props.workFlow 
     return (
-            <div className="row tab-pane fade in active">
+            <div className="row tab-pane fade in active" id='workflow'>
                 <div className="col-xs-12">
                     <div className="box">
                         <div className="box-header">

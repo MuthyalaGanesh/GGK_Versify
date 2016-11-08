@@ -10,10 +10,8 @@ import AddModal from './AddModalComponent'
 
 export const UnitCharacteristics = (props) => {
     const unitCharacteristicsData = props.unitCharacteristics;
-    return (
-     
-<div>
-    <div className="row tab-pane fade in active" id="home">
+    return (     
+    <div className="row tab-pane fade in active" id="unitcharacteristics">
         <div className="col-xs-12">
             <div className="box">
                 <div className="box-header">
@@ -81,9 +79,7 @@ export const UnitCharacteristics = (props) => {
                 </div>
             </div>
         </div>
-    </div>
-
-    <Modal show={props.unitCharacteristics.showEditModal}>
+        <Modal show={props.unitCharacteristics.showEditModal}>
         <form>
             <Modal.Header>
                 <Modal.Title>Edit </Modal.Title>
@@ -202,8 +198,10 @@ export const UnitCharacteristics = (props) => {
             </div>
         </Modal.Footer>
     </Modal>
+    </div>
 
-</div>
+    
+
     )
 }
 export default UnitCharacteristics

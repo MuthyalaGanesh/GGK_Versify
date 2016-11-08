@@ -20,13 +20,12 @@ export const BasicInfo = (props) => {
     
 const {formdata} = props;
 return (
-<div className="row tab-pane fade in active" id="home">
+<div className="row tab-pane fade in active" id="basicinfo">
     <div className="col-xs-12">
         <div className="box">
             <div className="box-header">
                 <h3 className="box-title">Basic Information</h3>
                 <div className="box-tools pull-right">
-                    &nbsp; 
                 </div>
             </div>
             <div className="box-body">

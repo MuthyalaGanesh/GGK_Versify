@@ -9,7 +9,7 @@ export const Gateway = (props) => {
     const editableGateway = props.gateways.EditableGateway; 
     const touched = props.formdata
     return (
-            <div className="row tab-pane fade in active">
+            <div className="row tab-pane fade in active" id='gateway'>
                 <div className="col-xs-12">
                     <div className="box">
                         <div className="box-header">

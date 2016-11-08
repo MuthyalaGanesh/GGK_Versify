@@ -7,7 +7,7 @@ import 'styles/commonStyles.scss'
 export const DataHistorian = (props) => { 
 
     return (
-            <div className="row tab-pane fade in active">
+            <div className="row tab-pane fade in active" id="datahistorian">
                 <div className="col-xs-12">
                     <div className="box">
                         <div className="box-header">

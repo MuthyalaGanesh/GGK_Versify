@@ -14,7 +14,7 @@ export const Users = (props) => {
         const {Roles,Contacts} = props.userInfo.userInformation;
        
         return (
-            <div className="row tab-pane fade in active">
+            <div className="row tab-pane fade in active" id='users'>
                 <div className="col-xs-12">
                     <div className="box">
                         <div className="box-header">
