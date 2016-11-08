@@ -25,9 +25,7 @@ export function onParentLoCationSelect(locationId) {
     return new Promise((resolve) => {
       dispatch({
          type: ON_PARENT_LOCATION_SELECT, 
-         payload: {
-           basicState :getState().form.BasicInfoForm,
-           locationId:locationId}
+         payload: locationId
           });
     });
   }  
@@ -35,10 +33,9 @@ export function onParentLoCationSelect(locationId) {
 
 export const ACTION_HANDLERS = {
   [ON_PARENT_LOCATION_SELECT]:(state, action) => {
-    action.payload.basicState.values.parentLocation = action.payload.locationId
-    debugger;
-    var newState = Object.assign({}, state, {abc:'dfg'});
-   return newState;
+   return Object.assign({}, state, {
+      parentLocation: action.payload
+    });
   },
   [BIND_LOCATIONS]: (state, action) => {
     return Object.assign({}, state, {
