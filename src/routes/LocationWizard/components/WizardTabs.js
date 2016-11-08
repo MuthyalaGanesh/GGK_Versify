@@ -1,6 +1,4 @@
 import React from 'react'
-import BasicInfo from '../routes/BasicInfo/component/BasicInfo'
-import CredentialsManagement from '../routes/CredentialsManagement/component/CredentialsManagement'
 import 'styles/locationStyles.scss'
 import {Panel, Nav, NavItem} from 'react-bootstrap'
 import {Link}from 'react-router'
