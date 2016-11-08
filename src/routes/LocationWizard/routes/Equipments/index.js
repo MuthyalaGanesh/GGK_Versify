@@ -3,7 +3,7 @@ export default (store) => ({
   path : 'equipments',
   getComponent (nextState, cb) {
     require.ensure([], (require) => {
-      const SystemIntegration = require('./container/EquipmentsContainer').default
+      const SystemIntegration = require('./container/equipmentsContainer').default
       
         const reducer = require('./module/equipments').default
       /*  Add the reducer to the store on key 'counter'  */
