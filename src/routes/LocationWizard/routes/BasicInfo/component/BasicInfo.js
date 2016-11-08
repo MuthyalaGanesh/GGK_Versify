@@ -71,7 +71,6 @@ return (
                                         <div className="col-sm-7 col-md-7">
                                             <Field 
                                             name="parentLocation" 
-                                            parentLocation = {props.basic.parentLocation}
                                             component={ParentLocationField} 
                                             onParentLoCationSelect ={props.onParentLoCationSelect}
                                             parentLocations={parentLocations}
