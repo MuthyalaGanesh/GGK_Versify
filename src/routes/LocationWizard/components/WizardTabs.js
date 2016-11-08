@@ -1,95 +1,96 @@
 import React from 'react'
 import 'styles/locationStyles.scss'
 import {Panel, Nav, NavItem} from 'react-bootstrap'
-import {Link}from 'react-router'
+//import {Link}from 'react-router'
 
+var Scroll    = require('react-scroll');
+
+var Link       = Scroll.Link;
+var DirectLink = Scroll.DirectLink;
+var Element    = Scroll.Element;
+var Events     = Scroll.Events;
+var scroll     = Scroll.animateScroll;
+var scrollSpy  = Scroll.scrollSpy;
 export const WizardTabs =(props)=> {
 return (
     
-  
 <div className="board-inner">
-    <ul className="nav nav-tabs">
-        <div className="liner"></div>
-        <li className="active">
-            <Link to='/location/basic' data-toggle="tab" title="Basic Information">
-            <span className="round-tabs one">
-                <i className="glyphicon glyphicon-home"></i>
-            </span>
-            <span className="tab-title"><small>Basic Information</small></span>
-            </Link>
-        </li>
-        <li>
-            <Link to='/location/credential' data-toggle="tab" title="Credential Management">
-            <span className="round-tabs two">
-                <i className="glyphicon glyphicon-gift"></i>
-            </span>
-            <span className="tab-title"><small>Credential Management</small></span>
-            </Link>
-        </li>
-        <li>
-            <Link to='/location/unitcharacteristics' data-toggle="tab" title="Unit Characteristics">
-            <span className="round-tabs three">
-                <i className="glyphicon glyphicon-user"></i>
-            </span>
-            <span className="tab-title"><small>Unit Characteristics</small></span>
-            </Link>
+    <nav className="navbar ">
 
-        </li>
-        <li>
-                <Link to="/location/systemintegration" data-toggle="tab" title="System Integration">
+        <div className="" id="bs-example-navbar-collapse-1" style={{'width':'75%','position':'fixed','zIndex':'999999'}}>
+            <ul className="nav nav-tabs">
+                <div className="liner"></div>
+                <li>
+                    <Link activeClass="active" className="basicInfo" to="basicInfo" spy={true} smooth={true} duration={500}>
+                    <span className="round-tabs one">
+                        <i className="glyphicon glyphicon-home"></i>
+                    </span>
+                    <span className="tab-title"><small>Basic Information</small></span></Link>
+                </li>               
+                <li>
+                    <Link activeClass="active" className="credential" to="credential" spy={true} smooth={true} duration={500}>
+                    <span className="round-tabs two">
+                        <i className="glyphicon glyphicon-gift"></i>
+                    </span>
+                    <span className="tab-title"><small>Credential Management</small></span></Link>
+                </li>
+                <li>
+                    <Link activeClass="active" className="unitcharacteristics" to="unitcharacteristics" spy={true} smooth={true} duration={500}>
+                    <span className="round-tabs three">
+                        <i className="glyphicon glyphicon-user"></i>
+                    </span>
+                    <span className="tab-title"><small>Unit Characteristics</small></span></Link>
+                </li>
+                <li>
+                    <Link activeClass="active" className="systemintegration" to="systemintegration" spy={true} smooth={true} duration={500}>
                     <span className="round-tabs four">
                         <i className="glyphicon glyphicon-comment"></i>
                     </span>
-                    <span className="tab-title"><small>System Integration</small></span>
+                    <span className="tab-title"><small>System Integration</small></span></Link>
+                </li>
+                <li>
+                    <Link activeClass="active" className="workflows" to="workflows" spy={true} smooth={true} duration={500}>
+                    <span className="round-tabs five">
+                        <i className="glyphicon glyphicon-folder-open"></i>
+                    </span>
+                    <span className="tab-title"><small>&nbsp;&nbsp;WorkFlows</small></span></Link>
+                </li>
+                <li>
+                    <Link activeClass="active" className="users" to="users" spy={true} smooth={true} duration={500}>
+                    <span className="round-tabs six">
+                        <i className="glyphicon glyphicon-user"></i>
+                    </span>
+                    <span className="tab-title"><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Users</small></span></Link>
+                </li>
+                <li>
+                    <Link activeClass="active" className="equipment" to="equipment" spy={true} smooth={true} duration={500}>
+                    <span className="round-tabs seven">
+                        <i className="glyphicon glyphicon-indent-right"></i>
+                    </span>
+                    <span className="tab-title"><small>&nbsp;&nbsp;&nbsp;Equipment</small></span>
+                    </Link>
+                </li>
+                <li>
+                    <Link activeClass="active" className="gateways" to="gateways" spy={true} smooth={true} duration={500}>
+                    <span className="round-tabs two">
+                        <i className="glyphicon glyphicon-pencil"></i>
+                    </span>
+                    <span className="tab-title"><small>&nbsp;&nbsp;&nbsp;Gateways</small></span>
+                    </Link>
+                </li>
+                <li>
+                    <Link activeClass="active" className="datahistorian" to="datahistorian" spy={true} smooth={true} duration={500}>
+                    <span className="round-tabs three">
+                        <i className="glyphicon glyphicon-pencil"></i>
+                    </span>
+                    <span className="tab-title"><small>Data Historian</small></span>
+                    </Link>
+                </li>
 
-                </Link>
-        </li>
-        <li>
-            <Link to="/location/workFlows" data-toggle="tab" title="WorkFlows">
-                <span className="round-tabs five">
-                    <i className="glyphicon glyphicon-folder-open"></i>
-                </span>
-                <span className="tab-title"><small>&nbsp;&nbsp;WorkFlows</small></span>
-            </Link>
-        </li>
-        <li>
-            <Link to="/location/users" data-toggle="tab" title="Users">
-                <span className="round-tabs six">
-                    <i className="glyphicon glyphicon-user"></i>
-                </span>
-                <span className="tab-title"><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Users</small></span>
-            </Link>
-        </li>
-        <li>
-            <Link to="/location/equipments" data-toggle="tab" title="Equipment">
-                <span className="round-tabs seven">
-                    <i className="glyphicon glyphicon-indent-right"></i>
-                </span>
-                <span className="tab-title"><small>&nbsp;&nbsp;&nbsp;Equipment</small></span>
-
-            </Link>
-        </li>
-        <li>
-            <Link to="/location/gateways" data-toggle="tab" title="Gateways">
-                <span className="round-tabs two">
-                    <i className="glyphicon glyphicon-pencil"></i>
-                </span>
-                <span className="tab-title"><small>&nbsp;&nbsp;&nbsp;Gateways</small></span>
-
-            </Link>
-        </li>
-        <li>
-            <Link to="/location/dataHistorian" data-toggle="tab" title="Data Historian">
-                <span className="round-tabs three">
-                    <i className="glyphicon glyphicon-pencil"></i>
-                </span>
-                <span className="tab-title"><small>Data Historian</small></span>
-
-            </Link>
-        </li>
-    </ul>
+            </ul>
+        </div>
+    </nav>
 </div>
-
         )    
 }
 
