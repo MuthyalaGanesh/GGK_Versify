@@ -1,7 +1,6 @@
-import {getUnitCharacteristics, getSelectedUnitCharacteristics} from 'api/locationWizardApi'
+import {getAllUOMValues, getUnitCharacteristics, getSelectedUnitCharacteristics} from 'api/locationWizardApi'
 import moment from 'moment';
 
-export const BIND_UNIT_CHARACTERISTICS = 'BIND_UNIT_CHARACTERISTICS'
 export const TOGGLE_ADD_MODAL = 'TOGGLE_ADD_MODAL'
 export const EDIT_TOGGLE = 'EDIT_TOGGLE'
 export const DELETE_MODAL = 'DELETE_MODAL'
@@ -11,6 +10,15 @@ export const ADD_NEW_ROW = 'ADD_NEW_ROW'
 export const CHARACTERISTIC_SELECTED = "CHARACTERISTIC_SELECTED"
 export const INSERT_ROW = "INSERT_ROW"
 
+export function getUOMValueByID(measureId) {
+  var UOM = "";
+  getAllUOMValues().map(u => {
+    if (u.id == measureId) {
+      UOM = u.name;
+    }
+  })
+  return UOM;
+}
 export function updateRow(event) {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
@@ -36,31 +44,43 @@ export function characteristicNameSelected(event) {
       return new Promise((resolve) => {
         dispatch({
           type: CHARACTERISTIC_SELECTED,
-          payload: getState().form.UnitCharacteristicsForm
+          payload: getState().form.UnitCharacteristicsForm.values.charateristicName
         })
       })
     }
   }
 }
 
-export function bindUnitCharateristics() {
-  return {
-    type: BIND_UNIT_CHARACTERISTICS,
-    payload: getSelectedUnitCharacteristics()
-  };
-};
-
 export function togglingAddModal() {
-  return {
-    type: TOGGLE_ADD_MODAL,
-    payload: false
-  };
-};
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      dispatch({
+        type: TOGGLE_ADD_MODAL,
+        payload: false
+      })
+      dispatch({
+        type: 'redux-form/DESTROY',
+        meta: { form: "UnitCharacteristicsForm" },
+        payload: ""
+      })
+    })
+  }
+}
+
 export function makeEditable(index) {
-  return {
-    type: EDIT_TOGGLE,
-    payload: index
-  };
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      dispatch({
+        type: EDIT_TOGGLE,
+        payload: index
+      })
+      dispatch({
+        type: 'redux-form/DESTROY',
+        meta: { form: "UnitCharacteristicsForm" },
+        payload: ""
+      })
+    })
+  }
 };
 export function deleteConfirmation(index) {
   return {
@@ -77,19 +97,19 @@ export function DeleteUnitCharateristic() {
 };
 
 export const ACTION_HANDLERS = {
-  //binding selected unit charateristics
-  [BIND_UNIT_CHARACTERISTICS]: (state, action) => {
-    return Object.assign({}, state, { selectedunitCharacteristics: action.payload })
-  },
+
   //opening Adding new unitCharacteristic modal
   [TOGGLE_ADD_MODAL]: (state, action) => {
     var newState = Object.assign({}, state, { showModal: !state.showModal });
+    newState.UOMLabel = "",
+      newState.descriptionLabel = "",
+      newState.displayNameLabel = ""
     newState.unSelectedUnitCharacteristics = [];
-
     newState.unitCharacteristics.map((allUC) => {
       var valuePresence = 1;
+
       newState.selectedunitCharacteristics.map((selUC) => {
-        if (selUC.Name == allUC.Name) {
+        if (selUC.id == allUC.id) {
           valuePresence++;
         }
       })
@@ -141,10 +161,10 @@ export const ACTION_HANDLERS = {
     var newState = Object.assign({}, state)
     if (action.payload) {
       newState.unitCharacteristics.map((uc) => {
-        if (uc.Name == action.payload.values.charateristicName) {
-          newState.UCMLabel = uc.UCM,
-            newState.descriptionLabel = uc.Description,
-            newState.displayNameLabel = uc.DisplayName
+        if (uc.id == parseInt(action.payload)) {
+          newState.UOMLabel = getUOMValueByID(uc.defaultUnitOfMeasureId),
+            newState.descriptionLabel = uc.description,
+            newState.displayNameLabel = uc.display
         }
       })
     }
@@ -154,10 +174,11 @@ export const ACTION_HANDLERS = {
     var newState = Object.assign({}, state, { showModal: !state.showModal })
     if (action.payload) {
       newState.unitCharacteristics.map((uc) => {
-        if (uc.Name == action.payload.values.charateristicName) {
+        if (uc.id == parseInt(action.payload.values.charateristicName)) {
           uc.EffectiveEndDate = action.payload.values.effectiveEndDate
           uc.EffectiveStartDate = action.payload.values.effectiveStartDate
           uc.Value = action.payload.values.ucvalue
+          uc.UOM = newState.UOMLabel
           newState.selectedunitCharacteristics.push(uc)
         }
       })
@@ -168,6 +189,7 @@ export const ACTION_HANDLERS = {
 const initialState = {
   error: "",
   unitCharacteristics: getUnitCharacteristics(),
+  allUOMvalues: getAllUOMValues(),
   selectedunitCharacteristics: [],
   unSelectedUnitCharacteristics: [],
   showModal: false,
@@ -176,7 +198,7 @@ const initialState = {
   editableUnitCharacter: {},
   showEditModal: false,
   startDate: moment(),
-  UCMLabel: "",
+  UOMLabel: "",
   descriptionLabel: "",
   displayNameLabel: ""
 };

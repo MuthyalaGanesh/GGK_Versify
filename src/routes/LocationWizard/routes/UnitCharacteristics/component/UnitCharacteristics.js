@@ -6,10 +6,10 @@ import 'styles/widgetStyle.scss'
 import DatePickerField from '../../../../../components/DatePicker/DatePickerField'
 import InputField from '../../../../../components/InputField/InputField'
 import TextAreaField from '../../../../../components/TextAreaField/TextAreaField'
-import AddModal from './AddModalComponent'
 
 export const UnitCharacteristics = (props) => {
     const unitCharacteristicsData = props.unitCharacteristics;
+
     return (     
     <div className="row tab-pane fade in active" id="unitcharacteristics">
         <div className="col-xs-12">
@@ -37,7 +37,7 @@ export const UnitCharacteristics = (props) => {
                                         <th>Display name</th>
                                         <th>Description</th>
                                         <th>Value</th>
-                                        <th>UCM</th>
+                                        <th>UOM</th>
                                         <th>Effective Start Date</th>
                                         <th>Effective End Date</th>
                                         <th>Actions</th>
@@ -48,12 +48,12 @@ export const UnitCharacteristics = (props) => {
                                     {
                                     unitCharacteristicsData.selectedunitCharacteristics.map((uc, index) =>
                                     (
-                                    <tr key={uc.Name}>
-                                        <td className="text-align-col">{uc.Name}</td>
-                                        <td className="text-align-col">{uc.DisplayName}</td>
-                                        <td>{uc.Description}</td>
+                                    <tr key={uc.id}>
+                                        <td className="text-align-col">{uc.name}</td>
+                                        <td className="text-align-col">{uc.display}</td>
+                                        <td>{uc.description}</td>
                                         <td>{uc.Value}</td>
-                                        <td className="text-align-col">{uc.UCM}</td>
+                                        <td className="text-align-col">{uc.UOM}</td>
                                         <td>{uc.EffectiveStartDate}</td>
                                         <td>{uc.EffectiveEndDate}</td>
                                         <td className="text-align-col">
@@ -137,12 +137,12 @@ export const UnitCharacteristics = (props) => {
 
                     <div className="col-xs-12 form-group">
                         <div className="col-xs-6">
-                            <label>UCM</label>
+                            <label>UOM</label>
                         </div>
                         <div className="col-xs-6">
                             <Field component={InputField} type="text" readOnly={true}
-                                   className="form-control" name="UCMLabel"
-                                   defaultvalue={props.unitCharacteristics.editableUnitCharacter.UCM}>
+                                   className="form-control" name="UOMLabel"
+                                   defaultvalue={props.unitCharacteristics.editableUnitCharacter.UOM}>
                             </Field>
                         </div>
                     </div>
@@ -178,13 +178,100 @@ export const UnitCharacteristics = (props) => {
         </form>
     </Modal>
 
-    <AddModal unitCharacteristicsData={unitCharacteristicsData}
-              showModal={props.unitCharacteristics.showModal}
-              onchange={props.characteristicNameSelected}
-              togglingAddModal={props.togglingAddModal}
-              AddUnitCharateristic={props.AddUnitCharateristic} />
+            <Modal show={props.unitCharacteristics.showModal}>
+                <form onChange={(event) => { props.characteristicNameSelected(event) } }>
+                    <Modal.Header>
+                        <Modal.Title>New Unit characteristic</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="row">
+                            <div className="col-xs-12 form-group">
+                                <div className="col-xs-6">
+                                    <label>Unit Characteristic Name</label>
+                                </div>
+                                <div className="col-xs-6">
+                                    <Field component="select" name="charateristicName" className="form-control">
+                                        <option value="">Select Unit Charateristic</option>
 
-    <Modal show={props.unitCharacteristics.showDeleteModal}>
+                                        {
+                                            unitCharacteristicsData.unSelectedUnitCharacteristics.map((uc, index) =>
+                                                (<option value={uc.id} key={uc.id}>{uc.display}</option>))
+                                        }
+                                    </Field>
+                                </div>
+                            </div>
+
+                            <div className="col-xs-12 form-group">
+                                <div className="col-xs-6">
+                                    <label>Display name</label>
+                                </div>
+                                <div className="col-xs-6">
+                                    <Field component={InputField} type="text" readOnly={true}
+                                        className="form-control" name="displayNameLabel"
+                                        defaultvalue={props.unitCharacteristics.displayNameLabel}>
+
+                                    </Field>
+                                </div>
+                            </div>
+                            <div className="col-xs-12 form-group">
+                                <div className="col-xs-6">
+                                    <label>Description</label>
+                                </div>
+                                <div className="col-xs-6">
+                                    <Field component={TextAreaField} readOnly={true}
+                                        className="form-control" name="descriptionLabel"
+                                        defaultValue={props.unitCharacteristics.descriptionLabel} rows="4">
+                                    </Field>
+                                </div>
+                            </div>
+
+                            <div className="col-xs-12 form-group">
+                                <div className="col-xs-6">
+                                    <label>Value</label>
+                                </div>
+                                <div className="col-xs-6">
+                                    <Field component="input" type="text" name="ucvalue" className="form-control"></Field>
+                                </div>
+                            </div>
+
+                            <div className="col-xs-12 form-group">
+                                <div className="col-xs-6">
+                                    <label>UOM</label>
+                                </div>
+                                <div className="col-xs-6">
+                                    <Field component={InputField} type="text" readOnly={true}
+                                        className="form-control" name="UOMLabel"
+                                        defaultvalue={props.unitCharacteristics.UOMLabel}>
+                                    </Field>
+                                </div>
+                            </div>
+                            <div className="col-xs-12 form-group">
+                                <div className="col-xs-6">
+                                    <label>Effective start date</label>
+                                </div>
+                                <div className="col-xs-6">
+                                    <Field component={DatePickerField} name="effectiveStartDate"></Field>
+                                </div>
+                            </div>
+
+                            <div className="col-xs-12 form-group">
+                                <div className="col-xs-6">
+                                    <label>Effective end date</label>
+                                </div>
+                                <div className="col-xs-6">
+                                    <Field component={DatePickerField} name="effectiveEndDate"></Field>
+                                </div>
+                            </div>
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <button className="btn btn-warning" type="button" onClick={props.togglingAddModal}>Cancel</button>
+                        <button className="btn btn-success" type="button" onClick={props.AddUnitCharateristic}>Add</button>
+                    </Modal.Footer>
+                </form>
+
+            </Modal>
+            <Modal show={props.unitCharacteristics.showDeleteModal}>
         <Modal.Header>
             <Modal.Title>Are you sure?</Modal.Title>
         </Modal.Header>
@@ -198,6 +285,7 @@ export const UnitCharacteristics = (props) => {
             </div>
         </Modal.Footer>
     </Modal>
+
     </div>
 
     

@@ -15,7 +15,8 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = (state) => ({
-    equipments: state.equipments
+    equipments: state.equipments,
+    formdata: state.form
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({

@@ -1,20 +1,20 @@
 import { reduxForm } from 'redux-form'
 import UnitCharacteristics from '../component/UnitCharacteristics'
-import {connect,dispatch} from 'react-redux'
+import {connect, dispatch} from 'react-redux'
 import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import moment from 'moment';
 import {
-            bindUnitCharateristics,
-            togglingAddModal,
-            makeEditable,
-            deleteConfirmation,
-            DeleteUnitCharateristic,
-            updateRow,
-            AddUnitCharateristic,
-            characteristicNameSelected} from '../module/unitCharacteristics';
+    bindUnitCharateristics,
+    togglingAddModal,
+    makeEditable,
+    deleteConfirmation,
+    DeleteUnitCharateristic,
+    updateRow,
+    AddUnitCharateristic,
+    characteristicNameSelected} from '../module/unitCharacteristics';
 
 
-const mapDispatchToProps= {
+const mapDispatchToProps = {
     bindUnitCharateristics,
     togglingAddModal,
     makeEditable,
@@ -23,10 +23,10 @@ const mapDispatchToProps= {
     updateRow,
     AddUnitCharateristic,
     characteristicNameSelected
- }
+}
 
 const mapStateToProps = (state) => ({
-  unitCharacteristics: state.unitCharacteristics
+    unitCharacteristics: state.unitCharacteristics
 })
 
 //moment localizer for datepicker
@@ -35,5 +35,4 @@ momentLocalizer(moment);
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
     form: 'UnitCharacteristicsForm',  //Form name is first form
     touchOnChange: true,
-    enableReinitialize :true
 })(UnitCharacteristics))
