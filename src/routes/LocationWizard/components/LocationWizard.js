@@ -43,7 +43,7 @@ return (
                     <div className='container-fluid'>
                         <WizardTabs />
                         <div className='clear'></div>
-                        <div className="tab-content element" style={{'marginTop':'95px'}}>
+                        <div className="tab-content element" style={{'marginTop':'60px'}}>
                             <Element name="basicInfo" className="element">
                                 <BasicInfoContainer parentLocations={props.location.parentLocations}/>
                             </Element>
