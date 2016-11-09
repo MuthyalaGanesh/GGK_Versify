@@ -72,7 +72,6 @@ return (
                                             <Field 
                                             name="parentLocation" 
                                             component={ParentLocationField} 
-                                            onParentLoCationSelect ={props.onParentLoCationSelect}
                                             parentLocations={parentLocations}
                                             className="form-control">                                                
                                             </Field>

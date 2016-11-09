@@ -13,8 +13,8 @@ import {
 
 
 const mapDispatchToProps = {
-    onParentLoCationSelect: onParentLoCationSelect,
-    BindLocations:BindLocations
+    
+    BindLocations
 }
 
 const mapStateToProps = (state) => ({

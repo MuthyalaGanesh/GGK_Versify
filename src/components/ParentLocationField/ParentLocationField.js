@@ -1,37 +1,22 @@
 import React from 'react'
 import TreeSelect, { TreeNode, SHOW_PARENT } from 'rc-tree-select';
 import 'rc-tree-select/assets/index.css';
- 
+
 export const ParentLocationField = (props) => (
- 
-    <TreeSelect
-          style={{'width':'100%'}}
-          transitionName="rc-tree-select-dropdown-slide-up"
-          choiceTransitionName="rc-tree-select-selection__choice-zoom"
-          dropdownStyle={{ maxHeight: 200, overflow: 'auto' }}
-          placeholder={<i>Select Parent Location</i>}
-          value={props.input.value !== '' ? props.input.value :undefined}
-          showSearch allowClear treeLine
-          inputValue= {null}
-          treeData={props.parentLocations}
-          treeNodeFilterProp="Name"
-          open={props.tsOpen || false}
-          onChange={(value) => {
-            console.log('onChange', arguments);
-            props.onParentLoCationSelect(value);
-            } 
-          }
-          onDropdownVisibleChange={(v, info) => {
-            console.log('single onDropdownVisibleChange', v, info);
-            if (info.documentClickClose) {
-              return false;
-            }
-            return true;
-          } 
-        }
-          onSelect={(e)=> {console.log("onselect",e);}}
-      />  
-        )
 
-export default ParentLocationField;
-
+  <TreeSelect
+    {...props.input}
+    style={{'width':'100%'}}
+    transitionName="rc-tree-select-dropdown-slide-up"
+    choiceTransitionName="rc-tree-select-selection__choice-zoom"
+    dropdownStyle={{ maxHeight: 200, overflow: 'auto' }}
+    placeholder={"Select Parent Location"}
+    value={props.input.value !== '' ? props.input.value :undefined}
+    showSearch ={false}
+    treeLine
+    treeData={props.parentLocations}
+    treeNodeFilterProp="Name"
+    open={props.tsOpen || false}
+    />
+  )
+  export default ParentLocationField;

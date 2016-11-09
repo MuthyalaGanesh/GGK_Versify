@@ -1,6 +1,6 @@
 import { reduxForm } from 'redux-form'
 import {connect} from 'react-redux'
-import WorkFlow from '../../components/workFlow'
+import WorkFlow from '../../components/WorkFlow'
 import { bindWorkflowItems } from '../../modules/workFlow';
 
 const mapStateToProps = (state) => ({

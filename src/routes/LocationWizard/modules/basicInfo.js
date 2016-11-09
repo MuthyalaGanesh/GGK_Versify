@@ -19,25 +19,9 @@ export function BindLocations() {
   }  
 };
 
-export function onParentLoCationSelect(locationId) {
-   console.log("onParentLoCationSelect",locationId)
-  return (dispatch, getState) => {
-    return new Promise((resolve) => {
-      dispatch({
-         type: ON_PARENT_LOCATION_SELECT, 
-         payload: {
-           BasicInfoForm :getState().form.BasicInfoForm,
-           locationId:locationId}
-          });
-    });
-  }  
-};
 
 export const ACTION_HANDLERS = {
-  [ON_PARENT_LOCATION_SELECT]:(state, action) => {
-   action.payload.BasicInfoForm.values.parentLocation = action.payload.locationId
-   return Object.assign({}, state);;
-  },
+
   [BIND_LOCATIONS]: (state, action) => {
     return Object.assign({}, state, {
      locations:action.payload.locationState.allLocations,
