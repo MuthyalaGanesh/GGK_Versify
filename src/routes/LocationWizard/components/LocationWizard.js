@@ -27,22 +27,19 @@ var scrollSpy  = Scroll.scrollSpy;
 
 export const LocationWizard =(props)=> {
 return (
-
-    <div className="row">
-        <div className="col-md-2 col-xs-12">
-            <LocationLeftMenu Locations={props.location.allLocations} leftMenuDropdownClickEvent={props.leftMenuDropdownClickEvent} />
-        </div>
-        <div className="col-md-10 col-xs-12" >
-            <section id="content_header" className="content-header">
-                <h1>Location Wizard<small>OMS Location wizard</small></h1>
-
-            </section>
-            <section id='Location-wizard-tabs' className="content">
+   <div>
+    <LocationLeftMenu Locations={props.location.allLocations} leftMenuDropdownClickEvent={props.leftMenuDropdownClickEvent} />
+    <section id="content_header" className="content-header col-xs-12 col-md-10">
+        <h1>Location Wizard<small>OMS Location wizard</small></h1>
+    </section>
+    <section id='Location-wizard-tabs' className="content">
+        <div className="row">
+            <div className="col-xs-12">
                 <div className="board">
                     <div className='container-fluid'>
                         <WizardTabs />
-
-                        <div className="tab-content" className="element" style={{'marginTop':'95px'}}>
+                        <div className='clear'></div>
+                        <div className="tab-content element" style={{'marginTop':'95px'}}>
                             <Element name="basicInfo" className="element">
                                 <BasicInfoContainer />
                             </Element>
@@ -80,10 +77,11 @@ return (
                         </div>
                     </div>
                 </div>
-            </section>
-            <LocationWizardFooter saveCompleteLocationWizard={props.saveCompleteLocationWizard} />
+            </div>
         </div>
-    </div>
+    </section>
+    <LocationWizardFooter saveCompleteLocationWizard={props.saveCompleteLocationWizard} />
+</div>
                
         )
     

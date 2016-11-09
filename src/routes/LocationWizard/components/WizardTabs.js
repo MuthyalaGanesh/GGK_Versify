@@ -13,11 +13,10 @@ var scroll     = Scroll.animateScroll;
 var scrollSpy  = Scroll.scrollSpy;
 export const WizardTabs =(props)=> {
 return (
-    
+  
 <div className="board-inner">
     <nav className="navbar ">
-
-        <div className="" id="bs-example-navbar-collapse-1" style={{'width':'75%','position':'fixed','zIndex':'999999'}}>
+        <div className="" style={{'width':'75%','position':'fixed','zIndex':'1'}}>
             <ul className="nav nav-tabs">
                 <div className="liner"></div>
                 <li className='active'>
@@ -26,7 +25,7 @@ return (
                         <i className="glyphicon glyphicon-home"></i>
                     </span>
                     <span className="tab-title"><small>Basic Information</small></span></Link>
-                </li>               
+                </li>
                 <li>
                     <Link activeClass="active" className="credential" offset={-280} to="credential" spy={true} smooth={true} duration={500}>
                     <span className="round-tabs two">
@@ -35,7 +34,7 @@ return (
                     <span className="tab-title"><small>Credential Management</small></span></Link>
                 </li>
                 <li>
-                    <Link activeClass="active" className="unitcharacteristics"offset={-280}to="unitcharacteristics" spy={true} smooth={true} duration={500}>
+                    <Link activeClass="active" className="unitcharacteristics" offset={-280}to ="unitcharacteristics" spy={true} smooth={true} duration={500}>
                     <span className="round-tabs three">
                         <i className="glyphicon glyphicon-user"></i>
                     </span>
