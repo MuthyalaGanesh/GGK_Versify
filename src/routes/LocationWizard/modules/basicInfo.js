@@ -40,7 +40,8 @@ const initialState = {
   technologyTypes: basicInfoDropdowns.getTechnologyTypes,
   fuelClasses: basicInfoDropdowns.getFuelClasses,
   timezones: basicInfoDropdowns.getTimezones,
-  initial:true
+  initial:true,
+  BasicInfo:{}
 };
 
 export default function basiInfoReducer(state = initialState, action) {

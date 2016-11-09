@@ -20,7 +20,13 @@ export function toggleMenuClick(event) {
 export function leftMenuDropdownClickEvent(id, event) {
   console.log("LOCATIONS_MENUITEM_DROPDOWN_CLICK:", id);
   return (dispatch, getState) => {
+    dispatch({
+      type:'redux-form/DESTROY',
+      meta:{form : "BasicInfoForm"},
+      payload:''
+    })
     dispatch(BindInitialValues(id));
+    
   };
 };
 export function saveCompleteLocationWizard() {

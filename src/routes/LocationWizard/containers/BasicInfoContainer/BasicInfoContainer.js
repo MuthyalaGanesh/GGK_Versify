@@ -8,31 +8,31 @@ import BasicInfo from '../../components/BasicInfo'
 import validate from '../../validations/basicInfoValidation'
 
 import {
-    onParentLoCationSelect,BindInitialValues
+    onParentLoCationSelect,
+    BindInitialValues
 } from '../../modules/basicInfo';
 
 
-const mapDispatchToProps = {    
+const mapDispatchToProps = {
     BindInitialValues
 }
-const stateObject = (state) => state.basic.BasicInfo;
 
 const mapStateToProps = (state) => ({
     location: state.location,
     basic: state.basic,
-    formdata: state.form
+    formdata: state.form,
+    initialValues: state.basic.BasicInfo
 })
 
-function prePareDefult(){
+function prePareDefult() {
 
 }
-
 
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
     form: 'BasicInfoForm', //Form name is first form
     destroyOnUnmount: false,
-    initialValues: {locationName:stateObject.locationName},
+    
     validate
 })(BasicInfo));
