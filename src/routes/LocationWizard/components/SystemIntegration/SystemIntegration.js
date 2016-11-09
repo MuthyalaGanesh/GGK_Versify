@@ -19,30 +19,33 @@ export const SystemIntegration = (props) => {
                     </div>
                     <div className="box-body">
                         <div className="row">
-                            <div className="col-sm-12 col-md-12 form-group">
-                                <div className="col-sm-3 col-md-3">
+                            <div className="form-group">
+                                <div className="col-xs-4">
                                     <label className="control-label"> External System Name </label>
                                 </div>
+                                <div className="col-xs-6">
+                                    <div className="col-xs-5">
+                                        { !props.systemIntegration.typeaheadShow ? <Field component={InputField} name="newSystemIntegration"
+                                            touched = {touched.hasOwnProperty('SystemIntegrationForm') ?
+                                                touched.SystemIntegrationForm.hasOwnProperty('fields') ? touched.SystemIntegrationForm.fields.hasOwnProperty('newSystemIntegration') : false : false }
+                                            className="form-control"/> :
+                                            <Field component="select" name="newSystemIntegration" className="form-control">
+                                                <option value="">Select SystemIntegration</option>
 
-                                { !props.systemIntegration.typeaheadShow ? <div className="col-sm-7 col-md-7">
-                                    <Field component={InputField} name="newSystemIntegration"
-                                        touched = {touched.hasOwnProperty('SystemIntegrationForm') ?
-                                            touched.SystemIntegrationForm.hasOwnProperty('fields') ? touched.SystemIntegrationForm.fields.hasOwnProperty('newSystemIntegration') : false : false }
-                                        className="form-control"/>
-                                </div> :
-                                    <Field component="select" name="newSystemIntegration" className="form-control">
-                                        <option value="">Select SystemIntegration</option>
-
-                                        {
-                                            systemIntegrationData.map((uc) => (
-                                                (uc.LocationMappingId < 0) ? <option value={uc.ExternalSystemName} key={uc.ExternalSystemName}>{uc.ExternalSystemName}</option> : null
-                                            ))
+                                                {
+                                                    systemIntegrationData.map((uc) => (
+                                                        (uc.LocationMappingId < 0) ? <option value={uc.ExternalSystemName} key={uc.ExternalSystemName}>{uc.ExternalSystemName}</option> : null
+                                                    ))
+                                                }
+                                            </Field>
                                         }
-                                    </Field>
-                                }
-                                <span className={props.systemIntegration.typeaheadShow ? "fa fa-plus-circle" : "fa fa-times-circle"} onClick={props.toggleTypeahead}>
-                                </span>
-                                <div className="col-sm-2 col-md-2">
+                                    </div>
+                                    <div className="col-xs-1">
+                                        <span className={props.systemIntegration.typeaheadShow ? "fa fa-plus-circle" : "fa fa-times-circle"} onClick={props.toggleTypeahead}>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="col-xs-2">
                                     <button className="btn btn-success" type="button" onClick={props.AddSystemIntegration}>Add</button>
                                 </div>
                             </div>
