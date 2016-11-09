@@ -100,7 +100,7 @@
         margin: 0 auto;
         left: 0;
         right: 0;
-        top: 40%;
+        top:25%;
         z-index: 0;
     }
     .nav-tabs > li.active > a,
@@ -114,8 +114,8 @@
         border-bottom-color: transparent;
     }
     span.round-tabs {
-        width: 60px;
-        height: 60px;
+        width: 61px;
+        height: 61px;
         line-height: 60px;
         display: inline-block;
         border-radius: 100px;
@@ -131,6 +131,10 @@
     }
     li a.wizard-item.active {
     border: 2px solid #3672a2 !important;
+    }
+     li a.wizard-item.active span {
+    color: #ffffff;
+    background: #3672a2;
     }
 
     span.round-tabs.one {
@@ -188,30 +192,15 @@
     }
     .nav-tabs > li {
         width: 11%;
-        height: 142px;
+        height: 110px;
     }
     .nav-tabs .tab-title {
-        /* top: 100px; */
-        /* float: right; */
-        
-        margin: 100% 0px 0px -50%;
-        /* text-align: center; */
-        
+        margin: 100% 0px 0px -50%;        
         position: absolute;
+        background: none !important;
+        color: #999 !important;
     }
-    /*li.active:before {
-    content: " ";
-    position: absolute;
-    left: 45%;
-    opacity:0;
-    margin: 0 auto;
-    bottom: -2px;
-    border: 10px solid transparent;
-    border-bottom-color: #fff;
-    z-index: 1;
-    transition:0.2s ease-in-out;
-}*/
-    
+
     li:after {
         content: " ";
         position: absolute;
@@ -236,7 +225,7 @@
     .nav-tabs > li a {
         width: 65px;
         height: 65px;
-        margin: 20px auto;
+        margin: 5px auto;
         border-radius: 100%;
         padding: 0;
         cursor: pointer;
