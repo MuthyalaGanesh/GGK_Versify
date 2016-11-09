@@ -9,6 +9,8 @@ var allLocations = require('./allLocationsTestData.json');
 var workFlows = require('./workFlowData.json');
 var userInfo = require('./userData.json');
 var gatewayInfo = require('./gatewayData.json');
+var metricInfo = require('./metricsData.json');
+var dataHistorianInfo = require('./dataHistorianData.json');
 
 export function getLocationTypes() {
     var data = jsonObject;
@@ -118,5 +120,15 @@ export function getUserInfo() {
 
 export function getGatewayInfo() {
     var data = gatewayInfo;
+    return data;
+}
+
+export function getMetricInfo() {
+    var data = metricInfo;
+    return data;
+}
+
+export function getDataHistorian() {
+    var data = dataHistorianInfo.AssignedScadaPoints;
     return data;
 }
