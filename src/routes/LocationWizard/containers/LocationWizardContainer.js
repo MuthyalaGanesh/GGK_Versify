@@ -5,7 +5,6 @@ import {
 import LocationWizard from '../components/LocationWizard'
 import {
 	saveCompleteLocationWizard,
-	onLocationItemClick,
 	leftMenuDropdownClickEvent,
 	toggleMenuClick
 } from '../modules/locationWizard';
@@ -18,7 +17,6 @@ function onchange(e) {
 	console.log(e.target.value, e.target.name)
 }
 const mapDispatchToProps = (dispatch) => ({
-	onLocationItemClick: onLocationItemClick,
 	toggleMenuClick :(e) => {
 		dispatch(toggleMenuClick(e))
 	},
@@ -28,7 +26,9 @@ const mapDispatchToProps = (dispatch) => ({
 	onchange: (e) => {
 		console.log(e.target.value, e.target.name)
 	},
-	leftMenuDropdownClickEvent:leftMenuDropdownClickEvent,
+	leftMenuDropdownClickEvent:(id, e) => {
+		dispatch(leftMenuDropdownClickEvent(id, e))
+	},
 	saveCompleteLocationWizard: () => {
 		dispatch(saveCompleteLocationWizard())
 	}

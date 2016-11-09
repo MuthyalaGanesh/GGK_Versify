@@ -10,7 +10,6 @@ export const BasicInfo = (props) => {
         locationTypes,
         primaryMarkets,
         locations,
-        parentLocations,
         owners,
         technologyTypes,
         fuelClasses,
@@ -72,7 +71,7 @@ return (
                                             <Field 
                                             name="parentLocation" 
                                             component={ParentLocationField} 
-                                            parentLocations={parentLocations}
+                                            parentLocations={props.parentLocations}
                                             className="form-control">                                                
                                             </Field>
                                         </div>

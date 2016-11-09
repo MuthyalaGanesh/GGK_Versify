@@ -4,28 +4,24 @@ import {
 import {React, dispatch} from 'react'
 
 export const ON_PARENT_LOCATION_SELECT = 'ON_PARENT_LOCATION_SELECT'
-export const BIND_LOCATIONS = 'BIND_LOCATIONS'
+export const BIND_INITIAL_VALUES = 'BIND_INITIAL_VALUES'
 
-export function BindLocations() {
-  return (dispatch, getState) => {
-    return new Promise((resolve) => {
-      dispatch({
-         type: BIND_LOCATIONS, 
-         payload: {
-           locationState:getState().location,
-           }
-          });
-    });
-  }  
+export function BindInitialValues(locationId) {
+  return {
+    type: BIND_INITIAL_VALUES,
+    payload: locationId
+  }; 
 };
 
 
 export const ACTION_HANDLERS = {
-
-  [BIND_LOCATIONS]: (state, action) => {
+  [BIND_INITIAL_VALUES]: (state, action) => {
+    console.log("BIND_INITIAL_VALUES:", action.payload);
     return Object.assign({}, state, {
-     locations:action.payload.locationState.allLocations,
-      parentLocations:changeObjectTypeOfLocations(action.payload.locationState.allLocations)
+      BasicInfo:{
+      locationId:action.payload,
+      locationName : "TEST LOCATION"
+      }
     })
   },
   ['ERROR']: (state, action) => {
@@ -35,24 +31,9 @@ export const ACTION_HANDLERS = {
   }
 }
 
-function changeObjectTypeOfLocations(allLocations){
-    var changedLocationsObject =[];
-    allLocations.forEach(function(item) {        
-     changedLocationsObject.push({
-         key: item.Id,
-         value: item.Id,
-         label: item.Name,
-         disabled: !item.IsOutageLevel || false,
-         children: changeObjectTypeOfLocations(item.Children)
-        });
-    });
-    return changedLocationsObject;
-}
-const allLocations = basicInfoDropdowns.getLocations;
+
 const initialState = {
   error: null,
-  locations:allLocations,
-  parentLocations:changeObjectTypeOfLocations(allLocations),
   locationTypes: basicInfoDropdowns.getLocationTypes,
   owners: basicInfoDropdowns.getOwners,
   primaryMarkets: basicInfoDropdowns.getPrimaryMarkets,

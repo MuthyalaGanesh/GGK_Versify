@@ -2,8 +2,9 @@ import {
   basicInfoDropdowns
 } from 'api/locationWizardApi'
 
+import { BindInitialValues } from './basicInfo';
 
-export const LOCATIONS_MENUITEM_CLICK = 'LOCATIONS_MENUITEM_CLICK';
+
 export const TOGGLE_LEFTMENU_CLICK = 'TOGGLE_LEFTMENU_CLICK';
 
 export const LOCATIONS_MENUITEM_DROPDOWN_CLICK = 'LOCATIONS_MENUITEM_DROPDOWN_CLICK';
@@ -15,20 +16,11 @@ export function toggleMenuClick(event) {
   };
 }
 
-export function onLocationItemClick(event) {
-  console.log("LOCATIONS_MENUITEM_CLICK:", event);
-
-  return {
-    type: LOCATIONS_MENUITEM_CLICK,
-    payload: event
-  };
-};
 
 export function leftMenuDropdownClickEvent(id, event) {
   console.log("LOCATIONS_MENUITEM_DROPDOWN_CLICK:", id);
-  return {
-    type: LOCATIONS_MENUITEM_DROPDOWN_CLICK,
-    payload: event
+  return (dispatch, getState) => {
+    dispatch(BindInitialValues(id));
   };
 };
 export function saveCompleteLocationWizard() {
@@ -59,13 +51,7 @@ function toArray(obj) {
   return array;
 }
 
-export const ACTION_HANDLERS = {
-  [LOCATIONS_MENUITEM_CLICK]: (state, action) => {
-    return Object.assign({}, state)
-  },
-  [LOCATIONS_MENUITEM_DROPDOWN_CLICK]: (state, action) => {
-    return Object.assign({}, state)
-  },
+export const ACTION_HANDLERS = {   
   [TOGGLE_LEFTMENU_CLICK]: (state, action) => {
     //Handling adding claases  sidebar-open,sidebar-collapse based on screen resolution
     var bodyClassList = toArray(document.getElementsByTagName('body')[0].classList);
@@ -90,9 +76,28 @@ export const ACTION_HANDLERS = {
     return Object.assign({}, state)
   },
 }
+
+function changeObjectTypeOfLocations(allLocations){
+    var changedLocationsObject =[];
+    allLocations.forEach(function(item) {        
+     changedLocationsObject.push({
+         key: item.Id,
+         value: item.Id,
+         label: item.Name,
+         disabled: !item.IsOutageLevel || false,
+         children: changeObjectTypeOfLocations(item.Children)
+        });
+    });
+    return changedLocationsObject;
+}
+
+const allLocationsObject = basicInfoDropdowns.getLocations;
+
 const initialState = {
   error: null,
-  allLocations: basicInfoDropdowns.getLocations
+  allLocations: allLocationsObject,
+  parentLocations:changeObjectTypeOfLocations(allLocationsObject),
+
 };
 
 export default function locationWizardReducer(state = initialState, action) {
