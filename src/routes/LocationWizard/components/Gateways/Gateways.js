@@ -1,6 +1,6 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
-import {Table, Popover, Button, Modal} from 'react-bootstrap/lib'
+import {Table, Popover, Button, Modal,OverlayTrigger,Tooltip} from 'react-bootstrap/lib'
 import InputField from 'components/InputField/InputField'
 import 'styles/commonStyles.scss'
 
@@ -15,7 +15,12 @@ export const Gateways = (props) => {
                         <div className="box-header">
                             <h3 className="box-title">Gateway</h3>
                             <div className="box-tools pull-right">
-                                <span className="fa fa-plus-circle fa-2x" onClick={props.AddGatewayModalToggle}></span>
+                                <OverlayTrigger placement="top" overlay={
+                                    <Tooltip id="tooltip">
+                                        <strong>Add New Gateway</strong>
+                                    </Tooltip>}>
+                                    <span className="fa fa-plus-circle fa-2x" onClick={props.AddGatewayModalToggle} ></span>
+                                </OverlayTrigger>
                             </div>
                         </div>
                         <div className="box-body"> 
@@ -36,13 +41,24 @@ export const Gateways = (props) => {
                                                         {
                                                         Gateways.map((gateway, index) =>
                                                         (<tr key={index}>
-                                                            <td className="text-align-col">{gateway.Name}</td>
-                                                            <td className="text-align-col">{gateway.URL}</td>
+                                                            <td className="text-align-col">{gateway.aliasName}</td>
+                                                            <td className="text-align-col">{gateway.piInterfaceRootUrl}</td>
                                                             <td className="text-align-col">
-                                                                <i className="fa fa-edit fa-2x" onClick={() => { props.EditGateway(index) } }></i>
+                                                                <OverlayTrigger placement="left" overlay={
+                                                                    <Tooltip id="tooltip">
+                                                                        <strong>Edit {gateway.aliasName}</strong>
+                                                                    </Tooltip>}>
+                                                                    <i className="fa fa-edit fa-2x" onClick={() => { props.EditGateway(index) } }></i>
+                                                                </OverlayTrigger>                                                                 
                                                             </td>
                                                             <td>
-                                                                <i className={isNaN(gateway.Id) ? "show fa fa-trash-o fa-2x" : "hide" } onClick={() => { props.DeleteGateway(index) } }></i>
+                                                                <OverlayTrigger placement="left" overlay={
+                                                                    <Tooltip id="tooltip">
+                                                                        <strong>Delete {gateway.aliasName}</strong>
+                                                                    </Tooltip>}>
+                                                                    <i className={!isNaN(gateway.id) && gateway.id== -1 ? "show fa fa-trash-o fa-2x" : "hide" } onClick={() => { props.DeleteGateway(index) } }></i>
+                                                                </OverlayTrigger> 
+                                                                
                                                             </td>
                                                         </tr>))
                                                         }
@@ -108,8 +124,8 @@ export const Gateways = (props) => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button className="btn btn-warning" type="button"  onClick={props.AddGatewayModalToggle}>Cancel</Button>
-                    <Button className={props.gateways.AddGateway  ? "show btn btn-success" : "hide"} type="button" onClick={props.AddGateway}>Add</Button>
-                    <Button className={props.gateways.AddGateway  ?  "hide" : "show btn btn-success"} type="button" onClick={props.UpdateGateway}>Save</Button>
+                    <Button className={props.gateways.AddNewGateway  ? "show btn btn-success" : "hide"} type="button" onClick={props.AddGateway}>Add</Button>
+                    <Button className={props.gateways.AddNewGateway  ?  "hide" : "show btn btn-success"} type="button" onClick={props.UpdateGateway}>Save</Button>
                 </Modal.Footer>
             </Modal> : null }
             </div>

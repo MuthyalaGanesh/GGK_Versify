@@ -23,12 +23,14 @@ export const Users = (props) => {
                             </div>
                         </div>
                         <div className="box-body"> 
-                            <div className="panel panel-info">
-                                <div className="panel-heading">
-                                    USERS BY ROLE
+                            <div className="box">
+                                <div className="box-header">
+                                    <h3 className="box-title">USERS BY ROLE</h3>
+                                    <div className="box-tools pull-right">
+                                    </div>
                                 </div>
-                                <div className="panel-body">
-                                <div className="col-sm-6 col-md-6 form-group">
+                                <div className="box-body">
+                                    <div className="col-sm-6 col-md-6 form-group">
                                         <div className="col-sm-5 col-md-5 parentLocation">
                                             <label className="control-label" >Roles </label>
                                         </div>
@@ -60,11 +62,13 @@ export const Users = (props) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="panel panel-info">
-                                <div className="panel-heading">
-                                    USERS BY CONTACT
+                            <div className="box">
+                                <div className="box-header">                                    
+                                    <h3 className="box-title">USERS BY CONTACT</h3>
+                                    <div className="box-tools pull-right">
+                                    </div>
                                 </div>
-                                <div className="panel-body">
+                                <div className="box-body">
                                 <div className="col-sm-6 col-md-6 form-group">
                                         <div className="col-sm-5 col-md-5 parentLocation">
                                             <label className="control-label" >Contacts </label>
