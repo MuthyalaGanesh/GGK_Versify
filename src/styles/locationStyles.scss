@@ -22,6 +22,12 @@
 #content_footer .pull-right{
     margin-right: 25px;
     }
+@media screen and (max-width: 400px) {
+.content-header
+{
+    top: 115px;
+}
+}
 
 /**Sidebar***/
 #control-sidebar-menutree-tab {
@@ -95,7 +101,7 @@
         left: 0;
         right: 0;
         top: 40%;
-        z-index: 1;
+        z-index: 0;
     }
     .nav-tabs > li.active > a,
     .nav-tabs > li.active > a:hover,
@@ -108,9 +114,9 @@
         border-bottom-color: transparent;
     }
     span.round-tabs {
-        width: 70px;
-        height: 70px;
-        line-height: 70px;
+        width: 60px;
+        height: 60px;
+        line-height: 60px;
         display: inline-block;
         border-radius: 100px;
         background: white;
@@ -120,67 +126,61 @@
         text-align: center;
         font-size: 25px;
     }
+     li a.wizard-item {
+        border: 2px solid #ddd;
+    }
+    li a.wizard-item.active {
+    border: 2px solid #3672a2 !important;
+    }
+
     span.round-tabs.one {
         color: rgb(34, 194, 34);
-        border: 2px solid rgb(34, 194, 34);
     }
+   
     li.active span.round-tabs.one {
         background: #fff !important;
-        border: 2px solid #ddd;
         color: rgb(34, 194, 34);
     }
     span.round-tabs.two {
         color: #febe29;
-        border: 2px solid #febe29;
     }
     li.active span.round-tabs.two {
         background: #fff !important;
-        border: 2px solid #ddd;
         color: #febe29;
     }
     span.round-tabs.three {
         color: #3e5e9a;
-        border: 2px solid #3e5e9a;
     }
     li.active span.round-tabs.three {
         background: #fff !important;
-        border: 2px solid #ddd;
         color: #3e5e9a;
     }
     span.round-tabs.four {
         color: #f1685e;
-        border: 2px solid #f1685e;
     }
     li.active span.round-tabs.four {
         background: #fff !important;
-        border: 2px solid #ddd;
         color: #f1685e;
     }
     span.round-tabs.five {
         color: #3879D9;
-        border: 2px solid #999;
     }
     li.active span.round-tabs.five {
         background: #fff !important;
-        border: 2px solid #3879D9;
         color: #3879D9;
     }
     span.round-tabs.six {
         color: #999;
-        border: 2px solid #999;
     }
     li.active span.round-tabs.six {
         background: #fff !important;
-        border: 2px solid #ddd;
         color: #999;
     }
     span.round-tabs.seven {
         color: #E3EDF6;
-        border: 2px solid #E3EDF6;
     }
     li.active span.round-tabs.seven {
         background: #fff !important;
-        border: 2px solid #ddd;
         color: #E3EDF6;
     }
     .nav-tabs > li.active > a span.round-tabs {
@@ -234,8 +234,8 @@
         border-bottom-color: #ddd;
     }
     .nav-tabs > li a {
-        width: 70px;
-        height: 70px;
+        width: 65px;
+        height: 65px;
         margin: 20px auto;
         border-radius: 100%;
         padding: 0;

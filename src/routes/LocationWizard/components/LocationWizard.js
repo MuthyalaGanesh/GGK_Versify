@@ -30,7 +30,11 @@ return (
    <div>
     <LocationLeftMenu Locations={props.location.allLocations} leftMenuDropdownClickEvent={props.leftMenuDropdownClickEvent} />
     <section id="content_header" className="content-header col-xs-12 col-md-10">
-        <h1>Location Wizard<small>OMS Location wizard</small></h1>
+         <Link to='#' onClick={props.toggleMenuClick} id="sidebar_toggle" className="sidebar-toggle" data-toggle="offcanvas" role="button">
+          <span className="glyphicon glyphicon-align-justify">
+          </span>
+        </Link>
+        <h1 style={{'marginLeft': '16px','marginTop':'-20px'}}>Location Wizard<small>OMS Location wizard</small></h1>
     </section>
     <section id='Location-wizard-tabs' className="content">
         <div className="row">

@@ -4,7 +4,10 @@ import {
 
 import LocationWizard from '../components/LocationWizard'
 import {
-	saveCompleteLocationWizard,onLocationItemClick,leftMenuDropdownClickEvent
+	saveCompleteLocationWizard,
+	onLocationItemClick,
+	leftMenuDropdownClickEvent,
+	toggleMenuClick
 } from '../modules/locationWizard';
 
 function submit(values) {
@@ -16,6 +19,9 @@ function onchange(e) {
 }
 const mapDispatchToProps = (dispatch) => ({
 	onLocationItemClick: onLocationItemClick,
+	toggleMenuClick :(e) => {
+		dispatch(toggleMenuClick(e))
+	},
 	submit: (values) => {
 		alert(JSON.stringify(values))
 	},
