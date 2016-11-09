@@ -12,7 +12,8 @@ ISO_MARKETS :  baseAddress+"/ISOMarkets",
 TIME_ZONES : baseAddress+"/TimeZones",
 METRICS : baseAddress+"/Metrics",
 WORKFLOW_GROUPS:baseAddress+"/WorkflowGroups",
-WORKFLOW_TYPES:baseAddress+"/WorkflowTypes"
+WORKFLOW_TYPES:baseAddress+"/WorkflowTypes",
+OMS_LOCATION_WIZARD_DATA:baseAddress+"/OMSLocationWizardData"
 }
 
 export default ApiUrl

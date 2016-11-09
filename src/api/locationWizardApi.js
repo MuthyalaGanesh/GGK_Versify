@@ -91,40 +91,7 @@ export function getAllUOMValues() {
     
 }
 export function getSystemIntegrationTypes() {
-    var systemIntegrationTypes = [{
-        Id: 1,
-        Name: "Turbine Manufacturer",
-        DisplayName: "Turbine Manufacturer"
-    }, {
-            Id: 2,
-            Name: "VTariff-Agency",
-            DisplayName: "VTariff-Agency"
-        }, {
-            Id: 3,
-            Name: "EMS",
-            DisplayName: "EMS"
-        }, {
-            Id: 4,
-            Name: "Gamesa Power",
-            DisplayName: "Gamesa Power"
-        }, {
-            Id: 5,
-            Name: "CAISO_Name",
-            DisplayName: "CAISO_Name"
-        }, {
-            Id: 6,
-            Name: "MISO Portal Meter view",
-            DisplayName: "MISO Portal Meter view"
-        }, {
-            Id: 7,
-            Name: "MISO Gateway",
-            DisplayName: "MISO Gateway"
-        }, {
-            Id: 8,
-            Name: "pjm_emtr",
-            DisplayName: "pjm_emtr"
-        }]
-    return systemIntegrationTypes;
+    return XMLHttpRequestSyncGet(Constants.OMS_LOCATION_WIZARD_DATA);
 }
 
 export const basicInfoDropdowns = {

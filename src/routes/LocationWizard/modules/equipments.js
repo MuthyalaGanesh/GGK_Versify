@@ -10,6 +10,11 @@ export function AddEquipment() {
         type: ADD_EQUIPMENT,
         payload: getState().form.EquipmentsForm.values.newEquipment
       })
+      dispatch({
+        type: 'redux-form/DESTROY',
+        meta: { form: "EquipmentsForm" },
+        payload: ""
+      })
     })
   }
 }

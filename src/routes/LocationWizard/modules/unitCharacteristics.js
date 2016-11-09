@@ -21,6 +21,8 @@ export function getUOMValueByID(measureId) {
 }
 export function updateRow(event) {
   return (dispatch, getState) => {
+    // console.log(getState().form.UnitCharacteristicsForm)
+
     return new Promise((resolve) => {
       dispatch({
         type: UPDATE_ROW,
@@ -34,6 +36,11 @@ export function AddUnitCharateristic() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       dispatch({ type: INSERT_ROW, payload: getState().form.UnitCharacteristicsForm })
+      dispatch({
+        type: 'redux-form/DESTROY',
+        meta: { form: "UnitCharacteristicsForm" },
+        payload: ""
+      })
     })
   }
 }
@@ -53,6 +60,7 @@ export function characteristicNameSelected(event) {
 
 export function togglingAddModal() {
   return (dispatch, getState) => {
+
     return new Promise((resolve) => {
       dispatch({
         type: TOGGLE_ADD_MODAL,
@@ -67,12 +75,12 @@ export function togglingAddModal() {
   }
 }
 
-export function makeEditable(index) {
+export function makeEditable(id) {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       dispatch({
         type: EDIT_TOGGLE,
-        payload: index
+        payload: id
       })
       dispatch({
         type: 'redux-form/DESTROY',
@@ -136,24 +144,43 @@ export const ACTION_HANDLERS = {
   //deleting object after confirmation
   [DELETE_UNIT_CHARACTERISTIC]: (state, action) => {
     if (action.payload) {
-      var newState = Object.assign({}, state, { showDeleteModal: !state.showDeleteModal })
-      newState.selectedunitCharacteristics.splice(parseInt(state.deletingUnitIndex), 1)
+      var newSelectedUC = [];
+      state.selectedunitCharacteristics.map((suc, i) => {
+        if (i != state.deletingUnitIndex) {
+          newSelectedUC.push(suc)
+        }
+      })
     }
-    return newState
+    return Object.assign({}, state, { showDeleteModal: !state.showDeleteModal, selectedunitCharacteristics: newSelectedUC })
   },
   //update edited row
   [UPDATE_ROW]: (state, action) => {
     var newState = Object.assign({}, state, { showEditModal: !state.showEditModal })
-    newState.editableUnitCharacter = {}
     if (action.payload) {
       newState.selectedunitCharacteristics.map((uc) => {
-        if (uc.Name == state.editableUnitCharacter.Name) {
-          uc.Value = action.payload.values.ucvalue;
-          uc.EffectiveStartDate = action.payload.values.effectiveStartDate;
-          uc.EffectiveEndDate = action.payload.values.effectiveEndDate;
+        if (uc.name == state.editableUnitCharacter.name) {
+          uc.Value = (action.payload.fields && action.payload.fields.ucvalue && action.payload.fields.ucvalue.touched)
+            ? action.payload.values.ucvalue : state.editableUnitCharacter.Value;
+          uc.EffectiveStartDate = (action.payload.fields && action.payload.fields.effectiveStartDate && action.payload.fields.effectiveStartDate.touched)
+            ? action.payload.values.effectiveStartDate : state.editableUnitCharacter.EffectiveStartDate;
+          uc.EffectiveEndDate = (action.payload.fields && action.payload.fields.effectiveEndDate && action.payload.fields.effectiveEndDate.touched)
+            ? action.payload.values.effectiveEndDate : state.editableUnitCharacter.EffectiveEndDate;
+
+          if (action.payload.fields && action.payload.fields.editableData) {
+            action.payload.values.editableData.map(ed => {
+              var newRow = uc;
+              newRow.EffectiveEndDate = ed.effectiveEndDate
+              newRow.EffectiveStartDate = ed.effectiveStartDate
+              newRow.Value = ed.ucvalue
+              state.selectedunitCharacteristics.push(newRow);
+            })
+          }
         }
+
       })
     }
+    newState.editableUnitCharacter = {}
+
     return newState;
   },
   //helps in prepopulating unit characteristic values after changing unit character
@@ -188,7 +215,9 @@ export const ACTION_HANDLERS = {
 }
 const initialState = {
   error: "",
-  unitCharacteristics: getUnitCharacteristics(),
+  unitCharacteristics: getUnitCharacteristics().sort(function(a, b){ 
+	return a.id-b.id
+}),
   allUOMvalues: getAllUOMValues(),
   selectedunitCharacteristics: [],
   unSelectedUnitCharacteristics: [],
