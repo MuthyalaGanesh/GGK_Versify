@@ -8,8 +8,7 @@ import TreeView from './BootstrapTreeView';
 export const LocationLeftMenu =(props)=> {
     
   return(   
-      <div>
-    <aside className="main-sidebar control-sidebar-dark">
+     <aside className="main-sidebar control-sidebar-dark">
         <ul className="nav nav-tabs nav-justified control-sidebar-tabs">
             <li className="active">
                 <Link to="#control-sidebar-menutree-tab" data-toggle="tab">
@@ -37,7 +36,6 @@ export const LocationLeftMenu =(props)=> {
         </div>
 
     </aside>
-</div> 
     );
 }
 

@@ -1,3 +1,29 @@
+.sidebar-menu > li {
+	 padding:7px 0px 6px 5px;
+}
+.sidebar-menu .treeview-menu {
+    display:block !important;
+}
+.dropdown-menu { 
+     width: 100%
+     }
+     /***Errors*/
+.error {
+	    border: 1px solid red;
+}
+.errorMessage{	
+	color:red;
+	margin-top:-10px;
+}
+/**Common styles***/
+.clear{
+	clear: both;
+}
+#content_footer .pull-right{
+    margin-right: 25px;
+    }
+
+/**Sidebar***/
 #control-sidebar-menutree-tab {
     .side-menu {
         float: left;
