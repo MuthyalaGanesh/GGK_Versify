@@ -16,7 +16,8 @@ return (
   
 <div className="board-inner">
     <nav className="navbar ">
-        <div className="" style={{'width':'75%','position':'fixed','zIndex':'1'}}>
+    <div style={{'width':'100%','position':'fixed','zIndex':'3','background':'#F7F9FA','heigth':'150px'}}>
+        <div className="" style={{'width':'75%'}}>
             <ul className="nav nav-tabs">
                 <div className="liner"></div>
                 <li>
@@ -87,6 +88,7 @@ return (
                 </li>
 
             </ul>
+        </div>
         </div>
     </nav>
 </div>

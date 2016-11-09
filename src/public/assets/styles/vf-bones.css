@@ -96,7 +96,7 @@ div.value { font-weight:bold; font-size:14px; height: 26px; padding: 3px 9px 3px
 }
 .fixed.layout-boxed .wrapper { max-width: 100%; }
 /* Content */
-.content { min-height: 250px; padding:55px 15px 65px 15px; margin-right: auto; margin-left: auto; }
+.content { min-height: 250px; padding:40px 15px 65px 15px; margin-right: auto; margin-left: auto; }
 /* H1 - H6 font */
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 { font-family:'Open Sans', 'Roboto', 'Roboto Condensed', 'Helvetica Neue', Helvetica, Arial, sans-serif; }
 /* General Links */
