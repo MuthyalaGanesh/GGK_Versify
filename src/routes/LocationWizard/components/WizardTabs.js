@@ -21,7 +21,7 @@ return (
             <ul className="nav nav-tabs">
                 <div className="liner"></div>
                 <li>
-                    <Link activeClass="active" className="wizard-item" offset={-232} to="basicInfo" spy={true} smooth={true} duration={500}>
+                    <Link activeClass="active" className="wizard-item active" offset={-232} to="basicInfo" spy={true} smooth={true} duration={500}>
                     <span className="round-tabs one">
                         <i className="glyphicon glyphicon-home"></i>
                     </span>

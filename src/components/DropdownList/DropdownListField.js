@@ -6,10 +6,9 @@ const DropdownListField = ({ input, ...rest }) =>
   <DropdownList {...input}
     onBlur={() => input.onBlur()}
     value={input.value}
-    onChange={(e)=>{
-        
+    onChange={(e)=>{  
         input.onChange(e);
-        rest.primaryMarketChangeEvent(e);
+        !!rest.onChangeEvent && rest.onChangeEvent(e);
      }}
     {...rest}/>
 

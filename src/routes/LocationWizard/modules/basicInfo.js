@@ -16,7 +16,7 @@ export function BindInitialValues(locationId) {
   }; 
 };
 
-export function primaryMarketChangeEvent(event) {
+export function onChangeEvent(event) {
   return {
     type: PRIMARY_MARKET_CHANGE_EVENT,
     payload: event

@@ -41,12 +41,13 @@ return (
                                     </div>
                                     <div className="col-sm-7 col-md-7">
                                         <OverlayTrigger placement="top" overlay={
-                                                        error && formdata.BasicInfoForm.values.locationName===''
+                                                        error && formdata.BasicInfoForm.values.locationName ===''
                                                         ?
                                                         <Tooltip placement="top" className="in" id="tooltip-top">
                                                         Please Enter Location Name
                                                         </Tooltip>
                                                        :<p></p>} >
+
                                                <Field name="locationName"
                                                    component="input"
                                                    className= {error && formdata.BasicInfoForm.values.locationName === ''
@@ -77,18 +78,18 @@ return (
                                                className="form-control">
                                         </Field>
                                     </div>
-                                </div>                                
+                                </div>
                                 <div className="col-sm-12 col-md-6 form-group">
                                     <div className="col-sm-5 col-md-5">
                                         <label className="control-label" id="locationType"> Type </label>
                                     </div>
-                                    <div className="col-sm-7 col-md-7">
-                                        <Field name="locationType" component="select" className="form-control">
-                                            <option value="">Select a type...</option>
-                                            {
-                                            locationTypes.map(locationType =>
-                                            <option value={locationType.id} key={locationType.id}>{locationType.displayName}</option>)
-                                            }
+                                    <div className="col-sm-7 col-md-7">                                       
+                                        <Field component={DropdownListField}
+                                               className="form-control" name="locationType"
+                                               data={locationTypes}
+                                               valueField='id'
+                                               textField='displayName'
+                                               placeholder="Select location type">
                                         </Field>
                                     </div>
                                 </div>
@@ -97,14 +98,13 @@ return (
                                     <div className="col-sm-5 col-md-5">
                                         <label className="control-label" id="technologyType"> Technology type </label>
                                     </div>
-                                    <div className="col-sm-7 col-md-7">
-                                        <Field name="technologyType" component="select" className="form-control">
-                                            <option value="">Select a Technology type...</option>
-                                            {
-                                            technologyTypes.map(technologyType =>
-                                            <option value={technologyType.id} key={technologyType.id}>{technologyType.name}</option>)
-                                            }
-                                        </Field>
+                                    <div className="col-sm-7 col-md-7">                                        
+                                        <Field component={DropdownListField}
+                                               className="form-control" name="technologyType"
+                                               data={technologyTypes}
+                                               valueField='id'
+                                               textField='name'
+                                               placeholder="Select Technology type" />
                                     </div>
                                 </div>
                                 <div className="col-sm-12 col-md-6 form-group">
@@ -112,12 +112,12 @@ return (
                                         <label className="control-label" id="primaryMarket"> Primary Market </label>
                                     </div>
                                     <div className="col-sm-7 col-md-7">
-                                        <Field component={DropdownListField} primaryMarketChangeEvent={props.primaryMarketChangeEvent}
-                                        className="form-control" name="primaryMarket"  
-                                        data={primaryMarkets}
-                                        valueField='id' 
-                                        textField='name' 
-                                        placeholder="Select primaryMarket type"/>                                        
+                                        <Field component={DropdownListField} onChangeEvent={props.onChangeEvent}
+                                               className="form-control" name="primaryMarket"
+                                               data={primaryMarkets}
+                                               valueField='id'
+                                               textField='name'
+                                               placeholder="Select primaryMarket type" />
                                     </div>
                                 </div>
                                 <div className='clear'></div>
@@ -131,42 +131,35 @@ return (
                                         : null
                                         }
 
-                                        { error && (!formdata.BasicInfoForm.values.hasOwnProperty('secondarytechnologyType') || (formdata.BasicInfoForm.values.secondarytechnologyType == formdata.BasicInfoForm.values.technologyType))
+                                        
+                                        <Field component={DropdownListField}
+                                               className={
+                                               error && (!formdata.BasicInfoForm.values.hasOwnProperty('secondarytechnologyType') 
+                                               || (formdata.BasicInfoForm.values.secondarytechnologyType == formdata.BasicInfoForm.values.technologyType))
 
-                                        ?
-
-                                        <Field name="secondarytechnologyType" component="select" className="form-control error">
-                                            <option value="">Select a Technology type...</option>
-                                            {
-                                            technologyTypes.map(technologyType =>
-                                            <option value={technologyType.id} key={technologyType.id}>{technologyType.name}</option>)
-                                            }
-                                        </Field>
-                                        :
-                                        <Field name="secondarytechnologyType" component="select" className="form-control">
-                                            <option value="">Select a Technology type...</option>
-                                            {
-                                            technologyTypes.map(technologyType =>
-                                            <option value={technologyType.id} key={technologyType.id}>{technologyType.name}</option>)
-                                            }
-                                        </Field>
-
-                                        }
-
+                                               ?'form-control error'
+                                               :'form-control'
+                                               }
+                                               name="secondarytechnologyType"
+                                               data={technologyTypes}
+                                               valueField='id'
+                                               textField='name'
+                                               placeholder="Select Technology type">
+                                            </Field>
                                     </div>
                                 </div>
                                 <div className="col-sm-12 col-md-6 form-group">
                                     <div className="col-sm-5 col-md-5">
                                         <label className="control-label" id="owner"> Owner </label>
                                     </div>
-                                    <div className="col-sm-7 col-md-7">
-                                        <Field name="owner" component="select" className="form-control">
-                                            <option value="">Select Owner...</option>
-                                            {
-                                            owners.map(owner =>
-                                            <option value={owner.id} key={owner.id}>{owner.name}</option>)
-                                            }
-                                        </Field>
+                                    <div className="col-sm-7 col-md-7">                                       
+                                        <Field component={DropdownListField}
+                                               className="form-control" name="owner"
+                                               data={owners}
+                                               valueField='id'
+                                               textField='name'
+                                               placeholder="Select Technology type">
+                                         </Field>
                                     </div>
                                 </div>
                                 <div className='clear'></div>
@@ -174,13 +167,13 @@ return (
                                     <div className="col-sm-5 col-md-5">
                                         <label className="control-label" id="fuelClass"> Fuel Class </label>
                                     </div>
-                                    <div className="col-sm-7 col-md-7">
-                                        <Field name="fuelClass" component="select" className="form-control">
-                                            <option value="">Select Fuel Class</option>
-                                            {
-                                            fuelClasses.map(fuelClass =>
-                                            <option value={fuelClass.id} key={fuelClass.id}>{fuelClass.name}</option>)
-                                            }
+                                    <div className="col-sm-7 col-md-7">                                       
+                                        <Field component={DropdownListField}
+                                               className="form-control" name="fuelClass"
+                                               data={fuelClasses}
+                                               valueField='id'
+                                               textField='name'
+                                               placeholder="Select Fuel Class">
                                         </Field>
                                     </div>
                                 </div>
@@ -197,13 +190,13 @@ return (
                                     <div className="col-sm-5 col-md-5">
                                         <label className="control-label" id="timezone"> Timezone </label>
                                     </div>
-                                    <div className="col-sm-7 col-md-7">
-                                        <Field name="timezone" component="select" className="form-control">
-                                            <option value="">Select Timezone</option>
-                                            {
-                                            timezones.map(timezone =>
-                                            <option value={timezone.id} key={timezone.id}>{timezone.value}</option>)
-                                            }
+                                    <div className="col-sm-7 col-md-7">                                        
+                                        <Field component={DropdownListField}
+                                               className="form-control" name="timezone"
+                                               data={timezones}
+                                               valueField='id'
+                                               textField='value'
+                                               placeholder="Select Timezone">
                                         </Field>
                                     </div>
                                 </div>
@@ -211,13 +204,13 @@ return (
                                     <div className="col-sm-5 col-md-5">
                                         <label className="control-label" id="physicalTimezone"> Physical Timezone </label>
                                     </div>
-                                    <div className="col-sm-7 col-md-7">
-                                        <Field name="physicalTimezone" component="select" className="form-control">
-                                            <option value="">Select Physical Timezone</option>
-                                            {
-                                            timezones.map(timezone =>
-                                            <option value={timezone.id} key={timezone.id}>{timezone.value}</option>)
-                                            }
+                                    <div className="col-sm-7 col-md-7">                                       
+                                        <Field component={DropdownListField}
+                                               className="form-control" name="physicalTimezone"
+                                               data={timezones}
+                                               valueField='id'
+                                               textField='value'
+                                               placeholder="Select PhysicalTimezone">
                                         </Field>
                                     </div>
                                 </div>
