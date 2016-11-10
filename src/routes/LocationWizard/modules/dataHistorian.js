@@ -88,20 +88,19 @@ export const ACTION_HANDLERS = {
     newState.EditableDataHistorian = {}       
     return newState
   },
-  [ADD_DATAHISTORIAN]: (state, action) => {    
-    console.log(state);
-    var newState = Object.assign({}, state, { showAddModal:!state.showAddModal })
+  [ADD_DATAHISTORIAN]: (state, action) => {
+    var newState = Object.assign({}, state, { showAddDataHistorianModal:!state.showAddDataHistorianModal })
     if (action.payload != null) { 
       if (action.payload.values.metric) {
           var newDataHistorian = {};          
           newDataHistorian.id = 0
-          newDataHistorian.metricId = action.payload.values.metric
-          newDataHistorian.metricName = action.payload.values.metric
-          newDataHistorian.metricDescription = action.payload.values.metric
-          newDataHistorian.isDigitalState = action.payload.values.GatewayPassword
-          newDataHistorian.scadaTag = action.payload.values.GatewayURL
-          newDataHistorian.scadaServerAliasName = action.payload.values.GatewayURL
-          newDataHistorian.scadaServerId = action.payload.values.GatewayURL
+          newDataHistorian.metricId = action.payload.values.metric.id
+          newDataHistorian.metricName = action.payload.values.metric.displayName
+          newDataHistorian.metricDescription = action.payload.values.metric.description
+          newDataHistorian.isDigitalState = action.payload.values.isDigitalTag
+          newDataHistorian.scadaTag = action.payload.values.Tag
+          newDataHistorian.scadaServerAliasName = action.payload.values.Gateway.aliasName
+          newDataHistorian.scadaServerId = action.payload.values.Gateway.id
           newDataHistorian.locationId = '11020321'
           newState.dataHistorian.push(newDataHistorian)
         }
@@ -111,34 +110,70 @@ export const ACTION_HANDLERS = {
   [EDIT_DATAHISTORIAN]: (state, action) => {
     if (!isNaN(action.payload) && state.dataHistorian) {
       let EditData = state.dataHistorian[action.payload]
-      state.EditableDataHistorian.Id = EditData.id 
-      state.EditableDataHistorian.metricId = EditData.aliasName
-      state.EditableDataHistorian.isDigitalState = EditData.piInterfaceRootUrl 
-      state.EditableDataHistorian.scadaTag = EditData.externalSystemLogin
-      state.EditableDataHistorian.scadaServerId = EditData.externalSystemPwd
-      state.EditableDataHistorian.index = action.payload
+      var EditableData = {};
+      EditableData.id = EditData.id 
+      EditableData.metricId = EditData.metricId
+      EditableData.isDigitalState = EditData.isDigitalState 
+      EditableData.scadaTag = EditData.scadaTag
+      EditableData.scadaServerId = EditData.scadaServerId
+      EditableData.index = action.payload
     }
-    let newState = Object.assign({}, state, { showAddDataHistorianModal: !state.shshowAddDataHistorianModalowAddModal })
-    newState.AddNewDataHistorian = false    
+    let newState = Object.assign({}, state, { EditableDataHistorian : EditableData , showAddDataHistorianModal : !state.showAddDataHistorianModal})
+    newState.AddNewDataHistorian = false 
     return newState
   },
   [UPDATE_DATAHISTORIAN]:(state,action)=>{
+    debugger;
      let updatedDataHistorian=[]; 
-    if (action.payload) {            
+    if (action.payload) {   
             state.dataHistorian.map((dh,i)  => {
               if(state.EditableDataHistorian != null && !isNaN(state.EditableDataHistorian.index))
               {
                 if (i!=state.EditableDataHistorian.index) {
-                    updatedGateways.push(dh)
+                    updatedDataHistorian.push(dh)
                 }
                 else{
-                    var newData = {};
-                    newData.id = dh.id
-                    newData.aliasName = action.payload.fields.GatewayName && action.payload.fields.GatewayName.touched ? action.payload.values.GatewayName : dh.aliasName
-                    newData.piInterfaceRootUrl = action.payload.fields.GatewayURL && action.payload.fields.GatewayURL.touched ? action.payload.values.GatewayURL : dh.piInterfaceRootUrl
-                    newData.externalSystemLogin = action.payload.fields.GatewayLogin && action.payload.fields.GatewayLogin.touched ? action.payload.values.GatewayLogin : dh.externalSystemLogin
-                    newData.externalSystemPwd = action.payload.fields.GatewayPassword && action.payload.fields.GatewayPassword.touched ? action.payload.values.GatewayPassword : dh.externalSystemPwd
-                    updatedGateways.push(newData) 
+                    var newDataHistorian = {};
+                    if(action.payload.fields)
+                    {
+                        newDataHistorian.id = dh.id
+                        if(action.payload.fields.metric && action.payload.fields.metric.touched )
+                        {
+                          newDataHistorian.metricId = action.payload.values.metric.id
+                          newDataHistorian.metricName = action.payload.values.metric.displayName
+                          newDataHistorian.metricDescription = action.payload.values.metric.description
+                        }
+                        else
+                        {
+                          newDataHistorian.metricId = dh.metricId
+                          newDataHistorian.metricName = dh.metricName
+                          newDataHistorian.metricDescription = dh.metricDescription
+                        }
+                        if(action.payload.fields.Gateway && action.payload.fields.Gateway.touched )
+                        {
+                          newDataHistorian.scadaServerAliasName = action.payload.values.Gateway.aliasName
+                          newDataHistorian.scadaServerId = action.payload.values.Gateway.id
+                        }  
+                        else
+                        {
+                          newDataHistorian.scadaServerAliasName = dh.scadaServerAliasName
+                          newDataHistorian.scadaServerId = dh.scadaServerId
+                        }                 
+                        newDataHistorian.scadaTag = action.payload.fields.Tag && action.payload.fields.Tag.touched ? action.payload.values.Tag : dh.scadaTag 
+                        newDataHistorian.isDigitalState = action.payload.values && !isNaN(action.payload.values.isDigitalTag)  ? action.payload.values.isDigitalTag : dh.isDigitalState
+                        updatedDataHistorian.push(newDataHistorian) 
+                    }
+                    else if(action.payload.values && !isNaN(action.payload.values.isDigitalTag))
+                    {
+                      let data = dh;
+                      data.isDigitalState = action.payload.values.isDigitalTag
+                      updatedDataHistorian.push(data) 
+                    }
+                    else
+                    {
+                      updatedDataHistorian.push(dh)
+                    }
+                    
                 }
               }                
             });
@@ -150,7 +185,7 @@ export const ACTION_HANDLERS = {
     if (action.payload) {            
             state.dataHistorian.map((dh,i) => {
                 if (i!=action.payload) {
-                    updatedGateways.push(dh)
+                    updatedDataHistorian.push(dh)
                 }
             });
         }

@@ -1,4 +1,5 @@
 import React from 'react'
+import {input} from 'react'
 import { Field, reduxForm } from 'redux-form'
 import {Table, Popover, Button, Modal,OverlayTrigger,Tooltip} from 'react-bootstrap/lib'
 import DropdownList from 'react-widgets/lib/DropdownList'
@@ -11,10 +12,23 @@ const RenderDropdownList = ({ input, ...rest }) =>
     value={input.value || rest.defaultValue} //requires value to be an array
     {...rest}/>
 
+ const RenderCheckBox = ({ input, ...rest })=>{
+    console.log(rest.defaultvalue)
+    return(
+        <input 
+            onChange={(e)=>{ input.onChange(e)}}
+            value={input.value}
+            defaultChecked = {rest.defaultvalue}
+            {...rest}/>
+        ) }
+       
+
 export const DataHistorian = (props) => { 
     const metrics = props.dataHistorian.metrics;
     const gateways = props.dataHistorian.gateways.Gateways;
     const dataHistorian = props.dataHistorian.dataHistorian;
+    const touched = props.formdata;
+    
     return (
             <div className="row tab-pane fade in active" id="datahistorian">
                 <div className="col-xs-12">
@@ -52,7 +66,7 @@ export const DataHistorian = (props) => {
                                                                     <Tooltip id="tooltip">
                                                                         <strong>Edit {data.metricName}</strong>
                                                                     </Tooltip>}>
-                                                                    <i className="fa fa-edit fa-2x" onClick={() => { props.EditGateway(index) } }></i>
+                                                                    <i className="fa fa-edit fa-2x" onClick={() => { props.EditDataHistorian(index) } }></i>
                                                                 </OverlayTrigger>                                                                 
                                                             </td>
                                                             <td>
@@ -60,7 +74,7 @@ export const DataHistorian = (props) => {
                                                                     <Tooltip id="tooltip">
                                                                         <strong>Delete {data.metricName}</strong>
                                                                     </Tooltip>}>
-                                                                    <i className={!isNaN(data.id) && data.id== 0 ? "show fa fa-trash-o fa-2x" : "hide" } onClick={() => { props.DeleteGateway(index) } }></i>
+                                                                    <i className={!isNaN(data.id) && data.id== 0 ? "show fa fa-trash-o fa-2x" : "hide" } onClick={() => { props.DeleteDataHistorian(index) } }></i>
                                                                 </OverlayTrigger> 
                                                                 
                                                             </td>
@@ -82,13 +96,13 @@ export const DataHistorian = (props) => {
                 </Modal.Header>
                 <Modal.Body>
                     <div className="row">
-                            <div className={props.dataHistorian.AddNewDataHistorian?"show col-xs-12 form-group":"Hide"}>
+                            <div className={props.dataHistorian.AddNewDataHistorian ||props.dataHistorian.EditableDataHistorian.id == 0 ? "col-xs-12 form-group show":"hide"}>
                                 <div className="col-xs-6">
-                                    <label>metric</label>
+                                    <label>Metric</label>
                                 </div>                                
                                 <div className="col-xs-6">
-                                    <Field component={RenderDropdownList} className="form-control" name="metric"  data={metrics} 
-                                            valueField='id' textField='displayName' placeholder="Select metric"/>
+                                     <Field component={RenderDropdownList} className="form-control" name="metric"  placeholder="Select a Metric"
+                                             valueField='id' textField='displayName' data={metrics} defaultValue = {props.dataHistorian.EditableDataHistorian.metricId}/>
                                 </div>
                             </div>
                             <div className="col-xs-12 form-group">
@@ -96,7 +110,8 @@ export const DataHistorian = (props) => {
                                     <label>Tag</label>
                                 </div>
                                 <div className="col-xs-6">
-                                    <Field component={InputField} type="text" className="form-control" name="Tag">
+                                    <Field component={InputField} type="text" className="form-control" name="Tag" defaultvalue={props.dataHistorian.EditableDataHistorian.scadaTag}
+                                                      touched = {touched.hasOwnProperty('DataHistorianForm')?touched.DataHistorianForm.hasOwnProperty('fields') ? touched.DataHistorianForm.fields.hasOwnProperty('Tag') : false :false }>
                                     </Field>
                                 </div>
                             </div>
@@ -105,13 +120,8 @@ export const DataHistorian = (props) => {
                                     <label>Gateway</label>
                                 </div>
                                 <div className="col-xs-6">
-                                    <Field component="select" className="form-control"  name = "Gateway">
-                                            <option value="">Select a Gateway</option>
-                                            {                                                
-                                                gateways.map(gateway =>
-                                                <option value={gateway} key={gateway.id}>{gateway.aliasName}</option>)
-                                            }
-                                    </Field>
+                                    <Field component={RenderDropdownList} className="form-control" name="Gateway"  placeholder="Select Gateway"
+                                             valueField='id' textField='aliasName' data={gateways} defaultValue = {props.dataHistorian.EditableDataHistorian.scadaServerId}/>
                                 </div>
                             </div>
                             <div className="col-xs-12 form-group">
@@ -119,9 +129,7 @@ export const DataHistorian = (props) => {
                                     <label>Is Digital Tag</label>
                                 </div>
                                 <div className="col-xs-6">
-                                    <Field name="isDigitalTag" 
-                                            component='input' type="checkbox"
-                                         text='Allow Outages at Location'/>                                           
+                                    <Field name="isDigitalTag" component={RenderCheckBox} type="checkbox" defaultvalue = {props.dataHistorian.EditableDataHistorian.isDigitalState}/>                                           
                                 </div>
                             </div>
                     </div>       

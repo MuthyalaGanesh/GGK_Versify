@@ -6,6 +6,7 @@ import {getGateways,getMetrics,getDataHistorians,AddDataHistorianModalToggle,Add
 
 const mapStateToProps = (state) => ({
   dataHistorian : state.dataHistorian,
+  formdata : state.form
 })
 
 const mapDispatchToProps = {

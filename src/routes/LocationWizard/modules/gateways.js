@@ -70,14 +70,15 @@ export const ACTION_HANDLERS = {
   [EDIT_GATEWAY]: (state, action) => {
     if (!isNaN(action.payload) && state.gateway.Gateways) {
       let EditGateway = state.gateway.Gateways[action.payload]
-      state.EditableGateway.Id = EditGateway.id 
-      state.EditableGateway.GatewayName = EditGateway.aliasName
-      state.EditableGateway.GatewayURL = EditGateway.piInterfaceRootUrl 
-      state.EditableGateway.GatewayLogin = EditGateway.externalSystemLogin
-      state.EditableGateway.GatewayPassword = EditGateway.externalSystemPwd
-      state.EditableGateway.index = action.payload
+      var EditableGateway ={}
+      EditableGateway.Id = EditGateway.id 
+      EditableGateway.GatewayName = EditGateway.aliasName
+      EditableGateway.GatewayURL = EditGateway.piInterfaceRootUrl 
+      EditableGateway.GatewayLogin = EditGateway.externalSystemLogin
+      EditableGateway.GatewayPassword = EditGateway.externalSystemPwd
+      EditableGateway.index = action.payload
     }
-    let newState = Object.assign({}, state, { showAddModal: !state.showAddModal })
+    let newState = Object.assign({}, state, { showAddModal: !state.showAddModal , EditableGateway : EditableGateway})
     newState.AddNewGateway = false    
     return newState
   },

@@ -9,7 +9,6 @@ var allLocations = require('./allLocationsTestData.json');
 var workFlows = require('./workFlowData.json');
 var userInfo = require('./userData.json');
 var gatewayInfo = require('./gatewayData.json');
-var metricInfo = require('./metricsData.json');
 var dataHistorianInfo = require('./dataHistorianData.json');
 
 export function getLocationTypes() {
@@ -111,9 +110,7 @@ export const basicInfoDropdowns = {
 export default basicInfoDropdowns;
 
 export function getWorkFlows() {
-
-    var data = workFlows;
-    return data;
+    return XMLHttpRequestSyncGet(Constants.WORKFLOW_GROUPS);
 }
 
 export function getUserInfo() {
@@ -122,13 +119,13 @@ export function getUserInfo() {
 }
 
 export function getGatewayInfo() {
-    var data = gatewayInfo;
-    return data;
+    debugger;
+    var data = XMLHttpRequestSyncGet(Constants.OMS_LOCATION_WIZARD_INDEPENDENT_DATA);
+    return data.GetOMSLocationWizardIndependentDataResult;
 }
 
 export function getMetricInfo() {
-    var data = metricInfo;
-    return data;
+    return XMLHttpRequestSyncGet(Constants.METRICS);
 }
 
 export function getDataHistorian() {
