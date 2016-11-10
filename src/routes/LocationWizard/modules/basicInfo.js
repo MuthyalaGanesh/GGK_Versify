@@ -1,10 +1,13 @@
 import {
-  basicInfoDropdowns
+  basicInfoDropdowns, getMarketDrivenMappings
+
 } from 'api/locationWizardApi'
 import {React, dispatch} from 'react'
 
 export const ON_PARENT_LOCATION_SELECT = 'ON_PARENT_LOCATION_SELECT'
 export const BIND_INITIAL_VALUES = 'BIND_INITIAL_VALUES'
+export const PRIMARY_MARKET_CHANGE_EVENT = 'PRIMARY_MARKET_CHANGE_EVENT'
+
 
 export function BindInitialValues(locationId) {
   return {
@@ -13,6 +16,12 @@ export function BindInitialValues(locationId) {
   }; 
 };
 
+export function primaryMarketChangeEvent(event) {
+  return {
+    type: PRIMARY_MARKET_CHANGE_EVENT,
+    payload: event
+  }; 
+};
 
 export const ACTION_HANDLERS = {
   [BIND_INITIAL_VALUES]: (state, action) => {
@@ -23,6 +32,14 @@ export const ACTION_HANDLERS = {
       locationName : "TEST LOCATION"
       }
     })
+  },
+  [PRIMARY_MARKET_CHANGE_EVENT]: (state, action) => {
+    //get MarketDrivenMappings from API based on marketType ID
+    var data = getMarketDrivenMappings(action.payload.id);
+    return Object.assign({}, state, {
+      CredetialBasicData:data
+      }
+    )
   },
   ['ERROR']: (state, action) => {
     return Object.assign({}, state, {
@@ -41,7 +58,8 @@ const initialState = {
   fuelClasses: basicInfoDropdowns.getFuelClasses,
   timezones: basicInfoDropdowns.getTimezones,
   initial:true,
-  BasicInfo:{}
+  BasicInfo:{},
+  CredetialBasicData:{}
 };
 
 export default function basiInfoReducer(state = initialState, action) {

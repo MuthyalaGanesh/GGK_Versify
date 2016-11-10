@@ -9,12 +9,14 @@ import validate from '../../validations/basicInfoValidation'
 
 import {
     onParentLoCationSelect,
-    BindInitialValues
+    BindInitialValues,
+    primaryMarketChangeEvent
 } from '../../modules/basicInfo';
 
 
 const mapDispatchToProps = {
-    BindInitialValues
+    BindInitialValues,
+    primaryMarketChangeEvent
 }
 
 const mapStateToProps = (state) => ({

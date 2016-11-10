@@ -5,23 +5,49 @@ import {Panel, ControlLabel} from 'react-bootstrap/lib'
 export const CredentialsManagement = (props) => {
         return (
     <div className="row tab-pane fade in active" id="credentialsmanagement">
-        <div className="col-xs-12">
-            <div className="box">
-                <div className="box-header">
-                    <h3 className="box-title">Credentials Management</h3>
-                    <div className="box-tools pull-right">
-                    </div>
+    <div className="col-xs-12">
+        <div className="box">
+            <div className="box-header">
+                <h3 className="box-title">Credentials Management</h3>
+                <div className="box-tools pull-right">
                 </div>
-                <div className="box-body">
-                    <div className="margin-bottom-sm padding-top">
-
-                        <h2 style={{'textAlign': 'center'}}> In Progress...</h2>
-
+            </div>
+            <div className="box-body">
+                <div className="margin-bottom-sm padding-top">
+                 
+                  { !!props.marketDrivenMappings && props.marketDrivenMappings.length >0
+                      ?  <div className="row">
+                      {props.marketDrivenMappings.map(fieldElement =>
+                                        <div className="col-sm-12 col-md-6 form-group">
+                                        <div className="col-sm-5 col-md-5">
+                           <label className="control-label" id={fieldElement.DisplayName}> {fieldElement.DisplayName} </label>
+                          </div>
+                         <div className="col-sm-7 col-md-7">
+                            <Field name={fieldElement.DisplayName}
+                                    component="input"
+                                    className= "form-control"
+                                    type="text"
+                                    placeholder={fieldElement.DisplayName}>
+                            </Field>
+                      </div>
+                      </div>
+                        )}
+                        </div>
+                    : <div className="row"> 
+                    <h6 style={{'textAlign':'center'}}>
+                    This section will be loaded based on selection of Primary Market type
+                    </h6>
                     </div>
+                    
+                }
+                                  
+                                
+                   
                 </div>
             </div>
         </div>
     </div>
+</div>
 
         )
     }

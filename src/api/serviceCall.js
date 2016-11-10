@@ -21,7 +21,7 @@ export function axiosPost(url, data) {
 export function axiosGet(url, queryString = null) {  
   var getUrl = url;
   if (!!queryString) {
-    getUrl = getUrl + "/" + queryString;
+    getUrl = getUrl + "?" + queryString;
   }
   return (
     axios.get(getUrl)    
@@ -44,7 +44,7 @@ export function axiosGet(url, queryString = null) {
 export function XMLHttpRequestSyncGet(url, queryString = null) {  
   var getUrl = url;
   if (!!queryString) {
-    getUrl = getUrl + "/" + queryString;
+    getUrl = getUrl + "?" + queryString;
   }
  try {
         var request = new XMLHttpRequest();

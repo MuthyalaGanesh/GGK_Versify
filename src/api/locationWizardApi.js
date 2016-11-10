@@ -41,6 +41,9 @@ export function getLocations() {
     return XMLHttpRequestSyncGet(Constants.LOCATIONS).GetAllLocationsResult;
 
 }
+export function getMarketDrivenMappings(marketId) {     
+     return XMLHttpRequestSyncGet(Constants.LWMARKETDRIVEN_MAPPINGS,"isoMarketId="+marketId);;
+}
 
 export function getOwners() {
     var data = jsonObject;
