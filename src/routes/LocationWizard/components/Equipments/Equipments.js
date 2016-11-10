@@ -51,7 +51,7 @@ export const Equipments = (props) => {
                                                             <tr key={index}>
                                                                 <td className="col-xs-3 name-cell">{eq}</td>
                                                                 <td className="col-xs-1 text-align-col">
-                                                                    <div>
+                                                                    <div className=" text-center">
                                                                         <i className="fa fa-edit fa-2x" onClick={() => { props.EditEquipment(index) } }></i>
                                                                         <i className="fa fa-trash-o fa-2x" onClick={() => { props.DeleteEquipment(index) } }></i>
                                                                     </div>

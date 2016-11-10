@@ -15,11 +15,11 @@ export const Gateways = (props) => {
                         <div className="box-header">
                             <h3 className="box-title">Gateway</h3>
                             <div className="box-tools pull-right">
-                                <OverlayTrigger placement="top" overlay={
+                                <OverlayTrigger placement="bottom" overlay={
                                     <Tooltip id="tooltip">
-                                        <strong>Add New Gateway</strong>
+                                        <strong>Add Gateway</strong>
                                     </Tooltip>}>
-                                    <span className="fa fa-plus-circle fa-2x" onClick={props.AddGatewayModalToggle} ></span>
+                                    <i className="fa fa-plus-circle fa-2x" onClick={props.AddGatewayModalToggle}></i>
                                 </OverlayTrigger>
                             </div>
                         </div>
@@ -43,20 +43,20 @@ export const Gateways = (props) => {
                                                         (<tr key={index}>
                                                             <td className="text-align-col">{gateway.aliasName}</td>
                                                             <td className="text-align-col">{gateway.piInterfaceRootUrl}</td>
-                                                            <td className="text-align-col">
+                                                            <td className="text-align-col text-center">
                                                                 <OverlayTrigger placement="left" overlay={
                                                                     <Tooltip id="tooltip">
                                                                         <strong>Edit {gateway.aliasName}</strong>
                                                                     </Tooltip>}>
-                                                                    <i className="fa fa-edit fa-2x" onClick={() => { props.EditGateway(index) } }></i>
+                                                                    <i className="fa fa-edit" onClick={() => { props.EditGateway(index) } }></i>
                                                                 </OverlayTrigger>                                                                 
                                                             </td>
-                                                            <td>
+                                                            <td className="text-align-col text-center">
                                                                 <OverlayTrigger placement="left" overlay={
                                                                     <Tooltip id="tooltip">
                                                                         <strong>Delete {gateway.aliasName}</strong>
                                                                     </Tooltip>}>
-                                                                    <i className={!isNaN(gateway.id) && gateway.id== -1 ? "show fa fa-trash-o fa-2x" : "hide" } onClick={() => { props.DeleteGateway(index) } }></i>
+                                                                    <i className={!isNaN(gateway.id) && gateway.id== -1 ? "show fa fa-trash-o" : "hide" } onClick={() => { props.DeleteGateway(index) } }></i>
                                                                 </OverlayTrigger> 
                                                                 
                                                             </td>
@@ -122,10 +122,12 @@ export const Gateways = (props) => {
                     </div> 
                         
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button className="btn btn-warning" type="button"  onClick={props.AddGatewayModalToggle}>Cancel</Button>
-                    <Button className={props.gateways.AddNewGateway  ? "show btn btn-success" : "hide"} type="button" onClick={props.AddGateway}>Add</Button>
-                    <Button className={props.gateways.AddNewGateway  ?  "hide" : "show btn btn-success"} type="button" onClick={props.UpdateGateway}>Save</Button>
+                <Modal.Footer class="modal-footer">
+                    <div class="pull-right">
+                        <button className={props.gateways.AddNewGateway  ? "btn btn-success" : "hide"} type="button" onClick={props.AddGateway}>Add</button>
+                        <button className={props.gateways.AddNewGateway  ?  "hide" : "btn btn-success"} type="button" onClick={props.UpdateGateway}>Save</button>
+                        <button className="btn btn-warning" type="button"  onClick={props.AddGatewayModalToggle}>Cancel</button>
+                    </div>
                 </Modal.Footer>
             </Modal> : null }
             </div>
