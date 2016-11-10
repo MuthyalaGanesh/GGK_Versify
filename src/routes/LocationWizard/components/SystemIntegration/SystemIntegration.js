@@ -72,7 +72,7 @@ export const SystemIntegration = (props) => {
                                                             touched = {touched.hasOwnProperty('SystemIntegrationForm') ?
                                                                 touched.SystemIntegrationForm.hasOwnProperty('fields') ? touched.SystemIntegrationForm.fields.hasOwnProperty('AliasName') : false : false }
                                                             className="form-control" /></td>
-                                                        <td className="align-text-col">
+                                                        <td className="text-align-col text-center">
                                                             <i className="fa fa-trash-o fa-2x" onClick={() => props.deleteSystemIntegration(i) }></i>
                                                         </td>
                                                     </tr>

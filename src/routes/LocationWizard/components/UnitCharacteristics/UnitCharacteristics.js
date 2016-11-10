@@ -52,7 +52,7 @@ const EffectiveDateValues = (props) => (
                             name={`${editableData}.effectiveEndDate`}
                             component={DatePickerField}/></td>
 
-                        <td><i type="button"
+                        <td className="text-align-col text-center"><i type="button"
                             title="Remove"
                             className="fa fa-trash-o fa-2x"
                             onClick={() => props.fields.remove(index) }></i>
