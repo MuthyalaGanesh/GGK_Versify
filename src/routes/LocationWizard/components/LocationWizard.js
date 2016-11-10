@@ -40,10 +40,13 @@ return (
         <div className="row">
             <div className="col-xs-12">
                 <div className="board">
-                    <div className='container-fluid'>
+                    <div className='row'>
                         <WizardTabs />
+                    </div>
+                    <div className=''>
+                        
                         <div className='clear'></div>
-                        <div className="tab-content element" style={{'marginTop':'60px'}}>
+                        <div className="tab-content element">
                             <Element name="basicInfo" className="element">
                                 <BasicInfoContainer parentLocations={props.location.parentLocations}/>
                             </Element>

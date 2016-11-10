@@ -60,12 +60,18 @@ return (
                                     </div>
                                 </div>
                                 <FormGroup className="col-sm-12 col-md-6">
-                                    <Field name="isOutageLevel"
+                                    
+                                    <label className="checkbox-inline">
+                                      <Field name="isOutageLevel"
                                            component='input' type="checkbox"
-                                           text='Allow Outages at Location' />
-                                    <label className="control-label"> &nbsp;&nbsp;Allow Outages at Location </label>
+                                           text='Allow Outages at Location'class='checkbox' />
+                                          &nbsp;&nbsp;Allow Outages at Location </label>
 
                                 </FormGroup>
+
+                                
+
+
                                 <div className='clear'></div>
                                 <div className="col-sm-12 col-md-6 form-group">
                                     <div className="col-sm-5 col-md-5">
