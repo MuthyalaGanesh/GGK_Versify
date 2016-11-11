@@ -10,7 +10,7 @@ export const SystemIntegration = (props) => {
     const touched = props.formdata
     return (
         <div className="row tab-pane fade in active" id="systemintegration">
-            <div className="col-md-12 col-sm-12">
+            <div className="col-sm-12">
                 <div className="box">
                     <div className="box-header">
                         <h3 className="box-title">System Integration</h3>

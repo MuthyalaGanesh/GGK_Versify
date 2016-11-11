@@ -32,7 +32,7 @@ const EffectiveDateValues = (props) => (
                             className="form-control"
                             defaultvalue={props.defaultValues[i].Value}
                             touched = {props.touched.hasOwnProperty('UnitCharacteristicsForm') ?
-                                props.touched.UnitCharacteristicsForm.hasOwnProperty('fields') ? props.touched.UnitCharacteristicsForm.fields.hasOwnProperty(`ucvalue[${i}]`) : false : false }/></td>
+                                props.touched.UnitCharacteristicsForm.hasOwnProperty('fields') ? props.touched.UnitCharacteristicsForm.fields.hasOwnProperty("ucvalue") ?  props.touched.UnitCharacteristicsForm.fields.ucvalue[i].hasOwnProperty('touched') :false:false : false }/></td>
                         <td> <Field
                             name={`effectiveStartDate[${i}]`}
                             component={DatePickerField}
@@ -104,7 +104,7 @@ export const UnitCharacteristics = (props) => {
                     <div className="box-header">
                         <h3 className="box-title">Unit Characteristics</h3>
                         <div className="box-tools pull-right">
-                            <OverlayTrigger placement="top" overlay={
+                            <OverlayTrigger placement="bottom" overlay={
                                 <Tooltip id="tooltip">
                                     <strong>Add Unit Charateristic</strong>
                                 </Tooltip>}>
@@ -150,7 +150,7 @@ export const UnitCharacteristics = (props) => {
                                                                 </Tooltip>}>
                                                                 <i className="fa fa-edit fa-2x" onClick={() => { props.ToggleAddEditModal(index) } }></i>
                                                             </OverlayTrigger>
-                                                            {uc.isDeletable ? <OverlayTrigger placement="top" overlay={
+                                                            {uc.isDeletable ? <OverlayTrigger placement="bottom" overlay={
                                                                 <Tooltip id="tooltip">
                                                                     <strong>Delete {uc.Name}</strong>
                                                                 </Tooltip>}>
