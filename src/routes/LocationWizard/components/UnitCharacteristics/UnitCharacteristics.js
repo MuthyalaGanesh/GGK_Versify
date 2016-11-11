@@ -42,7 +42,7 @@ const EffectiveDateValues = (props) => (
                             name={`effectiveEndDate[${i}]`}
                             component={DatePickerField}
                             defaultValue={props.defaultValues[i].EffectiveEndDate}/></td>
-                        <td>{i == 0 ? null : <i type="button"
+                        <td>{i == 0 ? <i onClick={() => props.fields.push({}) } className="fa fa-plus-circle fa-2x"></i> : <i type="button"
                             title="Remove"
                             className="fa fa-trash-o fa-2x"
                             onClick={() => props.removeEditableAttribute(i) }></i>}

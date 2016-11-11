@@ -51,7 +51,7 @@ export const Users = (props) => {
                             <div className="col-md-12 col-lg-6">
                             <div className="box">
                                 <div className="box-header">
-                                    <h3 className="box-title">USERS BY ROLE</h3>
+                                    <h3 className="box-title">Users By Role</h3>
                                     <div className="box-tools pull-right">
                                     </div>
                                 </div>
@@ -88,7 +88,7 @@ export const Users = (props) => {
                             <div className="col-md-12 col-lg-6">
                             <div className="box">
                                 <div className="box-header">                                    
-                                    <h3 className="box-title">USERS BY CONTACT</h3>
+                                    <h3 className="box-title">Users By Contact</h3>
                                     <div className="box-tools pull-right">
                                     </div>
                                 </div>
