@@ -171,11 +171,11 @@ export const ACTION_HANDLERS = {
 
           for (var index = 0; index < state.editableUnitCharacter.editableAttributes.length; index++) {
             var initialAttribute = {
-              Value: (action.payload.fields && action.payload.fields.ucvalue && action.payload.values.ucvalue[index])
+              Value: (action.payload.values && action.payload.values.ucvalue && action.payload.values.ucvalue[index])
                 ? action.payload.values.ucvalue[index] : state.editableUnitCharacter.editableAttributes[index].Value,
-              EffectiveStartDate: (action.payload.fields && action.payload.fields.effectiveStartDate && action.payload.values.effectiveStartDate[index])
+              EffectiveStartDate: (action.payload.values && action.payload.values.effectiveStartDate && action.payload.values.effectiveStartDate[index])
                 ? action.payload.values.effectiveStartDate[index] : state.editableUnitCharacter.editableAttributes[index].EffectiveStartDate,
-              EffectiveEndDate: (action.payload.fields && action.payload.fields.effectiveEndDate && action.payload.values.effectiveEndDate[index])
+              EffectiveEndDate: (action.payload.values && action.payload.values.effectiveEndDate && action.payload.values.effectiveEndDate[index])
                 ? action.payload.values.effectiveEndDate[index] : state.editableUnitCharacter.editableAttributes[index].EffectiveEndDate
             }
             finalAttributes.push(initialAttribute)
