@@ -20,11 +20,11 @@ export const SystemIntegration = (props) => {
                     <div className="box-body">
                         <div className="row">
                             <div className="form-group">
-                                <div className="col-md-2 col-sm-2">
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                     <label className="control-label"> External System Name </label>
                                 </div>
-                                <div className="col-md-9 col-sm-8">
-                                    <div className="col-md-7 col-sm-7">
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                    <div>
                                         { !props.systemIntegration.dropDownShow ? <Field component={InputField} name="newSystemIntegration"
                                             touched = {touched.hasOwnProperty('SystemIntegrationForm') ?
                                                 touched.SystemIntegrationForm.hasOwnProperty('fields') ? touched.SystemIntegrationForm.fields.hasOwnProperty('newSystemIntegration') : false : false }
@@ -40,17 +40,18 @@ export const SystemIntegration = (props) => {
                                             </Field>
                                         }
                                     </div>
-                                    <div className="col-md-2 col-sm-2">
-                                    <label className="control-label"> 
-                                        {props.systemIntegration.dropDownShow 
+
+                                </div>
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                    <div className="col-xs-6 col-sm-6 col-md-3 col-lg-3"> <label className="control-label">
+                                        {props.systemIntegration.dropDownShow
                                             ?
                                             <a onClick={props.toggleTypeahead} className="toggle-link"> Add Custom</a>
-                                            :<a onClick={props.toggleTypeahead}  className="toggle-link">Add Predefined</a>}
-                                    </label>
+                                            : <a onClick={props.toggleTypeahead}  className="toggle-link">Add Predefined</a>}
+                                    </label></div>
+                                    <div className="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                                        <button className="btn btn-success" type="button" onClick={props.AddSystemIntegration}>Add</button>
                                     </div>
-                                </div>
-                                <div className="col-md-1 col-sm-1">
-                                    <button className="btn btn-success" type="button" onClick={props.AddSystemIntegration}>Add</button>
                                 </div>
                             </div>
                         </div>
