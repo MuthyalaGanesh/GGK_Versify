@@ -2,17 +2,11 @@ import React from 'react'
 import _ from 'lodash';
 
 let treeviewSpanStyle = {
-  "width": "1rem",
-  "height": "1rem"
 };
 
 let treeviewSpanIndentStyle = treeviewSpanStyle;
-treeviewSpanIndentStyle["marginLeft"] = "2px";
-treeviewSpanIndentStyle["marginRight"] = "2px";
 
 let treeviewSpanIconStyle = treeviewSpanStyle;
-treeviewSpanIconStyle["marginLeft"] = "2px";
-treeviewSpanIconStyle["marginRight"] = "5px";
 
 class TreeView extends React.Component {
 
@@ -248,12 +242,12 @@ TreeView.defaultProps = {
   levels: 2,
   selectable: true,
 
-  expandIcon: 'glyphicon  glyphicon-chevron-right',
-  collapseIcon: 'glyphicon glyphicon-chevron-down',
-  emptyIcon: 'glyphicon',
-  nodeIcon: 'glyphicon glyphicon-stop',
-  unselectedIcon: 'glyphicon glyphicon-unchecked',
-  selectedIcon: 'glyphicon glyphicon-check',
+  expandIcon: 'fa  fa-chevron-left',
+  collapseIcon: 'fa fa-chevron-down',
+  emptyIcon: 'fa',
+  nodeIcon: 'fa fa-square',
+  unselectedIcon: 'fa fa-square-o',
+  selectedIcon: 'fa fa-check-square-o',
 
   color: "#FFF",
   backColor: undefined,
@@ -483,8 +477,7 @@ export class TreeNode extends React.Component {
       );
     }
 
-    style["cursor"] = "pointer";
-    style["margin"] = "5px";
+    style["cursor"] = "pointer";    
     return (        
           <li className="treeview"
             style={style}

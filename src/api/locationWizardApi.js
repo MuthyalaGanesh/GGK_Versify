@@ -131,3 +131,11 @@ export function getDataHistorian() {
     var data = dataHistorianInfo.AssignedScadaPoints;
     return data;
 }
+
+export function getNewContactPopUpInfo(){
+    var ContactPopup = {};
+    ContactPopup.status = XMLHttpRequestSyncGet(Constants.CONTACT_STATUS).GetContactStatusesResult;
+    ContactPopup.type = XMLHttpRequestSyncGet(Constants.CONTACT_TYPE);
+    ContactPopup.org = XMLHttpRequestSyncGet(Constants.ORGANIZATION);
+    return ContactPopup;
+}

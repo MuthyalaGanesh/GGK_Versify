@@ -17,9 +17,12 @@
 .align-text-col{
     text-align: center;
 }
-table>thead>tr>th{
-    text-align: center;
-}
 .dropdown-menu{
     overflow-y: scroll!important;
+}
+.toggle-link{
+    cursor: pointer;
+}
+#resultsDiv{
+    margin-top: 2%; 
 }

@@ -25,7 +25,10 @@ export function AddSystemIntegration() {
     return (dispatch, getState) => {
         return new Promise((resolve) => {
             dispatch({
-                type: ADD_SYSTEM_INTEGRATION, payload: getState().form.SystemIntegrationForm.values.newSystemIntegration
+                type: ADD_SYSTEM_INTEGRATION,
+                payload: getState().form.SystemIntegrationForm &&
+                    getState().form.SystemIntegrationForm.values ?
+                    getState().form.SystemIntegrationForm.values.newSystemIntegration : null
             })
             dispatch({
                 type: 'redux-form/DESTROY',
@@ -48,7 +51,7 @@ export function toggleTypeahead() {
 
 export const ACTION_HANDLERS = {
     [TOGGLE_TYPEAHEAD]: (state, action) => {
-        return Object.assign({}, state, { typeaheadShow: !state.typeaheadShow })
+        return Object.assign({}, state, { dropDownShow: !state.dropDownShow })
 
     },
 
@@ -96,39 +99,40 @@ export const ACTION_HANDLERS = {
             });
 
         }
+        return Object.assign({}, state)
     },
 
     [DELETE_SYS_INTEGRATION]: (state, action) => {
- 
-    if (action.payload && !isNaN(action.payload)) {
-    var newSystemIntegrations = [];
-    var newUnSelectedSysIntegrations = state.unSelectedSystemIntegrationTypes;
-    state.selectedSystemIntegrationTypes.map((ssit, index) => {
-        if (index != action.payload) {
-            newSystemIntegrations.push(ssit)
+        if (action.payload != null && action.payload != undefined && !isNaN(action.payload)) {
+            var newSystemIntegrations = [];
+            var newUnSelectedSysIntegrations = state.unSelectedSystemIntegrationTypes;
+            state.selectedSystemIntegrationTypes.map((ssit, index) => {
+                if (index != action.payload) {
+                    newSystemIntegrations.push(ssit)
+                }
+                else {
+                    ssit.LocationMappingId = -1;
+                    newUnSelectedSysIntegrations.push(ssit)
+                }
+            })
         }
-        else {
-            ssit.LocationMappingId = -1;
-            newUnSelectedSysIntegrations.push(ssit)
-        }
-    })
-}
 
-return Object.assign({}, state, {
-    selectedSystemIntegrationTypes: newSystemIntegrations,
-    unSelectedSystemIntegrationTypes: newUnSelectedSysIntegrations
-})
-}}
+        return Object.assign({}, state, {
+            selectedSystemIntegrationTypes: newSystemIntegrations,
+            unSelectedSystemIntegrationTypes: newUnSelectedSysIntegrations
+        })
+    }
+}
 
 const initialState = {
     error: "",
     systemIntegrationTypes: getSystemIntegrationTypes().GetOMSLocationWizardDataResult.AssignedLocationMappings,
     selectedSystemIntegrationTypes: [],
     unSelectedSystemIntegrationTypes: getSystemIntegrationTypes().GetOMSLocationWizardDataResult.AssignedLocationMappings,
-    typeaheadShow: true
+    dropDownShow: true
 };
 
 export default function systemIntegrationReducer(state = initialState, action) {
-const handler = ACTION_HANDLERS[action.type];
-return handler ? handler(state, action) : state;
+    const handler = ACTION_HANDLERS[action.type];
+    return handler ? handler(state, action) : state;
 }

@@ -6,32 +6,22 @@ span.fa.fa-plus-circle.fa-2x {
     cursor: pointer;
     float: right;
 }
-i.fa.fa-edit.fa-2x {
+i.fa.fa-edit {
     color: #6495ed;
-    margin: 5px;
+    margin:3px 0px 0px 0px;
     cursor: pointer;
 }
-i.fa.fa-trash-o.fa-2x {
+i.fa.fa-trash-o {
     color: red;
-    margin: 5px;
+    margin:3px 0px 0px 0px;
     cursor: pointer;
 }
 
-.btn.btn-success,.btn.btn-success:hover {
-    background-color: rgb(0, 166, 90) !important;
-}
+td i.fa.fa-edit,td i.fa.fa-trash-o {
+    font-size: 1.3em;
+} 
 
-.btn.btn-danger, .btn.btn-success {
-    float: left;
-    background-image: none;
-}
-
-.btn.btn-warning,.btn.btn-warning:hover  {
-    float: right;
-    background-image: none;
-    background-color: rgb(243, 156, 18) !important;
-}
-
-.btn-default:hover, .btn-default:active {
-    opacity: 0.8;
+div.box-tools.pull-right i.fa.fa-address-book {
+    font-size: 1.8em;
+    color: #64b448;
 }

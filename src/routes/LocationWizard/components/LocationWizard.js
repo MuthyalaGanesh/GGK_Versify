@@ -40,42 +40,44 @@ return (
         <div className="row">
             <div className="col-xs-12">
                 <div className="board">
-                    <div className='container-fluid'>
+                    <div className='row'>
                         <WizardTabs />
+                    </div>
+                    <div className='tab-content-menu'>                        
                         <div className='clear'></div>
-                        <div className="tab-content element" style={{'marginTop':'60px'}}>
+                        <div className="tab-content element">
                             <Element name="basicInfo" className="element">
                                 <BasicInfoContainer parentLocations={props.location.parentLocations}/>
                             </Element>
-                            <Element name="credential" className="element">
+                            <Element name="credential" className="element ">
                                 <CredentialsManagementContainer />
                             </Element>
 
-                            <Element name="unitcharacteristics" className="element">
+                            <Element name="unitcharacteristics" className="element ">
                                 <UnitCharacteristicsContainer />
                             </Element>
 
-                            <Element name="systemintegration" className="element">
+                            <Element name="systemintegration" className="element ">
                                 <SystemIntegrationContainer />
                             </Element>
 
-                            <Element name="workflows" className="element">
+                            <Element name="workflows" className="element ">
                                 <WorkFlowContainer />
                             </Element>
 
-                            <Element name="users" className="element">
+                            <Element name="users" className="element ">
                                 <UsersContainer />
                             </Element>
 
-                            <Element name="equipment" className="element">
+                            <Element name="equipment" className="element ">
                                 <EquipmentsContainer />
                             </Element>
 
-                            <Element name="gateways" className="element">
+                            <Element name="gateways" className="element ">
                                 <GatewaysContainer />
                             </Element>
 
-                            <Element name="datahistorian" className="element">
+                            <Element name="datahistorian" className="element ">
                                 <DataHistorianContainer />
                             </Element>
                         </div>

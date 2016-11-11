@@ -28,7 +28,7 @@ export const DataHistorian = (props) => {
     const gateways = props.dataHistorian.gateways.Gateways;
     const dataHistorian = props.dataHistorian.dataHistorian;
     const touched = props.formdata;
-    
+
     return (
             <div className="row tab-pane fade in active" id="datahistorian">
                 <div className="col-xs-12">
@@ -36,7 +36,12 @@ export const DataHistorian = (props) => {
                         <div className="box-header">
                             <h3 className="box-title">Data Historian</h3>
                             <div className="box-tools pull-right">
-                                <span className="fa fa-plus-circle fa-2x" onClick={props.AddDataHistorianModalToggle}></span>
+                                <OverlayTrigger placement="bottom" overlay={
+                                    <Tooltip id="tooltip">
+                                        <strong>Add Data Historian</strong>
+                                    </Tooltip>}>
+                                    <i className="fa fa-plus-circle fa-2x" onClick={props.AddDataHistorianModalToggle}></i>
+                                </OverlayTrigger>
                             </div>
                         </div>
                         <div className="box-body"> 
@@ -61,20 +66,20 @@ export const DataHistorian = (props) => {
                                                             <td className="text-align-col">{data.metricName}</td>
                                                             <td className="text-align-col">{data.metricDescription}</td>
                                                             <td className="text-align-col">{data.scadaTag}</td>
-                                                            <td className="text-align-col">
+                                                            <td className="text-align-col text-center">
                                                                 <OverlayTrigger placement="left" overlay={
                                                                     <Tooltip id="tooltip">
                                                                         <strong>Edit {data.metricName}</strong>
                                                                     </Tooltip>}>
-                                                                    <i className="fa fa-edit fa-2x" onClick={() => { props.EditDataHistorian(index) } }></i>
+                                                                    <i className="fa fa-edit" onClick={() => { props.EditDataHistorian(index) } }></i>
                                                                 </OverlayTrigger>                                                                 
                                                             </td>
-                                                            <td>
+                                                            <td className="text-align-col text-center">
                                                                 <OverlayTrigger placement="left" overlay={
                                                                     <Tooltip id="tooltip">
                                                                         <strong>Delete {data.metricName}</strong>
                                                                     </Tooltip>}>
-                                                                    <i className={!isNaN(data.id) && data.id== 0 ? "show fa fa-trash-o fa-2x" : "hide" } onClick={() => { props.DeleteDataHistorian(index) } }></i>
+                                                                    <i className={!isNaN(data.id) && data.id== 0 ? "show fa fa-trash-o" : "hide" } onClick={() => { props.DeleteDataHistorian(index) } }></i>
                                                                 </OverlayTrigger> 
                                                                 
                                                             </td>
@@ -111,7 +116,7 @@ export const DataHistorian = (props) => {
                                 </div>
                                 <div className="col-xs-6">
                                     <Field component={InputField} type="text" className="form-control" name="Tag" defaultvalue={props.dataHistorian.EditableDataHistorian.scadaTag}
-                                                      touched = {touched.hasOwnProperty('DataHistorianForm')?touched.DataHistorianForm.hasOwnProperty('fields') ? touched.DataHistorianForm.fields.hasOwnProperty('Tag') : false :false }>
+                                         placeholder="Tag" touched = {touched.hasOwnProperty('DataHistorianForm')?touched.DataHistorianForm.hasOwnProperty('fields') ? touched.DataHistorianForm.fields.hasOwnProperty('Tag') : false :false }>
                                     </Field>
                                 </div>
                             </div>
@@ -134,10 +139,13 @@ export const DataHistorian = (props) => {
                             </div>
                     </div>       
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button className="btn btn-warning" type="button"  onClick={props.AddDataHistorianModalToggle}>Cancel</Button>                    
-                    <Button className={props.dataHistorian.AddNewDataHistorian ? "show btn btn-success" : "hide"} type="button" onClick={props.AddDataHistorian}>Add</Button>
-                    <Button className={props.dataHistorian.AddNewDataHistorian ?  "hide" : "show btn btn-success"} type="button" onClick={props.UpdateAddDataHistorian}>Save</Button>
+                <Modal.Footer>     
+                    <div class="pull-right">  
+                        {props.dataHistorian.AddNewDataHistorian  ?       
+                            <button className="btn btn-success" type="button" onClick={props.AddDataHistorian}>Add</button> :
+                            <button className="btn btn-success" type="button" onClick={props.UpdateAddDataHistorian}>Save</button>}
+                        <button className="btn btn-warning" type="button"  onClick={props.AddDataHistorianModalToggle}>Cancel</button>  
+                    </div>
                 </Modal.Footer>
             </Modal>
             </div>

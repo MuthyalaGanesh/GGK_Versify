@@ -15,7 +15,10 @@ METRICS : baseAddress+"/Metrics",
 WORKFLOW_GROUPS:baseAddress+"/WorkflowGroups",
 WORKFLOW_TYPES:baseAddress+"/WorkflowTypes",
 OMS_LOCATION_WIZARD_DATA:baseAddress+"/OMSLocationWizardData",
-OMS_LOCATION_WIZARD_INDEPENDENT_DATA : baseAddress+"/OMSLocationWizardIndependentData"
+OMS_LOCATION_WIZARD_INDEPENDENT_DATA : baseAddress+"/OMSLocationWizardIndependentData",
+CONTACT_STATUS : baseAddress+"/ContactStatus",
+CONTACT_TYPE : baseAddress+"/ContactTypes",
+ORGANIZATION : baseAddress+"/Organizations"
 }
 
 export default ApiUrl

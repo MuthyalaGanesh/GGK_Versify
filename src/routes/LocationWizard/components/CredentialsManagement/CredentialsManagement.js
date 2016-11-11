@@ -18,20 +18,15 @@ export const CredentialsManagement = (props) => {
                   { !!props.marketDrivenMappings && props.marketDrivenMappings.length >0
                       ?  <div className="row">
                       {props.marketDrivenMappings.map(fieldElement =>
-                                        <div className="col-sm-12 col-md-6 form-group">
-                                        <div className="col-sm-5 col-md-5">
-                           <label className="control-label" id={fieldElement.DisplayName}> {fieldElement.DisplayName} </label>
-                          </div>
-                         <div className="col-sm-7 col-md-7">
-                            <Field name={fieldElement.DisplayName}
+                            <div className="col-sm-12 col-md-6 form-group">                                
+                                <label className="control-label" id={fieldElement.DisplayName}> {fieldElement.DisplayName} </label>
+                                <Field name={fieldElement.DisplayName}
                                     component="input"
-                                    className= "form-control"
+                                    className="form-control"
                                     type="text"
                                     placeholder={fieldElement.DisplayName}>
-                            </Field>
-                      </div>
-                      </div>
-                        )}
+                                </Field>
+                            </div>                        )}
                         </div>
                     : <div className="row"> 
                     <h6 style={{'textAlign':'center'}}>

@@ -9,7 +9,7 @@ export const LocationLeftMenu =(props)=> {
     
   return(   
      <aside className="main-sidebar control-sidebar-dark">
-        <ul className="nav nav-tabs nav-justified control-sidebar-tabs">
+        {/*<ul className="nav nav-tabs nav-justified control-sidebar-tabs">
             <li className="active">
                 <Link to="#control-sidebar-menutree-tab" data-toggle="tab">
                     <i className="fa fa-list"></i> Locations
@@ -25,7 +25,7 @@ export const LocationLeftMenu =(props)=> {
                     <i className="fa fa-history"></i> PlanOps
                 </Link>
             </li>
-        </ul>
+        </ul>*/}
 
         <div className="tab-content">
             <div className="tab-pane active" id="control-sidebar-menutree-tab">
