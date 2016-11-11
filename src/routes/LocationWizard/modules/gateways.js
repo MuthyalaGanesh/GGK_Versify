@@ -86,14 +86,12 @@ export const ACTION_HANDLERS = {
      let updatedGateways=[]; 
     if (action.payload) {            
             state.gateway.Gateways.map((gw,i) => {
-              debugger;
               if(state.EditableGateway != null && !isNaN(state.EditableGateway.index))
               {
                 if (i!=state.EditableGateway.index) {
                     updatedGateways.push(gw)
                 }
                 else{
-                  debugger;
                     var newGateway = {};
                     newGateway.id = gw.id
                     newGateway.aliasName = action.payload.fields.GatewayName && action.payload.fields.GatewayName.touched ? action.payload.values.GatewayName : gw.aliasName

@@ -119,7 +119,6 @@ export function getUserInfo() {
 }
 
 export function getGatewayInfo() {
-    debugger;
     var data = XMLHttpRequestSyncGet(Constants.OMS_LOCATION_WIZARD_INDEPENDENT_DATA);
     return data.GetOMSLocationWizardIndependentDataResult;
 }
