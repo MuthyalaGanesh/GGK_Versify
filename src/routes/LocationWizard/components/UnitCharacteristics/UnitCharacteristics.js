@@ -9,7 +9,7 @@ import TextAreaField from 'components/TextAreaField/TextAreaField'
 
 const EffectiveDateValues = (props) => (
     <div>
-        <Table>
+        <Table striped bordered condensed hover>
             <thead>
                 <tr>
                     <th>Value</th>
@@ -17,7 +17,7 @@ const EffectiveDateValues = (props) => (
                     <th>Effective End Date</th>
                     <th>
                         <span>
-                            Actions <i onClick={() => props.fields.push({}) } className="fa fa-plus-circle fa-2x"></i>
+                            Actions 
                         </span>
                     </th>
                 </tr>
@@ -63,6 +63,7 @@ const EffectiveDateValues = (props) => (
                             name="effectiveEndDate[0]"
                             component={DatePickerField}/></td>
                         <td>
+                            <i onClick={() => props.fields.push({}) } className="fa fa-plus-circle fa-2x"></i>
                         </td>
                     </tr>}
                 {props.fields.map((editableData, index) =>
