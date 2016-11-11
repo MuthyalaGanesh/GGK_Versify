@@ -122,12 +122,12 @@ export const Gateways = (props) => {
                     </div> 
                         
                 </Modal.Body>
-                <Modal.Footer class="modal-footer">
-                    <div class="pull-right">
-                        <button className={props.gateways.AddNewGateway  ? "btn btn-success" : "hide"} type="button" onClick={props.AddGateway}>Add</button>
-                        <button className={props.gateways.AddNewGateway  ?  "hide" : "btn btn-success"} type="button" onClick={props.UpdateGateway}>Save</button>
+                <Modal.Footer>               
+                        {props.gateways.AddNewGateway ?
+                        <button className="btn btn-success" type="button" onClick={props.AddGateway}>Add</button> :
+                        <button className="btn btn-success" type="button" onClick={props.UpdateGateway}>Save</button>}
                         <button className="btn btn-warning" type="button"  onClick={props.AddGatewayModalToggle}>Cancel</button>
-                    </div>
+                    
                 </Modal.Footer>
             </Modal> : null }
             </div>

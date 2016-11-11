@@ -116,7 +116,7 @@ export const DataHistorian = (props) => {
                                 </div>
                                 <div className="col-xs-6">
                                     <Field component={InputField} type="text" className="form-control" name="Tag" defaultvalue={props.dataHistorian.EditableDataHistorian.scadaTag}
-                                                      touched = {touched.hasOwnProperty('DataHistorianForm')?touched.DataHistorianForm.hasOwnProperty('fields') ? touched.DataHistorianForm.fields.hasOwnProperty('Tag') : false :false }>
+                                         placeholder="Tag" touched = {touched.hasOwnProperty('DataHistorianForm')?touched.DataHistorianForm.hasOwnProperty('fields') ? touched.DataHistorianForm.fields.hasOwnProperty('Tag') : false :false }>
                                     </Field>
                                 </div>
                             </div>
@@ -140,9 +140,10 @@ export const DataHistorian = (props) => {
                     </div>       
                 </Modal.Body>
                 <Modal.Footer>     
-                    <div class="pull-right">          
-                        <button className={props.dataHistorian.AddNewDataHistorian ? "btn btn-success" : "hide"} type="button" onClick={props.AddDataHistorian}>Add</button>
-                        <button className={props.dataHistorian.AddNewDataHistorian ?  "hide" : "btn btn-success"} type="button" onClick={props.UpdateAddDataHistorian}>Save</button>
+                    <div class="pull-right">  
+                        {props.dataHistorian.AddNewDataHistorian  ?       
+                            <button className="btn btn-success" type="button" onClick={props.AddDataHistorian}>Add</button> :
+                            <button className="btn btn-success" type="button" onClick={props.UpdateAddDataHistorian}>Save</button>}
                         <button className="btn btn-warning" type="button"  onClick={props.AddDataHistorianModalToggle}>Cancel</button>  
                     </div>
                 </Modal.Footer>

@@ -123,7 +123,6 @@ export const ACTION_HANDLERS = {
     return newState
   },
   [UPDATE_DATAHISTORIAN]:(state,action)=>{
-    debugger;
      let updatedDataHistorian=[]; 
     if (action.payload) {   
             state.dataHistorian.map((dh,i)  => {

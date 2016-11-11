@@ -1,7 +1,7 @@
 import { reduxForm } from 'redux-form'
 import {connect} from 'react-redux'
 import Users from '../../components/Users'
-import { bindUserInfo} from '../../modules/user';
+import { bindUserInfo,bindContactToRole,bindRoleToContact,selectRole,selectContact,AddContactModalToggle} from '../../modules/user';
 
 
 const mapStateToProps = (state) => ({
@@ -9,7 +9,12 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-	bindUserInfo
+	bindUserInfo,
+	bindContactToRole,
+	bindRoleToContact,
+	selectRole,
+	selectContact,
+	AddContactModalToggle
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(reduxForm({
