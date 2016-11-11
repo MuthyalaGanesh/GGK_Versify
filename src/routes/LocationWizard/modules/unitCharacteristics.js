@@ -1,15 +1,29 @@
 import {getAllUOMValues, getUnitCharacteristics, getSelectedUnitCharacteristics} from 'api/locationWizardApi'
 import moment from 'moment';
 
-export const TOGGLE_ADD_MODAL = 'TOGGLE_ADD_MODAL'
-export const EDIT_TOGGLE = 'EDIT_TOGGLE'
 export const DELETE_MODAL = 'DELETE_MODAL'
 export const DELETE_UNIT_CHARACTERISTIC = 'DELETE_UNIT_CHARACTERISTIC'
 export const UPDATE_ROW = 'UPDATE_ROW'
 export const ADD_NEW_ROW = 'ADD_NEW_ROW'
 export const CHARACTERISTIC_SELECTED = "CHARACTERISTIC_SELECTED"
 export const INSERT_ROW = "INSERT_ROW"
+export const REMOVE_EDIT_ATTRIBUTE = "REMOVE_EDIT_ATTRIBUTE"
+export const TOGGLE_MODAL = "TOGGLE_MODAL"
 
+export function ToggleAddEditModal(index) {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      dispatch({ type: TOGGLE_MODAL, payload: index })
+      dispatch({
+        type: 'redux-form/DESTROY',
+        meta: { form: "UnitCharacteristicsForm" },
+        payload: ""
+      })
+    })
+  }
+}
+
+//manipulating UOM value on the Unit Measure id basis
 export function getUOMValueByID(measureId) {
   var UOM = "";
   getAllUOMValues().map(u => {
@@ -19,19 +33,30 @@ export function getUOMValueByID(measureId) {
   })
   return UOM;
 }
+//remove editable attribute 
+export function removeEditableAttribute(index) {
+  return {
+    type: REMOVE_EDIT_ATTRIBUTE,
+    payload: index
+  }
+}
+//updating edited row
 export function updateRow(event) {
   return (dispatch, getState) => {
-    // console.log(getState().form.UnitCharacteristicsForm)
-
     return new Promise((resolve) => {
       dispatch({
         type: UPDATE_ROW,
         payload: getState().form.UnitCharacteristicsForm
       })
+      dispatch({
+        type: 'redux-form/DESTROY',
+        meta: { form: "UnitCharacteristicsForm" },
+        payload: ""
+      })
     })
   }
 }
-
+//Adding new unit characteristic
 export function AddUnitCharateristic() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
@@ -44,59 +69,31 @@ export function AddUnitCharateristic() {
     })
   }
 }
-
+//helps in prepopulating Unit characteristic details on the selection of charateristicName
 export function characteristicNameSelected(event) {
   if (event.target.name == 'charateristicName') {
     return (dispatch, getState) => {
       return new Promise((resolve) => {
         dispatch({
           type: CHARACTERISTIC_SELECTED,
-          payload: getState().form.UnitCharacteristicsForm.values.charateristicName
+          payload: getState().form.UnitCharacteristicsForm &&
+            getState().form.UnitCharacteristicsForm.values ?
+            getState().form.UnitCharacteristicsForm.values.charateristicName : null
         })
       })
     }
   }
 }
 
-export function togglingAddModal() {
-  return (dispatch, getState) => {
 
-    return new Promise((resolve) => {
-      dispatch({
-        type: TOGGLE_ADD_MODAL,
-        payload: false
-      })
-      dispatch({
-        type: 'redux-form/DESTROY',
-        meta: { form: "UnitCharacteristicsForm" },
-        payload: ""
-      })
-    })
-  }
-}
-
-export function makeEditable(id) {
-  return (dispatch, getState) => {
-    return new Promise((resolve) => {
-      dispatch({
-        type: EDIT_TOGGLE,
-        payload: id
-      })
-      dispatch({
-        type: 'redux-form/DESTROY',
-        meta: { form: "UnitCharacteristicsForm" },
-        payload: ""
-      })
-    })
-  }
-};
+//confirming delete unitCharacteristic(delete modal)
 export function deleteConfirmation(index) {
   return {
     type: DELETE_MODAL,
     payload: index
   }
 };
-
+//deleting unit charateristic
 export function DeleteUnitCharateristic() {
   return {
     type: DELETE_UNIT_CHARACTERISTIC,
@@ -105,35 +102,43 @@ export function DeleteUnitCharateristic() {
 };
 
 export const ACTION_HANDLERS = {
+  [TOGGLE_MODAL]: (state, action) => {
+    if (action.payload != null) {
+      if (!isNaN(action.payload)) {
+        if (action.payload == -1) {
+          var newState = Object.assign({}, state, { showModal: !state.showModal, isEditable: true })
+          newState.UOMLabel = "",
+            newState.descriptionLabel = "",
+            newState.displayNameLabel = ""
+          newState.unSelectedUnitCharacteristics = [];
+          newState.unitCharacteristics.map((allUC) => {
+            var valuePresence = 1;
 
-  //opening Adding new unitCharacteristic modal
-  [TOGGLE_ADD_MODAL]: (state, action) => {
-    var newState = Object.assign({}, state, { showModal: !state.showModal });
-    newState.UOMLabel = "",
-      newState.descriptionLabel = "",
-      newState.displayNameLabel = ""
-    newState.unSelectedUnitCharacteristics = [];
-    newState.unitCharacteristics.map((allUC) => {
-      var valuePresence = 1;
-
-      newState.selectedunitCharacteristics.map((selUC) => {
-        if (selUC.id == allUC.id) {
-          valuePresence++;
+            newState.selectedunitCharacteristics.map((selUC) => {
+              if (selUC.id == allUC.id) {
+                valuePresence++;
+              }
+            })
+            if (valuePresence == 1) {
+              allUC.isDeletable = true;
+              newState.unSelectedUnitCharacteristics.push(allUC);
+            }
+          })
+          return newState;
         }
-      })
-      if (valuePresence == 1) {
-        newState.unSelectedUnitCharacteristics.push(allUC);
+        else {
+          if (action.payload != null && !isNaN(action.payload) && state.selectedunitCharacteristics) {
+            state.editableUnitCharacter = state.selectedunitCharacteristics[action.payload]
+          }
+          return Object.assign({}, state, { showModal: !state.showModal, isEditable: false })
+        }
       }
-    })
-    return newState;
-  },
-  //making edit modal to open
-  [EDIT_TOGGLE]: (state, action) => {
-    if (action.payload != null && !isNaN(action.payload) && state.unitCharacteristics) {
-      state.editableUnitCharacter = state.selectedunitCharacteristics[action.payload]
+      else {
+        return Object.assign({}, state, { showModal: !state.showModal })
+      }
     }
-    return Object.assign({}, state, { showEditModal: !state.showEditModal })
   },
+
   //opening delete modal
   [DELETE_MODAL]: (state, action) => {
     if (action.payload != null) {
@@ -155,38 +160,49 @@ export const ACTION_HANDLERS = {
   },
   //update edited row
   [UPDATE_ROW]: (state, action) => {
-    var newState = Object.assign({}, state, { showEditModal: !state.showEditModal })
+    var newState = Object.assign({}, state, { showModal: !state.showModal })
+
     if (action.payload) {
       newState.selectedunitCharacteristics.map((uc) => {
-        if (uc.name == state.editableUnitCharacter.name) {
-          uc.Value = (action.payload.fields && action.payload.fields.ucvalue && action.payload.fields.ucvalue.touched)
-            ? action.payload.values.ucvalue : state.editableUnitCharacter.Value;
-          uc.EffectiveStartDate = (action.payload.fields && action.payload.fields.effectiveStartDate && action.payload.fields.effectiveStartDate.touched)
-            ? action.payload.values.effectiveStartDate : state.editableUnitCharacter.EffectiveStartDate;
-          uc.EffectiveEndDate = (action.payload.fields && action.payload.fields.effectiveEndDate && action.payload.fields.effectiveEndDate.touched)
-            ? action.payload.values.effectiveEndDate : state.editableUnitCharacter.EffectiveEndDate;
 
-          if (action.payload.fields && action.payload.fields.editableData) {
-            action.payload.values.editableData.map(ed => {
-              var newRow = uc;
-              newRow.EffectiveEndDate = ed.effectiveEndDate
-              newRow.EffectiveStartDate = ed.effectiveStartDate
-              newRow.Value = ed.ucvalue
-              state.selectedunitCharacteristics.push(newRow);
+        if (uc.name == state.editableUnitCharacter.name) {
+
+          var finalAttributes = []
+
+          for (var index = 0; index < state.editableUnitCharacter.editableAttributes.length; index++) {
+            var initialAttribute = {
+              Value: (action.payload.fields && action.payload.fields.ucvalue && action.payload.values.ucvalue[index])
+                ? action.payload.values.ucvalue[index] : state.editableUnitCharacter.editableAttributes[index].Value,
+              EffectiveStartDate: (action.payload.fields && action.payload.fields.effectiveStartDate && action.payload.values.effectiveStartDate[index])
+                ? action.payload.values.effectiveStartDate[index] : state.editableUnitCharacter.editableAttributes[index].EffectiveStartDate,
+              EffectiveEndDate: (action.payload.fields && action.payload.fields.effectiveEndDate && action.payload.values.effectiveEndDate[index])
+                ? action.payload.values.effectiveEndDate[index] : state.editableUnitCharacter.editableAttributes[index].EffectiveEndDate
+            }
+            finalAttributes.push(initialAttribute)
+          }
+          if (action.payload.values && action.payload.values.editableData) {
+            action.payload.values.editableData.map((ed, i) => {
+
+              var newEditableAttributes = {
+                EffectiveEndDate: ed.effectiveEndDate,
+                EffectiveStartDate: ed.effectiveStartDate,
+                Value: ed.ucvalue
+              }
+              finalAttributes.push(newEditableAttributes);
             })
           }
+          uc.editableAttributes = [];
+          uc.editableAttributes = finalAttributes;
         }
 
       })
     }
-    newState.editableUnitCharacter = {}
-
     return newState;
   },
   //helps in prepopulating unit characteristic values after changing unit character
   [CHARACTERISTIC_SELECTED]: (state, action) => {
     var newState = Object.assign({}, state)
-    if (action.payload) {
+    if (action.payload != null && action.payload != undefined) {
       newState.unitCharacteristics.map((uc) => {
         if (uc.id == parseInt(action.payload)) {
           newState.UOMLabel = getUOMValueByID(uc.defaultUnitOfMeasureId),
@@ -202,25 +218,61 @@ export const ACTION_HANDLERS = {
     if (action.payload) {
       newState.unitCharacteristics.map((uc) => {
         if (uc.id == parseInt(action.payload.values.charateristicName)) {
-          uc.EffectiveEndDate = action.payload.values.effectiveEndDate
-          uc.EffectiveStartDate = action.payload.values.effectiveStartDate
-          uc.Value = action.payload.values.ucvalue
+          uc.editableAttributes = [];
+          uc.editableAttributes.push({
+            EffectiveEndDate: action.payload.values && action.payload.values.effectiveEndDate ? action.payload.values.effectiveEndDate[0] : null,
+            EffectiveStartDate: action.payload.values && action.payload.values.effectiveStartDate ? action.payload.values.effectiveStartDate[0] : null,
+            Value: action.payload.values && action.payload.values.ucvalue ? action.payload.values.ucvalue[0] : null
+          });
+          if (action.payload.values && action.payload.values.editableData) {
+            action.payload.values.editableData.map((ed, i) => {
+
+              var newEditableAttributes = {
+                EffectiveEndDate: ed.effectiveEndDate,
+                EffectiveStartDate: ed.effectiveStartDate,
+                Value: ed.ucvalue
+              }
+              uc.editableAttributes.push(newEditableAttributes);
+            })
+          }
           uc.UOM = newState.UOMLabel
           newState.selectedunitCharacteristics.push(uc)
         }
       })
     }
-    return newState
+    return newState;
+
+  },
+  [REMOVE_EDIT_ATTRIBUTE]: (state, action) => {
+    if (action.payload != null && action.payload != undefined && !isNaN(action.payload)) {
+      var newEditableAttributes = []
+      var newEditableUnitCharacter = []
+      var newState = Object.assign({}, state)
+      newState.selectedunitCharacteristics.map((suc) => {
+        if (suc.id == state.editableUnitCharacter.id) {
+          newEditableUnitCharacter.push(suc);
+          suc.editableAttributes.map((ea, index) => {
+            if (index != action.payload) {
+              newEditableAttributes.push(ea)
+            }
+          })
+          newEditableUnitCharacter[0].editableAttributes = [];
+          newEditableUnitCharacter[0].editableAttributes = newEditableAttributes;
+        }
+      })
+
+      state.editableUnitCharacter = [];
+    }
+    return Object.assign({}, state, { editableUnitCharacter: newEditableUnitCharacter[0] });
   }
 }
 const initialState = {
   error: "",
-  unitCharacteristics: getUnitCharacteristics().sort(function(a, b){ 
-	return a.id-b.id
-}),
+  unitCharacteristics: getUnitCharacteristics(),
   allUOMvalues: getAllUOMValues(),
-  selectedunitCharacteristics: [],
+  selectedunitCharacteristics: getSelectedUnitCharacteristics(),
   unSelectedUnitCharacteristics: [],
+  finalUnitCharacteristics: [],
   showModal: false,
   showDeleteModal: false,
   deletingUnitIndex: 0,
@@ -229,7 +281,8 @@ const initialState = {
   startDate: moment(),
   UOMLabel: "",
   descriptionLabel: "",
-  displayNameLabel: ""
+  displayNameLabel: "",
+  isEditable: false
 };
 
 export default function unitCharacteristicsReducer(state = initialState, action) {

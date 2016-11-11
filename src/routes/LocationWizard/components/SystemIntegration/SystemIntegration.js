@@ -72,9 +72,9 @@ export const SystemIntegration = (props) => {
                                                 props.systemIntegration.selectedSystemIntegrationTypes.map((ssit, i) =>
                                                     <tr key={i}>
                                                         <td className="align-text-col"><label>{ssit.ExternalSystemName}</label></td>
-                                                        <td><Field component={InputField} name="AliasName"
+                                                        <td><Field component={InputField} name={`AliasName[${i}]`}
                                                             touched = {touched.hasOwnProperty('SystemIntegrationForm') ?
-                                                                touched.SystemIntegrationForm.hasOwnProperty('fields') ? touched.SystemIntegrationForm.fields.hasOwnProperty('AliasName') : false : false }
+                                                                touched.SystemIntegrationForm.hasOwnProperty('fields') ? touched.SystemIntegrationForm.fields.hasOwnProperty(`AliasName[${i}]`) : false : false }
                                                             className="form-control" /></td>
                                                         <td className="text-align-col text-center">
                                                             <i className="fa fa-trash-o fa-2x" onClick={() => props.deleteSystemIntegration(i) }></i>

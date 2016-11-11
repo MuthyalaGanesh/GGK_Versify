@@ -5,28 +5,29 @@ import momentLocalizer from 'react-widgets/lib/localizers/moment';
 import moment from 'moment';
 import {
     bindUnitCharateristics,
-    togglingAddModal,
-    makeEditable,
     deleteConfirmation,
     DeleteUnitCharateristic,
     updateRow,
     AddUnitCharateristic,
-    characteristicNameSelected} from '../../modules/unitCharacteristics';
+    characteristicNameSelected,
+    removeEditableAttribute,
+    ToggleAddEditModal} from '../../modules/unitCharacteristics';
 
 
 const mapDispatchToProps = {
     bindUnitCharateristics,
-    togglingAddModal,
-    makeEditable,
     deleteConfirmation,
     DeleteUnitCharateristic,
     updateRow,
     AddUnitCharateristic,
-    characteristicNameSelected
+    characteristicNameSelected,
+    removeEditableAttribute,
+    ToggleAddEditModal
 }
 
 const mapStateToProps = (state) => ({
-    unitCharacteristics: state.unitCharacteristics
+    unitCharacteristics: state.unitCharacteristics,
+    formdata: state.form
 })
 
 //moment localizer for datepicker

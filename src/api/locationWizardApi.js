@@ -40,8 +40,8 @@ export function getLocations() {
     return XMLHttpRequestSyncGet(Constants.LOCATIONS).GetAllLocationsResult;
 
 }
-export function getMarketDrivenMappings(marketId) {     
-     return XMLHttpRequestSyncGet(Constants.LWMARKETDRIVEN_MAPPINGS,"isoMarketId="+marketId);;
+export function getMarketDrivenMappings(marketId) {
+    return XMLHttpRequestSyncGet(Constants.LWMARKETDRIVEN_MAPPINGS, "isoMarketId=" + marketId);;
 }
 
 export function getOwners() {
@@ -78,21 +78,30 @@ export function getTimezones() {
 }
 
 export function getUnitCharacteristics() {
-    
+
     return XMLHttpRequestSyncGet(Constants.ATTRIBUTES);
 }
 export function getSelectedUnitCharacteristics() {
-    var unitCharacteristicsJson = [
-        // { Name: "Eco Min", DisplayName: "Eco Min", Description: "The lowest economic MW output level a unit can achieve system cost", Value: "", UCM: "MW", EffectiveStartDate: "", EffectiveEndDate: "" },
-        // { Name: "Eco Max", DisplayName: "Eco Max", Description: "The lowest economic MW output level a unit can achieve system cost", Value: "", UCM: "MW", EffectiveStartDate: "", EffectiveEndDate: "" },
-        // { Name: "Capacity", DisplayName: "Capacity", Description: "Capacity is the capability to produce energy", Value: "", UCM: "MW", EffectiveStartDate: "", EffectiveEndDate: "" }
-    ]
+    var unitCharacteristicsJson = []
+    getUnitCharacteristics().map((uc) => {
+        if (uc.name.toLowerCase() == "capacity" || uc.name.toLowerCase() == "eco min" || uc.name.toLowerCase() == "eco max") {
+            uc.editableAttributes = [{}]
+            uc.isDeletable = false;
+            getAllUOMValues().map((uom) => {
+                if (uc.defaultUnitOfMeasureId == uom.id) {
+                    uc.UOM = uom.name;
+                }
+            })
+            unitCharacteristicsJson.push(uc);
+        }
+    })
+
     return unitCharacteristicsJson;
 }
 
 export function getAllUOMValues() {
     return XMLHttpRequestSyncGet(Constants.UNITS_OF_MEASURE);
-    
+
 }
 export function getSystemIntegrationTypes() {
     return XMLHttpRequestSyncGet(Constants.OMS_LOCATION_WIZARD_DATA);
