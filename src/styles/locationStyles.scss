@@ -16,7 +16,14 @@
 .panel-info { border-color:#E3EDF6 !important; }
 .panel-info>.panel-heading { background-image:none!important; background-color:#E3EDF6 !important; color:#326A96 !important; }
 .dropdown-menu { width:100% }
-
+.rw-selectlist>li.rw-list-option.rw-state-selected, ul.rw-list>li.rw-list-option.rw-state-selected
+{
+    background: #F1F0F0 !important;
+}
+.rw-combobox:hover, .rw-datetimepicker:hover, .rw-dropdownlist:hover, .rw-numberpicker:hover
+{
+    background: #F1F0F0 !important;
+}
 /******Sidebar*******/
 #control-sidebar-menutree-tab { .menu-name a:hover { color:#df630b; }
 }

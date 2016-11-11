@@ -35,14 +35,11 @@ return (
 
                         <div className="col-sm-12">
                             <div className="row">
-                                <div className="col-sm-12 col-md-6 form-group">
-                                    <div className="col-sm-5 col-md-5">
-                                        <label className="control-label"> Name </label>
-                                    </div>
-                                    <div className="col-sm-7 col-md-7">
-                                        <OverlayTrigger placement="top" overlay={
-                                                        error && formdata.BasicInfoForm.values.locationName ===''
-                                                        ?
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                    <label className="control-label"> Name </label>
+                                    <OverlayTrigger placement="top" overlay={
+                                                    error && formdata.BasicInfoForm.values.locationName ==''
+                                                    ?
                                                         <Tooltip placement="top" className="in" id="tooltip-top">
                                                         Please Enter Location Name
                                                         </Tooltip>
@@ -50,175 +47,128 @@ return (
 
                                                <Field name="locationName"
                                                    component="input"
-                                                   className= {error && formdata.BasicInfoForm.values.locationName === ''
+                                                   className= {error && formdata.BasicInfoForm.values.locationName == ''
                                                        ? "form-control error"
                                                        :"form-control"}
                                                    type="text"
                                                    placeholder="Location Name">
                                                 </Field>
                                         </OverlayTrigger>
-                                    </div>
                                 </div>
-                                <FormGroup className="col-sm-12 col-md-6">
-                                    
-                                    <label className="checkbox-inline">
-                                      <Field name="isOutageLevel"
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                    <label className="control-label"> Allow Outages at Location </label>
+                                    <Field name="isOutageLevel"
                                            component='input' type="checkbox"
-                                           text='Allow Outages at Location'class='checkbox' />
-                                          &nbsp;&nbsp;Allow Outages at Location </label>
+                                           text='Allow Outages at Location' className='checkbox'>
+                                    </Field>
+                                    
+                                </div>                               
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                    <label className="control-label"> Parent Location </label>
+                                    <Field name="parentLocation"
+                                           component={ParentLocationField}
+                                           parentLocations={props.parentLocations}
+                                           className="form-control">
+                                    </Field>
+                                </div>
+                                 <div className='clear'></div>
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                    <label className="control-label"> Type </label>
+                                    <Field component={DropdownListField}
+                                           className="form-control" name="locationType"
+                                           data={locationTypes}
+                                           valueField='id'
+                                           textField='displayName'
+                                           placeholder="Select location type">
+                                    </Field>
+                                </div>
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                    <label className="control-label"> Technology Type </label>
+                                    <Field component={DropdownListField}
+                                           className="form-control" name="technologyType"
+                                           data={technologyTypes}
+                                           valueField='id'
+                                           textField='name'
+                                           placeholder="Select Technology type" />
+                                </div>
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                    <label className="control-label"> Secondary Technology Type </label>
+                                    { error && (formdata.BasicInfoForm.values.secondarytechnologyType == formdata.BasicInfoForm.values.technologyType)
+                                    ?   <div className='errorMessage'> Please selct different technologyType </div>
+                                    : null
+                                    }
 
-                                </FormGroup>
 
-                                
-
-
-                                <div className='clear'></div>
-                                <div className="col-sm-12 col-md-6 form-group">
-                                    <div className="col-sm-5 col-md-5">
-                                        <label className="control-label" id="parentLocation"> Parent Location</label>
-                                    </div>
-                                    <div className="col-sm-7 col-md-7">
-                                        <Field name="parentLocation"
-                                               component={ParentLocationField}
-                                               parentLocations={props.parentLocations}
-                                               className="form-control">
-                                        </Field>
-                                    </div>
+                                    <Field component={DropdownListField}
+                                           className={
+                                           error && (!formdata.BasicInfoForm.values.hasOwnProperty('secondarytechnologyType')
+                                           || (formdata.BasicInfoForm.values.secondarytechnologyType ==formdata.BasicInfoForm.values.technologyType))
+                                           ?'form-control error'
+                                           :'form-control'
+                                           }
+                                           name="secondarytechnologyType"
+                                           data={technologyTypes}
+                                           valueField='id'
+                                           textField='name'
+                                           placeholder="Select Technology type">
+                                    </Field>
                                 </div>
-                                <div className="col-sm-12 col-md-6 form-group">
-                                    <div className="col-sm-5 col-md-5">
-                                        <label className="control-label" id="locationType"> Type </label>
-                                    </div>
-                                    <div className="col-sm-7 col-md-7">                                       
-                                        <Field component={DropdownListField}
-                                               className="form-control" name="locationType"
-                                               data={locationTypes}
-                                               valueField='id'
-                                               textField='displayName'
-                                               placeholder="Select location type">
-                                        </Field>
-                                    </div>
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                    <label className="control-label"> Primary Market </label>
+                                    <Field component={DropdownListField} onChangeEvent={props.onChangeEvent}
+                                           className="form-control" name="primaryMarket"
+                                           data={primaryMarkets}
+                                           valueField='id'
+                                           textField='name'
+                                           placeholder="Select primaryMarket type" />
                                 </div>
-                                <div className='clear'></div>
-                                <div className="col-sm-12 col-md-6 form-group">
-                                    <div className="col-sm-5 col-md-5">
-                                        <label className="control-label" id="technologyType"> Technology type </label>
-                                    </div>
-                                    <div className="col-sm-7 col-md-7">                                        
-                                        <Field component={DropdownListField}
-                                               className="form-control" name="technologyType"
-                                               data={technologyTypes}
-                                               valueField='id'
-                                               textField='name'
-                                               placeholder="Select Technology type" />
-                                    </div>
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                    <label className="control-label"> Owner </label>
+                                    <Field component={DropdownListField}
+                                           className="form-control" name="owner"
+                                           data={owners}
+                                           valueField='id'
+                                           textField='name'
+                                           placeholder="Select Owner type">
+                                    </Field>
                                 </div>
-                                <div className="col-sm-12 col-md-6 form-group">
-                                    <div className="col-sm-5 col-md-5">
-                                        <label className="control-label" id="primaryMarket"> Primary Market </label>
-                                    </div>
-                                    <div className="col-sm-7 col-md-7">
-                                        <Field component={DropdownListField} onChangeEvent={props.onChangeEvent}
-                                               className="form-control" name="primaryMarket"
-                                               data={primaryMarkets}
-                                               valueField='id'
-                                               textField='name'
-                                               placeholder="Select primaryMarket type" />
-                                    </div>
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                    <label className="control-label"> Fuel ClassName </label>
+                                    <Field component={DropdownListField}
+                                           className="form-control" name="fuelClass"
+                                           data={fuelClasses}
+                                           valueField='id'
+                                           textField='name'
+                                           placeholder="Select Fuel className">
+                                    </Field>
                                 </div>
-                                <div className='clear'></div>
-                                <div className="col-sm-12 col-md-6 form-group">
-                                    <div className="col-sm-5 col-md-5">
-                                        <label className="control-label" id="secondarytechnologyType"> Secondary Technology type </label>
-                                    </div>
-                                    <div className="col-sm-7 col-md-7">
-                                        { error && (formdata.BasicInfoForm.values.secondarytechnologyType == formdata.BasicInfoForm.values.technologyType)
-                                        ?   <div className='errorMessage'> Please selct different technologyType </div>
-                                        : null
-                                        }
-
-                                        
-                                        <Field component={DropdownListField}
-                                               className={
-                                               error && (!formdata.BasicInfoForm.values.hasOwnProperty('secondarytechnologyType') 
-                                               || (formdata.BasicInfoForm.values.secondarytechnologyType == formdata.BasicInfoForm.values.technologyType))
-
-                                               ?'form-control error'
-                                               :'form-control'
-                                               }
-                                               name="secondarytechnologyType"
-                                               data={technologyTypes}
-                                               valueField='id'
-                                               textField='name'
-                                               placeholder="Select Technology type">
-                                            </Field>
-                                    </div>
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                    <label className="control-label"> OwnerShip % </label>
+                                    <Field name="ownerShipPercentage"
+                                           component="input"
+                                           className="form-control"
+                                           type="text"
+                                           placeholder="OwnerShip Percentage" />
                                 </div>
-                                <div className="col-sm-12 col-md-6 form-group">
-                                    <div className="col-sm-5 col-md-5">
-                                        <label className="control-label" id="owner"> Owner </label>
-                                    </div>
-                                    <div className="col-sm-7 col-md-7">                                       
-                                        <Field component={DropdownListField}
-                                               className="form-control" name="owner"
-                                               data={owners}
-                                               valueField='id'
-                                               textField='name'
-                                               placeholder="Select Technology type">
-                                         </Field>
-                                    </div>
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                    <label className="control-label"> Timezone</label>
+                                    <Field component={DropdownListField}
+                                           className="form-control" name="timezone"
+                                           data={timezones}
+                                           valueField='id'
+                                           textField='value'
+                                           placeholder="Select Timezone">
+                                    </Field>
                                 </div>
-                                <div className='clear'></div>
-                                <div className="col-sm-12 col-md-6 form-group">
-                                    <div className="col-sm-5 col-md-5">
-                                        <label className="control-label" id="fuelClass"> Fuel Class </label>
-                                    </div>
-                                    <div className="col-sm-7 col-md-7">                                       
-                                        <Field component={DropdownListField}
-                                               className="form-control" name="fuelClass"
-                                               data={fuelClasses}
-                                               valueField='id'
-                                               textField='name'
-                                               placeholder="Select Fuel Class">
-                                        </Field>
-                                    </div>
-                                </div>
-                                <div className="col-sm-12 col-md-6 form-group">
-                                    <div className="col-sm-5 col-md-5">
-                                        <label className="control-label" id="ownerShipPercentage"> Ownership % </label>
-                                    </div>
-                                    <div className="col-sm-7 col-md-7">
-                                        <Field name="ownerShipPercentage" component="input" className="form-control" type="text" placeholder="OwnerShip Percentage" />
-                                    </div>
-                                </div>
-                                <div className='clear'></div>
-                                <div className="col-sm-12 col-md-6 form-group">
-                                    <div className="col-sm-5 col-md-5">
-                                        <label className="control-label" id="timezone"> Timezone </label>
-                                    </div>
-                                    <div className="col-sm-7 col-md-7">                                        
-                                        <Field component={DropdownListField}
-                                               className="form-control" name="timezone"
-                                               data={timezones}
-                                               valueField='id'
-                                               textField='value'
-                                               placeholder="Select Timezone">
-                                        </Field>
-                                    </div>
-                                </div>
-                                <div className="col-sm-12 col-md-6 form-group">
-                                    <div className="col-sm-5 col-md-5">
-                                        <label className="control-label" id="physicalTimezone"> Physical Timezone </label>
-                                    </div>
-                                    <div className="col-sm-7 col-md-7">                                       
-                                        <Field component={DropdownListField}
-                                               className="form-control" name="physicalTimezone"
-                                               data={timezones}
-                                               valueField='id'
-                                               textField='value'
-                                               placeholder="Select PhysicalTimezone">
-                                        </Field>
-                                    </div>
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                    <label className="control-label"> Physical Timezone </label>
+                                    <Field component={DropdownListField}
+                                           className="form-control" name="physicalTimezone"
+                                           data={timezones}
+                                           valueField='id'
+                                           textField='value'
+                                           placeholder="Select Physical Timezone">
+                                    </Field>
                                 </div>
                             </div>
                         </div>
