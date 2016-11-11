@@ -27,7 +27,7 @@ export const Equipments = (props) => {
                                             touched = {touched.hasOwnProperty('EquipmentsForm') ? touched.EquipmentsForm.hasOwnProperty('fields') ? touched.EquipmentsForm.fields.hasOwnProperty('newEquipment') : false : false }>
                                         </Field>
                                     </div>
-                                    <div className="col-md-4 col-sm-4">
+                                    <div className="col-md-offset-3 col-md-1 col-sm-4">
                                         <button className="btn btn-success" onClick={props.AddEquipment}>Add</button>
                                     </div>
                                 </div>

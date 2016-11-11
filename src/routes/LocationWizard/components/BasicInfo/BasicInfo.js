@@ -35,7 +35,7 @@ return (
 
                         <div className="col-sm-12">
                             <div className="row">
-                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
                                     <label className="control-label"> Name </label>
                                     <OverlayTrigger placement="top" overlay={
                                                     error && formdata.BasicInfoForm.values.locationName ==''
@@ -55,7 +55,7 @@ return (
                                                 </Field>
                                         </OverlayTrigger>
                                 </div>
-                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
                                     <label className="control-label"> Allow Outages at Location </label>
                                     <Field name="isOutageLevel"
                                            component='input' type="checkbox"
@@ -63,7 +63,7 @@ return (
                                     </Field>
                                     
                                 </div>                               
-                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
                                     <label className="control-label"> Parent Location </label>
                                     <Field name="parentLocation"
                                            component={ParentLocationField}
@@ -72,7 +72,7 @@ return (
                                     </Field>
                                 </div>
                                  <div className='clear'></div>
-                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
                                     <label className="control-label"> Type </label>
                                     <Field component={DropdownListField}
                                            className="form-control" name="locationType"
@@ -82,7 +82,7 @@ return (
                                            placeholder="Select location type">
                                     </Field>
                                 </div>
-                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
                                     <label className="control-label"> Technology Type </label>
                                     <Field component={DropdownListField}
                                            className="form-control" name="technologyType"
@@ -91,7 +91,7 @@ return (
                                            textField='name'
                                            placeholder="Select Technology type" />
                                 </div>
-                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
                                     <label className="control-label"> Secondary Technology Type </label>
                                     { error && (formdata.BasicInfoForm.values.secondarytechnologyType == formdata.BasicInfoForm.values.technologyType)
                                     ?   <div className='errorMessage'> Please selct different technologyType </div>
@@ -113,7 +113,7 @@ return (
                                            placeholder="Select Technology type">
                                     </Field>
                                 </div>
-                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
                                     <label className="control-label"> Primary Market </label>
                                     <Field component={DropdownListField} onChangeEvent={props.onChangeEvent}
                                            className="form-control" name="primaryMarket"
@@ -122,7 +122,7 @@ return (
                                            textField='name'
                                            placeholder="Select primaryMarket type" />
                                 </div>
-                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
                                     <label className="control-label"> Owner </label>
                                     <Field component={DropdownListField}
                                            className="form-control" name="owner"
@@ -132,7 +132,7 @@ return (
                                            placeholder="Select Owner type">
                                     </Field>
                                 </div>
-                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
                                     <label className="control-label"> Fuel ClassName </label>
                                     <Field component={DropdownListField}
                                            className="form-control" name="fuelClass"
@@ -142,7 +142,7 @@ return (
                                            placeholder="Select Fuel className">
                                     </Field>
                                 </div>
-                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
                                     <label className="control-label"> OwnerShip % </label>
                                     <Field name="ownerShipPercentage"
                                            component="input"
@@ -150,7 +150,7 @@ return (
                                            type="text"
                                            placeholder="OwnerShip Percentage" />
                                 </div>
-                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
                                     <label className="control-label"> Timezone</label>
                                     <Field component={DropdownListField}
                                            className="form-control" name="timezone"
@@ -160,7 +160,7 @@ return (
                                            placeholder="Select Timezone">
                                     </Field>
                                 </div>
-                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
                                     <label className="control-label"> Physical Timezone </label>
                                     <Field component={DropdownListField}
                                            className="form-control" name="physicalTimezone"

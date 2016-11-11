@@ -97,14 +97,16 @@ label.checkbox-inline, label.radio-inline { margin-right:10px; padding-left:34px
     .btn.green { background-color:#5cb85c; /*border:2px solid #5cb85c;*/color:#ffffff; }
 
     .tab-content {margin-top:45px;}
-
+.tab-content-menu{
+    margin-top: -12px;
+}
     @media(max-width:585px) {
     .board { height:auto !important; }
     span.round-tabs { font-size:16px; width:50px; height:50px; line-height:50px; }
     .tab-content .head { font-size:20px; }
     .nav-tabs > li a { width:50px; height:50px; line-height:50px; }
     li.active:after { content:" "; position:absolute; left:35%; }
-    .btn-outline-rounded { padding:12px 20px; }
+    .btn-outline-rounded { padding:12px 20px; }    
     }
 
     @media (max-width: 991px) {
@@ -113,6 +115,7 @@ label.checkbox-inline, label.radio-inline { margin-right:10px; padding-left:34px
     .nav-tabs > li a:hover { background:transparent; }
     .liner { height:2px; background:#ddd; position:absolute; width:90%; margin:0 -30px 0px 30px; top:20px; z-index:0; }
     .tab-content {margin-top:30px;}
+    .tab-content-menu{ margin-top: -5px;}
     }
 
     @media (max-width: 767px) {
@@ -121,5 +124,6 @@ label.checkbox-inline, label.radio-inline { margin-right:10px; padding-left:34px
     .nav-tabs > li a:hover { background:transparent; }
     .liner { height:2px; background:#ddd; position:absolute; width:90%; margin:0 -30px 0px 30px; top:15px; z-index:0; display:none; }
     .tab-content {margin-top:0px;}
+    .tab-content-menu{ margin-top: -20px;}
     }
 }

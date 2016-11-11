@@ -23,7 +23,7 @@ export const SystemIntegration = (props) => {
                                 <div className="col-md-2 col-sm-2">
                                     <label className="control-label"> External System Name </label>
                                 </div>
-                                <div className="col-md-9 col-sm-9">
+                                <div className="col-md-9 col-sm-8">
                                     <div className="col-md-7 col-sm-7">
                                         { !props.systemIntegration.dropDownShow ? <Field component={InputField} name="newSystemIntegration"
                                             touched = {touched.hasOwnProperty('SystemIntegrationForm') ?
@@ -41,7 +41,12 @@ export const SystemIntegration = (props) => {
                                         }
                                     </div>
                                     <div className="col-md-2 col-sm-2">
-                                        {props.systemIntegration.dropDownShow ?<a onClick={props.toggleTypeahead} className="toggle-link">Add Custom</a>:<a onClick={props.toggleTypeahead}  className="toggle-link">Add Predefined</a>}
+                                    <label className="control-label"> 
+                                        {props.systemIntegration.dropDownShow 
+                                            ?
+                                            <a onClick={props.toggleTypeahead} className="toggle-link"> Add Custom</a>
+                                            :<a onClick={props.toggleTypeahead}  className="toggle-link">Add Predefined</a>}
+                                    </label>
                                     </div>
                                 </div>
                                 <div className="col-md-1 col-sm-1">
