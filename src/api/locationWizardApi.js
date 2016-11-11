@@ -40,8 +40,8 @@ export function getLocations() {
     return XMLHttpRequestSyncGet(Constants.LOCATIONS).GetAllLocationsResult;
 
 }
-export function getMarketDrivenMappings(marketId) {
-    return XMLHttpRequestSyncGet(Constants.LWMARKETDRIVEN_MAPPINGS, "isoMarketId=" + marketId);;
+export function getMarketDrivenMappings(marketId = null) {
+    return XMLHttpRequestSyncGet(Constants.LWMARKETDRIVEN_MAPPINGS, marketId != null ? "isoMarketId=" + marketId : null);;
 }
 
 export function getOwners() {
@@ -75,6 +75,11 @@ export function getTimezones() {
 
     });
     return arrTimezones;
+}
+
+
+export function getOMSLocationwizardData(){
+    return XMLHttpRequestSyncGet(Constants.OMSLOCATIONWIZARD_DATA);
 }
 
 export function getUnitCharacteristics() {

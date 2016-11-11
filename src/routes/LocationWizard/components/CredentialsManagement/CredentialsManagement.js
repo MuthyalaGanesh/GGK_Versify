@@ -1,6 +1,7 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
 import {Panel, ControlLabel} from 'react-bootstrap/lib'
+import DropdownListField from 'components/DropdownList/DropdownListField'
 
 export const CredentialsManagement = (props) => {
         return (
@@ -20,12 +21,23 @@ export const CredentialsManagement = (props) => {
                       {props.marketDrivenMappings.map(fieldElement =>
                             <div className="col-sm-12 col-md-6 form-group">                                
                                 <label className="control-label" id={fieldElement.DisplayName}> {fieldElement.DisplayName} </label>
+                                {!fieldElement.IsDropDown 
+                                    ?
                                 <Field name={fieldElement.DisplayName}
                                     component="input"
                                     className="form-control"
                                     type="text"
                                     placeholder={fieldElement.DisplayName}>
                                 </Field>
+                                : <Field name={fieldElement.DisplayName}
+                                    component={DropdownListField}
+                                           className="form-control"
+                                           data={[]}
+                                           valueField='id'
+                                           textField='DisplayName'
+                                           placeholder={fieldElement.DisplayName}>
+                                </Field>
+                            }
                             </div>                        )}
                         </div>
                     : <div className="row"> 

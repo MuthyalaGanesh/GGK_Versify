@@ -1,8 +1,9 @@
 import {
-  basicInfoDropdowns, getMarketDrivenMappings
+  basicInfoDropdowns, getMarketDrivenMappings,getOMSLocationwizardData
 
 } from 'api/locationWizardApi'
 import {React, dispatch} from 'react'
+import _ from 'lodash';
 
 export const ON_PARENT_LOCATION_SELECT = 'ON_PARENT_LOCATION_SELECT'
 export const BIND_INITIAL_VALUES = 'BIND_INITIAL_VALUES'
@@ -36,6 +37,12 @@ export const ACTION_HANDLERS = {
   [PRIMARY_MARKET_CHANGE_EVENT]: (state, action) => {
     //get MarketDrivenMappings from API based on marketType ID
     var data = getMarketDrivenMappings(action.payload.id);
+    var omsLocationwizardData = getOMSLocationwizardData();
+    var marketDrivendata=[];
+     _.each(data, (item) => {
+        marketDrivendata.push(item);
+    });
+   
     return Object.assign({}, state, {
       CredetialBasicData:data
       }
@@ -59,7 +66,7 @@ const initialState = {
   timezones: basicInfoDropdowns.getTimezones,
   initial:true,
   BasicInfo:{},
-  CredetialBasicData:{}
+  CredetialBasicData:getMarketDrivenMappings()
 };
 
 export default function basiInfoReducer(state = initialState, action) {
