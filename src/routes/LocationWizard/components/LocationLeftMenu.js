@@ -9,23 +9,14 @@ export const LocationLeftMenu =(props)=> {
     
   return(   
      <aside className="main-sidebar control-sidebar-dark">
-        {/*<ul className="nav nav-tabs nav-justified control-sidebar-tabs">
-            <li className="active">
-                <Link to="#control-sidebar-menutree-tab" data-toggle="tab">
-                    <i className="fa fa-list"></i> Locations
+        <ul className="nav nav-tabs nav-justified control-sidebar-tabs">
+            <li id='location-header' className="active">
+             <h5>Locations </h5>                
+                <Link to="/location" data-toggle="tab">
+                   <i className="fa fa-plus-circle fa-2x"></i> 
                 </Link>
             </li>
-            <li>
-                <Link to="#control-sidebar-favorites-tab" data-toggle="tab">
-                    <i className="fa fa-star-o"></i> ExecView
-                </Link>
-            </li>
-            <li>
-                <Link to="#control-sidebar-recent-tab" data-toggle="tab">
-                    <i className="fa fa-history"></i> PlanOps
-                </Link>
-            </li>
-        </ul>*/}
+        </ul>
 
         <div className="tab-content">
             <div className="tab-pane active" id="control-sidebar-menutree-tab">

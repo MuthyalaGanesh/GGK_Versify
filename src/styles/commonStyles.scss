@@ -1,6 +1,15 @@
 .error{
 color: red;
 }
+#location-header .fa.fa-plus-circle.fa-2x
+{
+    color: #FFF !important;
+    cursor: pointer;    
+}
+#location-header a{
+    float: right;
+    margin-top: -40px;
+}
 span.fa.fa-plus-circle.fa-2x {
     color: #64b448;
     cursor: pointer;
