@@ -44,3 +44,16 @@ div.box-tools.pull-right i.fa.fa-address-book {
     margin-top:0px;
 }
 }
+
+i#success {
+    color: #64b448;
+}
+
+i#danger {
+    color: #fc8181;
+}
+
+.rw-multiselect-wrapper {
+    max-height: 150px;
+    cursor: pointer !important;
+}

@@ -139,13 +139,12 @@ export const DataHistorian = (props) => {
                             </div>
                     </div>       
                 </Modal.Body>
-                <Modal.Footer>     
-                    <div class="pull-right">  
+                <Modal.Footer>  
                         {props.dataHistorian.AddNewDataHistorian  ?       
                             <button className="btn btn-success" type="button" onClick={props.AddDataHistorian}>Add</button> :
                             <button className="btn btn-success" type="button" onClick={props.UpdateAddDataHistorian}>Save</button>}
                         <button className="btn btn-warning" type="button"  onClick={props.AddDataHistorianModalToggle}>Cancel</button>  
-                    </div>
+                   
                 </Modal.Footer>
             </Modal>
             </div>

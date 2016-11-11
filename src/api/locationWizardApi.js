@@ -146,5 +146,6 @@ export function getNewContactPopUpInfo(){
     ContactPopup.status = XMLHttpRequestSyncGet(Constants.CONTACT_STATUS).GetContactStatusesResult;
     ContactPopup.type = XMLHttpRequestSyncGet(Constants.CONTACT_TYPE);
     ContactPopup.org = XMLHttpRequestSyncGet(Constants.ORGANIZATION);
+    ContactPopup.Timezones = getTimezones();
     return ContactPopup;
 }

@@ -29,6 +29,7 @@ const RenderDropdownList = ({ input, ...rest }) =>
 
 export const Users = (props) => {    
         const {Roles,Contacts} = props.userInfo.userInformation;
+        const ContactPopUpInfo = props.userInfo.newContactPopUp;
         return (
             <div className="row tab-pane fade in active" id='users'>
                 <div className="col-xs-12">
@@ -162,12 +163,12 @@ export const Users = (props) => {
                                     <div className="col-xs-12 form-group">
                                 <div className="col-xs-4">
                                     <label>Cell / Mobile</label>
-                                    <Field component={InputField} className="form-control" name="Name" type="text"  placeholder="Cell / Mobile"
+                                    <Field component={InputField} className="form-control" name="Cell" type="text"  placeholder="Cell / Mobile"
                                              />
                                 </div>
                                 <div className="col-xs-4">
                                     <label>Other Phone</label>
-                                    <Field component={InputField} type="text" className="form-control" name="Primary" placeholder="Other Phone">
+                                    <Field component={InputField} type="text" className="form-control" name="OtherPhone" placeholder="Other Phone">
                                     </Field>
                                 </div>
                                 <div className="col-xs-4">
@@ -181,13 +182,13 @@ export const Users = (props) => {
                             <div className="col-xs-12 form-group">
                                 <div className="col-xs-4">
                                     <label>Org</label>
-                                    <Field component={RenderDropdownList} className="form-control" name="Gateway"  placeholder="Select Org"
-                                             />
+                                    <Field component={RenderDropdownList} className="form-control" name="Org"  placeholder="Select Org"
+                                            data = {ContactPopUpInfo.org} textField ='name' valueField='id'/>
                                 </div>
                                 <div className="col-xs-4">
                                     <label>type</label>
-                                    <Field component={RenderDropdownList} className="form-control" name="Gateway"  placeholder="Select type"
-                                             />
+                                    <Field component={RenderDropdownList} className="form-control" name="Type"  placeholder="Select type"
+                                             data = {ContactPopUpInfo.type} textField ='name' valueField='id'/>
                                 </div>
                                 <div className="col-xs-4">
                                     <label>Custom 3</label>
@@ -200,12 +201,12 @@ export const Users = (props) => {
                             <div className="col-xs-12 form-group">
                                 <div className="col-xs-4">
                                     <label>Primary Email</label>
-                                    <Field component={InputField} className="form-control" name="Name" type="text"  placeholder="Primary Email"
+                                    <Field component={InputField} className="form-control" name="PrimaryEmail" type="text"  placeholder="Primary Email"
                                              />
                                 </div>
                                 <div className="col-xs-4">
                                     <label>Secondary Email</label>
-                                    <Field component={InputField} type="text" className="form-control" name="Primary" placeholder="Secondary Email">
+                                    <Field component={InputField} type="text" className="form-control" name="SecondaryEmail" placeholder="Secondary Email">
                                     </Field>
                                 </div>
                                 <div className="col-xs-4">
@@ -219,13 +220,13 @@ export const Users = (props) => {
                             <div className="col-xs-12 form-group">
                                 <div className="col-xs-4">
                                     <label>Title</label>
-                                    <Field component={InputField} className="form-control" name="Name" type="text"  placeholder="Primary Email"
+                                    <Field component={InputField} className="form-control" name="Title" type="text"  placeholder="Title"
                                              />
                                 </div>
                                 <div className="col-xs-4">
                                     <label>TimeZone</label>
-                                    <Field component={RenderDropdownList} className="form-control" name="Gateway"  placeholder="Select type"
-                                             />
+                                    <Field component={RenderDropdownList} className="form-control" name="TimeZone"  placeholder="Select TimeZone"
+                                            data = {ContactPopUpInfo.Timezones} textField ='value' valueField='id' />
                                 </div>
                                 <div className="col-xs-4">
                                     <label>Custom 5</label>
@@ -246,7 +247,7 @@ export const Users = (props) => {
                                         <div className="col-xs-4">
                                             <label>status</label>
                                             <Field component={RenderDropdownList} className="form-control" name="Gateway"  placeholder="Select type"
-                                             />
+                                                 data = {ContactPopUpInfo.status}/>
                                         </div>
                                         <div className="col-xs-4">
                                             <label>User ID</label>
