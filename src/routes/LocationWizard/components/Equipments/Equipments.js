@@ -21,13 +21,13 @@ export const Equipments = (props) => {
                         <div className="margin-bottom-sm padding-top">
                             <div className="row">
                                 <div className="col-md-12 col-sm-12">
-                                    <div className="col-md-2 col-sm-2"><label>Equipment</label></div>
-                                    <div className="col-md-6 col-md-6">
+                                    <div className="col-md-2 col-sm-2 col-xs-12"><label>Equipment</label></div>
+                                    <div className="col-md-6 col-md-6 col-sm-6 col-xs-8">
                                         <Field component={InputField} type="text" className="form-control" name="newEquipment"
                                             touched = {touched.hasOwnProperty('EquipmentsForm') ? touched.EquipmentsForm.hasOwnProperty('fields') ? touched.EquipmentsForm.fields.hasOwnProperty('newEquipment') : false : false }>
                                         </Field>
                                     </div>
-                                    <div className="col-md-offset-3 col-md-1 col-sm-4">
+                                    <div className="col-md-offset-3 col-md-1 col-sm-4 col-xs-4">
                                         <button className="btn btn-success" onClick={props.AddEquipment}>Add</button>
                                     </div>
                                 </div>
