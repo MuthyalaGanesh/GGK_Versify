@@ -45,12 +45,14 @@ div.box-tools.pull-right i.fa.fa-address-book {
 }
 }
 
-#success {
+#select-all {
     color: #64b448;
+    cursor: pointer;
 }
 
-#danger {
+#deselect-all {
     color: #fc8181;
+    cursor: pointer;
 }
 
 .rw-multiselect-wrapper {

@@ -42,10 +42,10 @@ export const WorkFlow = (props) => {
                                                         placeholder="Select WorkFlow"/>
                                                 </div>
                                                 <div className="col-xs-6 col-sm-6 col-md-1 col-lg-1">
-                                                        <span id="success" onClick={props.selectAll}>Select All</span>
+                                                        <span id="select-all" onClick={props.selectAll}>Select All</span>
                                                 </div>
                                                 <div className="col-xs-6 col-sm-6 col-md-1 col-lg-1">
-                                                        <span id='danger' onClick={props.removeAll}>Deselect All</span>
+                                                        <span id='deselect-all' onClick={props.removeAll}>Deselect All</span>
                                                 </div>
                                             </div>  
                                         </div>
