@@ -8,7 +8,7 @@ export function AddEquipment() {
     return new Promise((resolve) => {
       dispatch({
         type: ADD_EQUIPMENT,
-        payload: getState().form.EquipmentsForm.values.newEquipment
+        payload: getState().form.EquipmentsForm && getState().form.EquipmentsForm.values ? getState().form.EquipmentsForm.values.newEquipment : null
       })
       dispatch({
         type: 'redux-form/DESTROY',
@@ -20,9 +20,18 @@ export function AddEquipment() {
 }
 
 export function EditEquipment(index) {
-  return {
-    type: EDIT_EQUIPMENT,
-    payload: index
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      dispatch({
+        type: EDIT_EQUIPMENT,
+        payload: index
+      })
+      dispatch({
+        type: 'redux-form/DESTROY',
+        meta: { form: "EquipmentsForm" },
+        payload: ""
+      })
+    })
   }
 }
 export function ApplyEditEquipment() {
@@ -36,13 +45,21 @@ export function ApplyEditEquipment() {
   }
 }
 export function DeleteEquipment(index) {
-
+  return {
+    type: DELETE_EQUIPMENT,
+    payload: index
+  }
 }
 export const ACTION_HANDLERS = {
+
   [ADD_EQUIPMENT]: (state, action) => {
-    if (action.payload) {
+
+    if (action.payload != null && action.payload != undefined && typeof action.payload == "string") {
       var valuePresence = 1;
       var newEquipmentData = [];
+      if (!state.insertedEquipment) {
+        state.insertedEquipment = [];
+      }
       state.insertedEquipment.map((eq) => {
         newEquipmentData.push(eq);
         if (eq == action.payload) {
@@ -52,11 +69,11 @@ export const ACTION_HANDLERS = {
       if (valuePresence == 1) {
         newEquipmentData.push(action.payload);
       }
+      return Object.assign({}, state, { insertedEquipment: newEquipmentData })
     }
-    return Object.assign({}, state, { insertedEquipment: newEquipmentData })
+    return Object.assign({}, state)
   },
   [EDIT_EQUIPMENT]: (state, action) => {
-    console.log(action.payload)
     if (action.payload != null && action.payload != undefined && !isNaN(action.payload)) {
       state.editableEquipment = state.insertedEquipment[action.payload];
     }
@@ -75,17 +92,19 @@ export const ACTION_HANDLERS = {
       })
       return Object.assign({}, state, { insertedEquipment: updatedEquipments, showEditModal: !state.showEditModal })
     }
+    return Object.assign({}, state)
   },
   [DELETE_EQUIPMENT]: (state, action) => {
-    if (action.payload) {
+    if (action.payload != null && action.payload != undefined && !isNaN(action.payload)) {
       var updatedEquipments = []
       state.insertedEquipment.map((eq, i) => {
         if (i != action.payload) {
           updatedEquipments.push(eq)
         }
       })
+      return Object.assign({}, state, { insertedEquipment: updatedEquipments })
     }
-    return Object.assign({}, state, { insertedEquipment: updatedEquipments })
+    return Object.assign({}, state)
   }
 }
 

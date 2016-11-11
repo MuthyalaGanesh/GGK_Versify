@@ -10,7 +10,7 @@ export const SystemIntegration = (props) => {
     const touched = props.formdata
     return (
         <div className="row tab-pane fade in active" id="systemintegration">
-            <div className="col-xs-12">
+            <div className="col-md-12 col-sm-12">
                 <div className="box">
                     <div className="box-header">
                         <h3 className="box-title">System Integration</h3>
@@ -20,12 +20,12 @@ export const SystemIntegration = (props) => {
                     <div className="box-body">
                         <div className="row">
                             <div className="form-group">
-                                <div className="col-xs-4">
+                                <div className="col-md-2 col-sm-2">
                                     <label className="control-label"> External System Name </label>
                                 </div>
-                                <div className="col-xs-6">
-                                    <div className="col-xs-5">
-                                        { !props.systemIntegration.typeaheadShow ? <Field component={InputField} name="newSystemIntegration"
+                                <div className="col-md-9 col-sm-9">
+                                    <div className="col-md-7 col-sm-7">
+                                        { !props.systemIntegration.dropDownShow ? <Field component={InputField} name="newSystemIntegration"
                                             touched = {touched.hasOwnProperty('SystemIntegrationForm') ?
                                                 touched.SystemIntegrationForm.hasOwnProperty('fields') ? touched.SystemIntegrationForm.fields.hasOwnProperty('newSystemIntegration') : false : false }
                                             className="form-control"/> :
@@ -40,12 +40,11 @@ export const SystemIntegration = (props) => {
                                             </Field>
                                         }
                                     </div>
-                                    <div className="col-xs-1">
-                                        <span className={props.systemIntegration.typeaheadShow ? "fa fa-plus-circle" : "fa fa-times-circle"} onClick={props.toggleTypeahead}>
-                                        </span>
+                                    <div className="col-md-2 col-sm-2">
+                                        {props.systemIntegration.dropDownShow ?<a onClick={props.toggleTypeahead} className="toggle-link">Add Custom</a>:<a onClick={props.toggleTypeahead}  className="toggle-link">Add Predefined</a>}
                                     </div>
                                 </div>
-                                <div className="col-xs-2">
+                                <div className="col-md-1 col-sm-1">
                                     <button className="btn btn-success" type="button" onClick={props.AddSystemIntegration}>Add</button>
                                 </div>
                             </div>
