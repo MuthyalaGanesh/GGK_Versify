@@ -55,14 +55,17 @@ return (
                                                 </Field>
                                         </OverlayTrigger>
                                 </div>
-                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
-                                    <label className="control-label"> Allow Outages at Location </label>
-                                    <Field name="isOutageLevel"
-                                           component='input' type="checkbox"
-                                           text='Allow Outages at Location' className='checkbox'>
-                                    </Field>
+                                <FormGroup className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group-checkbox">
                                     
-                                </div>                               
+                                    <label className="checkbox-inline control-label">
+                                      <Field name="isOutageLevel"
+                                           component='input' type="checkbox"
+                                           text='Allow Outages at Location'class='checkbox' />
+                                          &nbsp;&nbsp;Allow Outages at Location </label>
+
+                                </FormGroup>
+
+                                                              
                                 <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
                                     <label className="control-label"> Parent Location </label>
                                     <Field name="parentLocation"

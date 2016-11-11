@@ -34,3 +34,13 @@ div.box-tools.pull-right i.fa.fa-address-book {
     font-size: 1.8em;
     color: #64b448;
 }
+.form-group-checkbox{
+    margin-top:20px;
+    margin-left:-15px;
+    margin-right: 15px;
+}
+@media (max-width: 767px) {
+    .form-group-checkbox{
+    margin-top:0px;
+}
+}
