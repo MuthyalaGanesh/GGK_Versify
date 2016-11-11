@@ -43,8 +43,10 @@ export function toggleTypeahead() {
     return (dispatch, getState) => {
         return new Promise((resolve) => {
             dispatch({ type: TOGGLE_TYPEAHEAD })
-            dispatch({ type: 'redux-form/DESTROY', meta: { form: "GatewayForm" }, payload: "" })
-
+            dispatch({
+                type: 'redux-form/DESTROY',
+                meta: { form: "SystemIntegrationForm" }, payload: ""
+            })
         })
     }
 }

@@ -2,7 +2,9 @@ import {
   basicInfoDropdowns
 } from 'api/locationWizardApi'
 
-import { BindInitialValues } from './basicInfo';
+import {
+  BindInitialValues
+} from './basicInfo';
 
 
 export const TOGGLE_LEFTMENU_CLICK = 'TOGGLE_LEFTMENU_CLICK';
@@ -21,29 +23,37 @@ export function leftMenuDropdownClickEvent(id, event) {
   console.log("LOCATIONS_MENUITEM_DROPDOWN_CLICK:", id);
   return (dispatch, getState) => {
     dispatch({
-      type:'redux-form/DESTROY',
-      meta:{form : "BasicInfoForm"},
-      payload:''
+      type: 'redux-form/DESTROY',
+      meta: {
+        form: "BasicInfoForm"
+      },
+      payload: ''
     })
     dispatch(BindInitialValues(id));
-    
+
   };
 };
 export function saveCompleteLocationWizard() {
   return (dispatch, getState) => {
-    console.log("state-", getState().form)
     return new Promise((resolve) => {
       console.log("state pro-", getState().form)
-      getState().form.BasicInfoForm.hasOwnProperty('values') ? Object.keys(getState().form.BasicInfoForm.values).length < 11 ? dispatch({
-          type: 'ERROR',
-          payload: 1
-        }) : console.log(Object.keys(getState().form.BasicInfoForm.values).length)
-        /*(getState().form.BasicInfoForm.values.technologyType.name ==  getState().form.BasicInfoForm.values.secondarytechnologyType.name) 
-                  ? dispatch({
-                      type: 'ERROR',
-                      payload: 1
-                  }) : null*/
-        : null
+      debugger;
+      getState().form.BasicInfoForm.hasOwnProperty('values') 
+        ? Object.keys(getState().form.BasicInfoForm.values).length < 11 
+            ? dispatch({
+            type: 'ERROR',
+            payload: 1
+          })
+           : (getState().form.BasicInfoForm.values.technologyType == getState().form.BasicInfoForm.values.secondarytechnologyType) 
+               ? dispatch({
+                type: 'ERROR',
+                payload: 1
+              }) 
+               : console.log(getState(),'stateobject')
+       : dispatch({
+        type: 'ERROR',
+        payload: 1
+      })
     })
   }
 }
@@ -57,7 +67,7 @@ function toArray(obj) {
   return array;
 }
 
-export const ACTION_HANDLERS = {   
+export const ACTION_HANDLERS = {
   [TOGGLE_LEFTMENU_CLICK]: (state, action) => {
     //Handling adding claases  sidebar-open,sidebar-collapse based on screen resolution
     var bodyClassList = toArray(document.getElementsByTagName('body')[0].classList);
@@ -83,18 +93,18 @@ export const ACTION_HANDLERS = {
   },
 }
 
-function changeObjectTypeOfLocations(allLocations){
-    var changedLocationsObject =[];
-    allLocations.forEach(function(item) {        
-     changedLocationsObject.push({
-         key: item.Id,
-         value: item.Id,
-         label: item.Name,
-         disabled: !item.IsOutageLevel || false,
-         children: changeObjectTypeOfLocations(item.Children)
-        });
+function changeObjectTypeOfLocations(allLocations) {
+  var changedLocationsObject = [];
+  allLocations.forEach(function(item) {
+    changedLocationsObject.push({
+      key: item.Id,
+      value: item.Id,
+      label: item.Name,
+      disabled: !item.IsOutageLevel || false,
+      children: changeObjectTypeOfLocations(item.Children)
     });
-    return changedLocationsObject;
+  });
+  return changedLocationsObject;
 }
 
 const allLocationsObject = basicInfoDropdowns.getLocations;
@@ -102,7 +112,7 @@ const allLocationsObject = basicInfoDropdowns.getLocations;
 const initialState = {
   error: null,
   allLocations: allLocationsObject,
-  parentLocations:changeObjectTypeOfLocations(allLocationsObject),
+  parentLocations: changeObjectTypeOfLocations(allLocationsObject),
 
 };
 
