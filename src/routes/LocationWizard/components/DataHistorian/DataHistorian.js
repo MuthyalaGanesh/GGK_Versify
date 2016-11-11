@@ -130,11 +130,11 @@ export const DataHistorian = (props) => {
                                 </div>
                             </div>
                             <div className="col-xs-12 form-group">
-                                <div className="col-xs-6">
-                                    <label>Is Digital Tag</label>
-                                </div>
-                                <div className="col-xs-6">
-                                    <Field name="isDigitalTag" component={RenderCheckBox} type="checkbox" defaultvalue = {props.dataHistorian.EditableDataHistorian.isDigitalState}/>                                           
+                                <div className="col-xs-6 row">
+                                    <label className="checkbox-inline control-label">
+                                        <Field name="isDigitalTag" component={RenderCheckBox} type="checkbox" defaultvalue = {props.dataHistorian.EditableDataHistorian.isDigitalState}/>
+                                        Is Digital Tag
+                                    </label>
                                 </div>
                             </div>
                     </div>       

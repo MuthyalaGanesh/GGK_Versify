@@ -20,7 +20,6 @@ export const WorkFlow = (props) => {
                         <div className="box-header">
                             <h3 className="box-title">WorkFlow</h3>
                             <div className="box-tools pull-right">
-                            &nbsp;
                             </div>
                         </div>
                         <div className="box-body"> 
@@ -42,21 +41,11 @@ export const WorkFlow = (props) => {
                                                         valueField='id'
                                                         placeholder="Select WorkFlow"/>
                                                 </div>
-                                                <div className="col-sm-1 col-md-1 col-lg-1">
-                                                    <OverlayTrigger placement="bottom" overlay={
-                                                        <Tooltip id="tooltip">
-                                                            <strong>Select All</strong>
-                                                        </Tooltip>}>
-                                                        <i id='success' className="fa fa-check fa-2x" onClick={props.selectAll}></i>
-                                                    </OverlayTrigger>
+                                                <div className="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                                                        <span id="success" onClick={props.selectAll}>Select All</span>
                                                 </div>
-                                                <div className="col-sm-1 col-md-1 col-lg-1">
-                                                    <OverlayTrigger placement="bottom" overlay={
-                                                        <Tooltip id="tooltip">
-                                                            <strong>Remove All</strong>
-                                                        </Tooltip>}>
-                                                        <i id='danger' className="fa fa-times fa-2x" onClick={props.removeAll}></i>
-                                                    </OverlayTrigger>
+                                                <div className="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                                                        <span id='danger' onClick={props.removeAll}>Deselect All</span>
                                                 </div>
                                             </div>  
                                         </div>

@@ -4,9 +4,7 @@ import { Field, reduxForm } from 'redux-form'
 export const InputField = (props) => {
 	let input = props.touched?props.input.value:props.defaultvalue;
 	return(
-			<div>
-        		<input {...props.input} value={input} className={props.className} readOnly={props.readOnly}/>
-    		</div>
+        	<input {...props.input} value={input} className={props.className} readOnly={props.readOnly}/>
 		)
 }
 export default InputField
