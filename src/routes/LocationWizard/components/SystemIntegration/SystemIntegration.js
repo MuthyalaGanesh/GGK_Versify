@@ -49,7 +49,7 @@ export const SystemIntegration = (props) => {
                                             <a onClick={props.toggleTypeahead} className="toggle-link"> Add Custom</a>
                                             : <a onClick={props.toggleTypeahead}  className="toggle-link">Add Predefined</a>}
                                     </label></div>
-                                    <div className="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                                    <div className="col-xs-6 col-sm-6 col-md-1 col-lg-1 btn-top">
                                         <button className="btn btn-success" type="button" onClick={props.AddSystemIntegration}>Add</button>
                                     </div>
                                 </div>
