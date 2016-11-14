@@ -33,7 +33,7 @@ const EffectiveDateValues = (props) => (
                             className="form-control"
                             defaultvalue={props.defaultValues[i].Value}
                             touched = {props.touched.hasOwnProperty('UnitCharacteristicsForm') ?
-                                props.touched.UnitCharacteristicsForm.hasOwnProperty('fields') ? props.touched.UnitCharacteristicsForm.fields.hasOwnProperty("ucvalue") ? props.touched.UnitCharacteristicsForm.fields.ucvalue[i].hasOwnProperty('touched') : false : false : false }/></td>
+                                props.touched.UnitCharacteristicsForm.hasOwnProperty('fields') ? props.touched.UnitCharacteristicsForm.fields.hasOwnProperty("ucvalue") ? props.touched.UnitCharacteristicsForm.values.ucvalue[i] : false : false : false }/></td>
                         <td> <Field
                             name={`effectiveStartDate[${i}]`}
                             component={DatePickerField}

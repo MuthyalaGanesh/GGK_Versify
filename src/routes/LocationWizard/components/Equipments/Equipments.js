@@ -34,31 +34,31 @@ export const Equipments = (props) => {
                             </div>
                             {props.equipments.insertedEquipment && props.equipments.insertedEquipment.length >
                                 0 ?
-                                    <div className="col-md-12 col-sm-12">
-                                        <Table striped bordered condensed hover responsive className="all-equipments">
-                                            <thead>
-                                                <tr>
-                                                    <th className="col-md-3 col-sm-3">Name</th>
-                                                    <th className="col-md-1 col-md-1">Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {
-                                                    props.equipments.insertedEquipment.map((eq, index) =>
-                                                        (
-                                                            <tr key={index}>
-                                                                <td className="col-md-3 col-sm-3 name-cell">{eq}</td>
-                                                                <td className="col-md-1 col-sm-3">
-                                                                    <div className=" text-center">
-                                                                        <i className="fa fa-edit fa-2x" onClick={() => { props.EditEquipment(index) } }></i>
-                                                                        <i className="fa fa-trash-o fa-2x" onClick={() => { props.DeleteEquipment(index) } }></i>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>)
-                                                    )
-                                                }
-                                            </tbody>
-                                        </Table>
+                                <div className="col-md-12 col-sm-12">
+                                    <Table striped bordered condensed hover responsive className="all-equipments">
+                                        <thead>
+                                            <tr>
+                                                <th className="col-md-3 col-sm-3">Name</th>
+                                                <th className="col-md-1 col-md-1">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {
+                                                props.equipments.insertedEquipment.map((eq, index) =>
+                                                    (
+                                                        <tr key={index}>
+                                                            <td className="col-md-3 col-sm-3 name-cell">{eq}</td>
+                                                            <td className="col-md-1 col-sm-3">
+                                                                <div className=" text-center">
+                                                                    <i className="fa fa-edit fa-2x" onClick={() => { props.EditEquipment(index) } }></i>
+                                                                    <i className="fa fa-trash-o fa-2x" onClick={() => { props.DeleteEquipment(index) } }></i>
+                                                                </div>
+                                                            </td>
+                                                        </tr>)
+                                                )
+                                            }
+                                        </tbody>
+                                    </Table>
                                 </div> : null}
 
                         </div>
@@ -73,7 +73,7 @@ export const Equipments = (props) => {
                                     className="form-control"
                                     name="editedEquipment"
                                     defaultvalue={props.equipments.editableEquipment}
-                                    touched = {touched.hasOwnProperty('EquipmentsForm') ? touched.EquipmentsForm.hasOwnProperty('fields') ? touched.EquipmentsForm.fields.hasOwnProperty('editedEquipment') : false : false }></Field>
+                                    touched = {touched.hasOwnProperty('EquipmentsForm') ? touched.EquipmentsForm.hasOwnProperty('fields') ? touched.EquipmentsForm.fields.hasOwnProperty('editedEquipment') ? touched.EquipmentsForm.values.editedEquipment : false : false : false }></Field>
                             </Modal.Body>
                             <Modal.Footer>
                                 <button className="btn btn-warning" type="button" onClick={props.EditEquipment}>Cancel</button>
