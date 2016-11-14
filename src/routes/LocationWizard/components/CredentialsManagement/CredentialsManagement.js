@@ -31,10 +31,9 @@ export const CredentialsManagement = (props) => {
                                 </Field>
                                 : <Field name={fieldElement.DisplayName}
                                     component={DropdownListField}
-                                           className="form-control"
-                                           data={[]}
-                                           valueField='id'
-                                           textField='DisplayName'
+                                           data={fieldElement.dropDownItems}
+                                           valueKey='key'
+                                           labelKey='value'
                                            placeholder={fieldElement.DisplayName}>
                                 </Field>
                             }

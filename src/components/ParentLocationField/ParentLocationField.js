@@ -13,7 +13,7 @@ export const ParentLocationField = (props) => (
     placeholder={"Select Parent Location"}
     value={props.input.value !== '' ? props.input.value :undefined}
     showSearch ={false}
-    treeLine
+    treeLine allowClear
     treeData={props.parentLocations}
     treeNodeFilterProp="Name"
     open={props.tsOpen || false}
