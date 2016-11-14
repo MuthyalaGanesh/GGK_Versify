@@ -20,7 +20,7 @@ const DropdownListField = ({ input, ...rest }) =>
 				clearable={true} 
 				name={rest.name}
         disabled={rest.disabled || false} 
-				value={input.value} 
+				value={input.value || rest.defaultValue} 
 				onChange={(e)=>{  
              input.onChange(e);
             !!rest.onChangeEvent && rest.onChangeEvent(e);

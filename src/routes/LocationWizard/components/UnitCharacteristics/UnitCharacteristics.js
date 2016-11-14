@@ -5,6 +5,7 @@ import 'styles/unitCharacteristicsStyles.scss'
 import 'styles/widgetStyle.scss'
 import DatePickerField from 'components/DatePicker/DatePickerField'
 import InputField from 'components/InputField/InputField'
+import DropdownListField from 'components/DropdownList/DropdownListField'
 import TextAreaField from 'components/TextAreaField/TextAreaField'
 
 const EffectiveDateValues = (props) => (
@@ -17,7 +18,7 @@ const EffectiveDateValues = (props) => (
                     <th>Effective End Date</th>
                     <th>
                         <span>
-                            Actions 
+                            Actions
                         </span>
                     </th>
                 </tr>
@@ -32,7 +33,7 @@ const EffectiveDateValues = (props) => (
                             className="form-control"
                             defaultvalue={props.defaultValues[i].Value}
                             touched = {props.touched.hasOwnProperty('UnitCharacteristicsForm') ?
-                                props.touched.UnitCharacteristicsForm.hasOwnProperty('fields') ? props.touched.UnitCharacteristicsForm.fields.hasOwnProperty("ucvalue") ?  props.touched.UnitCharacteristicsForm.fields.ucvalue[i].hasOwnProperty('touched') :false:false : false }/></td>
+                                props.touched.UnitCharacteristicsForm.hasOwnProperty('fields') ? props.touched.UnitCharacteristicsForm.fields.hasOwnProperty("ucvalue") ? props.touched.UnitCharacteristicsForm.fields.ucvalue[i].hasOwnProperty('touched') : false : false : false }/></td>
                         <td> <Field
                             name={`effectiveStartDate[${i}]`}
                             component={DatePickerField}
@@ -128,7 +129,7 @@ export const UnitCharacteristics = (props) => {
                                             <th>UOM</th>
                                             <th>Effective Start Date</th>
                                             <th>Effective End Date</th>
-                                            <th>Actions</th>
+                                            <th colSpan={2}>Actions</th>
                                         </tr>
                                     </thead>
 
@@ -151,6 +152,8 @@ export const UnitCharacteristics = (props) => {
                                                                 </Tooltip>}>
                                                                 <i className="fa fa-edit fa-2x" onClick={() => { props.ToggleAddEditModal(index) } }></i>
                                                             </OverlayTrigger>
+                                                        </td>
+                                                        <td>
                                                             {uc.isDeletable ? <OverlayTrigger placement="bottom" overlay={
                                                                 <Tooltip id="tooltip">
                                                                     <strong>Delete {uc.Name}</strong>
@@ -169,7 +172,7 @@ export const UnitCharacteristics = (props) => {
 
             </div>
             <Modal show={props.unitCharacteristics.showModal}>
-                <form onChange={(event) => { props.characteristicNameSelected(event) } }>
+                <form>
                     <Modal.Header>
                         {props.unitCharacteristics.isEditable ? <Modal.Title>Add Unit Characteristic</Modal.Title> : <Modal.Title>Edit Unit Characteristic</Modal.Title>}
                     </Modal.Header>
@@ -181,18 +184,15 @@ export const UnitCharacteristics = (props) => {
                                     <label>Unit Characteristic Name</label>
                                 </div>
                                 <div className="col-xs-6">
-                                    {props.unitCharacteristics.isEditable ? <Field component="select" name="charateristicName" className="form-control">
-                                        <option value="">Select Unit Charateristic</option>
-
-                                        {
-                                            unitCharacteristicsData.unSelectedUnitCharacteristics.map((uc, index) =>
-                                                (<option value={uc.id} key={uc.id}>{uc.display}</option>))
-                                        }
-                                    </Field> :
-                                        <Field component={InputField} type="text" readOnly={true}
-                                            className="form-control" name="charateristicName"
-                                            defaultvalue={!props.unitCharacteristics.isEditable ? props.unitCharacteristics.editableUnitCharacter.name : null}>
-                                        </Field>}
+                                    <Field component={DropdownListField}
+                                        name="charateristicName"
+                                        data={unitCharacteristicsData.unSelectedUnitCharacteristics}
+                                        valueKey='id'
+                                        labelKey='display'
+                                        disabled={props.unitCharacteristics.editableUnitCharacter ? !props.unitCharacteristics.editableUnitCharacter.isDeletable : false}
+                                        placeholder="Select Unit Charateristic" onChangeEvent={props.characteristicNameSelected}
+                                        defaultValue={props.unitCharacteristics.editableUnitCharacter && props.unitCharacteristics.editableUnitCharacter.id ? props.unitCharacteristics.editableUnitCharacter : null}>
+                                    </Field>
                                 </div>
                             </div>
 
@@ -203,7 +203,8 @@ export const UnitCharacteristics = (props) => {
                                 <div className="col-xs-6">
                                     <Field component={InputField} type="text" readOnly={true}
                                         className="form-control" name="displayNameLabel"
-                                        defaultvalue={!props.unitCharacteristics.isEditable ? props.unitCharacteristics.editableUnitCharacter.display : props.unitCharacteristics.displayNameLabel}>
+                                        defaultvalue={props.unitCharacteristics.editableUnitCharacter ?
+                                            props.unitCharacteristics.editableUnitCharacter.display : props.unitCharacteristics.displayNameLabel}>
                                     </Field>
                                 </div>
                             </div>
@@ -215,12 +216,11 @@ export const UnitCharacteristics = (props) => {
                                 <div className="col-xs-6">
                                     <Field component={TextAreaField} readOnly={true}
                                         className="form-control" name="descriptionLabel" readOnly={true}
-                                        defaultValue={!props.unitCharacteristics.isEditable ? props.unitCharacteristics.editableUnitCharacter.description : props.unitCharacteristics.descriptionLabel} rows="4">
+                                        defaultValue={props.unitCharacteristics.editableUnitCharacter ?
+                                            props.unitCharacteristics.editableUnitCharacter.description : props.unitCharacteristics.descriptionLabel} rows="4">
                                     </Field>
                                 </div>
                             </div>
-
-
 
                             <div className="col-xs-12 form-group">
                                 <div className="col-xs-6">
@@ -229,13 +229,14 @@ export const UnitCharacteristics = (props) => {
                                 <div className="col-xs-6">
                                     <Field component={InputField} type="text" readOnly={true}
                                         className="form-control" name="UOMLabel"
-                                        defaultvalue={!props.unitCharacteristics.isEditable ? props.unitCharacteristics.editableUnitCharacter.UOM : props.unitCharacteristics.UOMLabel}>
+                                        defaultvalue={props.unitCharacteristics.editableUnitCharacter ?
+                                            props.unitCharacteristics.editableUnitCharacter.UOM : props.unitCharacteristics.UOMLabel}>
                                     </Field>
                                 </div>
                             </div>
                             <FieldArray name="editableData"
                                 component={EffectiveDateValues}
-                                defaultValues={!props.unitCharacteristics.isEditable ? props.unitCharacteristics.editableUnitCharacter.editableAttributes : null}
+                                defaultValues={props.unitCharacteristics.editableUnitCharacter ? props.unitCharacteristics.editableUnitCharacter.editableAttributes : null}
                                 removeEditableAttribute={props.removeEditableAttribute}
                                 isEditable={props.unitCharacteristics.isEditable}
                                 touched={touched}/>

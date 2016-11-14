@@ -86,7 +86,7 @@ export function getUnitCharacteristics() {
 
     return XMLHttpRequestSyncGet(Constants.ATTRIBUTES);
 }
-export function getSelectedUnitCharacteristics() {
+export function getDefaultUnitCharacteristics() {
     var unitCharacteristicsJson = []
     getUnitCharacteristics().map((uc) => {
         if (uc.name.toLowerCase() == "capacity" || uc.name.toLowerCase() == "eco min" || uc.name.toLowerCase() == "eco max") {
