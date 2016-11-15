@@ -114,6 +114,7 @@ export function getDefaultUnitCharacteristics() {
         if (uc.name.toLowerCase() == "capacity" || uc.name.toLowerCase() == "eco min" || uc.name.toLowerCase() == "eco max") {
             uc.editableAttributes = [{}]
             uc.isDeletable = false;
+            uc.isSavable = false;
             getAllUOMValues().map((uom) => {
                 if (uc.defaultUnitOfMeasureId == uom.id) {
                     uc.UOM = uom.name;

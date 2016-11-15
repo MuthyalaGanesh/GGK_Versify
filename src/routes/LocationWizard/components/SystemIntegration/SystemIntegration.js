@@ -19,31 +19,31 @@ export const SystemIntegration = (props) => {
                     </div>
                     <div className="box-body">
                         <div className="row">
-                            <div className="form-group">
-                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                    <label className="control-label"> External System Name </label>
-                                </div>
-                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                    <div>
-                                        { !props.systemIntegration.dropDownShow ? <Field component={InputField} name="newSystemIntegration"
-                                            touched = {touched.hasOwnProperty('SystemIntegrationForm') ?
-                                                touched.SystemIntegrationForm.hasOwnProperty('fields') ? touched.SystemIntegrationForm.fields.hasOwnProperty('newSystemIntegration') : false : false }
-                                            className="form-control"/> :
-                                            <Field component="select" name="newSystemIntegration" className="form-control">
-                                                <option value="">Select SystemIntegration</option>
-
-                                                {
-                                                    systemIntegrationData.map((uc) => (
-                                                        (uc.LocationMappingId < 0) ? <option value={uc.ExternalSystemName} key={uc.ExternalSystemName}>{uc.ExternalSystemName}</option> : null
-                                                    ))
-                                                }
-                                            </Field>
-                                        }
+                            <div className="col-sm-12">
+                                <div className="form-group">
+                                    <div className="col-sm-5 col-md-3 col-lg-3">
+                                        <label className="control-label"> External System Name </label>
                                     </div>
+                                    <div className="col-sm-5 col-md-7 col-lg-7">
+                                        <div>
+                                            { !props.systemIntegration.dropDownShow ? <Field component={InputField} name="newSystemIntegration"
+                                                touched = {touched.hasOwnProperty('SystemIntegrationForm') ?
+                                                    touched.SystemIntegrationForm.hasOwnProperty('fields') ? touched.SystemIntegrationForm.fields.hasOwnProperty('newSystemIntegration') : false : false }
+                                                className="form-control"/> :
+                                                <Field component="select" name="newSystemIntegration" className="form-control">
+                                                    <option value="">Select SystemIntegration</option>
 
-                                </div>
-                                <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                    <div className="col-xs-6 col-sm-6 col-md-3 col-lg-3"> <label className="control-label">
+                                                    {
+                                                        systemIntegrationData.map((uc) => (
+                                                            (uc.LocationMappingId < 0) ? <option value={uc.ExternalSystemName} key={uc.ExternalSystemName}>{uc.ExternalSystemName}</option> : null
+                                                        ))
+                                                    }
+                                                </Field>
+                                            }
+                                        </div>
+
+                                    </div>
+                                    <div className="col-xs-6 col-sm-6 col-md-1 col-lg-1"> <label className="control-label">
                                         {props.systemIntegration.dropDownShow
                                             ?
                                             <a onClick={props.toggleTypeahead} className="toggle-link"> Add Custom</a>
@@ -73,7 +73,7 @@ export const SystemIntegration = (props) => {
                                                 props.systemIntegration.selectedSystemIntegrationTypes.map((ssit, i) =>
                                                     <tr key={i}>
                                                         <td className="align-text-col"><label>{ssit.ExternalSystemName}</label></td>
-                                                        <td><Field component={InputField} name={`AliasName[${i}]`}
+                                                        <td><Field component={InputField} name={`AliasName[${i}]`} onChange={props.AliasGiven()}
                                                             touched = {touched.hasOwnProperty('SystemIntegrationForm') ?
                                                                 touched.SystemIntegrationForm.hasOwnProperty('fields') ? touched.SystemIntegrationForm.fields.hasOwnProperty(`AliasName[${i}]`) : false : false }
                                                             className="form-control" /></td>

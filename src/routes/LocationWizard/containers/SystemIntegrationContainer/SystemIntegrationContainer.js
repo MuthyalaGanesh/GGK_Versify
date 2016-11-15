@@ -8,7 +8,8 @@ import {
     AddSystemIntegration,
     deleteSystemIntegration,
     showNoResults,
-    toggleTypeahead} from '../../modules/systemIntegration'
+    toggleTypeahead,
+    AliasGiven} from '../../modules/systemIntegration'
 
 const mapDispatchToProps = {
     SystemIntegrationModal,
@@ -17,7 +18,8 @@ const mapDispatchToProps = {
     SelectedSystemIntegrationType,
     deleteSystemIntegration,
     showNoResults,
-    toggleTypeahead
+    toggleTypeahead,
+    AliasGiven
 }
 
 const mapStateToProps = (state) => ({
