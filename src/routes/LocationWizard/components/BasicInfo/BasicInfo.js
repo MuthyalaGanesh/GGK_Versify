@@ -5,8 +5,6 @@ import validate from '../../validations/basicInfoValidation'
 import {Panel, ControlLabel, Checkbox, Button,FormGroup, Tooltip,OverlayTrigger } from 'react-bootstrap/lib'
 import 'styles/basicInfoStyles.scss'
 import ParentLocationField from 'components/ParentLocationField/ParentLocationField'
-const { DOM: { input } } = React
-
 
 export const BasicInfo = (props) => {
     const {
@@ -64,12 +62,12 @@ return (
 
                                 <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
                                     <label className="control-label"> Parent Location </label>
-                                    {props.basic.parentLocation && props.basic.parentLocation.touched && props.basic.parentLocation.error && <span>{props.basic.parentLocation.error}</span>}
-
                                     <Field name="parentLocation"
                                            component={ParentLocationField}
                                            parentLocations={props.parentLocations}>
                                     </Field>
+                                    {props.basic.parentLocation && props.basic.parentLocation.touched && props.basic.parentLocation.error && <span className='errorMessage'>{props.basic.parentLocation.error}</span>}
+                                    
                                 </div>
                                 <div className='clear'></div>
                                 <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
@@ -93,12 +91,6 @@ return (
                                 </div>
                                 <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
                                     <label className="control-label"> Secondary Technology Type </label>
-                                    { error && (formdata.BasicInfoForm.values.secondarytechnologyType == formdata.BasicInfoForm.values.technologyType)
-                                    ?   <div className='errorMessage'> Please selct different technologyType </div>
-                                    : null
-                                    }
-
-
                                     <Field component={DropdownListField}
                                            className={
                                            error && (!formdata.BasicInfoForm.values.hasOwnProperty('secondarytechnologyType')
@@ -112,6 +104,10 @@ return (
                                            labelKey='name'
                                            placeholder="Select Technology type">
                                     </Field>
+                                    { error && (formdata.BasicInfoForm.values.secondarytechnologyType == formdata.BasicInfoForm.values.technologyType)
+                                    ?   <span className='errorMessage'> Please select different technologyType </span>
+                                    : null
+                                    }
                                 </div>
                                 <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
                                     <label className="control-label"> Primary Market </label>

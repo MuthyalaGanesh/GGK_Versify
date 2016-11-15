@@ -18,13 +18,13 @@ export function axiosPost(url, data) {
   )
 }
 
-export function axiosGet(url, queryString = null) {  
+export function axiosGet(url, queryString = null) {
   var getUrl = url;
   if (!!queryString) {
     getUrl = getUrl + "?" + queryString;
   }
   return (
-    axios.get(getUrl)    
+    axios.get(getUrl)
     .catch(function(error) {
       if (error.response) {
         // The request was made, but the server responded with a status code
@@ -41,24 +41,48 @@ export function axiosGet(url, queryString = null) {
   )
 }
 
-export function XMLHttpRequestSyncGet(url, queryString = null) {  
+export function XMLHttpRequestSyncGet(url, queryString = null) {
   var getUrl = url;
   if (!!queryString) {
     getUrl = getUrl + "?" + queryString;
   }
- try {
-        var request = new XMLHttpRequest();
-        request.open('GET', getUrl, false); // `false` makes the request synchronous
-        request.send(null);
+  try {
+    var request = new XMLHttpRequest();
+    request.open('GET', getUrl, false); // `false` makes the request synchronous
+    request.send(null);
 
-        if (request.status === 200) {
-            return JSON.parse(request.response);
-        } else {
-          console.error(getUrl, "Status: ", request.status);
-            return [];
-        }
-    } catch (error) {
-        console.error(getUrl,"Error: ", error);
-    };
+    if (request.status === 200) {
+      return JSON.parse(request.response);
+    } else {
+      console.error(getUrl, "Status: ", request.status);
+      return [];
+    }
+  } catch (error) {
+    console.error(getUrl, "Error: ", error);
+  };
 }
 
+export function XMLHttpRequestSyncSaveLocationPost(url, dataObj) {
+
+  try {
+          axios({
+            url,
+            method: 'POST',
+            data: data,
+            headers: {
+              "From": "jmcneil@versify.com",
+              "User-Agent": "FiddlerCompose",
+              "Content-Type": "application/json"
+            },
+            responseType: 'json'
+
+          }).then(function(response) {
+            console.log(response);
+          }).catch(function(error) {
+            console.error(url, "axios error: ", error);
+
+          });
+      } catch (error) {
+        console.error(url, "Error: ", error);
+      };
+}

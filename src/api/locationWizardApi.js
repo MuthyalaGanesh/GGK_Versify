@@ -2,7 +2,8 @@ import Constants from "../constants/apiUrl"
 import {
     axiosPost,
     axiosGet,
-    XMLHttpRequestSyncGet
+    XMLHttpRequestSyncGet,
+    XMLHttpRequestSyncSaveLocationPost
 } from "./serviceCall"
 var jsonObject = require('./testData.json');
 var allLocations = require('./allLocationsTestData.json');
@@ -87,7 +88,7 @@ export function getTimezones() {
     //var data = jsonObject.Timezones;
     var data = XMLHttpRequestSyncGet(Constants.TIME_ZONES);
     var arrTimezones = [];
-    data.GetTimeZonesResult.forEach(function (item, index) {
+    data.GetTimeZonesResult.forEach(function(item, index) {
         arrTimezones.push({
             id: item,
             value: item
@@ -98,7 +99,7 @@ export function getTimezones() {
 }
 
 
-export function getOMSLocationwizardData(){
+export function getOMSLocationwizardData() {
     return XMLHttpRequestSyncGet(Constants.OMSLOCATIONWIZARD_DATA);
 }
 
@@ -169,11 +170,15 @@ export function getDataHistorian() {
     return data;
 }
 
-export function getNewContactPopUpInfo(){
+export function getNewContactPopUpInfo() {
     var ContactPopup = {};
     ContactPopup.status = XMLHttpRequestSyncGet(Constants.CONTACT_STATUS).GetContactStatusesResult;
     ContactPopup.type = XMLHttpRequestSyncGet(Constants.CONTACT_TYPE);
     ContactPopup.org = XMLHttpRequestSyncGet(Constants.ORGANIZATION);
     ContactPopup.Timezones = getTimezones();
     return ContactPopup;
+}
+
+export function finalLocationSaveObject(saveObject) {
+    return XMLHttpRequestSyncSaveLocationPost(Constants.SAVE_OMSLOCATION_DATA, saveObject);
 }

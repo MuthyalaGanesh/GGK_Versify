@@ -12,8 +12,8 @@ export const ParentLocationField = (props) => (
     dropdownStyle={{ maxHeight: 200, overflow: 'auto' }}
     placeholder={"Select Parent Location"}
     value={props.input.value !== '' ? props.input.value :undefined}
-    showSearch ={false}
-    treeLine allowClear
+    defaultValue={'Locations'}
+    allowClear treeLine     
     treeData={props.parentLocations}
     treeNodeFilterProp="Name"
     open={props.tsOpen || false}

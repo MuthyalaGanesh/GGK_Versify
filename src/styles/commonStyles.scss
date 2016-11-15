@@ -1,6 +1,16 @@
-.error{
-color: red;
-}
+/*******Errors*********/
+.error {
+	    border:1px solid red; 
+      border-radius: 5px !important;
+      
+      }
+.errorMessage{	
+	color:red;
+     }
+     .form-control{
+       border-radius: 5px !important;
+     }
+
 #location-header .fa.fa-plus-circle.fa-2x
 {
     color: #FFF !important;

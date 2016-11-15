@@ -1,5 +1,6 @@
 import {
-  basicInfoDropdowns
+  basicInfoDropdowns,
+  finalLocationSaveObject
 } from 'api/locationWizardApi'
 
 import {
@@ -36,25 +37,19 @@ export function saveCompleteLocationWizard() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       console.log("state pro-", getState())
-      debugger;
-      getState().form.BasicInfoForm.hasOwnProperty('values')
-        ? Object.keys(getState().form.BasicInfoForm.values).length < 11
-          ? dispatch({
-            type: 'ERROR',
-            payload: 1
-          })
-          : (getState().form.BasicInfoForm.values.technologyType == getState().form.BasicInfoForm.values.secondarytechnologyType)
-            ? dispatch({
-              type: 'ERROR',
-              payload: 1
-            })
-            : console.log(getState(), 'stateobject')
-        : dispatch({
-          type: 'ERROR',
-          payload: 1
-        })
+      getState().form.BasicInfoForm.hasOwnProperty('values') ? Object.keys(getState().form.BasicInfoForm.values).length < 11 ? dispatch({
+        type: 'ERROR',
+        payload: 1
+      }) : (getState().form.BasicInfoForm.values.technologyType == getState().form.BasicInfoForm.values.secondarytechnologyType) ? dispatch({
+        type: 'ERROR',
+        payload: 1
+      }) : console.log(getState(), 'stateobject') : dispatch({
+        type: 'ERROR',
+        payload: 1
+      })
 
       var basicInfoObj = {}
+      var todayDate = new Date();
       var values = getState().form.BasicInfoForm ? getState().form.BasicInfoForm.values : {};
       basicInfoObj = new Object({
         Id: 0,
@@ -64,10 +59,10 @@ export function saveCompleteLocationWizard() {
         ParentId: values.parentLocation,
         LocationType: values.locationType.name,
         Notes: null,
-        CreateDate: new Date().toJSON().slice(0,10),
+        CreateDate: todayDate.toJSON(),
         CreateUser: null,
-        UpdateDate: new Date().toJSON().slice(0,10),
-        UpdateUser: "",
+        UpdateDate: todayDate.toJSON(),
+        UpdateUser: "GGK",
         IsDispatchLevel: false,
         IsScheduleLevel: false,
         IsOutageLevel: values.isOutageLevel,
@@ -102,11 +97,11 @@ export function saveCompleteLocationWizard() {
         CustomValue5: 0,
         Children: []
       })
-      console.log(basicInfoObj, "Basic info")
+      console.log("Basic info-", basicInfoObj, )
 
-      var equipments = []
+      var equipmentsObj = []
       getState().equipments && getState().equipments.insertedEquipment ? getState().equipments.insertedEquipment.map(eq => {
-        equipments.push({
+        equipmentsObj.push({
           id: 0,
           LocationId: 0,
           Name: eq,
@@ -116,39 +111,60 @@ export function saveCompleteLocationWizard() {
         type: 'ERROR',
         payload: 1
       })
-      console.log(equipments, "Equipments")
+      console.log(equipmentsObj, "Equipments")
 
-      getState().systemIntegration ? console.log(getState().systemIntegration.selectedSystemIntegrationTypes, "SystemIntegrations") : dispatch({
-        type: 'ERROR',
-        payload: 1
-      })
+      var systemIntegrationObj = [];
+      if (getState().systemIntegration) {
+        systemIntegrationObj = getState().selectedSystemIntegrationTypes;
+        console.log(getState().systemIntegration.selectedSystemIntegrationTypes, "SystemIntegrations")
+      } else {
+        dispatch({
+          type: 'ERROR',
+          payload: 1
+        })
+      }
 
       var unitCharacteristicsObj = [];
       getState().unitCharacteristics && getState().unitCharacteristics.selectedunitCharacteristics ?
         getState().unitCharacteristics.selectedunitCharacteristics.map(suc => {
           suc.editableAttributes.map(ea => {
-            unitCharacteristicsObj.push(new Object(
-              {
-                LocationId: 0,
-                AttributeId: suc.id,
-                AttributeName: suc.name,
-                AttributeDescription: suc.description,
-                LocationAttributeId: 0,
-                UnitOfMeasureId: suc.defaultUnitOfMeasureId,
-                UnitOfMeasureName: suc.UOM,
-                Value: ea.Value,
-                EffectiveStartDate: ea.EffectiveStartDate,
-                EffectiveEndDate: ea.EffectiveEndDate,
-                DisplayName: suc.display
-              }
-            ))
+            unitCharacteristicsObj.push(new Object({
+              LocationId: 0,
+              AttributeId: suc.id,
+              AttributeName: suc.name,
+              AttributeDescription: suc.description,
+              LocationAttributeId: 0,
+              UnitOfMeasureId: suc.defaultUnitOfMeasureId,
+              UnitOfMeasureName: suc.UOM,
+              Value: ea.Value,
+              EffectiveStartDate: ea.EffectiveStartDate,
+              EffectiveEndDate: ea.EffectiveEndDate,
+              DisplayName: suc.display
+            }))
           })
-        })
-        : dispatch({
+        }) : dispatch({
           type: 'ERROR',
           payload: 1
         })
       console.log(unitCharacteristicsObj, "UnitCharacteristics")
+
+      var finalSaveObject = {
+        saveData: {
+          Location: basicInfoObj,
+          UnitCharacteristics: [],
+          CredentialsAndIdentifiers: {},
+          SupportInformation: systemIntegrationObj,
+          WorkflowGroups: [],
+          Roles: [],
+          Gateways: [],
+          ScadaPoints: [],
+          Equipments: equipmentsObj
+        }
+      }
+      var finalData = JSON.parse(JSON.stringify(finalSaveObject));
+      console.log("finalSaveObject", finalData)
+        //Call save Functionality
+      //finalLocationSaveObject(finalData);
     })
   }
 }
@@ -190,7 +206,7 @@ export const ACTION_HANDLERS = {
 
 function changeObjectTypeOfLocations(allLocations) {
   var changedLocationsObject = [];
-  allLocations.forEach(function (item) {
+  allLocations.forEach(function(item) {
     changedLocationsObject.push({
       key: item.Id,
       value: item.Id,

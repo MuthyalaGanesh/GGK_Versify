@@ -22,6 +22,7 @@ CONTACT_STATUS : baseAddress+"/ContactStatus",
 CONTACT_TYPE : baseAddress+"/ContactTypes",
 ORGANIZATION : baseAddress+"/Organizations",
 AUTO_COMPLETE_CONTACTS :baseAddress+"/AutoCompleteContacts?searchText=",
+SAVE_OMSLOCATION_DATA :baseAddress+"/SaveOMSLocationWizardData"
 ROLE : baseAddress+"/Roles"
 }
 
