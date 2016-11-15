@@ -91,33 +91,153 @@ export const ACTION_HANDLERS = {
     }
   },
   [BIND_CONTACT_TO_ROLE]: (state, action) => {
-      let Roleindex  = state.userInformation.Roles.findIndex( (r) => r.Id === state.selectedRole.Id );
-      var newstate = Object.assign({},state)
-      newstate.defaultContacts = action.payload.values.contactsByRoles.map((c)=> c.Id)
-      newstate.userInformation.Roles[Roleindex].ContactIds = newstate.defaultContacts;
-      return newstate;
+      let saveRoles = state.saveRoles
+      let userInformation = state.userInformation
+      let Roleindex  = userInformation.Roles.findIndex( (r) => r.Id === state.selectedRole.Id );
+      let defaultContact = action.payload.values.contactsByRoles.map((c)=> c.Id)
+      userInformation.Roles[Roleindex].ContactIds = defaultContact;
+      if(saveRoles.length == 0)
+      {
+         saveRoles.push(userInformation.Roles[Roleindex]);
+      }
+      else
+      {
+        let savedRoleIndex = saveRoles.findIndex( (r) => r.Id === state.selectedRole.Id );
+        savedRoleIndex >= 0 ? saveRoles[savedRoleIndex] = userInformation.Roles[Roleindex] : saveRoles.push(userInformation.Roles[Roleindex])
+      }
+      let defaultRole = []
+      let Contact= state.selectedContact;        
+      if(Contact != undefined || Contact != null && Contact.Id != undefined && Contact.Id != null)
+        {
+            userInformation.Roles.map((role)=>
+            {
+                if(role.ContactIds.indexOf(Contact.Id) >= 0)
+                {
+                    defaultRole.push(role.Id)
+                }
+            }) 
+        }
+      return Object.assign({},state,{userInformation : userInformation,defaultRoles : defaultRole ,defaultContacts : defaultContact ,saveRoles : saveRoles})
   },
-  [BIND_ROLE_TO_CONTACT]: (state, action) => { 
-      let Contactindex  = state.userInformation.Contacts.findIndex( (c) => c.Id === state.selectedContact.Id );
-      var newstate = Object.assign({},state)
-      newstate.defaultRoles = action.payload.values.RoleByContact.map((r)=> r.Id)
-      newstate.userInformation.Contacts[Contactindex].RolesIds = newstate.defaultRoles;
-      return newstate;
+  [BIND_ROLE_TO_CONTACT]: (state, action) => {     
+      let saveRoles = state.saveRoles
+      let userInformation = state.userInformation 
+      let defaultContacts = []
+      let defaultRoles = []
+      defaultRoles = action.payload.values.RoleByContact.map((r)=> r.Id)
+      let mappedRole = [];
+      userInformation.Roles.map((role)=>
+        {
+          if(role.ContactIds.indexOf(state.selectedContact.Id) >= 0)
+          {
+            mappedRole.push(role.Id)
+          }
+        })
+      if(defaultRoles != undefined && defaultRoles != null)
+      {
+        defaultRoles.map((role)=>
+        {
+          if(mappedRole.indexOf(role)<0)
+          {
+            let roleindex  = userInformation.Roles.findIndex( (r) => r.Id === role );
+            userInformation.Roles[roleindex].ContactIds.push(state.selectedContact.Id);
+            if(saveRoles.length == 0)
+            {
+              saveRoles.push(userInformation.Roles[roleindex]);
+            }
+            else
+            {
+              let savedRoleIndex = saveRoles.findIndex( (r) => r.Id === userInformation.Roles[roleindex].Id );
+              savedRoleIndex >= 0 ? saveRoles[savedRoleIndex] = userInformation.Roles[roleindex] : saveRoles.push(userInformation.Roles[roleindex])
+            }
+          }
+        })
+        if(mappedRole!=undefined && mappedRole != null)
+        {
+            mappedRole.map((role)=>
+            {
+              if(defaultRoles.indexOf(role)<0)
+              {
+                let contactIds = []
+                let roleindex  = userInformation.Roles.findIndex( (r) => r.Id === role );
+                let contactindex = userInformation.Roles[roleindex].ContactIds.indexOf(state.selectedContact.Id);
+                userInformation.Roles[roleindex].ContactIds.map((Ids,i)=>
+                  {
+                    if(i!=contactindex)
+                    {
+                      contactIds.push(Ids)
+                    }
+                  })
+                userInformation.Roles[roleindex].ContactIds = contactIds
+                if(saveRoles.length == 0)
+                {
+                  saveRoles.push(userInformation.Roles[roleindex]);
+                }
+                else
+                {
+                  let savedRoleIndex = saveRoles.findIndex( (r) => r.Id === userInformation.Roles[roleindex].Id );
+                  savedRoleIndex >= 0 ? saveRoles[savedRoleIndex] = userInformation.Roles[roleindex] : saveRoles.push(userInformation.Roles[roleindex])
+                }
+              }
+            })
+        }
+        if(state.selectedRole != undefined && state.selectedRole !=null)
+        {
+          let roleindex = userInformation.Roles.findIndex( (r) => r.Id === state.selectedRole.Id)
+          if(roleindex >= 0)
+          {            
+            userInformation.Roles[roleindex].ContactIds.map((c)=>defaultContacts.push(c))
+            if(saveRoles.length == 0)
+            {
+              saveRoles.push(userInformation.Roles[roleindex]);
+            }
+            else
+            {
+              let savedRoleIndex = saveRoles.findIndex( (r) => r.Id === userInformation.Roles[roleindex].Id );
+              savedRoleIndex >= 0 ? saveRoles[savedRoleIndex] = userInformation.Roles[roleindex] : saveRoles.push(userInformation.Roles[roleindex])
+            }
+          }
+        }
+      }
+      return Object.assign({},state,{userInformation : userInformation,defaultRoles : defaultRoles ,defaultContacts : defaultContacts,saveRoles : saveRoles})
   },
   [SELECTED_ROLE]: (state, action) => {
     if(action.payload.values)
     {
       let Role = action.payload.values.RoleByRoles;
-      let defaultContact = Role.ContactIds;
-      return Object.assign({},state,{selectedRole : Role , defaultContacts : defaultContact})
+      if(Role == undefined || Role == null )
+      {
+        let defaultContact =  [] ;
+        return Object.assign({},state,{selectedRole : {} , defaultContacts : [], disableContacts : true})
+      }
+      else
+      {
+        let defaultContact = []
+        defaultContact = Role.ContactIds;
+        return Object.assign({},state,{selectedRole : Role , defaultContacts : defaultContact, disableContacts : false})
+      }
     }    
   },
   [SELECTED_CONTACT]: (state, action) => {
     if(action.payload.values)
     {
       let Contact= action.payload.values.ContactsByContact;
-      let defaultRole = Contact.RolesIds;
-      return Object.assign({},state,{selectedContact : Contact , defaultRoles : defaultRole})
+       if(Contact == undefined || Contact == null)
+      {
+      return Object.assign({},state,{selectedContact : {} , defaultRoles : [], disableRoles : true})
+      }
+      else
+      { 
+        let defaultRole = [];
+        state.userInformation.Roles.map((role)=>
+        {
+          if(role.ContactIds.indexOf(Contact.Id) >= 0)
+          {
+            defaultRole.push(role.Id)
+          }
+        })        
+      return Object.assign({},state,{selectedContact : Contact , defaultRoles : defaultRole, disableRoles : false})
+      }      
     } 
   }
 }
@@ -129,7 +249,10 @@ const initialState = {
   defaultContacts : [],
   defaultRoles : [],
   newContactPopUp : {},
-  showAddContactModal : false
+  showAddContactModal : false,
+  disableRoles : true,
+  disableContacts : true,
+  saveRoles : []
 };
 
 export default function userInfoReducer(state = initialState, action) {

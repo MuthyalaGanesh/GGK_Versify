@@ -2,30 +2,8 @@ import React from 'react'
 import { Field, reduxForm } from 'redux-form'
 import {Modal,OverlayTrigger,Tooltip} from 'react-bootstrap/lib'
 import InputField from 'components/InputField/InputField'
-import Multiselect from 'react-widgets/lib/Multiselect'
-import DropdownList from 'react-widgets/lib/DropdownList'
+import DropdownListField from 'components/DropdownList/DropdownListField'
 import 'styles/widgetStyle.scss'
-
-
-const renderMultiselect = ({ input, ...rest }) =>
-  <Multiselect {...input}
-    onBlur={() => input.onBlur()}
-    value={input.value || rest.defaultValue} 
-    onChange={(e)=>{  
-        input.onChange(e);
-        !!rest.onChangeEvent && rest.onChangeEvent(e);
-     }}
-    {...rest}/>
-
-const RenderDropdownList = ({ input, ...rest }) =>
-  <DropdownList {...input}
-    onBlur={() => input.onBlur()}
-    value={input.value || rest.defaultValue}
-    onChange={(e)=>{  
-        input.onChange(e);
-        !!rest.onChangeEvent && rest.onChangeEvent(e);
-     }}
-    {...rest}/>
 
 export const Users = (props) => {    
         const {Roles,Contacts} = props.userInfo.userInformation;
@@ -59,26 +37,27 @@ export const Users = (props) => {
                                     <div className="row">
                                         <div className="col-sm-12 col-md-6 col-lg-6">
                                                 <label className="control-label"> Roles </label>
-                                                <Field component={RenderDropdownList} className="form-control"  name = 'RoleByRoles'
+                                                <Field component={DropdownListField} name = 'RoleByRoles'
                                                         data ={Roles} 
                                                         defaultValue = {props.userInfo.selectedRole.Id}                                                       
-                                                        textField='Name'                                             
-                                                        valueField='Id'
+                                                        labelKey='Name'                                             
+                                                        valueKey='Id'
                                                         placeholder="Select a Role"
-                                                        onChangeEvent = {props.selectRole}
-                                            />                                                
+                                                        onChangeEvent = {props.selectRole}/>                                           
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6">
                                                 <label className="control-label"> Contacts </label>
                                                 <Field
                                                     name = 'contactsByRoles'
-                                                    component={renderMultiselect}
-                                                        defaultValue={props.userInfo.defaultContacts}
+                                                    component={DropdownListField}
+                                                    defaultValue={props.userInfo.defaultContacts}
                                                     data ={Contacts}                                                        
-                                                    textField='Name'                                             
-                                                    valueField='Id'
-                                                    placeholder="Select contacts"
-                                                        onChangeEvent = {props.bindContactToRole}                                                      
+                                                    labelKey='Name'                                             
+                                                    valueKey='Id'
+                                                    placeholder="Select contacts"                                                    
+                                                    disabled = {props.userInfo.disableContacts}
+                                                    multi = {true}
+                                                    onChangeEvent = {props.bindContactToRole}                                                      
                                                     />
                                             </div>
                                         </div>
@@ -97,26 +76,28 @@ export const Users = (props) => {
                                     <div className="row">
                                         <div className="col-sm-12 col-md-6 col-lg-6">
                                                 <label className="control-label"> Contacts </label>
-                                            <Field component={RenderDropdownList} className="form-control" name = 'ContactsByContact'
+                                            <Field component={DropdownListField}  name = 'ContactsByContact'
                                                         data ={Contacts} 
                                                         defaultValue = {props.userInfo.selectedContact.Id}                                                          
-                                                        textField='Name'                                             
-                                                        valueField='Id'
+                                                        labelKey='Name'                                             
+                                                        valueKey='Id'
                                                         placeholder="Select a contact"
-                                                        onChangeEvent = {props.selectContact}/>                                            
+                                                        onChangeEvent = {props.selectContact}/>                                    
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6">
                                                 <label className="control-label"> Roles </label>
                                                 <Field
                                                         name = 'RoleByContact'
-                                                        component={renderMultiselect}
+                                                        component={DropdownListField}
                                                         defaultValue={props.userInfo.defaultRoles}
                                                         data={Roles}                                                       
-                                                        textField='Name'                                             
-                                                        valueField='Id'
+                                                        labelKey='Name'                                             
+                                                        valueKey='Id'                                                        
+                                                        multi = {true}
                                                         placeholder="Select roles"
+                                                        disabled = {props.userInfo.disableRoles}
                                                         onChangeEvent = {props.bindRoleToContact}
-                                                        />
+                                                        />   
                                             </div>
                                         </div>
                                 </div>
@@ -178,13 +159,13 @@ export const Users = (props) => {
                             <div className="col-xs-12 form-group">
                                 <div className="col-xs-4">
                                     <label>Org</label>
-                                    <Field component={RenderDropdownList} className="form-control" name="Org"  placeholder="Select Org"
-                                            data = {ContactPopUpInfo.org} textField ='name' valueField='id'/>
+                                    <Field component={DropdownListField} name="Org"  placeholder="Select Org"
+                                            data = {ContactPopUpInfo.org} labelKey ='name' valueKey='id'/>
                                 </div>
                                 <div className="col-xs-4">
                                     <label>type</label>
-                                    <Field component={RenderDropdownList} className="form-control" name="Type"  placeholder="Select type"
-                                             data = {ContactPopUpInfo.type} textField ='name' valueField='id'/>
+                                    <Field component={DropdownListField} name="Type"  placeholder="Select type"
+                                             data = {ContactPopUpInfo.type} labelKey ='name' valueKey='id'/>
                                 </div>
                                 <div className="col-xs-4">
                                     <label>Custom 3</label>
@@ -221,8 +202,8 @@ export const Users = (props) => {
                                 </div>
                                 <div className="col-xs-4">
                                     <label>TimeZone</label>
-                                    <Field component={RenderDropdownList} className="form-control" name="TimeZone"  placeholder="Select TimeZone"
-                                            data = {ContactPopUpInfo.Timezones} textField ='value' valueField='id' />
+                                    <Field component={DropdownListField} name="TimeZone"  placeholder="Select TimeZone"
+                                            data = {ContactPopUpInfo.Timezones} labelKey ='value' valueKey='id' />
                                 </div>
                                 <div className="col-xs-4">
                                     <label>Custom 5</label>
@@ -242,7 +223,7 @@ export const Users = (props) => {
                                     <div className="col-xs-12 form-group">
                                         <div className="col-xs-4">
                                             <label>status</label>
-                                            <Field component={RenderDropdownList} className="form-control" name="Gateway"  placeholder="Select type"
+                                            <Field component={DropdownListField} name="Gateway"  placeholder="Select type"
                                                  data = {ContactPopUpInfo.status}/>
                                         </div>
                                         <div className="col-xs-4">

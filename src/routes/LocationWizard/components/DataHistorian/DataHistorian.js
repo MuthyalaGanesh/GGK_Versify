@@ -131,7 +131,7 @@ export const DataHistorian = (props) => {
                             </div>
                             <div className="col-xs-12 form-group">
                                 <div className="col-xs-6 row">
-                                    <label className="checkbox-inline control-label">
+                                    <label className="checkbox-inline control-label" onClick={props.ClickedIsDigitalTag}>
                                         <Field name="isDigitalTag" component={RenderCheckBox} type="checkbox" defaultvalue = {props.dataHistorian.EditableDataHistorian.isDigitalState}/>
                                         Is Digital Tag
                                     </label>

@@ -1,15 +1,9 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
 import {Panel, ControlLabel} from 'react-bootstrap/lib'
-import Multiselect from 'react-widgets/lib/Multiselect'
+import DropdownListField from 'components/DropdownList/DropdownListField'
 import { Modal,OverlayTrigger,Tooltip} from 'react-bootstrap/lib'
 import 'styles/widgetStyle.scss'
-
-const renderMultiselect = ({ input, ...rest }) =>
-  <Multiselect {...input}
-    onBlur={() => input.onBlur()}
-    value={input.value || rest.defaultValue} // requires value to be an array
-    {...rest}/>
 
 export const WorkFlow = (props) => { 
        const {workFlowItems} = props.workFlow 
@@ -33,19 +27,17 @@ export const WorkFlow = (props) => {
                                                 </div>
                                                 <div className="col-sm-5 col-md-7 col-lg-7 MultipleSelect">
                                                     <Field
-                                                        component={renderMultiselect}
+                                                        component={DropdownListField}
                                                         defaultValue={props.workFlow.defaultWorkFlow}
                                                         name = 'workFlowItem'
                                                         data={workFlowItems}                                                                                                              
-                                                        textField='name'                                             
-                                                        valueField='id'
+                                                        labelKey='name'                                             
+                                                        valueKey='id'
+                                                        multi = {true}
                                                         placeholder="Select WorkFlow"/>
                                                 </div>
-                                                <div className="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                                                <div className="col-xs-2 col-sm-2 col-md-2 col-lg-2">
                                                         <span id="select-all" onClick={props.selectAll}>Select All</span>
-                                                </div>
-                                                <div className="col-xs-6 col-sm-6 col-md-1 col-lg-1">
-                                                        <span id='deselect-all' onClick={props.removeAll}>Deselect All</span>
                                                 </div>
                                             </div>  
                                         </div>

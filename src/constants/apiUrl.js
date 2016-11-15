@@ -15,11 +15,14 @@ OMSLOCATIONWIZARD_DATA: baseAddress+"/OMSLocationWizardData",
 METRICS : baseAddress+"/Metrics",
 WORKFLOW_GROUPS:baseAddress+"/WorkflowGroups",
 WORKFLOW_TYPES:baseAddress+"/WorkflowTypes",
+WORKFLOW_DATA : baseAddress+"/WorkflowData",
 OMS_LOCATION_WIZARD_DATA:baseAddress+"/OMSLocationWizardData",
 OMS_LOCATION_WIZARD_INDEPENDENT_DATA : baseAddress+"/OMSLocationWizardIndependentData",
 CONTACT_STATUS : baseAddress+"/ContactStatus",
 CONTACT_TYPE : baseAddress+"/ContactTypes",
-ORGANIZATION : baseAddress+"/Organizations"
+ORGANIZATION : baseAddress+"/Organizations",
+AUTO_COMPLETE_CONTACTS :baseAddress+"/AutoCompleteContacts?searchText=",
+ROLE : baseAddress+"/Roles"
 }
 
 export default ApiUrl

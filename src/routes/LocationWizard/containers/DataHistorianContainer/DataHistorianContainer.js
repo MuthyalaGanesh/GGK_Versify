@@ -1,7 +1,7 @@
 import { reduxForm } from 'redux-form'
 import {connect} from 'react-redux'
 import DataHistorian from  '../../components/DataHistorian'
-import {getGateways,getMetrics,getDataHistorians,AddDataHistorianModalToggle,AddDataHistorian,UpdateAddDataHistorian,EditDataHistorian,DeleteDataHistorian} from '../../modules/dataHistorian';
+import {getGateways,getMetrics,getDataHistorians,AddDataHistorianModalToggle,ClickedIsDigitalTag,AddDataHistorian,UpdateAddDataHistorian,EditDataHistorian,DeleteDataHistorian} from '../../modules/dataHistorian';
 
 
 const mapStateToProps = (state) => ({
@@ -14,6 +14,7 @@ const mapDispatchToProps = {
 	getMetrics,
     getDataHistorians,
 	AddDataHistorianModalToggle,
+	ClickedIsDigitalTag,
 	AddDataHistorian,
 	UpdateAddDataHistorian,
 	EditDataHistorian,

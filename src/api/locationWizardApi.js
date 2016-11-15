@@ -11,6 +11,25 @@ var userInfo = require('./userData.json');
 var gatewayInfo = require('./gatewayData.json');
 var dataHistorianInfo = require('./dataHistorianData.json');
 
+function mapWorkFlowInfo() {
+    let workFlowData = XMLHttpRequestSyncGet(Constants.WORKFLOW_DATA).GetWorkflowDataResult.WorkflowGroupsWorkflows;
+    let workFlows = XMLHttpRequestSyncGet(Constants.WORKFLOW_GROUPS);
+    var finalArray = _.map(workFlows, function(workflow){
+    return _.extend(workflow, _.omit(_.find(workFlowData, {Key: workflow.id}), 'Key'));
+    });    
+    let workFlowGroup = []
+    finalArray.map((final)=>{
+            let newData = {};          
+            newData.id = final.id  
+            newData.name = final.name
+            newData.isActive = final.isActive
+            newData.workflowTypeId = final.workflowTypeId
+            newData.title = final.Value!=null && final.Value.length > 0 ? final.Value.join('\n') : null
+            workFlowGroup.push(newData)
+    });
+    return workFlowGroup;
+}
+
 export function getLocationTypes() {
     var data = jsonObject;
     //return data.locationTypes;
@@ -40,6 +59,7 @@ export function getLocations() {
     return XMLHttpRequestSyncGet(Constants.LOCATIONS).GetAllLocationsResult;
 
 }
+
 export function getMarketDrivenMappings(marketId = null) {
     return XMLHttpRequestSyncGet(Constants.LWMARKETDRIVEN_MAPPINGS, marketId != null ? "isoMarketId=" + marketId : null);;
 }
@@ -86,6 +106,7 @@ export function getUnitCharacteristics() {
 
     return XMLHttpRequestSyncGet(Constants.ATTRIBUTES);
 }
+
 export function getDefaultUnitCharacteristics() {
     var unitCharacteristicsJson = []
     getUnitCharacteristics().map((uc) => {
@@ -106,8 +127,8 @@ export function getDefaultUnitCharacteristics() {
 
 export function getAllUOMValues() {
     return XMLHttpRequestSyncGet(Constants.UNITS_OF_MEASURE);
-
 }
+
 export function getSystemIntegrationTypes() {
     return XMLHttpRequestSyncGet(Constants.OMS_LOCATION_WIZARD_DATA);
 }
@@ -124,12 +145,14 @@ export const basicInfoDropdowns = {
 export default basicInfoDropdowns;
 
 export function getWorkFlows() {
-    return XMLHttpRequestSyncGet(Constants.WORKFLOW_GROUPS);
+    return mapWorkFlowInfo();
 }
 
 export function getUserInfo() {
-    var data = userInfo;
-    return data;
+    let roles = XMLHttpRequestSyncGet(Constants.ROLE).GetRolesResult;
+    let contacts = XMLHttpRequestSyncGet(Constants.AUTO_COMPLETE_CONTACTS).GetAutoCompleteContactsResult;
+    let userInfo = {Roles : roles.Roles,Contacts : contacts.Contacts}
+    return userInfo ;
 }
 
 export function getGatewayInfo() {

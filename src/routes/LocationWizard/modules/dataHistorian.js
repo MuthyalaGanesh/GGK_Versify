@@ -10,6 +10,7 @@ export const ADD_DATAHISTORIAN = 'ADD_DATAHISTORIAN'
 export const EDIT_DATAHISTORIAN = 'EDIT_DATAHISTORIAN'
 export const UPDATE_DATAHISTORIAN = 'UPDATE_DATAHISTORIAN'
 export const DELETE_DATAHISTORIAN = 'DELETE_DATAHISTORIAN'
+export const CLICKED_IS_DIGITAL_TAG = 'CLICKED_IS_DIGITAL_TAG'
 
 export function getGateways() { 
   return {
@@ -31,6 +32,7 @@ export function getDataHistorians() {
     payload: getDataHistorian()
   };
 };
+
 
 export function AddDataHistorianModalToggle(){	
 return{	
@@ -71,6 +73,14 @@ export function DeleteDataHistorian(index) {
     })
   }
 };
+
+export function ClickedIsDigitalTag(){
+  return(dispatch,getState)=>{
+    return new Promise((resolve)=>{
+      dispatch({type:CLICKED_IS_DIGITAL_TAG})
+    })
+  }
+}
 
 export const ACTION_HANDLERS = { 
   [GET_GATEWAY_INFO]: (state, action) => {
@@ -162,10 +172,10 @@ export const ACTION_HANDLERS = {
                         newDataHistorian.isDigitalState = action.payload.values && !isNaN(action.payload.values.isDigitalTag)  ? action.payload.values.isDigitalTag : dh.isDigitalState
                         updatedDataHistorian.push(newDataHistorian) 
                     }
-                    else if(action.payload.values && !isNaN(action.payload.values.isDigitalTag))
+                    else if(state.clickedIsDigitalTag)
                     {
                       let data = dh;
-                      data.isDigitalState = action.payload.values.isDigitalTag
+                      data.isDigitalState = action.payload.values && action.payload.values.isDigitalTag ? action.payload.values.isDigitalTag :false
                       updatedDataHistorian.push(data) 
                     }
                     else
@@ -189,6 +199,9 @@ export const ACTION_HANDLERS = {
             });
         }
      return Object.assign({},state,{dataHistorian:updatedDataHistorian})
+  },
+  [CLICKED_IS_DIGITAL_TAG]:(state,action)=>{ 
+     return Object.assign({},state,{clickedIsDigitalTag:true})
   }
 }
 
@@ -198,7 +211,8 @@ const initialState = {
   EditableDataHistorian: {},
   metrics : getMetricInfo(),
   gateways  :getGatewayInfo(),
-  showAddDataHistorianModal:false 
+  showAddDataHistorianModal:false,
+  clickedIsDigitalTag : false
 };
 
 export default function dataHistorianReducer(state = initialState, action) {
