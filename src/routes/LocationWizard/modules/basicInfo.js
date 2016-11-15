@@ -41,24 +41,28 @@ export const ACTION_HANDLERS = {
   },
   [PRIMARY_MARKET_CHANGE_EVENT]: (state, action) => {
     //get MarketDrivenMappings from API based on marketType ID
-    var data = getMarketDrivenMappings(!!action.payload ? action.payload.id:null);
+    var data = getMarketDrivenMappings(!!action.payload ? action.payload.id : null);
     var omsLocationwizardData = getOMSLocationwizardData();
     var marketDrivendata = [];
     _.each(data, (item) => {
-       item.dropDownItems=[];
-         var dropDownItems=[];      
-      if (item.IsDropDown) {
-        _.each(omsLocationwizardData.GetOMSLocationWizardDataResult.AssignedLocationMappings, (wizardDataItem) => {
+      item.dropDownItems = [];
+      var dropDownItems = [];
+
+      _.each(omsLocationwizardData.GetOMSLocationWizardDataResult.AssignedLocationMappings, (wizardDataItem) => {
+        if (item.IsDropDown) {
           var dt = _(wizardDataItem).find(function(x) {
             return x => x.ExternalSystemName === item.ExternalSystemName
           });
           if (!!dt && dt != '') {
-            dropDownItems.push({key:dt,value:dt});
+            dropDownItems.push({
+              key: dt,
+              value: dt
+            });
           }
-        })
-        item.dropDownItems =_.uniqBy(dropDownItems, 'key');;
-      }
-        marketDrivendata.push(item);      
+        }
+      })
+      item.dropDownItems = _.uniqBy(dropDownItems, 'key');;
+      marketDrivendata.push(item);
     });
 
     return Object.assign({}, state, {

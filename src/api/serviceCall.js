@@ -68,16 +68,10 @@ export function XMLHttpRequestSyncSaveLocationPost(url, dataObj) {
           axios({
             url,
             method: 'POST',
-            data: data,
-            headers: {
-              "From": "jmcneil@versify.com",
-              "User-Agent": "FiddlerCompose",
-              "Content-Type": "application/json"
-            },
+            data: data,           
             responseType: 'json'
-
           }).then(function(response) {
-            console.log(response);
+            console.log("post response", response);
           }).catch(function(error) {
             console.error(url, "axios error: ", error);
 
