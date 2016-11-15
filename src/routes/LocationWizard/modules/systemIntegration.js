@@ -5,6 +5,18 @@ export const SYSTEM_INTEGRATION_TYPES = "SYSTEM_INTEGRATION_TYPES"
 export const ADD_SYSTEM_INTEGRATION = "ADD_SYSTEM_INTEGRATION"
 export const DELETE_SYS_INTEGRATION = "DELETE_SYS_INTEGRATION"
 export const TOGGLE_TYPEAHEAD = "TOGGLE_TYPEAHEAD"
+export const ALIAS_SAVE = "ALIAS_SAVE"
+
+export function AliasGiven() {
+    return (dispatch, getState) => {
+        return new Promise((resolve) => {
+            dispatch({
+                type: ALIAS_SAVE,
+                payload: getState().form.SystemIntegrationForm
+            })
+        })
+    }
+}
 
 export function deleteSystemIntegration(index) {
     return (dispatch, getState) => {
@@ -52,9 +64,20 @@ export function toggleTypeahead() {
 }
 
 export const ACTION_HANDLERS = {
+    [ALIAS_SAVE]: (state, action) => {
+        var newState = Object.assign({}, state)
+        if (action.payload && action.payload.values) {
+            action.payload.values.AliasName.map((alias, index) => {
+                if (alias) {
+                    newState.selectedSystemIntegrationTypes[index].AliasName = alias;
+                }
+            })
+        }
+        return newState;
+    },
+
     [TOGGLE_TYPEAHEAD]: (state, action) => {
         return Object.assign({}, state, { dropDownShow: !state.dropDownShow })
-
     },
 
     [ADD_SYSTEM_INTEGRATION]: (state, action) => {
