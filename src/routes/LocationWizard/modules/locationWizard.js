@@ -6,7 +6,6 @@ import {
   BindInitialValues
 } from './basicInfo';
 
-
 export const TOGGLE_LEFTMENU_CLICK = 'TOGGLE_LEFTMENU_CLICK';
 
 export const LOCATIONS_MENUITEM_DROPDOWN_CLICK = 'LOCATIONS_MENUITEM_DROPDOWN_CLICK';
@@ -36,24 +35,120 @@ export function leftMenuDropdownClickEvent(id, event) {
 export function saveCompleteLocationWizard() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      console.log("state pro-", getState().form)
+      console.log("state pro-", getState())
       debugger;
-      getState().form.BasicInfoForm.hasOwnProperty('values') 
-        ? Object.keys(getState().form.BasicInfoForm.values).length < 11 
-            ? dispatch({
+      getState().form.BasicInfoForm.hasOwnProperty('values')
+        ? Object.keys(getState().form.BasicInfoForm.values).length < 11
+          ? dispatch({
             type: 'ERROR',
             payload: 1
           })
-           : (getState().form.BasicInfoForm.values.technologyType == getState().form.BasicInfoForm.values.secondarytechnologyType) 
-               ? dispatch({
-                type: 'ERROR',
-                payload: 1
-              }) 
-               : console.log(getState(),'stateobject')
-       : dispatch({
+          : (getState().form.BasicInfoForm.values.technologyType == getState().form.BasicInfoForm.values.secondarytechnologyType)
+            ? dispatch({
+              type: 'ERROR',
+              payload: 1
+            })
+            : console.log(getState(), 'stateobject')
+        : dispatch({
+          type: 'ERROR',
+          payload: 1
+        })
+
+      var basicInfoObj = {}
+      var values = getState().form.BasicInfoForm ? getState().form.BasicInfoForm.values : {};
+      basicInfoObj = new Object({
+        Id: 0,
+        LocationId: 0,
+        Name: values.locationName,
+        Tz: values.timezone.id,
+        ParentId: values.parentLocation,
+        LocationType: values.locationType.name,
+        Notes: null,
+        CreateDate: new Date().toJSON().slice(0,10),
+        CreateUser: null,
+        UpdateDate: new Date().toJSON().slice(0,10),
+        UpdateUser: "",
+        IsDispatchLevel: false,
+        IsScheduleLevel: false,
+        IsOutageLevel: values.isOutageLevel,
+        IsAFWLevel: false,
+        CanTakeAFWorOutage: true,
+        IsForecastLevel: false,
+        IsLogLevel: false,
+        TechnologyTypeId: values.technologyType.id,
+        SecondaryTechnologyTypeId: values.secondarytechnologyType.id,
+        PrimaryMarketId: values.primaryMarket.id,
+        SecondaryMarketId: null,
+        FuelClassId: values.fuelClass.id,
+        IsReportingLevel: false,
+        DisplayRealTimeMonitor: false,
+        OwnerOrgId: values.owner.id,
+        VTraderName: null,
+        Attributes: null,
+        IsSelected: false,
+        MetricIds: null,
+        PhysicalTz: values.physicalTimezone.id,
+        Status: null,
+        StatusDate: null,
+        OwnershipPct: values.ownerShipPercentage,
+        ShortName: null,
+        CAISOMarketId: null,
+        GADSUnitId: null,
+        LocationScadaPoints: null,
+        CustomValue1: 0,
+        CustomValue2: 0,
+        CustomValue3: 0,
+        CustomValue4: 0,
+        CustomValue5: 0,
+        Children: []
+      })
+      console.log(basicInfoObj, "Basic info")
+
+      var equipments = []
+      getState().equipments && getState().equipments.insertedEquipment ? getState().equipments.insertedEquipment.map(eq => {
+        equipments.push({
+          id: 0,
+          LocationId: 0,
+          Name: eq,
+          IsDirty: false
+        })
+      }) : dispatch({
         type: 'ERROR',
         payload: 1
       })
+      console.log(equipments, "Equipments")
+
+      getState().systemIntegration ? console.log(getState().systemIntegration.selectedSystemIntegrationTypes, "SystemIntegrations") : dispatch({
+        type: 'ERROR',
+        payload: 1
+      })
+
+      var unitCharacteristicsObj = [];
+      getState().unitCharacteristics && getState().unitCharacteristics.selectedunitCharacteristics ?
+        getState().unitCharacteristics.selectedunitCharacteristics.map(suc => {
+          suc.editableAttributes.map(ea => {
+            unitCharacteristicsObj.push(new Object(
+              {
+                LocationId: 0,
+                AttributeId: suc.id,
+                AttributeName: suc.name,
+                AttributeDescription: suc.description,
+                LocationAttributeId: 0,
+                UnitOfMeasureId: suc.defaultUnitOfMeasureId,
+                UnitOfMeasureName: suc.UOM,
+                Value: ea.Value,
+                EffectiveStartDate: ea.EffectiveStartDate,
+                EffectiveEndDate: ea.EffectiveEndDate,
+                DisplayName: suc.display
+              }
+            ))
+          })
+        })
+        : dispatch({
+          type: 'ERROR',
+          payload: 1
+        })
+      console.log(unitCharacteristicsObj, "UnitCharacteristics")
     })
   }
 }
@@ -95,7 +190,7 @@ export const ACTION_HANDLERS = {
 
 function changeObjectTypeOfLocations(allLocations) {
   var changedLocationsObject = [];
-  allLocations.forEach(function(item) {
+  allLocations.forEach(function (item) {
     changedLocationsObject.push({
       key: item.Id,
       value: item.Id,
