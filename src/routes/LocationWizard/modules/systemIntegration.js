@@ -73,7 +73,6 @@ export const ACTION_HANDLERS = {
                 }
             })
         }
-        console.log(newState)
         return newState;
     },
 
