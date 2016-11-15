@@ -14,7 +14,6 @@ const DropdownListField = ({ input, ...rest }) =>
   //    }}
   //   {...rest}/>
 <Select 
-				autofocus 
         searchable={true} 
 				options={rest.data} 
 				clearable={true} 
