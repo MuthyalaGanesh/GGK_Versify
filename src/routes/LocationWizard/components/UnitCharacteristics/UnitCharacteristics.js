@@ -25,7 +25,6 @@ const EffectiveDateValues = (props) => (
             </thead>
             <tbody>
                 {props.defaultValues ? props.defaultValues.map((dv, i) =>
-
                     <tr>
                         <td><Field
                             name={`ucvalue[${i}]`}
@@ -74,7 +73,8 @@ const EffectiveDateValues = (props) => (
                             name={`${editableData}.ucvalue`}
                             component={InputField}
                             className="form-control"
-                            /></td>
+                            touched = {props.touched.hasOwnProperty('UnitCharacteristicsForm') ?
+                                props.touched.UnitCharacteristicsForm.hasOwnProperty('fields') ? props.touched.UnitCharacteristicsForm.fields.hasOwnProperty("editableData") ? props.touched.UnitCharacteristicsForm.values.editableData : false : false : false }/></td>
                         <td> <Field
                             name={`${editableData}.effectiveStartDate`}
                             component={DatePickerField}
