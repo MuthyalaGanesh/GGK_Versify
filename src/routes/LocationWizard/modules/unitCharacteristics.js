@@ -119,6 +119,7 @@ export const ACTION_HANDLERS = {
             })
             if (valuePresence == 1) {
               allUC.isDeletable = true;
+              allUC.isSavable = true;
               newState.unSelectedUnitCharacteristics.push(allUC);
             }
           })
@@ -166,6 +167,7 @@ export const ACTION_HANDLERS = {
       newState.selectedunitCharacteristics.map((uc, index) => {
 
         if (index == state.editableIndex) {
+          state.editableUnitCharacter.isSavable = true;
           newState.selectedunitCharacteristics[index] = state.editableUnitCharacter;
           var finalAttributes = []
 

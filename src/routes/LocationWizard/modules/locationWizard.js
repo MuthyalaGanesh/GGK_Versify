@@ -128,19 +128,21 @@ export function saveCompleteLocationWizard() {
       getState().unitCharacteristics && getState().unitCharacteristics.selectedunitCharacteristics ?
         getState().unitCharacteristics.selectedunitCharacteristics.map(suc => {
           suc.editableAttributes.map(ea => {
-            unitCharacteristicsObj.push(new Object({
-              LocationId: 0,
-              AttributeId: suc.id,
-              AttributeName: suc.name,
-              AttributeDescription: suc.description,
-              LocationAttributeId: 0,
-              UnitOfMeasureId: suc.defaultUnitOfMeasureId,
-              UnitOfMeasureName: suc.UOM,
-              Value: ea.Value,
-              EffectiveStartDate: ea.EffectiveStartDate,
-              EffectiveEndDate: ea.EffectiveEndDate,
-              DisplayName: suc.display
-            }))
+            if (suc.isSavable) {
+              unitCharacteristicsObj.push(new Object({
+                LocationId: 0,
+                AttributeId: suc.id,
+                AttributeName: suc.name,
+                AttributeDescription: suc.description,
+                LocationAttributeId: 0,
+                UnitOfMeasureId: suc.defaultUnitOfMeasureId,
+                UnitOfMeasureName: suc.UOM,
+                Value: ea.Value,
+                EffectiveStartDate: ea.EffectiveStartDate,
+                EffectiveEndDate: ea.EffectiveEndDate,
+                DisplayName: suc.display
+              }))
+            }
           })
         }) : dispatch({
           type: 'ERROR',
@@ -163,7 +165,7 @@ export function saveCompleteLocationWizard() {
       }
       var finalData = JSON.parse(JSON.stringify(finalSaveObject));
       console.log("finalSaveObject", finalData)
-        //Call save Functionality
+      //Call save Functionality
       //finalLocationSaveObject(finalData);
     })
   }
@@ -206,7 +208,7 @@ export const ACTION_HANDLERS = {
 
 function changeObjectTypeOfLocations(allLocations) {
   var changedLocationsObject = [];
-  allLocations.forEach(function(item) {
+  allLocations.forEach(function (item) {
     changedLocationsObject.push({
       key: item.Id,
       value: item.Id,
