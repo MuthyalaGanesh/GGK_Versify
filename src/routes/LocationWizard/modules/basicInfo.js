@@ -74,7 +74,7 @@ export const ACTION_HANDLERS = {
     });
 
     return Object.assign({}, state, {
-      CredetialBasicData: marketDrivendata
+      CredentialBasicData: marketDrivendata
     })
   },
   ['ERROR']: (state, action) => {
@@ -95,7 +95,7 @@ const initialState = {
   timezones: basicInfoDropdowns.getTimezones,
   initial: true,
   BasicInfo: {},
-  CredetialBasicData: getMarketDrivenMappings()
+  CredentialBasicData: getMarketDrivenMappings()
 };
 
 export default function basiInfoReducer(state = initialState, action) {

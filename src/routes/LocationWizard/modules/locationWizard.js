@@ -255,32 +255,87 @@ function dataHistorianObjectPreparation(stateTree, dispatch) {
   return dataHistorianObj
 }
 
+function credentialdatavalidation(data) {
+  var CredentialBasicData = data.basic.CredentialBasicData
+  if(data.form.CredentialsManagementForm.hasOwnProperty('values')){
+    var i =0 
+      for( i in CredentialBasicData){
+       if(CredentialBasicData[i].IsDropDown){
+           if(data.form.CredentialsManagementForm.values.hasOwnProperty(`${CredentialBasicData[i].DisplayName}`)){
+             if(data.form.CredentialsManagementForm.values[`${CredentialBasicData[i].DisplayName}`] != null){
+                if ( x == CredentialBasicData.length){
+                return 1
+              }
+             }
+             else{
+                return 0
+             }
+        }else{
+          return 0
+        }
+       }
+       else{
+         if(data.form.CredentialsManagementForm.values.hasOwnProperty(`${CredentialBasicData[i].DisplayName}`)){
+              if ( x == CredentialBasicData.length){
+                return 1
+              }
+        }else{
+          return 0
+        }
+       }
+      }
+
+
+      
+  }
+  return 0
+}
+  
+
+
+
 export function saveCompleteLocationWizard() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       console.log("state pro-", getState())
-      getState().form.BasicInfoForm.hasOwnProperty('values') ? Object.keys(getState().form.BasicInfoForm.values).length < 11 ? Object.keys(getState().form.BasicInfoForm.values).length == 10 ? !getState().form.BasicInfoForm.hasOwnProperty('parentLocation') ? (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null && getState().form.BasicInfoForm.values.technologyType != null && getState().form.BasicInfoForm.values.fuelClass != null && getState().form.BasicInfoForm.values.physicalTimezone != null && getState().form.BasicInfoForm.values.secondarytechnologyType != null && getState().form.BasicInfoForm.values.owner != null) ? dispatch({
-        type: 'ERROR',
-        payload: 0
-      }) : dispatch({
-        type: 'ERROR',
-        payload: 1
-      }) : dispatch({
-        type: 'ERROR',
-        payload: 1
-      }) : dispatch({
-        type: 'ERROR',
-        payload: 1
-      }) : (getState().form.BasicInfoForm.values.technologyType == getState().form.BasicInfoForm.values.secondarytechnologyType) ? dispatch({
-        type: 'ERROR',
-        payload: 1
-      }) : (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null && getState().form.BasicInfoForm.values.technologyType != null && getState().form.BasicInfoForm.values.fuelClass != null && getState().form.BasicInfoForm.values.physicalTimezone != null && getState().form.BasicInfoForm.values.secondarytechnologyType != null && getState().form.BasicInfoForm.values.owner != null) ? dispatch({
-        type: 'ERROR',
-        payload: 0
-      }) : dispatch({
-        type: 'ERROR',
-        payload: 1
-      })
+      getState().form.BasicInfoForm.hasOwnProperty('values') 
+      ? Object.keys(getState().form.BasicInfoForm.values).length < 11 
+        ? Object.keys(getState().form.BasicInfoForm.values).length == 10 
+          ? !getState().form.BasicInfoForm.hasOwnProperty('parentLocation') 
+            ? (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null 
+              &&getState().form.BasicInfoForm.values.technologyType != null &&getState().form.BasicInfoForm.values.fuelClass != null &&getState().form.BasicInfoForm.values.physicalTimezone != null 
+              &&getState().form.BasicInfoForm.values.secondarytechnologyType != null &&getState().form.BasicInfoForm.values.owner != null 
+              ) 
+                ? (credentialdatavalidation(getState()))
+                  ?dispatch({
+                    type: 'ERROR',
+                    payload: 0})
+                  : dispatch({
+                      type: 'ERROR',
+                      payload: 1}) && console.log('error')
+                :dispatch({
+                type: 'ERROR',
+                payload: 1}) 
+            :dispatch({
+              type: 'ERROR',
+             payload: 1}) 
+          :dispatch({
+              type: 'ERROR',
+             payload: 1})
+        : (getState().form.BasicInfoForm.values.technologyType == getState().form.BasicInfoForm.values.secondarytechnologyType) 
+            ? dispatch({
+              type: 'ERROR',
+               payload: 1}) 
+            : (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null 
+              &&getState().form.BasicInfoForm.values.technologyType != null &&getState().form.BasicInfoForm.values.fuelClass != null &&getState().form.BasicInfoForm.values.physicalTimezone != null 
+              &&getState().form.BasicInfoForm.values.secondarytechnologyType != null &&getState().form.BasicInfoForm.values.owner != null 
+              ) 
+                ? dispatch({
+                type: 'ERROR',
+                payload: 0}) 
+                :dispatch({
+                type: 'ERROR',
+                payload: 1}) 
 
       : dispatch({
         type: 'ERROR',

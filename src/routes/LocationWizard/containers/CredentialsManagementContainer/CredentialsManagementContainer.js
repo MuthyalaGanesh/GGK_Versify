@@ -9,7 +9,8 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = (state) => ({
-    marketDrivenMappings: state.basic.CredetialBasicData
+    basic: state.basic,
+    formdata:state.form
 })
 
 
