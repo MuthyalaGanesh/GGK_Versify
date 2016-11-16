@@ -359,7 +359,19 @@ function changeObjectTypeOfLocations(allLocations) {
       children: changeObjectTypeOfLocations(item.Children)
     });
   });
-  return changedLocationsObject;
+  return changedLocationsObject
+}
+function test(objectfunc) {
+  console.log(objectfunc)
+  var object = objectfunc
+  var retobj = []
+ retobj.push({
+      key: -1,
+      value: -1,
+      label: 'LOCATIONS'
+     })
+ object.map((element)=>{retobj.push(element)})
+  return retobj
 }
 
 const allLocationsObject = basicInfoDropdowns.getLocations;
@@ -367,7 +379,7 @@ const allLocationsObject = basicInfoDropdowns.getLocations;
 const initialState = {
   error: null,
   allLocations: allLocationsObject,
-  parentLocations: changeObjectTypeOfLocations(allLocationsObject),
+  parentLocations: test(changeObjectTypeOfLocations(allLocationsObject)),
 
 };
 

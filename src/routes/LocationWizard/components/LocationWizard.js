@@ -47,7 +47,7 @@ return (
                         <div className='clear'></div>
                         <div className="tab-content element">
                             <Element name="basicInfo" className="element">
-                                <BasicInfoContainer parentLocations={props.location.parentLocations}/>
+                                <BasicInfoContainer />
                             </Element>
                             <Element name="credential" className="element ">
                                 <CredentialsManagementContainer />

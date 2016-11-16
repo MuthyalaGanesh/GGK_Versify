@@ -22,6 +22,7 @@ export function BindInitialValues(locationId) {
   };
 };
 
+
 export function onChangeEvent(event) {
   return {
     type: PRIMARY_MARKET_CHANGE_EVENT,

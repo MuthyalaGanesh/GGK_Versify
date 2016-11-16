@@ -11,12 +11,14 @@ export const ParentLocationField = (props) => (
     choiceTransitionName="rc-tree-select-selection__choice-zoom"
     dropdownStyle={{ maxHeight: 200, overflow: 'auto' }}
     placeholder={"Select Parent Location"}
-    value={props.input.value !== '' ? props.input.value :undefined}
-    defaultValue={'Locations'}
-    allowClear treeLine     
+    value={props.input.value !== '' ? props.input.value : -1 }
+    allowClear={false}
+    showSearch={false}
+     treeLine     
     treeData={props.parentLocations}
     treeNodeFilterProp="Name"
-    open={props.tsOpen || false}
     />
+   
   )
+
   export default ParentLocationField;
