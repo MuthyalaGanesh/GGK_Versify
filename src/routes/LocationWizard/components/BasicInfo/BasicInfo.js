@@ -161,7 +161,7 @@ return (
                   component="input"
                   className={error && (formdata.BasicInfoForm.hasOwnProperty('values') ? formdata.BasicInfoForm.values.hasOwnProperty('ownerShipPercentage') ? (parseInt(formdata.BasicInfoForm.values.ownerShipPercentage ) > 100):true : true)
                   ? "form-control error"
-                  :null}
+                  :"form-control"}
                   type="text"
                   placeholder="OwnerShip Percentage" />
                 </div>

@@ -260,17 +260,46 @@ export function saveCompleteLocationWizard() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       console.log("state pro-", getState())
-      getState().form.BasicInfoForm.hasOwnProperty('values') ? Object.keys(getState().form.BasicInfoForm.values).length < 11 ? dispatch({
-        type: 'ERROR',
-        payload: 1
-      }) : (getState().form.BasicInfoForm.values.technologyType == getState().form.BasicInfoForm.values.secondarytechnologyType) ? dispatch({
-        type: 'ERROR',
-        payload: 1
-      }) : console.log(getState(), 'stateobject') : dispatch({
-        type: 'ERROR',
-        payload: 1
-      })
+      getState().form.BasicInfoForm.hasOwnProperty('values') 
+      ? Object.keys(getState().form.BasicInfoForm.values).length < 11 
+        ? Object.keys(getState().form.BasicInfoForm.values).length == 10 
+          ? !getState().form.BasicInfoForm.hasOwnProperty('parentLocation') 
+            ? (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null 
+              &&getState().form.BasicInfoForm.values.technologyType != null &&getState().form.BasicInfoForm.values.fuelClass != null &&getState().form.BasicInfoForm.values.physicalTimezone != null 
+              &&getState().form.BasicInfoForm.values.secondarytechnologyType != null &&getState().form.BasicInfoForm.values.owner != null 
+              ) 
+                ? dispatch({
+                type: 'ERROR',
+                payload: 0}) 
+                :dispatch({
+                type: 'ERROR',
+                payload: 1}) 
+            :dispatch({
+              type: 'ERROR',
+             payload: 1}) 
+          :dispatch({
+              type: 'ERROR',
+             payload: 1})
+        : (getState().form.BasicInfoForm.values.technologyType == getState().form.BasicInfoForm.values.secondarytechnologyType) 
+            ? dispatch({
+              type: 'ERROR',
+               payload: 1}) 
+            : (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null 
+              &&getState().form.BasicInfoForm.values.technologyType != null &&getState().form.BasicInfoForm.values.fuelClass != null &&getState().form.BasicInfoForm.values.physicalTimezone != null 
+              &&getState().form.BasicInfoForm.values.secondarytechnologyType != null &&getState().form.BasicInfoForm.values.owner != null 
+              ) 
+                ? dispatch({
+                type: 'ERROR',
+                payload: 0}) 
+                :dispatch({
+                type: 'ERROR',
+                payload: 1}) 
 
+      : dispatch({
+          type: 'ERROR',
+          payload: 1
+        })
+      console.log(Object.keys(getState().form.BasicInfoForm.values).length, 'stateobjectmo')
       var values = getState().form.BasicInfoForm ? getState().form.BasicInfoForm.values : {};
       var basicInfoObj = basicInforObjectPreparation(values)
       var credentialsAndIdentifier = credentialsAndIdentifiersObj()
