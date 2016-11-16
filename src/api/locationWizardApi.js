@@ -174,7 +174,14 @@ export function getDataHistorian() {
 
 export function getNewContactPopUpInfo() {
     var ContactPopup = {};
-    ContactPopup.status = XMLHttpRequestSyncGet(Constants.CONTACT_STATUS).GetContactStatusesResult;
+    ContactPopup.status = []
+    XMLHttpRequestSyncGet(Constants.CONTACT_STATUS).GetContactStatusesResult.map((status)=>
+        {
+            let obj = {}
+            obj.id = status.charAt(0)
+            obj.value = status
+            ContactPopup.status.push(obj)
+        });
     ContactPopup.type = XMLHttpRequestSyncGet(Constants.CONTACT_TYPE);
     ContactPopup.org = XMLHttpRequestSyncGet(Constants.ORGANIZATION);
     ContactPopup.Timezones = getTimezones();

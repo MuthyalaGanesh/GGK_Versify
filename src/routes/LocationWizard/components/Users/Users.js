@@ -231,12 +231,12 @@ export const Users = (props) => {
                                     <div className="col-xs-12 form-group">
                                         <div className="col-xs-4">
                                             <label>status</label>
-                                            <Field component={DropdownListField} name="Gateway"  placeholder="Select type"
-                                                 data = {ContactPopUpInfo.status}/>
+                                            <Field component={DropdownListField} name="status"  placeholder="Select type"
+                                                 data = {ContactPopUpInfo.status} labelKey ='value' valueKey='id'/>
                                         </div>
                                         <div className="col-xs-4">
                                             <label>User ID</label>
-                                            <Field component={InputField} className="form-control" name="Name" type="text"  placeholder="Primary Email"
+                                            <Field component={InputField} className="form-control" name="userId" type="text"  placeholder="Primary Email"
                                              />
                                         </div>                                
                                         <div className="col-xs-4">
@@ -258,7 +258,7 @@ export const Users = (props) => {
                         </div>          
                     </Modal.Body>
                     <Modal.Footer>   
-                                <button className="btn btn-success" type="button" onClick={props.AddContactModalToggle}>Add</button> 
+                                <button className="btn btn-success" type="button" onClick={props.saveNewContact}>Add</button> 
                                 <button className="btn btn-warning" type="button"  onClick={props.AddContactModalToggle}>Cancel</button>  
                         
                 </Modal.Footer>

@@ -17,6 +17,8 @@ export const EDIT_DATAHISTORIAN = 'EDIT_DATAHISTORIAN'
 export const UPDATE_DATAHISTORIAN = 'UPDATE_DATAHISTORIAN'
 export const DELETE_DATAHISTORIAN = 'DELETE_DATAHISTORIAN'
 export const CLICKED_IS_DIGITAL_TAG = 'CLICKED_IS_DIGITAL_TAG'
+export const CONFIRM_DELETE_HISTORIAN = 'CONFIRM_DELETE_HISTORIAN'
+export const CLOSE_CONFIRMATION = "CLOSE_CONFIRMATION"
 
 export function getGateways() {
   return {
@@ -39,6 +41,40 @@ export function getDataHistorians() {
   };
 };
 
+export function ConfirmDataDelete(index) {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      dispatch({
+        type: CONFIRM_DELETE_HISTORIAN,
+        payload: index
+      })
+      dispatch({
+        type: 'redux-form/DESTROY',
+        meta: {
+          form: "GatewayForm"
+        },
+        payload: ""
+      })
+    })
+  }
+}
+
+export function CloseDataConfirmation() {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      dispatch({
+        type: CLOSE_CONFIRMATION,
+      })
+      dispatch({
+        type: 'redux-form/DESTROY',
+        meta: {
+          form: "GatewayForm"
+        },
+        payload: ""
+      })
+    })
+  }
+}
 
 export function AddDataHistorianModalToggle() {
   return {
@@ -128,6 +164,18 @@ export const ACTION_HANDLERS = {
   [GET_DATAEHISTORIAN_INFO]: (state, action) => {
     return Object.assign({}, state, {
       dataHistorian: action.payload
+    })
+  },
+  [CONFIRM_DELETE_HISTORIAN]: (state, action) => {
+    return Object.assign({}, state, {
+      deleteDataIndex: action.payload,
+      showDataDeleteModal : !state.showDataDeleteModal
+    })
+  },
+  [CLOSE_CONFIRMATION]: (state, action) => {
+    return Object.assign({}, state, {
+      deleteDataIndex: null,
+      showDataDeleteModal : !state.showDataDeleteModal
     })
   },
   [ADD_DATAHISTORIAN__MODAL]: (state, action) => {
@@ -246,15 +294,17 @@ export const ACTION_HANDLERS = {
   },
   [DELETE_DATAHISTORIAN]: (state, action) => {
     let updatedDataHistorian = [];
-    if (action.payload) {
+    if (state.deleteDataIndex) {
       state.dataHistorian.map((dh, i) => {
-        if (i != action.payload) {
+        if (i != state.deleteDataIndex) {
           updatedDataHistorian.push(dh)
         }
       });
     }
     return Object.assign({}, state, {
-      dataHistorian: updatedDataHistorian
+      dataHistorian: updatedDataHistorian,
+      showDataDeleteModal : !state.showDataDeleteModal,
+      deleteDataIndex : null
     })
   },
   [CLICKED_IS_DIGITAL_TAG]: (state, action) => {
@@ -272,7 +322,9 @@ const initialState = {
   gateways: getGatewayInfo(),
   showAddDataHistorianModal: false,
   clickedIsDigitalTag: false,
-  saveScada: []
+  saveScada: [],
+  showDataDeleteModal : false,
+  deleteDataIndex : null
 };
 
 export default function dataHistorianReducer(state = initialState, action) {

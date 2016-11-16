@@ -15,7 +15,7 @@ export const SELECTED_ALL_CONTACT = 'SELECTED_ALL_CONTACT'
 export const SELECTED_ALL_ROLE = 'SELECTED_ALL_ROLE'
 export const UNSELECTED_ALL_CONTACT = 'UNSELECTED_ALL_CONTACT'
 export const UNSELECTED_ALL_ROLE = 'UNSELECTED_ALL_ROLE'
-
+export const SAVE_NEW_CONTACT = 'SAVE_NEW_CONTACT'
 
 
 export function selectAllContacts() {
@@ -118,6 +118,24 @@ export function AddContactModalToggle() {
   }
 }
 
+export function saveNewContact(){
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      dispatch({
+        type: SAVE_NEW_CONTACT,
+        payload:getState().form.UsersForm
+      })
+      dispatch({
+        type: 'redux-form/DESTROY',
+        meta: {
+          form: "UsersForm"
+        },
+        payload: ""
+      })
+    })
+  }
+}
+
 export function bindContactToRole() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
@@ -204,6 +222,14 @@ export const ACTION_HANDLERS = {
     } else {
       return Object.assign({}, state, {
         newContactPopUp: getNewContactPopUpInfo(),
+        showAddContactModal: !state.showAddContactModal
+      })
+    }
+  },
+  [SAVE_NEW_CONTACT]:(state,action)=>{
+      let newContact = {}
+      if (action.payload) {
+      return Object.assign({}, state, {
         showAddContactModal: !state.showAddContactModal
       })
     }

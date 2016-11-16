@@ -56,7 +56,7 @@ export const Gateways = (props) => {
                                                                     <Tooltip id="tooltip">
                                                                         <strong>Delete {gateway.aliasName}</strong>
                                                                     </Tooltip>}>
-                                                                    <i className={!isNaN(gateway.id) && gateway.id== -1 ? "show fa fa-trash-o" : "hide" } onClick={() => { props.DeleteGateway(index) } }></i>
+                                                                    <i className={!isNaN(gateway.id) && gateway.id== -1 ? "show fa fa-trash-o" : "hide" } onClick={() => { props.ConfirmGatewayDelete(index) } }></i>
                                                                 </OverlayTrigger> 
                                                                 
                                                             </td>
@@ -72,7 +72,7 @@ export const Gateways = (props) => {
                         </div>
                     </div>
                 </div>
-              {props.gateways.showAddModal ?  <Modal show={props.gateways.showAddModal}>
+              <Modal show={props.gateways.showAddModal}>
                 <Modal.Header>
                     <Modal.Title>New Gateway</Modal.Title>
                 </Modal.Header>
@@ -129,7 +129,21 @@ export const Gateways = (props) => {
                         <button className="btn btn-warning" type="button"  onClick={props.AddGatewayModalToggle}>Cancel</button>
                     
                 </Modal.Footer>
-            </Modal> : null }
+            </Modal>
+            <Modal show={props.gateways.showGatewayDeleteModal}>
+                <Modal.Header>
+                    <Modal.Title>Are you sure?</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Are you sure, want to delete this gateways?
+                </Modal.Body>
+                <Modal.Footer>
+                    <div className="pull-right">
+                        <button className="btn btn-warning" type="button" onClick={props.CloseGatewayConfirmation}>Close</button>
+                        <button className="btn btn-danger" type="button" onClick={props.DeleteGateway}>Delete</button>
+                    </div>
+                </Modal.Footer>
+            </Modal>
             </div>
         )
 }
