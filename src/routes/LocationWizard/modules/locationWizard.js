@@ -220,8 +220,12 @@ function rolesObjectPreparation(stateTree, dispatch) {
 function workflowsObjectPreparation(stateTree, dispatch) {
   var workflowObj = [];
   stateTree.workFlows && stateTree.workFlows.defaultWorkFlow ?
-    stateTree.workFlows.defaultWorkFlow.map(workflow => {
-      workflowObj.push(workflow)
+    stateTree.workFlows.defaultWorkFlow.map(workFlow => {
+      let workflow = {}
+      workflow.WorkflowGroupLocationId = w.WorkflowGroupLocationId
+      workflow.WorkflowGroupId = w.WorkflowGroupId
+      workflow.WorkflowGroupName = w.WorkflowGroupName
+      workflowObj.push(workflow) 
     }) : dispatch({
       type: 'ERROR',
       payload: 1

@@ -45,7 +45,7 @@ export const Users = (props) => {
                                                         placeholder="Select a Role"
                                                         onChangeEvent = {props.selectRole}/>                                           
                                             </div>
-                                            <div className="col-sm-12 col-md-6 col-lg-6">
+                                            <div className="col-sm-12 col-md-6 col-lg-6 MultipleSelect">
                                                 <label className="control-label"> Contacts </label>
                                                 <Field
                                                     name = 'contactsByRoles'
@@ -59,6 +59,10 @@ export const Users = (props) => {
                                                     multi = {true}
                                                     onChangeEvent = {props.bindContactToRole}                                                      
                                                     />
+                                                <div className={props.userInfo.disableContacts ? "hide" :"col-lg-12"}>
+                                                    <span className="select-all pull-left" onClick={props.selectAllContacts}>Select All</span>
+                                                    <span className="deselect-all pull-right" onClick={props.unSelectAllContacts}>Deselect All</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -84,7 +88,7 @@ export const Users = (props) => {
                                                         placeholder="Select a contact"
                                                         onChangeEvent = {props.selectContact}/>                                    
                                             </div>
-                                            <div className="col-sm-12 col-md-6 col-lg-6">
+                                            <div className="col-sm-12 col-md-6 col-lg-6 MultipleSelect">
                                                 <label className="control-label"> Roles </label>
                                                 <Field
                                                         name = 'RoleByContact'
@@ -97,7 +101,11 @@ export const Users = (props) => {
                                                         placeholder="Select roles"
                                                         disabled = {props.userInfo.disableRoles}
                                                         onChangeEvent = {props.bindRoleToContact}
-                                                        />   
+                                                        />  
+                                                 <div className={props.userInfo.disableRoles ? "hide" :"col-lg-12"}>
+                                                    <span className="select-all pull-left" onClick={props.selectAllRoles}>Select All</span>
+                                                    <span className="deselect-all pull-right" onClick={props.unSelectAllRoles}>Deselect All</span>
+                                                </div> 
                                             </div>
                                         </div>
                                 </div>

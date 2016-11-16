@@ -51,14 +51,30 @@ div.box-tools.pull-right i.fa.fa-address-book {
     padding-bottom: 3px;
 }
 
+.MultipleSelect div.Select.Select--multi.is-searchable div.Select-control span.Select-arrow-zone,
+.MultipleSelect div.Select.Select--multi.is-searchable div.Select-control span.Select-clear-zone{
+    display : none
+}
+
+.MultipleSelect div.Select.Select--multi.is-searchable div.Select-control span.Select-multi-value-wrapper
+{
+    height: 100px!important;
+    overflow: auto !important;  
+}
+
 @media (max-width: 767px) {
     .form-group-checkbox{
     margin-top:0px;
 }
 }
 
-#select-all {
+.select-all {
     color: #64b448;
+    cursor: pointer;
+}
+
+.deselect-all {
+    color: red;
     cursor: pointer;
 }
 

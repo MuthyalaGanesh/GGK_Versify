@@ -31,14 +31,15 @@ export const WorkFlow = (props) => {
                                                         defaultValue={props.workFlow.defaultWorkFlow}
                                                         name = 'workFlowItem'
                                                         data={workFlowItems}                                                                                                              
-                                                        labelKey='name'                                             
-                                                        valueKey='id'
+                                                        labelKey='WorkflowGroupName'                                             
+                                                        valueKey='WorkflowGroupId'
                                                         multi = {true}
                                                         placeholder="Select WorkFlow"
                                                         onChangeEvent = {props.workFlowChange}/>
-                                                </div>
-                                                <div className="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                                                        <span id="select-all" onClick={props.selectAll}>Select All</span>
+                                                        <div className="col-lg-12">
+                                                            <span className="select-all pull-left" onClick={props.selectAll}>Select All</span>
+                                                            <span className="deselect-all pull-right" onClick={props.removeAll}>Deselect All</span>
+                                                        </div>
                                                 </div>
                                             </div>  
                                         </div>

@@ -78,7 +78,7 @@ export const ACTION_HANDLERS = {
   },
   [SELECT_ALL]: (state, action) => {
     return Object.assign({}, state, {
-      defaultWorkFlow: state.workFlowItems.map((workFlow) => workFlow.id)
+      defaultWorkFlow: state.workFlowItems.map((workFlow) => workFlow)
     })
   },
   [REMOVE_ALL]: (state, action) => {
@@ -87,7 +87,6 @@ export const ACTION_HANDLERS = {
     })
   },
   [WORKFLOW_CHANGE]: (state, action) => {
-    debugger;
     let defaultvalues = action.payload.values.workFlowItem;
     return Object.assign({}, state, {
       defaultWorkFlow: defaultvalues

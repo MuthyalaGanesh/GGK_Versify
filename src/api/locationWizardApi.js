@@ -20,9 +20,10 @@ function mapWorkFlowInfo() {
     });    
     let workFlowGroup = []
     finalArray.map((final)=>{
-            let newData = {};          
-            newData.id = final.id  
-            newData.name = final.name
+            let newData = {}; 
+            newData.WorkflowGroupLocationId = 0         
+            newData.WorkflowGroupId = final.id  
+            newData.WorkflowGroupName = final.name
             newData.isActive = final.isActive
             newData.workflowTypeId = final.workflowTypeId
             newData.title = final.Value!=null && final.Value.length > 0 ? final.Value.join('\n') : null

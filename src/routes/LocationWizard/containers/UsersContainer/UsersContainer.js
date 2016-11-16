@@ -1,11 +1,26 @@
-import { reduxForm } from 'redux-form'
-import {connect} from 'react-redux'
+import {
+	reduxForm
+} from 'redux-form'
+import {
+	connect
+} from 'react-redux'
 import Users from '../../components/Users'
-import { bindUserInfo,bindContactToRole,bindRoleToContact,selectRole,selectContact,AddContactModalToggle} from '../../modules/user';
+import {
+	bindUserInfo,
+	bindContactToRole,
+	bindRoleToContact,
+	selectRole,
+	selectContact,
+	AddContactModalToggle,
+	selectAllContacts,
+	selectAllRoles,
+	unSelectAllContacts,
+	unSelectAllRoles
+} from '../../modules/user';
 
 
 const mapStateToProps = (state) => ({
-  userInfo : state.users
+	userInfo: state.users
 })
 
 const mapDispatchToProps = {
@@ -14,11 +29,14 @@ const mapDispatchToProps = {
 	bindRoleToContact,
 	selectRole,
 	selectContact,
-	AddContactModalToggle
+	AddContactModalToggle,
+	selectAllContacts,
+	selectAllRoles,
+	unSelectAllContacts,
+	unSelectAllRoles
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(reduxForm({
-    form: 'UsersForm',  //Form name is first form
-    destroyOnUnmount: false,
+export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
+	form: 'UsersForm', //Form name is first form
+	destroyOnUnmount: false,
 })(Users));
-
