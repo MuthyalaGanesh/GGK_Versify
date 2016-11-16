@@ -40,9 +40,9 @@ export function leftMenuDropdownClickEvent(id, event) {
 
 
 function basicInforObjectPreparation(values) {
-  var locationId = values.LocationId;
+
   var todayDate = new Date();
-  var primaryMarketTypeId = values.primaryMarket.id;
+
   return new Object({
     Id: 0,
     LocationId: 0,
@@ -64,7 +64,7 @@ function basicInforObjectPreparation(values) {
     IsLogLevel: false,
     TechnologyTypeId: values.technologyType.id,
     SecondaryTechnologyTypeId: values.secondarytechnologyType.id,
-    PrimaryMarketId: 1,
+    PrimaryMarketId: values.primaryMarket.id,
     SecondaryMarketId: null,
     FuelClassId: values.fuelClass.id,
     IsReportingLevel: false,
@@ -92,10 +92,9 @@ function basicInforObjectPreparation(values) {
 }
 
 
-function credentialsAndIdentifiersObj() {
+function credentialsAndIdentifiersObj(credentialsObj, primaryMarketTypeId, locationId) {
 
   var credentialsAndIdentifiersObj = [];
-  var credentialsObj = getState().form.CredentialsManagementForm ? getState().form.CredentialsManagementForm.values : {};
   //get MarketDrivenMappings from API based on marketType ID
   var marketDrivenMappings = getMarketDrivenMappings(primaryMarketTypeId);
   var omsLocationwizardData = getOMSLocationwizardData(locationId > 0 ? locationId : null);
@@ -141,7 +140,7 @@ function credentialsAndIdentifiersObj() {
   return credentialsAndIdentifiersObj;
 }
 
-function equipmentObjectPreparation(stateTree) {
+function equipmentObjectPreparation(stateTree, dispatch) {
   var equipmentsObj = []
   stateTree.equipments && stateTree.equipments.insertedEquipment ? stateTree.equipments.insertedEquipment.map(eq => {
     equipmentsObj.push({
@@ -160,7 +159,7 @@ function equipmentObjectPreparation(stateTree) {
 }
 
 
-function SystemIntegrationObjectPreparation(stateTree) {
+function SystemIntegrationObjectPreparation(stateTree, dispatch) {
   var systemIntegrationObj = []
   if (stateTree.systemIntegration) {
     systemIntegrationObj = stateTree.systemIntegration.selectedSystemIntegrationTypes;
@@ -175,7 +174,7 @@ function SystemIntegrationObjectPreparation(stateTree) {
 }
 
 
-function unitCharacterSticObjectPreparation(stateTree) {
+function unitCharacterSticObjectPreparation(stateTree, dispatch) {
   var unitCharacteristicsObj = [];
   stateTree.unitCharacteristics && stateTree.unitCharacteristics.selectedunitCharacteristics ?
     stateTree.unitCharacteristics.selectedunitCharacteristics.map(suc => {
@@ -190,8 +189,8 @@ function unitCharacterSticObjectPreparation(stateTree) {
             UnitOfMeasureId: suc.defaultUnitOfMeasureId,
             UnitOfMeasureName: suc.UOM,
             Value: ea.Value,
-            EffectiveStartDate: ea.EffectiveStartDate,
-            EffectiveEndDate: ea.EffectiveEndDate,
+            EffectiveStartDate: '/Date(' + ea.EffectiveStartDate.getTime() + ')/',
+            EffectiveEndDate: '/Date(' + ea.EffectiveEndDate.getTime() + ')/',
             DisplayName: suc.display
           }))
         }
@@ -206,7 +205,7 @@ function unitCharacterSticObjectPreparation(stateTree) {
 
 }
 
-function rolesObjectPreparation(stateTree) {
+function rolesObjectPreparation(stateTree, dispatch) {
   var rolesObj = [];
   stateTree.users && stateTree.users.saveRoles ?
     stateTree.users.saveRoles.map(role => {
@@ -218,7 +217,7 @@ function rolesObjectPreparation(stateTree) {
   return rolesObj;
 }
 
-function workflowsObjectPreparation(stateTree) {
+function workflowsObjectPreparation(stateTree, dispatch) {
   var workflowObj = [];
   stateTree.workFlows && stateTree.workFlows.defaultWorkFlow ?
     stateTree.workFlows.defaultWorkFlow.map(workflow => {
@@ -231,7 +230,7 @@ function workflowsObjectPreparation(stateTree) {
 }
 
 
-function gateWayObjectPreparation(stateTree) {
+function gateWayObjectPreparation(stateTree, dispatch) {
   var gatewayObj = [];
   stateTree.gateways && stateTree.gateways.saveGateway ?
     stateTree.gateways.saveGateway.map(gateway => {
@@ -244,10 +243,10 @@ function gateWayObjectPreparation(stateTree) {
   return gatewayObj
 }
 
-function dataHistorianObjectPreparation(stateTree) {
+function dataHistorianObjectPreparation(stateTree, dispatch) {
   var dataHistorianObj = [];
-  stateTree.dataHistorian && stateTree.gateways.saveScada ?
-    stateTree.gateways.saveScada.map(scada => {
+  stateTree.dataHistorian && stateTree.dataHistorian.saveScada ?
+    stateTree.dataHistorian.saveScada.map(scada => {
       dataHistorianObj.push(scada)
     }) : dispatch({
       type: 'ERROR',
@@ -260,58 +259,50 @@ export function saveCompleteLocationWizard() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       console.log("state pro-", getState())
-      getState().form.BasicInfoForm.hasOwnProperty('values') 
-      ? Object.keys(getState().form.BasicInfoForm.values).length < 11 
-        ? Object.keys(getState().form.BasicInfoForm.values).length == 10 
-          ? !getState().form.BasicInfoForm.hasOwnProperty('parentLocation') 
-            ? (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null 
-              &&getState().form.BasicInfoForm.values.technologyType != null &&getState().form.BasicInfoForm.values.fuelClass != null &&getState().form.BasicInfoForm.values.physicalTimezone != null 
-              &&getState().form.BasicInfoForm.values.secondarytechnologyType != null &&getState().form.BasicInfoForm.values.owner != null 
-              ) 
-                ? dispatch({
-                type: 'ERROR',
-                payload: 0}) 
-                :dispatch({
-                type: 'ERROR',
-                payload: 1}) 
-            :dispatch({
-              type: 'ERROR',
-             payload: 1}) 
-          :dispatch({
-              type: 'ERROR',
-             payload: 1})
-        : (getState().form.BasicInfoForm.values.technologyType == getState().form.BasicInfoForm.values.secondarytechnologyType) 
-            ? dispatch({
-              type: 'ERROR',
-               payload: 1}) 
-            : (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null 
-              &&getState().form.BasicInfoForm.values.technologyType != null &&getState().form.BasicInfoForm.values.fuelClass != null &&getState().form.BasicInfoForm.values.physicalTimezone != null 
-              &&getState().form.BasicInfoForm.values.secondarytechnologyType != null &&getState().form.BasicInfoForm.values.owner != null 
-              ) 
-                ? dispatch({
-                type: 'ERROR',
-                payload: 0}) 
-                :dispatch({
-                type: 'ERROR',
-                payload: 1}) 
+      getState().form.BasicInfoForm.hasOwnProperty('values') ? Object.keys(getState().form.BasicInfoForm.values).length < 11 ? Object.keys(getState().form.BasicInfoForm.values).length == 10 ? !getState().form.BasicInfoForm.hasOwnProperty('parentLocation') ? (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null && getState().form.BasicInfoForm.values.technologyType != null && getState().form.BasicInfoForm.values.fuelClass != null && getState().form.BasicInfoForm.values.physicalTimezone != null && getState().form.BasicInfoForm.values.secondarytechnologyType != null && getState().form.BasicInfoForm.values.owner != null) ? dispatch({
+        type: 'ERROR',
+        payload: 0
+      }) : dispatch({
+        type: 'ERROR',
+        payload: 1
+      }) : dispatch({
+        type: 'ERROR',
+        payload: 1
+      }) : dispatch({
+        type: 'ERROR',
+        payload: 1
+      }) : (getState().form.BasicInfoForm.values.technologyType == getState().form.BasicInfoForm.values.secondarytechnologyType) ? dispatch({
+        type: 'ERROR',
+        payload: 1
+      }) : (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null && getState().form.BasicInfoForm.values.technologyType != null && getState().form.BasicInfoForm.values.fuelClass != null && getState().form.BasicInfoForm.values.physicalTimezone != null && getState().form.BasicInfoForm.values.secondarytechnologyType != null && getState().form.BasicInfoForm.values.owner != null) ? dispatch({
+        type: 'ERROR',
+        payload: 0
+      }) : dispatch({
+        type: 'ERROR',
+        payload: 1
+      })
 
       : dispatch({
-          type: 'ERROR',
-          payload: 1
-        })
+        type: 'ERROR',
+        payload: 1
+      })
       console.log(Object.keys(getState().form.BasicInfoForm.values).length, 'stateobjectmo')
       var values = getState().form.BasicInfoForm ? getState().form.BasicInfoForm.values : {};
+      var locationId = values.LocationId;
+      var primaryMarketTypeId = values.primaryMarket.id;
+
       var basicInfoObj = basicInforObjectPreparation(values)
-      var credentialsAndIdentifier = credentialsAndIdentifiersObj()
-      var equipmentsObj = equipmentObjectPreparation(getState())
-      var systemIntegrationObj = SystemIntegrationObjectPreparation(getState())
-      var unitCharacteristicsObj = unitCharacterSticObjectPreparation(getState())
-      var rolesObj = rolesObjectPreparation(getState())
-      var workflowObj = workflowsObjectPreparation(getState());
-      var gatewayObj = gateWayObjectPreparation(getState());
-      var dataHistorianObj = dataHistorianObjectPreparation(getState());
-
-
+      var credentialsAndIdentifier = credentialsAndIdentifiersObj(
+        getState().form.CredentialsManagementForm ? getState().form.CredentialsManagementForm.values : {},
+        primaryMarketTypeId,
+        locationId)
+      var equipmentsObj = equipmentObjectPreparation(getState(), dispatch)
+      var systemIntegrationObj = SystemIntegrationObjectPreparation(getState(), dispatch)
+      var unitCharacteristicsObj = unitCharacterSticObjectPreparation(getState(), dispatch)
+      var rolesObj = rolesObjectPreparation(getState(), dispatch)
+      var workflowObj = workflowsObjectPreparation(getState(), dispatch);
+      var gatewayObj = gateWayObjectPreparation(getState(), dispatch);
+      var dataHistorianObj = dataHistorianObjectPreparation(getState(), dispatch);
 
       var finalSaveObject = {
         "saveData": {
@@ -390,16 +381,19 @@ function changeObjectTypeOfLocations(allLocations) {
   });
   return changedLocationsObject
 }
+
 function test(objectfunc) {
   console.log(objectfunc)
   var object = objectfunc
   var retobj = []
- retobj.push({
-      key: -1,
-      value: -1,
-      label: 'LOCATIONS'
-     })
- object.map((element)=>{retobj.push(element)})
+  retobj.push({
+    key: -1,
+    value: -1,
+    label: 'LOCATIONS'
+  })
+  object.map((element) => {
+    retobj.push(element)
+  })
   return retobj
 }
 
