@@ -34,7 +34,8 @@ export const WorkFlow = (props) => {
                                                         labelKey='name'                                             
                                                         valueKey='id'
                                                         multi = {true}
-                                                        placeholder="Select WorkFlow"/>
+                                                        placeholder="Select WorkFlow"
+                                                        onChangeEvent = {props.workFlowChange}/>
                                                 </div>
                                                 <div className="col-xs-2 col-sm-2 col-md-2 col-lg-2">
                                                         <span id="select-all" onClick={props.selectAll}>Select All</span>
