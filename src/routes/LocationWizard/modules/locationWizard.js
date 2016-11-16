@@ -189,8 +189,8 @@ function unitCharacterSticObjectPreparation(stateTree, dispatch) {
             UnitOfMeasureId: suc.defaultUnitOfMeasureId,
             UnitOfMeasureName: suc.UOM,
             Value: ea.Value,
-            EffectiveStartDate: '/Date(' + ea.EffectiveStartDate.getTime() + ')/',
-            EffectiveEndDate: '/Date(' + ea.EffectiveEndDate.getTime() + ')/',
+            EffectiveStartDate: !!ea.EffectiveStartDate ?'/Date(' + (new Date(ea.EffectiveStartDate)).getTime() + ')/':null,
+            EffectiveEndDate: !!ea.EffectiveEndDate ? '/Date(' +(new Date(ea.EffectiveEndDate)).getTime() + ')/':null,
             DisplayName: suc.display
           }))
         }
@@ -220,7 +220,7 @@ function rolesObjectPreparation(stateTree, dispatch) {
 function workflowsObjectPreparation(stateTree, dispatch) {
   var workflowObj = [];
   stateTree.workFlows && stateTree.workFlows.defaultWorkFlow ?
-    stateTree.workFlows.defaultWorkFlow.map(workFlow => {
+    stateTree.workFlows.defaultWorkFlow.map(w => {
       let workflow = {}
       workflow.WorkflowGroupLocationId = w.WorkflowGroupLocationId
       workflow.WorkflowGroupId = w.WorkflowGroupId
