@@ -33,6 +33,9 @@ const basicInfoValidation = values => {
   if(!values.physicalTimezone){
     errors.physicalTimezone='Physical Timezone is required'
   }
+  if(!values.ownerShipPercentage){
+    errors.ownerShipPercentage='OwnerShip Percentage is required'
+  }
  
   return errors
 }
