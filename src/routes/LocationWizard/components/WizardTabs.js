@@ -17,7 +17,7 @@ export const WizardTabs =(props)=> {
       e = d.documentElement,
       g = d.getElementsByTagName('body')[0],
       x = w.innerWidth || e.clientWidth || g.clientWidth;
-var offsetValue = x < 768 ? -125 : -180;
+var offsetValue = x < 768 ? -125 : -165;
 
 return (
   
