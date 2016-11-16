@@ -1,7 +1,7 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
 import {Panel, ControlLabel} from 'react-bootstrap/lib'
-import DropdownListField from 'components/DropdownList/DropdownListField'
+import CreatableDropdownListField from 'components/DropdownList/CreatableDropdownListField'
 
 export const CredentialsManagement = (props) => {
         return (
@@ -30,8 +30,12 @@ export const CredentialsManagement = (props) => {
                                     placeholder={fieldElement.DisplayName}>
                                 </Field>
                                 : <Field name={fieldElement.DisplayName}
-                                    component={DropdownListField}
-                                           data={fieldElement.dropDownItems}
+                                    component={CreatableDropdownListField}
+                                    
+                                           data={fieldElement.Field == "AliasName" 
+                                           ?fieldElement.aliasNameDropDownItems
+                                           :fieldElement.externalSystemLoginDropDownItems
+                                           }
                                            valueKey='key'
                                            labelKey='value'
                                            placeholder={fieldElement.DisplayName}>

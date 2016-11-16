@@ -45,23 +45,30 @@ export const ACTION_HANDLERS = {
     var omsLocationwizardData = getOMSLocationwizardData(!!action.payload ? action.payload.id : null);
     var marketDrivendata = [];
     _.each(data, (item) => {
-      item.dropDownItems = [];
-      var dropDownItems = [];
+      item.aliasNameDropDownItems = [];
+      item.externalSystemLoginDropDownItems = [];
+      var aliasNameDropDownItems = [];
+      var externalSystemLoginDropDownItems = [];
 
       _.each(omsLocationwizardData.GetOMSLocationWizardDataResult.AssignedLocationMappings, (wizardDataItem) => {
         if (item.IsDropDown) {
           var dt = _(wizardDataItem).find(function(x) {
-            return x => x.ExternalSystemName === item.ExternalSystemName
+            return x => x.ExternalSystemName === item.ExternalSystemName && x.Field === item.Field
           });
           if (!!dt && dt != '') {
-            dropDownItems.push({
-              key: dt,
-              value: dt
+            aliasNameDropDownItems.push({
+              key: wizardDataItem.AliasName,
+              value: wizardDataItem.AliasName
+            });
+            externalSystemLoginDropDownItems.push({
+              key: wizardDataItem.ExternalSystemLogin,
+              value: wizardDataItem.ExternalSystemLogin
             });
           }
         }
       })
-      item.dropDownItems = _.uniqBy(dropDownItems, 'key');;
+      item.aliasNameDropDownItems = _.uniqBy(aliasNameDropDownItems, 'key');
+      item.externalSystemLoginDropDownItems = _.uniqBy(externalSystemLoginDropDownItems, 'key');
       marketDrivendata.push(item);
     });
 
