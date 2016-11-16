@@ -26,6 +26,7 @@ export const Equipments = (props) => {
                                         <Field component={InputField} type="text" className="form-control" name="newEquipment"
                                             touched = {touched.hasOwnProperty('EquipmentsForm') ? touched.EquipmentsForm.hasOwnProperty('fields') ? touched.EquipmentsForm.fields.hasOwnProperty('newEquipment') : false : false }>
                                         </Field>
+
                                     </div>
                                     <div className="col-md-offset-3 col-md-1 col-sm-4 col-xs-4">
                                         <button className="btn btn-success" onClick={props.AddEquipment}>Add</button>
@@ -38,8 +39,8 @@ export const Equipments = (props) => {
                                     <Table striped bordered condensed hover responsive className="all-equipments">
                                         <thead>
                                             <tr>
-                                                <th className="col-md-3 col-sm-3">Name</th>
-                                                <th className="col-md-1 col-md-1">Actions</th>
+                                                <th className="col-md-3 col-sm-3 text-center">Name</th>
+                                                <th className="col-md-1 col-md-1 text-center">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -47,9 +48,9 @@ export const Equipments = (props) => {
                                                 props.equipments.insertedEquipment.map((eq, index) =>
                                                     (
                                                         <tr key={index}>
-                                                            <td className="col-md-3 col-sm-3 name-cell">{eq}</td>
+                                                            <td className="col-md-3 col-sm-3 name-cell text-center">{eq}</td>
                                                             <td className="col-md-1 col-sm-3">
-                                                                <div className=" text-center">
+                                                                <div className="text-center">
                                                                     <i className="fa fa-edit fa-2x" onClick={() => { props.EditEquipment(index) } }></i>
                                                                     <i className="fa fa-trash-o fa-2x" onClick={() => { props.DeleteEquipment(index) } }></i>
                                                                 </div>
