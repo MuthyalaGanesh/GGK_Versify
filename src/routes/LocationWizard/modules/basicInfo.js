@@ -42,7 +42,7 @@ export const ACTION_HANDLERS = {
   [PRIMARY_MARKET_CHANGE_EVENT]: (state, action) => {
     //get MarketDrivenMappings from API based on marketType ID
     var data = getMarketDrivenMappings(!!action.payload ? action.payload.id : null);
-    var omsLocationwizardData = getOMSLocationwizardData();
+    var omsLocationwizardData = getOMSLocationwizardData(!!action.payload ? action.payload.id : null);
     var marketDrivendata = [];
     _.each(data, (item) => {
       item.dropDownItems = [];

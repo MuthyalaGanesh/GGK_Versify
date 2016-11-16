@@ -34,6 +34,12 @@ return (
 
                         <div className="col-sm-12">
                             <div className="row">
+                             <Field name="LocationId"
+                                           component="input"                                           
+                                           type="hidden"
+                                           value={props.LocationId ||0}
+                                           >
+                                    </Field>
                                 <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
                                     <label className="control-label">
                                         Name

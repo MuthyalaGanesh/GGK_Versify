@@ -1,7 +1,8 @@
 import {
   basicInfoDropdowns,
   finalLocationSaveObject,
-  getOMSLocationwizardData
+  getOMSLocationwizardData,
+  getMarketDrivenMappings 
 } from 'api/locationWizardApi'
 
 import {
@@ -51,7 +52,10 @@ export function saveCompleteLocationWizard() {
 
       var basicInfoObj = {}
       var todayDate = new Date();
+      
       var values = getState().form.BasicInfoForm ? getState().form.BasicInfoForm.values : {};
+      var locationId = values.LocationId;
+      var primaryMarketTypeId= values.primaryMarket.id;
       basicInfoObj = new Object({
         Id: 0,
         LocationId: 0,
@@ -101,22 +105,57 @@ export function saveCompleteLocationWizard() {
       console.log("Basic info-", basicInfoObj, )
       var credentialsAndIdentifiersObj = [];
       var credentialsObj = getState().form.CredentialsManagementForm ? getState().form.CredentialsManagementForm.values : {};
-      let omsLocationwizardData = getOMSLocationwizardData();
+       //get MarketDrivenMappings from API based on marketType ID
+    var marketDrivenMappings = getMarketDrivenMappings(primaryMarketTypeId);
+    var omsLocationwizardData = getOMSLocationwizardData(locationId >0 ? locationId : null);    
+    var locationMappingData = [];
+     var itemDatawithMarketDrivenMappings =[];
+    _.each(marketDrivenMappings, (item) => {
+      var itemData = item;
+      itemData.value=null;
+       if(credentialsObj.hasOwnProperty(item.DisplayName)){
+         if(item.IsDropDown){
+          itemData.value = credentialsObj[item.DisplayName].key;
+         }else{
+          itemData.value = credentialsObj[item.DisplayName];
+         }
+        }
+        itemDatawithMarketDrivenMappings.push(itemData);
+      // _.each(omsLocationwizardData.GetOMSLocationWizardDataResult.AssignedLocationMappings, (wizardDataItem) => {
+      //   debugger;
+        
+      //     locationMappingData.push(
+      //       {
+      //         LocationMappingId: wizardDataItem.LocationMappingId || 0,
+      //         ExternalSystemName: itemData.ExternalSystemName || '',
+      //         AliasName: itemData.AliasName ||'',
+      //         ExternalSystemLogin: itemData.ExternalSystemLogin || '',
+      //         ExternalSystemPwd:itemData.ExternalSystemPwd || '',
+      //         ParameterList: itemData.ParameterList || '',
+      //         FlaggedForDeletion: false
+      
+      //     });
+      //})
+    });
+//     var groupByItems = _(itemDatawithMarketDrivenMappings).groupBy("ExternalSystemName");
+//     var c = _.groupBy(itemDatawithMarketDrivenMappings, function(b) { return b.ExternalSystemName})
+// _.each(groupByItems, (item) => {
+//   debugger;
+//        locationMappingData.push(
+//             {
+//               LocationMappingId: item.LocationMappingId || 0,
+//               ExternalSystemName: itemData.ExternalSystemName || '',
+//               AliasName: itemData.AliasName ||'',
+//               ExternalSystemLogin: itemData.ExternalSystemLogin || '',
+//               ExternalSystemPwd:itemData.ExternalSystemPwd || '',
+//               ParameterList: itemData.ParameterList || '',
+//               FlaggedForDeletion: false
+      
+//           });
+// })
+
       var assignedLocationMappings = omsLocationwizardData.GetOMSLocationWizardDataResult.AssignedLocationMappings;
-      debugger;
-      var finalcredObj = [];
-      _.each(credentialsObj, (credential) => {
-        var a = credential
-      })
-      var obj = {
-        LocationMappingId: 0,
-        ExternalSystemName: action.payload,
-        AliasName: "",
-        ExternalSystemLogin: "",
-        ExternalSystemPwd: "",
-        ParameterList: "",
-        FlaggedForDeletion: false
-      };
+      
       var equipmentsObj = []
       getState().equipments && getState().equipments.insertedEquipment ? getState().equipments.insertedEquipment.map(eq => {
         equipmentsObj.push({
@@ -168,10 +207,10 @@ export function saveCompleteLocationWizard() {
         })
       console.log(unitCharacteristicsObj, "UnitCharacteristics")
 
-      var RolesObj = [];
+      var rolesObj = [];
       getState().users && getState().users.saveRoles ?
         getState().users.saveRoles.map(role => {
-          RolesObj.push(role)
+          rolesObj.push(role)
         }) : dispatch({
           type: 'ERROR',
           payload: 1
@@ -207,13 +246,13 @@ export function saveCompleteLocationWizard() {
       var finalSaveObject = {
         saveData: {
           Location: basicInfoObj,
-          UnitCharacteristics: [],
-          CredentialsAndIdentifiers: {},
+          UnitCharacteristics: unitCharacteristicsObj,
+          CredentialsAndIdentifiers: credentialsAndIdentifiersObj,
           SupportInformation: systemIntegrationObj,
-          WorkflowGroups: [],
-          Roles: [],
-          Gateways: [],
-          ScadaPoints: [],
+          WorkflowGroups: workflowObj,
+          Roles: rolesObj,
+          Gateways: gatewayObj,
+          ScadaPoints: dataHistorianObj,
           Equipments: equipmentsObj
         }
       }

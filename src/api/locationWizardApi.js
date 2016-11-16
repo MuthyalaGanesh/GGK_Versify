@@ -62,7 +62,7 @@ export function getLocations() {
 }
 
 export function getMarketDrivenMappings(marketId = null) {
-    return XMLHttpRequestSyncGet(Constants.LWMARKETDRIVEN_MAPPINGS, marketId != null ? "isoMarketId=" + marketId : null);;
+    return XMLHttpRequestSyncGet(Constants.LWMARKETDRIVEN_MAPPINGS, marketId != null ? "isoMarketId=" + marketId : null);
 }
 
 export function getOwners() {
@@ -99,8 +99,8 @@ export function getTimezones() {
 }
 
 
-export function getOMSLocationwizardData() {
-    return XMLHttpRequestSyncGet(Constants.OMSLOCATIONWIZARD_DATA);
+export function getOMSLocationwizardData(locationId = null) {
+    return XMLHttpRequestSyncGet(Constants.OMSLOCATIONWIZARD_DATA, locationId != null ? "locationId=" + locationId : null);
 }
 
 export function getUnitCharacteristics() {
