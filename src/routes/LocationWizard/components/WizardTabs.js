@@ -31,28 +31,28 @@ return (
                     <span className="round-tabs one">
                         <i className="fa fa-info"></i>
                     </span>
-                    <span className="tab-title hidden-xs"><small>Basic Information</small></span></Link>
+                    <span className="tab-title hidden-xs"><small>Information</small></span></Link>
                 </li>
                 <li>
                     <Link activeClass="active" className="wizard-item" offset={offsetValue} to="credential" spy={true}  smooth={true} duration={500}>
                     <span className="round-tabs two">
                         <i className="fa fa-lock"></i>
                     </span>
-                    <span className="tab-title hidden-xs"><small>Credential Management</small></span></Link>
+                    <span className="tab-title hidden-xs"><small>Credentials</small></span></Link>
                 </li>
                 <li>
                     <Link activeClass="active" className="wizard-item" offset={offsetValue}to ="unitcharacteristics" spy={true}  smooth={true} duration={500}>
                     <span className="round-tabs three">
                         <i className="fa fa-list-alt"></i>
                     </span>
-                    <span className="tab-title hidden-xs"><small>Unit Characteristics</small></span></Link>
+                    <span className="tab-title hidden-xs"><small>Attributes</small></span></Link>
                 </li>
                 <li>
                     <Link activeClass="active" className="wizard-item" offset={offsetValue} to="systemintegration" spy={true}  smooth={true} duration={500}>
                     <span className="round-tabs four">
                         <i className="fa fa-link"></i>
                     </span>
-                    <span className="tab-title hidden-xs"><small>System Integration</small></span></Link>
+                    <span className="tab-title hidden-xs"><small>Integrations</small></span></Link>
                 </li>
                 <li>
                     <Link activeClass="active" className="wizard-item" to="workflows" offset={offsetValue} spy={true}  smooth={true} duration={500}>
@@ -89,7 +89,7 @@ return (
                     <span className="round-tabs three">
                         <i className="fa fa-history"></i>
                     </span>
-                    <span className="tab-title hidden-xs"><small>Data Historian</small></span>
+                    <span className="tab-title hidden-xs"><small>Historian</small></span>
                     </Link>
                 </li>
 
