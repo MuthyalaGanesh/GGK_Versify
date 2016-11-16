@@ -221,7 +221,7 @@ export const ACTION_HANDLERS = {
             } else if (state.clickedIsDigitalTag) {
               let data = dh;
               data.isDigitalState = action.payload.values && action.payload.values.isDigitalTag ? action.payload.values.isDigitalTag : false
-              updatedDataHistorian.push()
+              updatedDataHistorian.push(dh)
               if (dh.id > 0) {
                 let scadaIndex = saveDataHistorian.findIndex((s) => s.id === dh.id);
                 scadaIndex >= 0 ? saveDataHistorian[scadaIndex] = data : saveDataHistorian.push(data)
