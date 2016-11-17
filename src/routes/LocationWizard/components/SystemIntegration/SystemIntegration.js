@@ -3,6 +3,7 @@ import { Field, reduxForm } from 'redux-form'
 import {Panel, Table, Button, Modal} from 'react-bootstrap/lib'
 import 'styles/systemIntegrationStyles.scss'
 import InputField from 'components/InputField/InputField'
+import CreatableDropdownListField from 'components/DropdownList/CreatableDropdownListField'
 
 export const SystemIntegration = (props) => {
     const systemIntegrationData = props.systemIntegration.unSelectedSystemIntegrationTypes;
@@ -20,35 +21,23 @@ export const SystemIntegration = (props) => {
                         <div className="row">
                             <div className="col-sm-12">
                                 <div className="form-group">
-                                    <div className="col-sm-5 col-md-3 col-lg-3">
+                                    <div className="col-xs-12 col-sm-12 col-md-2 col-lg-2 form-group">
                                         <label className="control-label"> External System Name </label>
                                     </div>
-                                    <div className="col-sm-5 col-md-7 col-lg-7">
-                                        <div>
-                                            { !props.systemIntegration.dropDownShow ? <Field component={InputField} name="newSystemIntegration"
-                                                touched = {touched.hasOwnProperty('SystemIntegrationForm') ?
-                                                    touched.SystemIntegrationForm.hasOwnProperty('fields') ? touched.SystemIntegrationForm.fields.hasOwnProperty('newSystemIntegration') : false : false }
-                                                className="form-control"/> :
-                                                <Field component="select" name="newSystemIntegration" className="form-control">
-                                                    <option value="">Select SystemIntegration</option>
+                                    <div className="col-xs-12 col-sm-12 col-md-8 col-lg-8 form-group">
 
-                                                    {
-                                                        systemIntegrationData.map((uc) => (
-                                                            (uc.LocationMappingId < 0) ? <option value={uc.ExternalSystemName} key={uc.ExternalSystemName}>{uc.ExternalSystemName}</option> : null
-                                                        ))
-                                                    }
-                                                </Field>
-                                            }
-                                        </div>
+                                        <Field component={CreatableDropdownListField}
+                                            name="newSystemIntegration"
+                                            data={systemIntegrationData}
+                                            valueKey='ExternalSystemName'
+                                            labelKey='ExternalSystemName'
+                                            placeholder="Select System Integration"
+                                            touched = {touched.hasOwnProperty('SystemIntegrationForm') ?
+                                                touched.SystemIntegrationForm.hasOwnProperty('fields') ? touched.SystemIntegrationForm.fields.hasOwnProperty('newSystemIntegration') : false : false }>
+                                        </Field>
 
                                     </div>
-                                    <div className="col-xs-6 col-sm-6 col-md-1 col-lg-1"> <label className="control-label">
-                                        {props.systemIntegration.dropDownShow
-                                            ?
-                                            <a onClick={props.toggleTypeahead} className="toggle-link"> Add Custom</a>
-                                            : <a onClick={props.toggleTypeahead}  className="toggle-link">Add Predefined</a>}
-                                    </label></div>
-                                    <div className="col-xs-6 col-sm-6 col-md-1 col-lg-1 btn-top">
+                                    <div className="col-xs-12 col-sm-12 col-md-2 col-lg-2 form-group btn-top">
                                         <button className="btn btn-success" type="button" onClick={props.AddSystemIntegration}
                                             disabled={touched.hasOwnProperty('SystemIntegrationForm') && touched.SystemIntegrationForm.hasOwnProperty('values')
                                                 && touched.SystemIntegrationForm.values.hasOwnProperty('newSystemIntegration')
@@ -65,9 +54,9 @@ export const SystemIntegration = (props) => {
                                     <Table striped bordered condensed hover responsive>
                                         <thead>
                                             <tr>
-                                                <th>Name</th>
-                                                <th>Description</th>
-                                                <th>Actions</th>
+                                                <th className="align-text-col">Name</th>
+                                                <th className="align-text-col">Description</th>
+                                                <th className="align-text-col">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -75,7 +64,7 @@ export const SystemIntegration = (props) => {
                                                 props.systemIntegration.selectedSystemIntegrationTypes.map((ssit, i) =>
                                                     <tr key={i}>
                                                         <td className="align-text-col"><label>{ssit.ExternalSystemName}</label></td>
-                                                        <td><Field component={InputField} name={`AliasName[${i}]`} onblur={()=>props.AliasGiven()}
+                                                        <td><Field component={InputField} name={`AliasName[${i}]`} onblur={() => props.AliasGiven() }
                                                             touched = {touched.hasOwnProperty('SystemIntegrationForm') ?
                                                                 touched.SystemIntegrationForm.hasOwnProperty('values') ? touched.SystemIntegrationForm.values.hasOwnProperty("AliasName") : false : false }
 
@@ -89,7 +78,6 @@ export const SystemIntegration = (props) => {
                                         </tbody>
                                     </Table>
                                 </div> : null}
-
                         </div>
                     </div>
                 </div>

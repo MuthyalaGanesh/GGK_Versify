@@ -4,7 +4,6 @@ export const ADD_MODAL = "ADD_MODAL"
 export const SYSTEM_INTEGRATION_TYPES = "SYSTEM_INTEGRATION_TYPES"
 export const ADD_SYSTEM_INTEGRATION = "ADD_SYSTEM_INTEGRATION"
 export const DELETE_SYS_INTEGRATION = "DELETE_SYS_INTEGRATION"
-export const TOGGLE_TYPEAHEAD = "TOGGLE_TYPEAHEAD"
 export const ALIAS_SAVE = "ALIAS_SAVE"
 export const STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION ="STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION"
 
@@ -50,8 +49,9 @@ export function AddSystemIntegration() {
             dispatch({
                 type: ADD_SYSTEM_INTEGRATION,
                 payload: getState().form.SystemIntegrationForm &&
-                    getState().form.SystemIntegrationForm.values ?
-                    getState().form.SystemIntegrationForm.values.newSystemIntegration : null
+                    getState().form.SystemIntegrationForm.values &&
+                    getState().form.SystemIntegrationForm.values.newSystemIntegration?
+                    getState().form.SystemIntegrationForm.values.newSystemIntegration.ExternalSystemName : null
             })
             dispatch({
                 type: 'redux-form/DESTROY',
@@ -61,18 +61,6 @@ export function AddSystemIntegration() {
         })
     }
 };
-
-export function toggleTypeahead() {
-    return (dispatch, getState) => {
-        return new Promise((resolve) => {
-            dispatch({ type: TOGGLE_TYPEAHEAD })
-            dispatch({
-                type: 'redux-form/DESTROY',
-                meta: { form: "SystemIntegrationForm" }, payload: ""
-            })
-        })
-    }
-}
 
 export const ACTION_HANDLERS = {
     [ALIAS_SAVE]: (state, action) => {
@@ -85,10 +73,6 @@ export const ACTION_HANDLERS = {
             })
         }
         return newState;
-    },
-
-    [TOGGLE_TYPEAHEAD]: (state, action) => {
-        return Object.assign({}, state, { dropDownShow: !state.dropDownShow })
     },
 
     [ADD_SYSTEM_INTEGRATION]: (state, action) => {
@@ -163,8 +147,7 @@ export const ACTION_HANDLERS = {
             error: "",
             systemIntegrationTypes: getSystemIntegrationTypes().GetOMSLocationWizardDataResult.AssignedLocationMappings,
             selectedSystemIntegrationTypes: action.payload,
-            unSelectedSystemIntegrationTypes: getSystemIntegrationTypes().GetOMSLocationWizardDataResult.AssignedLocationMappings,
-            dropDownShow: true
+            unSelectedSystemIntegrationTypes: getSystemIntegrationTypes().GetOMSLocationWizardDataResult.AssignedLocationMappings
         };
     }
 }
@@ -173,8 +156,7 @@ const initialState = {
     error: "",
     systemIntegrationTypes: getSystemIntegrationTypes().GetOMSLocationWizardDataResult.AssignedLocationMappings,
     selectedSystemIntegrationTypes: [],
-    unSelectedSystemIntegrationTypes: getSystemIntegrationTypes().GetOMSLocationWizardDataResult.AssignedLocationMappings,
-    dropDownShow: true
+    unSelectedSystemIntegrationTypes: getSystemIntegrationTypes().GetOMSLocationWizardDataResult.AssignedLocationMappings
 };
 
 export default function systemIntegrationReducer(state = initialState, action) {
