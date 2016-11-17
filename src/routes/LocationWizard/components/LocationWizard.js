@@ -1,6 +1,7 @@
 import React from 'react'
 import 'styles/locationStyles.scss'
 import {Panel, Nav, NavItem} from 'react-bootstrap'
+import {Button} from 'react-bootstrap/lib'
 //import {Link}from 'react-router'
 import WizardTabs from "./WizardTabs"
 import LocationLeftMenu from "./LocationLeftMenu"
@@ -35,6 +36,7 @@ return (
           </span>
         </Link>
         <h1 style={{'marginLeft': '16px','marginTop':'-20px'}}>Location Wizard<small>OMS Location wizard</small></h1>
+			<Button bsStyle="primary" style={{'float': 'right','marginTop':'-20px'}} onClick={props.saveCompleteLocationWizard}>Save</Button>
     </section>
     <section id='Location-wizard-tabs' className="content">
         <div className="row">
@@ -86,7 +88,6 @@ return (
             </div>
         </div>
     </section>
-    <LocationWizardFooter saveCompleteLocationWizard={props.saveCompleteLocationWizard} />
 </div>
                
         )
