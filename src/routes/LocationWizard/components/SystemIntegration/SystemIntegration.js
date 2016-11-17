@@ -50,7 +50,10 @@ export const SystemIntegration = (props) => {
                                             : <a onClick={props.toggleTypeahead}  className="toggle-link">Add Predefined</a>}
                                     </label></div>
                                     <div className="col-xs-6 col-sm-6 col-md-1 col-lg-1 btn-top">
-                                        <button className="btn btn-success" type="button" onClick={props.AddSystemIntegration}>Add</button>
+                                        <button className="btn btn-success" type="button" onClick={props.AddSystemIntegration}
+                                            disabled={touched.hasOwnProperty('SystemIntegrationForm') && touched.SystemIntegrationForm.hasOwnProperty('values')
+                                                && touched.SystemIntegrationForm.values.hasOwnProperty('newSystemIntegration')
+                                                ? false : true}>Add</button>
                                     </div>
                                 </div>
                             </div>
@@ -73,7 +76,7 @@ export const SystemIntegration = (props) => {
                                                 props.systemIntegration.selectedSystemIntegrationTypes.map((ssit, i) =>
                                                     <tr key={i}>
                                                         <td className="align-text-col"><label>{ssit.ExternalSystemName}</label></td>
-                                                        <td><Field component={InputField} name={`AliasName[${i}]`} onblur={()=>props.AliasGiven()}
+                                                        <td><Field component={InputField} name={`AliasName[${i}]`} onblur={() => props.AliasGiven() }
                                                             touched = {touched.hasOwnProperty('SystemIntegrationForm') ?
                                                                 touched.SystemIntegrationForm.hasOwnProperty('fields') ? touched.SystemIntegrationForm.fields.hasOwnProperty(`AliasName[${i}]`) : false : false }
                                                             className="form-control" /></td>

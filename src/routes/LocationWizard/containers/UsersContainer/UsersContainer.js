@@ -15,7 +15,8 @@ import {
 	selectAllContacts,
 	selectAllRoles,
 	unSelectAllContacts,
-	unSelectAllRoles
+	unSelectAllRoles,
+	saveNewContact
 } from '../../modules/user';
 
 
@@ -33,7 +34,8 @@ const mapDispatchToProps = {
 	selectAllContacts,
 	selectAllRoles,
 	unSelectAllContacts,
-	unSelectAllRoles
+	unSelectAllRoles,
+	saveNewContact
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({

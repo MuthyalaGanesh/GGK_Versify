@@ -29,7 +29,8 @@ export const Equipments = (props) => {
 
                                     </div>
                                     <div className="col-md-offset-3 col-md-1 col-sm-4 col-xs-4">
-                                        <button className="btn btn-success" onClick={props.AddEquipment}>Add</button>
+                                        <button className="btn btn-success" onClick={props.AddEquipment}
+                                            disabled={touched.hasOwnProperty('EquipmentsForm') && touched.EquipmentsForm.hasOwnProperty('values') && touched.EquipmentsForm.values.hasOwnProperty('newEquipment') ? false : true}>Add</button>
                                     </div>
                                 </div>
                             </div>
@@ -74,7 +75,7 @@ export const Equipments = (props) => {
                                     className="form-control"
                                     name="editedEquipment"
                                     defaultvalue={props.equipments.editableEquipment}
-                                    touched = {touched.hasOwnProperty('EquipmentsForm') ? touched.EquipmentsForm.hasOwnProperty('fields') ? touched.EquipmentsForm.fields.hasOwnProperty('editedEquipment') ? touched.EquipmentsForm.values.editedEquipment : false : false : false }></Field>
+                                    touched = {touched.hasOwnProperty('EquipmentsForm') ? touched.EquipmentsForm.hasOwnProperty('values') ? touched.EquipmentsForm.values.hasOwnProperty('editedEquipment') : false : false }></Field>
                             </Modal.Body>
                             <Modal.Footer>
                                 <button className="btn btn-warning" type="button" onClick={props.EditEquipment}>Cancel</button>

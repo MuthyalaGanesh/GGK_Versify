@@ -8,6 +8,8 @@ export const ADD_GATEWAY = 'ADD_GATEWAY'
 export const EDIT_GATEWAY = 'EDIT_GATEWAY'
 export const UPDATE_GATEWAY = 'UPDATE_GATEWAY'
 export const DELETE_GATEWAY = 'DELETE_GATEWAY'
+export const CONFIRM_DELETE_GATEWAY = 'CONFIRM_DELETE_GATEWAY'
+export const CLOSE_GATEWAY_CONFIRMATION = "CLOSE_GATEWAY_CONFIRMATION"
 
 export function getGateways() {
   return {
@@ -15,6 +17,41 @@ export function getGateways() {
     payload: getGatewayInfo()
   };
 };
+
+export function ConfirmGatewayDelete(index) {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      dispatch({
+        type: CONFIRM_DELETE_GATEWAY,
+        payload: index
+      })
+      dispatch({
+        type: 'redux-form/DESTROY',
+        meta: {
+          form: "GatewayForm"
+        },
+        payload: ""
+      })
+    })
+  }
+}
+
+export function CloseGatewayConfirmation() {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      dispatch({
+        type: CLOSE_GATEWAY_CONFIRMATION,
+      })
+      dispatch({
+        type: 'redux-form/DESTROY',
+        meta: {
+          form: "GatewayForm"
+        },
+        payload: ""
+      })
+    })
+  }
+}
 
 export function AddGatewayModalToggle() {
   return (dispatch, getState) => {
@@ -80,12 +117,11 @@ export function EditGateway(index) {
   }
 }
 
-export function DeleteGateway(index) {
+export function DeleteGateway() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       dispatch({
-        type: DELETE_GATEWAY,
-        payload: index
+        type: DELETE_GATEWAY
       })
     })
   }
@@ -95,6 +131,18 @@ export const ACTION_HANDLERS = {
   [GET_GATEWAY_INFO]: (state, action) => {
     return Object.assign({}, state, {
       gateway: action.payload
+    })
+  },
+  [CONFIRM_DELETE_GATEWAY]: (state, action) => {
+    return Object.assign({}, state, {
+      GatewayDeleteIndex: action.payload,
+      showGatewayDeleteModal: !state.showGatewayDeleteModal
+    })
+  },
+  [CLOSE_GATEWAY_CONFIRMATION]: (state, action) => {
+    return Object.assign({}, state, {
+      GatewayDeleteIndex: null,
+      showGatewayDeleteModal: !state.showGatewayDeleteModal
     })
   },
   [ADD_MODAL]: (state, action) => {
@@ -169,17 +217,19 @@ export const ACTION_HANDLERS = {
   },
   [DELETE_GATEWAY]: (state, action) => {
     let updatedGateways = [];
-    if (action.payload) {
+    if (state.GatewayDeleteIndex) {
       state.gateway.Gateways.map((gw, i) => {
-        if (i != action.payload) {
+        if (i != state.GatewayDeleteIndex) {
           updatedGateways.push(gw)
         }
       });
     }
     return Object.assign({}, state, {
       gateway: {
-        Gateways: updatedGateways
-      }
+        Gateways: updatedGateways,
+      },
+      GatewayDeleteIndex: null,
+      showGatewayDeleteModal: !state.showGatewayDeleteModal
     })
   },
   [ADD_GATEWAY]: (state, action) => {
@@ -210,7 +260,9 @@ const initialState = {
   gateway: getGatewayInfo(),
   EditableGateway: {},
   showAddModal: false,
-  saveGateway: []
+  saveGateway: [],
+  GatewayDeleteIndex: null,
+  showGatewayDeleteModal: false
 };
 
 export default function gateWayReducer(state = initialState, action) {

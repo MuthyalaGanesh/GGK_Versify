@@ -2,7 +2,7 @@ import React from 'react'
 import {input} from 'react'
 import { Field, reduxForm } from 'redux-form'
 import {Table, Popover, Button, Modal,OverlayTrigger,Tooltip} from 'react-bootstrap/lib'
-import DropdownList from 'react-widgets/lib/DropdownList'
+import DropdownListField from 'components/DropdownList/DropdownListField'
 import InputField from 'components/InputField/InputField'
 import 'styles/commonStyles.scss'
 
@@ -79,7 +79,7 @@ export const DataHistorian = (props) => {
                                                                     <Tooltip id="tooltip">
                                                                         <strong>Delete {data.metricName}</strong>
                                                                     </Tooltip>}>
-                                                                    <i className={!isNaN(data.id) && data.id== 0 ? "show fa fa-trash-o" : "hide" } onClick={() => { props.DeleteDataHistorian(index) } }></i>
+                                                                    <i className={!isNaN(data.id) && data.id== 0 ? "show fa fa-trash-o" : "hide" } onClick={() => { props.ConfirmDataDelete(index) } }></i>
                                                                 </OverlayTrigger> 
                                                                 
                                                             </td>
@@ -106,8 +106,13 @@ export const DataHistorian = (props) => {
                                     <label>Metric</label>
                                 </div>                                
                                 <div className="col-xs-6">
-                                     <Field component={RenderDropdownList} className="form-control" name="metric"  placeholder="Select a Metric"
-                                             valueField='id' textField='displayName' data={metrics} defaultValue = {props.dataHistorian.EditableDataHistorian.metricId}/>
+                                    <Field component={DropdownListField} name = 'metric'
+                                                        data={metrics} 
+                                                        defaultValue = {props.dataHistorian.EditableDataHistorian.metricId}                                                   
+                                                        labelKey='displayName'                                             
+                                                        valueKey='id'
+                                                        placeholder="Select a Metric"
+                                                        onChangeEvent = {props.selectRole}/> 
                                 </div>
                             </div>
                             <div className="col-xs-12 form-group">
@@ -125,8 +130,13 @@ export const DataHistorian = (props) => {
                                     <label>Gateway</label>
                                 </div>
                                 <div className="col-xs-6">
-                                    <Field component={RenderDropdownList} className="form-control" name="Gateway"  placeholder="Select Gateway"
-                                             valueField='id' textField='aliasName' data={gateways} defaultValue = {props.dataHistorian.EditableDataHistorian.scadaServerId}/>
+                                    <Field component={DropdownListField} name = 'Gateway'
+                                                        data={gateways} 
+                                                        defaultValue = {props.dataHistorian.EditableDataHistorian.scadaServerId}                                                   
+                                                        labelKey='aliasName'                                             
+                                                        valueKey='id'
+                                                        placeholder="Select Gateway"
+                                                        onChangeEvent = {props.selectRole}/> 
                                 </div>
                             </div>
                             <div className="col-xs-12 form-group">
@@ -145,6 +155,20 @@ export const DataHistorian = (props) => {
                             <button className="btn btn-success" type="button" onClick={props.UpdateAddDataHistorian}>Save</button>}
                         <button className="btn btn-warning" type="button"  onClick={props.AddDataHistorianModalToggle}>Cancel</button>  
                    
+                </Modal.Footer>
+            </Modal>
+            <Modal show={props.dataHistorian.showDataDeleteModal}>
+                <Modal.Header>
+                    <Modal.Title>Are you sure?</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Are you sure, want to delete this Data Historian?
+                </Modal.Body>
+                <Modal.Footer>
+                    <div className="pull-right">
+                        <button className="btn btn-warning" type="button" onClick={props.CloseDataConfirmation}>Close</button>
+                        <button className="btn btn-danger" type="button" onClick={props.DeleteDataHistorian}>Delete</button>
+                    </div>
                 </Modal.Footer>
             </Modal>
             </div>
