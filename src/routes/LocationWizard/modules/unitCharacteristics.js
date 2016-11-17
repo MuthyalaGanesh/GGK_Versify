@@ -9,13 +9,13 @@ export const CHARACTERISTIC_SELECTED = "CHARACTERISTIC_SELECTED"
 export const INSERT_ROW = "INSERT_ROW"
 export const REMOVE_EDIT_ATTRIBUTE = "REMOVE_EDIT_ATTRIBUTE"
 export const TOGGLE_MODAL = "TOGGLE_MODAL"
-export const BIND_INITIAL_VALUES = "BIND_INITIAL_VALUES"
+export const BIND_INITIAL_ATTRIBUTES = "BIND_INITIAL_ATTRIBUTES"
 
 //helps in binding initial values
-export function BindUnitCharacteristicsInitialValues(locationId) {
+export function BindUnitCharacteristicsInitialValues(locationObj) {
   return {
-    type: BIND_INITIAL_VALUES,
-    payload: locationId
+    type: BIND_INITIAL_ATTRIBUTES,
+    payload: locationObj
   };
 };
 
@@ -33,16 +33,6 @@ export function ToggleAddEditModal(index) {
   }
 }
 
-//manipulating UOM value on the Unit Measure id basis
-export function getUOMValueByID(measureId) {
-  var UOM = "";
-  getAllUOMValues().map(u => {
-    if (u.id == measureId) {
-      UOM = u.name;
-    }
-  })
-  return UOM;
-}
 //remove editable attribute 
 export function removeEditableAttribute(index) {
   return {
@@ -106,26 +96,59 @@ export function DeleteUnitCharateristic() {
 
 export const ACTION_HANDLERS = {
 
-  [BIND_INITIAL_VALUES]: (state, action) => {
-    if (action.payload && !isNaN(parseInt(action.payload))) {
-      console.log(action.payload);
-      var unitCharacteristicsObj = [];
-      if (!state.selectedunitCharacteristics || (state.selectedunitCharacteristics && state.selectedunitCharacteristics.length == 0)) {
-        state.selectedunitCharacteristics = [];
-        state.selectedunitCharacteristics = getDefaultUnitCharacteristics();
+  [BIND_INITIAL_ATTRIBUTES]: (state, action) => {
+    if (action.payload) {
+      var newState = Object.assign({}, state)
+      var attributes = action.payload.Attributes
+      console.log(attributes)
+      debugger;
+      if (!attributes || (attributes && attributes.length == 0)) {
+        newState.selectedunitCharacteristics = [];
+        newState.selectedunitCharacteristics = newState.defaultUnitCharacteristics;
       }
       else {
-        getDefaultUnitCharacteristics().map(duc => {
-          var valuePresence = 1;
-          state.selectedunitCharacteristics.map(suc => {
-            valuePresence++;
+        newState.selectedunitCharacteristics = [];
+        attributes.map(att => {
+          newState.unitCharacteristics.map(uc => {
+            if (uc.id == att.AttributeId) {
+
+              uc.LocationId = att.LocationId
+              newState.defaultUnitCharacteristics.map(duc => {
+                if (duc.id == att.AttributeId) {
+                  uc.isDeletable = true;
+                }
+              })
+              if (uc.defaultUnitOfMeasureId) {
+                state.allUOMvalues.map(uom => {
+                  if (uc.defaultUnitOfMeasureId == uom.id) {
+                    uc.UOM = uom.name
+                  }
+                })
+              }
+
+              var editableAttributes = {
+                EffectiveEndDate: (new Date(parseInt(att.EffEndDate.substring(att.EffEndDate.indexOf("(") + 1, (att.EffEndDate.indexOf(")")))))).toLocaleDateString(),
+                EffectiveStartDate: (new Date(parseInt(att.EffStartDate.substring(att.EffStartDate.indexOf("(") + 1, (att.EffStartDate.indexOf(")")))))).toLocaleDateString(),
+                Value: att.Value
+              }
+
+              var valuePresence = 1;
+              newState.selectedunitCharacteristics.map(suc => {
+                if (suc.id == att.AttributeId) {
+                  suc.editableAttributes.push(editableAttributes);
+                  valuePresence++;
+                }
+              })
+              if (valuePresence == 1) {
+                uc.editableAttributes = [];
+                uc.editableAttributes.push(editableAttributes);
+                newState.selectedunitCharacteristics.push(uc);
+              }
+            }
           })
-          if (valuePresence == 1) {
-            state.selectedunitCharacteristics.push(duc);
-          }
         })
       }
-      return Object.assign({}, state);
+      return newState;
     }
   },
   [TOGGLE_MODAL]: (state, action) => {
@@ -240,8 +263,8 @@ export const ACTION_HANDLERS = {
               if (dateVariations) {
                 errorStatus = 1;
                 dateValidations.push(dateVariations < 0 ?
-                  "Effective end date and start dates shouldn't overlap"
-                  : "Effective end date and start dates shouldn't have gaps")
+                  "Effective end date and start dates shouldn't have gaps"
+                  : "Effective end date and start dates shouldn't overlap")
               }
               if ((new Date(ea.EffectiveEndDate) - new Date(ea.EffectiveStartDate)) < 0) {
                 errorStatus = 1;
@@ -252,6 +275,9 @@ export const ACTION_HANDLERS = {
         }
 
       })
+      // if (!errorStatus && dateValidations.length == 0) {
+
+      // }
 
       return Object.assign({}, newState, {
         editableUnitCharacter: (!errorStatus && dateValidations.length == 0) ? {} :
@@ -267,7 +293,13 @@ export const ACTION_HANDLERS = {
       newState.unitCharacteristics.map((uc) => {
         if (uc.id == parseInt(action.payload.id)) {
           if (!state.editableUnitCharacter) {
-            newState.UOMLabel = getUOMValueByID(uc.defaultUnitOfMeasureId)
+            if (uc.defaultUnitOfMeasureId && state.allUOMvalues) {
+              state.allUOMvalues.map(uom => {
+                if (uom.id == uc.defaultUnitOfMeasureId) {
+                  newState.UOMLabel = uom.name
+                }
+              })
+            }
             newState.descriptionLabel = uc.description
             newState.displayNameLabel = uc.display
           }
@@ -322,8 +354,8 @@ export const ACTION_HANDLERS = {
               if (dateVariations) {
                 errorStatus = 1;
                 dateValidations.push(dateVariations < 0 ?
-                  "Effective end date and start dates shouldn't overlap"
-                  : "Effective end date and start dates shouldn't have gaps")
+                  "Effective end date and start dates shouldn't have gaps"
+                  : "Effective end date and start dates shouldn't overlap")
               }
               if ((new Date(ea.EffectiveEndDate) - new Date(ea.EffectiveStartDate)) < 0) {
                 errorStatus = 1;
@@ -333,6 +365,19 @@ export const ACTION_HANDLERS = {
           })
           uc.UOM = newState.UOMLabel
           if (!errorStatus && dateValidations.length == 0) {
+            // var minDiff = 0;
+            // var todayDate = new Date();
+            // uc.editableAttributes.map((ea, i) => {
+            //   var effDate = new Date(ea.EffectiveStartDate);
+            //   var timeDiff = Math.abs(effDate.getTime() - todayDate.getTime());
+            //   var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            //   if (diffDays < minDiff || minDiff == 0) {
+            //     minDiff = diffDays;
+            //     var initialDate = uc.editableAttributes[0];
+            //     uc.editableAttributes[0] = ea;
+            //     ea = initialDate;
+            //   }
+            // })
             newState.selectedunitCharacteristics.push(uc)
           }
         }
@@ -377,6 +422,7 @@ const initialState = {
   allUOMvalues: getAllUOMValues(),
   selectedunitCharacteristics: getDefaultUnitCharacteristics(),
   unSelectedUnitCharacteristics: [],
+  defaultUnitCharacteristics: getDefaultUnitCharacteristics(),
   finalUnitCharacteristics: [],
   showModal: false,
   showDeleteModal: false,

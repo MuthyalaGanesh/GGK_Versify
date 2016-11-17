@@ -240,7 +240,7 @@ export const UnitCharacteristics = (props) => {
                                         && !(touched.hasOwnProperty('UnitCharacteristicsForm') ?
                                             touched.UnitCharacteristicsForm.hasOwnProperty('values') ?
                                                 touched.UnitCharacteristicsForm.values.hasOwnProperty("charateristicName") ?
-                                                    true : false : false : false)) ?
+                                                    touched.UnitCharacteristicsForm.values.charateristicName : false : false : false)) ?
                                         <span className="errorMessage">select unit characteristic</span> : null}
                                 </div>
                             </div>
