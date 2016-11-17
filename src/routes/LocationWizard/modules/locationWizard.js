@@ -128,18 +128,16 @@ export function leftMenuDropdownClickEvent(id, event) {
 
 
 function basicInforObjectPreparation(values) {
-
   var todayDate = new Date();
-
   return new Object({
-    Id: 0,
-    LocationId: 0,
+    Id: values.locationId || 0,
+    LocationId: values.locationId || 0,
     Name: values.locationName,
     Tz: values.timezone.id,
-    ParentId: values.parentLocation,
+    ParentId: values.parentLocation || 0,
     LocationType: values.locationType.name,
     Notes: null,
-    CreateDate: '/Date(' + todayDate.getTime() + ')/',
+    CreateDate: values.createDate || '/Date(' + todayDate.getTime() + ')/',
     CreateUser: null,
     UpdateDate: '/Date(' + todayDate.getTime() + ')/',
     UpdateUser: "GGK",

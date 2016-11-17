@@ -65,9 +65,7 @@ return (
                   <Field name="parentLocation"
                   component={ParentLocationField}
                   parentLocations={props.location.parentLocations}>
-                  </Field>
-                  
-                  
+                  </Field> 
                 </div>
                 <div className='clear'></div>
                 <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
@@ -100,6 +98,7 @@ return (
                   ?   <span className='errorMessage' style ={{float:'right'}}> Please select different technologyType </span>
                   : null
                   }</label>
+                  <div className='clear'></div>
                   <Field component={DropdownListField}
                   className={error && (formdata.BasicInfoForm.hasOwnProperty('values') ? formdata.BasicInfoForm.values.hasOwnProperty('secondarytechnologyType') ? (formdata.BasicInfoForm.values.secondarytechnologyType == null )? true:(formdata.BasicInfoForm.values.secondarytechnologyType == formdata.BasicInfoForm.values.technologyType) :true : true)
                   ? "error"
