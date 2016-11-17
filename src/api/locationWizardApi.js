@@ -128,12 +128,13 @@ export function getUnitCharacteristics() {
 
 export function getDefaultUnitCharacteristics() {
     var unitCharacteristicsJson = []
+    var allUOMValues=getAllUOMValues();
     getUnitCharacteristics().map((uc) => {
         if (uc.name.toLowerCase() == "capacity" || uc.name.toLowerCase() == "eco min" || uc.name.toLowerCase() == "eco max") {
             uc.editableAttributes = [{}]
             uc.isDeletable = false;
             uc.isSavable = false;
-            getAllUOMValues().map((uom) => {
+            allUOMValues.map((uom) => {
                 if (uc.defaultUnitOfMeasureId == uom.id) {
                     uc.UOM = uom.name;
                 }

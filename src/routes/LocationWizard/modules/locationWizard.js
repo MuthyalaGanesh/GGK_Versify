@@ -39,10 +39,30 @@ export function toggleMenuClick(event) {
   };
 }
 
+var currentLocation = null;
+function findLocation(allLocations, locationId) {
+  _.each(allLocations, (item) => {
+    if (currentLocation != null) {
+      return false;
+    }
+    if (item.Id == locationId) {
+      if (currentLocation == null) {
+        currentLocation = item;
+        return false;
+      }
+    } else {
+      findLocation(item.Children, locationId)
+    }
+  });
+}
 
 export function leftMenuDropdownClickEvent(id, event) {
   console.log("LOCATIONS_MENUITEM_DROPDOWN_CLICK:", id);
   return (dispatch, getState) => {
+    var allLocationdata = basicInfoDropdowns.getLocations;
+    findLocation(allLocationdata, id);
+    var locationObj = currentLocation;
+    currentLocation = null;
     let editObject = getOMSLocationwizardData(id);
     let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
     let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
@@ -122,7 +142,7 @@ export function leftMenuDropdownClickEvent(id, event) {
 
     dispatch(BindInitialValues(id));
 
-    dispatch(BindUnitCharacteristicsInitialValues(id))
+    // dispatch(BindUnitCharacteristicsInitialValues(locationObj))
   };
 };
 
@@ -198,28 +218,28 @@ function credentialsAndIdentifiersObj(credentialsObj, primaryMarketTypeId, locat
     }
     itemDatawithMarketDrivenMappings.push(itemData);
   });
-  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function(b) {
+  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function (b) {
     return b.ExternalSystemName
   })
   var assignedLocationMappings = omsLocationwizardData.GetOMSLocationWizardDataResult.AssignedLocationMappings;
 
   _.each(groupByItems, (item) => {
-      var locationMappingDataItem = {};
-      locationMappingDataItem.LocationMappingId = 0;
-      locationMappingDataItem.ExternalSystemName = '',
-        locationMappingDataItem.AliasName = '',
-        locationMappingDataItem.ExternalSystemLogin = '',
-        locationMappingDataItem.ExternalSystemPwd = '',
-        locationMappingDataItem.ParameterList = '',
-        locationMappingDataItem.FlaggedForDeletion = false
-      _.each(item, (itemData) => {
-        locationMappingDataItem[itemData.Field] = itemData.value || '';
-        locationMappingDataItem.ExternalSystemName = itemData.ExternalSystemName;
+    var locationMappingDataItem = {};
+    locationMappingDataItem.LocationMappingId = 0;
+    locationMappingDataItem.ExternalSystemName = '',
+      locationMappingDataItem.AliasName = '',
+      locationMappingDataItem.ExternalSystemLogin = '',
+      locationMappingDataItem.ExternalSystemPwd = '',
+      locationMappingDataItem.ParameterList = '',
+      locationMappingDataItem.FlaggedForDeletion = false
+    _.each(item, (itemData) => {
+      locationMappingDataItem[itemData.Field] = itemData.value || '';
+      locationMappingDataItem.ExternalSystemName = itemData.ExternalSystemName;
 
-      });
-      locationMappingData.push(locationMappingDataItem);
-    })
-    //Final  Credentials And Identifiers Object
+    });
+    locationMappingData.push(locationMappingDataItem);
+  })
+  //Final  Credentials And Identifiers Object
   credentialsAndIdentifiersObj = [{
     LocationMappingRecords: locationMappingData
   }];
@@ -268,7 +288,7 @@ function unitCharacterSticObjectPreparation(stateTree, dispatch) {
         if (suc.isSavable) {
           unitCharacteristicsObj.push(new Object({
             LocationId: 0,
-            AttributeId: suc.id,
+            AttributeId: suc.id != 0 ? suc.id : 0,
             AttributeName: suc.name,
             AttributeDescription: suc.description,
             LocationAttributeId: 0,
@@ -414,10 +434,10 @@ export function saveCompleteLocationWizard() {
         payload: 1
       })
 
-      : dispatch({
-        type: 'ERROR',
-        payload: 1
-      })
+        : dispatch({
+          type: 'ERROR',
+          payload: 1
+        })
       console.log(Object.keys(getState().form.BasicInfoForm.values).length, 'stateobjectmo')
       var values = getState().form.BasicInfoForm ? getState().form.BasicInfoForm.values : {};
       var locationId = values.LocationId;
@@ -451,15 +471,15 @@ export function saveCompleteLocationWizard() {
       }
       var finalData = JSON.stringify(finalSaveObject)
       console.log("finalSaveObject", finalData)
-        // axios({
-        //   method: 'post',
-        //   url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
-        //   data: finalSaveObject
-        // }).then(function(response) {
-        //   console.log("success", response);
-        // }).catch(function(error) {
-        //   alert("error" + JSON.stringify(error));
-        // });
+      // axios({
+      //   method: 'post',
+      //   url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
+      //   data: finalSaveObject
+      // }).then(function(response) {
+      //   console.log("success", response);
+      // }).catch(function(error) {
+      //   alert("error" + JSON.stringify(error));
+      // });
 
     })
   }
@@ -502,7 +522,7 @@ export const ACTION_HANDLERS = {
 
 function changeObjectTypeOfLocations(allLocations) {
   var changedLocationsObject = [];
-  allLocations.forEach(function(item) {
+  allLocations.forEach(function (item) {
     changedLocationsObject.push({
       key: item.Id,
       value: item.Id,

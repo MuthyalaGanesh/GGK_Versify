@@ -234,7 +234,7 @@ export const UnitCharacteristics = (props) => {
                                         labelKey='display'
                                         disabled={props.unitCharacteristics.editableUnitCharacter ? !props.unitCharacteristics.editableUnitCharacter.isDeletable : false}
                                         placeholder="Select Unit Charateristic" onChangeEvent={props.characteristicNameSelected}
-                                        defaultValue={props.unitCharacteristics.editableUnitCharacter && props.unitCharacteristics.editableUnitCharacter.id ? props.unitCharacteristics.editableUnitCharacter : null}>
+                                        defaultvalue={props.unitCharacteristics.editableUnitCharacter && props.unitCharacteristics.editableUnitCharacter.id ? props.unitCharacteristics.editableUnitCharacter : null}>
                                     </Field>
                                     {props.unitCharacteristics.editableUnitCharacter && props.unitCharacteristics.editableUnitCharacter.id ? null : (props.unitCharacteristics.error
                                         && !(touched.hasOwnProperty('UnitCharacteristicsForm') ?
