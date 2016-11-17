@@ -143,7 +143,7 @@ export function leftMenuDropdownClickEvent(id, event) {
 
     dispatch(BindInitialValues(locationObj));
 
-    // dispatch(BindUnitCharacteristicsInitialValues(locationObj))
+    dispatch(BindUnitCharacteristicsInitialValues(locationObj))
   };
 };
 
