@@ -9,7 +9,17 @@ export const CHARACTERISTIC_SELECTED = "CHARACTERISTIC_SELECTED"
 export const INSERT_ROW = "INSERT_ROW"
 export const REMOVE_EDIT_ATTRIBUTE = "REMOVE_EDIT_ATTRIBUTE"
 export const TOGGLE_MODAL = "TOGGLE_MODAL"
+export const BIND_INITIAL_VALUES = "BIND_INITIAL_VALUES"
 
+//helps in binding initial values
+export function BindUnitCharacteristicsInitialValues(locationId) {
+  return {
+    type: BIND_INITIAL_VALUES,
+    payload: locationId
+  };
+};
+
+//toggling Add/edit modal popup
 export function ToggleAddEditModal(index) {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
@@ -61,11 +71,7 @@ export function AddUnitCharateristic() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       dispatch({ type: INSERT_ROW, payload: getState().form.UnitCharacteristicsForm })
-      dispatch({
-        type: 'redux-form/DESTROY',
-        meta: { form: "UnitCharacteristicsForm" },
-        payload: ""
-      })
+
     })
   }
 }
@@ -100,6 +106,28 @@ export function DeleteUnitCharateristic() {
 
 export const ACTION_HANDLERS = {
 
+  [BIND_INITIAL_VALUES]: (state, action) => {
+    if (action.payload && !isNaN(parseInt(action.payload))) {
+      console.log(action.payload);
+      var unitCharacteristicsObj = [];
+      if (!state.selectedunitCharacteristics || (state.selectedunitCharacteristics && state.selectedunitCharacteristics.length == 0)) {
+        state.selectedunitCharacteristics = [];
+        state.selectedunitCharacteristics = getDefaultUnitCharacteristics();
+      }
+      else {
+        getDefaultUnitCharacteristics().map(duc => {
+          var valuePresence = 1;
+          state.selectedunitCharacteristics.map(suc => {
+            valuePresence++;
+          })
+          if (valuePresence == 1) {
+            state.selectedunitCharacteristics.push(duc);
+          }
+        })
+      }
+      return Object.assign({}, state);
+    }
+  },
   [TOGGLE_MODAL]: (state, action) => {
     if (action.payload != null) {
       if (!isNaN(action.payload)) {
@@ -303,8 +331,8 @@ export const ACTION_HANDLERS = {
               }
             }
           })
+          uc.UOM = newState.UOMLabel
           if (!errorStatus && dateValidations.length == 0) {
-            uc.UOM = newState.UOMLabel
             newState.selectedunitCharacteristics.push(uc)
           }
         }

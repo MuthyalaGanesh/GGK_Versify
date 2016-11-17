@@ -2,7 +2,6 @@ import React from 'react'
 import { Field, reduxForm } from 'redux-form'
 import {Panel, Table, Button, Modal} from 'react-bootstrap/lib'
 import 'styles/systemIntegrationStyles.scss'
-import TypeaheadField from 'components/Typeahead/TypeaheadField'
 import InputField from 'components/InputField/InputField'
 
 export const SystemIntegration = (props) => {
