@@ -55,11 +55,26 @@ export function getPrimaryMarkets() {
 
 }
 export function getLocations() {
-    var data = allLocations;
     console.log("Location data method is fired: ");
-    //return data.GetAllLocationsResult;    
     return XMLHttpRequestSyncGet(Constants.LOCATIONS).GetAllLocationsResult;
+}
 
+function changeObjectTypeOfLocations(allLocations) {
+  var changedLocationsObject = [];
+  allLocations.forEach(function(item) {
+    changedLocationsObject.push({
+      Id: item.Id,
+      Name: item.Name,
+      IsOutageLevel: item.IsOutageLevel,
+      Children: changeObjectTypeOfLocations(item.Children)
+    });
+  });
+  return changedLocationsObject
+}
+
+export function getParentLocations() {
+    let data = XMLHttpRequestSyncGet(Constants.LOCATIONS).GetAllLocationsResult;
+    return changeObjectTypeOfLocations(data);
 }
 
 export function getMarketDrivenMappings(marketId = null) {
@@ -140,6 +155,7 @@ export const basicInfoDropdowns = {
     getLocationTypes: getLocationTypes(),
     getPrimaryMarkets: getPrimaryMarkets(),
     getLocations: getLocations(),
+    getParentLocations: getParentLocations(),
     getOwners: getOwners(),
     getTechnologyTypes: getTechnologyTypes(),
     getFuelClasses: getFuelClasses(),

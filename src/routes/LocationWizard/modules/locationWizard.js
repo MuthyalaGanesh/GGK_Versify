@@ -310,10 +310,10 @@ export function saveCompleteLocationWizard() {
               &&getState().form.BasicInfoForm.values.technologyType != null &&getState().form.BasicInfoForm.values.fuelClass != null &&getState().form.BasicInfoForm.values.physicalTimezone != null 
               &&getState().form.BasicInfoForm.values.secondarytechnologyType != null &&getState().form.BasicInfoForm.values.owner != null 
               ) 
-                ? (credentialdatavalidation(getState()))
+                ? (credentialdatavalidation(getState()))  && console.log(credentialdatavalidation(getState()))
                   ?dispatch({
                     type: 'ERROR',
-                    payload: 0})
+                    payload: 0})  && console.log('NOerror')
                   : dispatch({
                       type: 'ERROR',
                       payload: 1}) && console.log('error')
@@ -334,9 +334,13 @@ export function saveCompleteLocationWizard() {
               &&getState().form.BasicInfoForm.values.technologyType != null &&getState().form.BasicInfoForm.values.fuelClass != null &&getState().form.BasicInfoForm.values.physicalTimezone != null 
               &&getState().form.BasicInfoForm.values.secondarytechnologyType != null &&getState().form.BasicInfoForm.values.owner != null 
               ) 
-                ? dispatch({
-                type: 'ERROR',
-                payload: 0}) 
+                 ? (credentialdatavalidation(getState()))  && console.log(credentialdatavalidation(getState()))
+                  ?dispatch({
+                    type: 'ERROR',
+                    payload: 0})  && console.log('NOerror')
+                  : dispatch({
+                      type: 'ERROR',
+                      payload: 1}) && console.log('error')
                 :dispatch({
                 type: 'ERROR',
                 payload: 1}) 
@@ -441,27 +445,26 @@ function changeObjectTypeOfLocations(allLocations) {
   return changedLocationsObject
 }
 
-function test(objectfunc) {
-  console.log(objectfunc)
-  var object = objectfunc
-  var retobj = []
-  retobj.push({
+function AddDefaultParent(objectfuncntion) {
+  var object = objectfuncntion
+  var returnObj = []
+  returnObj.push({
     key: -1,
     value: -1,
     label: 'LOCATIONS'
   })
   object.map((element) => {
-    retobj.push(element)
+    returnObj.push(element)
   })
-  return retobj
+  return returnObj
 }
 
-const allLocationsObject = basicInfoDropdowns.getLocations;
+const allParentLocationsObject = basicInfoDropdowns.getParentLocations;
 
 const initialState = {
   error: null,
-  allLocations: allLocationsObject,
-  parentLocations: test(changeObjectTypeOfLocations(allLocationsObject)),
+  allLocations: allParentLocationsObject,
+  parentLocations: AddDefaultParent(changeObjectTypeOfLocations(allParentLocationsObject)),
 
 };
 

@@ -53,10 +53,10 @@ export const ACTION_HANDLERS = {
 
       _.each(omsLocationwizardData.GetOMSLocationWizardDataResult.AssignedLocationMappings, (wizardDataItem) => {
         if (item.IsDropDown) {
-          var dt = _(wizardDataItem).find(function(x) {
+          var dropdownItem = _(wizardDataItem).find(function(x) {
             return x => x.ExternalSystemName === item.ExternalSystemName && x.Field === item.Field
           });
-          if (!!dt && dt != '') {
+          if (!!dropdownItem && dropdownItem != '') {
             aliasNameDropDownItems.push({
               key: wizardDataItem.AliasName,
               value: wizardDataItem.AliasName

@@ -75,7 +75,7 @@ label.checkbox-inline, label.radio-inline { margin-right:10px; padding-left:34px
 
     .nav-tabs > li.active > a span.round-tabs { background:#fafafa; }
     .nav-tabs > li { width:auto; height:auto; margin:0px 5px; display:inline-block; }
-
+    .nav-tabs > li a.active .tab-title {font-weight: bold; color: #3672A2 !important}
     .nav-tabs .tab-title { background:none !important; color:#999 !important; line-height:normal; display:block; width:50px; }
 
     li:after { content:" "; position:absolute; left:30%; opacity:0; margin:0 auto; bottom:0px; border:5px solid transparent; border-bottom-color:#ddd; transition:0.1s ease-in-out; }
