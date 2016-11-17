@@ -441,27 +441,26 @@ function changeObjectTypeOfLocations(allLocations) {
   return changedLocationsObject
 }
 
-function test(objectfunc) {
-  console.log(objectfunc)
-  var object = objectfunc
-  var retobj = []
-  retobj.push({
+function AddDefaultParent(objectfuncntion) {
+  var object = objectfuncntion
+  var returnObj = []
+  returnObj.push({
     key: -1,
     value: -1,
     label: 'LOCATIONS'
   })
   object.map((element) => {
-    retobj.push(element)
+    returnObj.push(element)
   })
-  return retobj
+  return returnObj
 }
 
-const allLocationsObject = basicInfoDropdowns.getLocations;
+const allParentLocationsObject = basicInfoDropdowns.getParentLocations;
 
 const initialState = {
   error: null,
-  allLocations: allLocationsObject,
-  parentLocations: test(changeObjectTypeOfLocations(allLocationsObject)),
+  allLocations: allParentLocationsObject,
+  parentLocations: AddDefaultParent(changeObjectTypeOfLocations(allParentLocationsObject)),
 
 };
 
