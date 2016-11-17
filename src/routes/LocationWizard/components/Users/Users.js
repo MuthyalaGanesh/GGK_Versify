@@ -19,7 +19,7 @@ export const Users = (props) => {
                                     <Tooltip id="tooltip">
                                         <strong>Add New Contact</strong>
                                     </Tooltip>}>
-                                    <i className="fa fa-address-book fa-2x" onClick={props.AddContactModalToggle}></i>
+                                    <i className="fa fa-address-book fa-2x" onClick={(e)=>props.AddContactModalToggle()}></i>
                                 </OverlayTrigger>
                             </div>
                         </div>
@@ -39,25 +39,25 @@ export const Users = (props) => {
                                                 <label className="control-label"> Roles </label>
                                                 <Field component={DropdownListField} name = 'RoleByRoles'
                                                         data ={Roles} 
-                                                        defaultValue = {props.userInfo.selectedRole.Id}                                                       
+                                                        defaultvalue = {props.userInfo.selectedRole.Id}                                                       
                                                         labelKey='Name'                                             
                                                         valueKey='Id'
                                                         placeholder="Select a Role"
-                                                        onChangeEvent = {props.selectRole}/>                                           
+                                                        onChangeEvent = {(e)=>props.selectRole()}/>                                           
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6 MultipleSelect">
                                                 <label className="control-label"> Contacts </label>
                                                 <Field
                                                     name = 'contactsByRoles'
                                                     component={DropdownListField}
-                                                    defaultValue={props.userInfo.defaultContacts}
+                                                    defaultvalue={props.userInfo.defaultContacts}
                                                     data ={Contacts}                                                        
                                                     labelKey='Name'                                             
                                                     valueKey='Id'
                                                     placeholder="Select contacts"                                                    
                                                     disabled = {props.userInfo.disableContacts}
                                                     multi = {true}
-                                                    onChangeEvent = {props.bindContactToRole}                                                      
+                                                    onChangeEvent = {(e)=>props.bindContactToRole()}                                                      
                                                     />
                                                 <div className={props.userInfo.disableContacts ? "hide" :"col-lg-12"}>
                                                     <span className="select-all pull-left" onClick={props.selectAllContacts}>Select All</span>
@@ -82,25 +82,25 @@ export const Users = (props) => {
                                                 <label className="control-label"> Contacts </label>
                                             <Field component={DropdownListField}  name = 'ContactsByContact'
                                                         data ={Contacts} 
-                                                        defaultValue = {props.userInfo.selectedContact.Id}                                                          
+                                                        defaultvalue = {props.userInfo.selectedContact.Id}                                                          
                                                         labelKey='Name'                                             
                                                         valueKey='Id'
                                                         placeholder="Select a contact"
-                                                        onChangeEvent = {props.selectContact}/>                                    
+                                                        onChangeEvent = {(e)=>props.selectContact()}/>                                    
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6 MultipleSelect">
                                                 <label className="control-label"> Roles </label>
                                                 <Field
                                                         name = 'RoleByContact'
                                                         component={DropdownListField}
-                                                        defaultValue={props.userInfo.defaultRoles}
+                                                        defaultvalue={props.userInfo.defaultRoles}
                                                         data={Roles}                                                       
                                                         labelKey='Name'                                             
                                                         valueKey='Id'                                                        
                                                         multi = {true}
                                                         placeholder="Select roles"
                                                         disabled = {props.userInfo.disableRoles}
-                                                        onChangeEvent = {props.bindRoleToContact}
+                                                        onChangeEvent = {(e)=>props.bindRoleToContact()}
                                                         />  
                                                  <div className={props.userInfo.disableRoles ? "hide" :"col-lg-12"}>
                                                     <span className="select-all pull-left" onClick={props.selectAllRoles}>Select All</span>
