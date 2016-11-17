@@ -354,7 +354,7 @@ function credentialdatavalidation(data) {
        }
        else{
          if(data.form.CredentialsManagementForm.values.hasOwnProperty(`${CredentialBasicData[i].DisplayName}`)){
-              if ( x == CredentialBasicData.length){
+              if ( i == CredentialBasicData.length){
                 return 1
               }
         }else{

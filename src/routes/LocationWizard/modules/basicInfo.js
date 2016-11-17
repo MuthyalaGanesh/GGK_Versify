@@ -173,6 +173,7 @@ const initialState = {
   timezones: basicInfoDropdowns.getTimezones,
   initial: true,
   BasicInfo: {},
+  CredentialInitialValues:{},
   CredentialBasicData: getMarketDrivenMappings()
 };
 

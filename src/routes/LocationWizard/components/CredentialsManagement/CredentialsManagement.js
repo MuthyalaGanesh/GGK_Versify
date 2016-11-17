@@ -4,7 +4,6 @@ import {Panel, ControlLabel} from 'react-bootstrap/lib'
 import CreatableDropdownListField from 'components/DropdownList/CreatableDropdownListField'
 export const CredentialsManagement = (props) => {
     const {formdata} = props
-    console.log(props.basic.error)
 return (
 <div className="row tab-pane fade in active" id="credentialsmanagement">
     <div className="col-xs-12">

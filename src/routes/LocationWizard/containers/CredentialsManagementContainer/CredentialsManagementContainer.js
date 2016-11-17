@@ -11,7 +11,8 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state) => ({
     basic: state.basic,
-    formdata:state.form
+    formdata:state.form,
+    initialValues: state.basic.CredentialInitialValues
 })
 
 
