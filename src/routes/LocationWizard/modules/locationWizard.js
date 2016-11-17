@@ -154,9 +154,9 @@ function basicInforObjectPreparation(values) {
     Id: values.locationId || 0,
     LocationId: values.locationId || 0,
     Name: values.locationName,
-    Tz: values.timezone.id,
+    Tz: values.timezone.id || values.timezone,
     ParentId: values.parentLocation || 0,
-    LocationType: values.locationType.name,
+    LocationType: values.locationType.name || values.locationType,
     Notes: null,
     CreateDate: values.createDate || '/Date(' + todayDate.getTime() + ')/',
     CreateUser: null,
@@ -169,19 +169,19 @@ function basicInforObjectPreparation(values) {
     CanTakeAFWorOutage: true,
     IsForecastLevel: false,
     IsLogLevel: false,
-    TechnologyTypeId: values.technologyType.id,
-    SecondaryTechnologyTypeId: !!values.secondarytechnologyType ? values.secondarytechnologyType.id : null,
-    PrimaryMarketId: values.primaryMarket.id,
+    TechnologyTypeId: values.technologyType.id || values.technologyType,
+    SecondaryTechnologyTypeId: !!values.secondarytechnologyType ? values.secondarytechnologyType.id || values.secondarytechnologyType : null,
+    PrimaryMarketId: values.primaryMarket.id || values.primaryMarket,
     SecondaryMarketId: null,
-    FuelClassId: values.fuelClass.id,
+    FuelClassId: values.fuelClass.id || values.fuelClass,
     IsReportingLevel: false,
     DisplayRealTimeMonitor: false,
-    OwnerOrgId: values.owner.id,
+    OwnerOrgId: values.owner.id || values.owner,
     VTraderName: null,
     Attributes: null,
     IsSelected: false,
     MetricIds: null,
-    PhysicalTz: values.physicalTimezone.id,
+    PhysicalTz: values.physicalTimezone.id || values.physicalTimezone,
     Status: null,
     StatusDate: null,
     OwnershipPct: values.ownerShipPercentage,
@@ -199,7 +199,7 @@ function basicInforObjectPreparation(values) {
 }
 
 
-function credentialsAndIdentifiersObj(credentialsObj, primaryMarketTypeId, locationId) {
+function prepareCredentialsAndIdentifiersObj(credentialsObj, primaryMarketTypeId, locationId) {
 
   var credentialsAndIdentifiersObj = [];
   //get MarketDrivenMappings from API based on marketType ID
@@ -223,7 +223,6 @@ function credentialsAndIdentifiersObj(credentialsObj, primaryMarketTypeId, locat
     return b.ExternalSystemName
   })
   var assignedLocationMappings = omsLocationwizardData.GetOMSLocationWizardDataResult.AssignedLocationMappings;
-
   _.each(groupByItems, (item) => {
       var locationMappingDataItem = {};
       locationMappingDataItem.LocationMappingId = 0;
@@ -240,9 +239,21 @@ function credentialsAndIdentifiersObj(credentialsObj, primaryMarketTypeId, locat
       });
       locationMappingData.push(locationMappingDataItem);
     })
+    var finalLocationMappingData =[];
+    _.each(locationMappingData, (mappedItem)=>{
+    _.each(omsLocationwizardData.GetOMSLocationWizardDataResult.AssignedLocationMappings, (wizardDataItem) => {    
+      var id = wizardDataItem.LocationMappingId 
+        if (wizardDataItem.LocationMappingId > 0) {
+          if (wizardDataItem.ExternalSystemName == mappedItem.ExternalSystemName) {
+            mappedItem.LocationMappingId=wizardDataItem.LocationMappingId;
+        }
+      }
+    })
+    finalLocationMappingData.push(mappedItem);
+    });
     //Final  Credentials And Identifiers Object
   credentialsAndIdentifiersObj = [{
-    LocationMappingRecords: locationMappingData
+    LocationMappingRecords: finalLocationMappingData
   }];
   return credentialsAndIdentifiersObj;
 }
@@ -449,11 +460,10 @@ function saveObjectPreparationAndCall(getState, dispatch) {
     payload: 0
   });
   var values = getState().form.BasicInfoForm ? getState().form.BasicInfoForm.values : {};
-  var locationId = values.LocationId;
-  var primaryMarketTypeId = values.primaryMarket.id;
-
+  var locationId = values.locationId;
+  var primaryMarketTypeId = values.primaryMarket.id || values.primaryMarket;
   var basicInfoObj = basicInforObjectPreparation(values)
-  var credentialsAndIdentifier = credentialsAndIdentifiersObj(
+  var credentialsAndIdentifier = prepareCredentialsAndIdentifiersObj(
     getState().form.CredentialsManagementForm ? getState().form.CredentialsManagementForm.values : {},
     primaryMarketTypeId,
     locationId)
