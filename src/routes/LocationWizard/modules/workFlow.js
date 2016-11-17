@@ -6,6 +6,7 @@ export const BIND_WORKFLOW_ITEMS = 'BIND_WORKFLOW_ITEMS'
 export const SELECT_ALL = 'SELECT_ALL'
 export const REMOVE_ALL = 'REMOVE_ALL'
 export const WORKFLOW_CHANGE = 'WORKFLOW_CHANGE'
+export const BIND_LOCATION_WORKFOW = 'BIND_LOCATION_WORKFOW'
 
 export function bindWorkflowItems() {
   return (dispatch, getState) => {
@@ -17,6 +18,33 @@ export function bindWorkflowItems() {
     })
   }
 };
+
+export function bindWorkLocationData(assignedWorkflows) {
+  let Work = {}
+  Work.allWorkflows = getWorkFlows();
+  Work.defaultWorkFlow = []
+  if (assignedWorkflows != null) {
+    assignedWorkflows.map((assigned) => {
+      let index = Work.allWorkflows.findIndex((workflow) => workflow.WorkflowGroupId === assigned.WorkflowGroupId);
+      if(index>0)
+      {
+        let workflowinfo = Work.allWorkflows[index];
+        workflowinfo.WorkflowGroupLocationId = assigned.WorkflowGroupLocationId;
+        Work.allWorkflows[index]=workflowinfo
+        Work.defaultWorkFlow.push(workflowinfo);
+      }
+      else
+      {
+        Work.allWorkflows.push(assigned);
+        Work.defaultWorkFlow.push(assigned);
+      }
+    })
+  }
+  return {
+    type: BIND_LOCATION_WORKFOW,
+    payload: Work
+  };
+}
 
 export function selectAll() {
   return (dispatch, getState) => {
@@ -90,6 +118,12 @@ export const ACTION_HANDLERS = {
     let defaultvalues = action.payload.values.workFlowItem;
     return Object.assign({}, state, {
       defaultWorkFlow: defaultvalues
+    })
+  },
+  [BIND_LOCATION_WORKFOW]:(state,action)=>{
+    return Object.assign({}, state, {
+      workFlowItems: action.payload.allWorkflows,
+      defaultWorkFlow : action.payload.defaultWorkFlow
     })
   }
 }

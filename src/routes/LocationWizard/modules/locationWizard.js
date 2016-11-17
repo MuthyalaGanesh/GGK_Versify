@@ -12,14 +12,19 @@ import {
 import {
   BindUnitCharacteristicsInitialValues
 } from './unitCharacteristics';
-import{
+import {
   bindLocationData
 } from './dataHistorian'
 import {
   bindGatewayLocationData
 } from './gateways'
+import {
+  bindWorkLocationData
+} from './workFlow'
 
-import {editSystemIntegration} from "./systemIntegration"
+import {
+  editSystemIntegration
+} from "./systemIntegration"
 
 import axios from 'axios'
 
@@ -42,15 +47,15 @@ export function leftMenuDropdownClickEvent(id, event) {
     let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
     let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
     dispatch(bindLocationData(dataHistorianParticularLocationObject));
-      var selected_system_integrations=[]
-      for(var i=0;i<locationsInfo.length;i++){
-          if(locationsInfo[i].AliasName && locationsInfo[i].LocationMappingId >0){
-              selected_system_integrations.push(locationsInfo[i]);
-          }
+    var selected_system_integrations = []
+    for (var i = 0; i < locationsInfo.length; i++) {
+      if (locationsInfo[i].AliasName && locationsInfo[i].LocationMappingId > 0) {
+        selected_system_integrations.push(locationsInfo[i]);
       }
+    }
     dispatch(bindGatewayLocationData(editObject.GetOMSLocationWizardDataResult.Gateways))
     dispatch(editSystemIntegration(selected_system_integrations));
-
+    dispatch(bindWorkLocationData(editObject.GetOMSLocationWizardDataResult.AssignedWorkflowGroups));
     dispatch({
       type: 'redux-form/DESTROY',
       meta: {
@@ -107,7 +112,7 @@ export function leftMenuDropdownClickEvent(id, event) {
       },
       payload: ''
     })
-     dispatch({
+    dispatch({
       type: 'redux-form/DESTROY',
       meta: {
         form: "WorkFlowForm"
@@ -116,7 +121,7 @@ export function leftMenuDropdownClickEvent(id, event) {
     })
 
     dispatch(BindInitialValues(id));
-    
+
     dispatch(BindUnitCharacteristicsInitialValues(id))
   };
 };
@@ -195,28 +200,28 @@ function credentialsAndIdentifiersObj(credentialsObj, primaryMarketTypeId, locat
     }
     itemDatawithMarketDrivenMappings.push(itemData);
   });
-  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function (b) {
+  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function(b) {
     return b.ExternalSystemName
   })
   var assignedLocationMappings = omsLocationwizardData.GetOMSLocationWizardDataResult.AssignedLocationMappings;
 
   _.each(groupByItems, (item) => {
-    var locationMappingDataItem = {};
-    locationMappingDataItem.LocationMappingId = 0;
-    locationMappingDataItem.ExternalSystemName = '',
-      locationMappingDataItem.AliasName = '',
-      locationMappingDataItem.ExternalSystemLogin = '',
-      locationMappingDataItem.ExternalSystemPwd = '',
-      locationMappingDataItem.ParameterList = '',
-      locationMappingDataItem.FlaggedForDeletion = false
-    _.each(item, (itemData) => {
-      locationMappingDataItem[itemData.Field] = itemData.value || '';
-      locationMappingDataItem.ExternalSystemName = itemData.ExternalSystemName;
+      var locationMappingDataItem = {};
+      locationMappingDataItem.LocationMappingId = 0;
+      locationMappingDataItem.ExternalSystemName = '',
+        locationMappingDataItem.AliasName = '',
+        locationMappingDataItem.ExternalSystemLogin = '',
+        locationMappingDataItem.ExternalSystemPwd = '',
+        locationMappingDataItem.ParameterList = '',
+        locationMappingDataItem.FlaggedForDeletion = false
+      _.each(item, (itemData) => {
+        locationMappingDataItem[itemData.Field] = itemData.value || '';
+        locationMappingDataItem.ExternalSystemName = itemData.ExternalSystemName;
 
-    });
-    locationMappingData.push(locationMappingDataItem);
-  })
-  //Final  Credentials And Identifiers Object
+      });
+      locationMappingData.push(locationMappingDataItem);
+    })
+    //Final  Credentials And Identifiers Object
   credentialsAndIdentifiersObj = [{
     LocationMappingRecords: locationMappingData
   }];
@@ -344,40 +349,37 @@ function dataHistorianObjectPreparation(stateTree, dispatch) {
 
 function credentialdatavalidation(data) {
   var CredentialBasicData = data.basic.CredentialBasicData
-  if(data.form.CredentialsManagementForm.hasOwnProperty('values')){
-    var i =0 
-      for( i in CredentialBasicData){
-       if(CredentialBasicData[i].IsDropDown){
-           if(data.form.CredentialsManagementForm.values.hasOwnProperty(`${CredentialBasicData[i].DisplayName}`)){
-             if(data.form.CredentialsManagementForm.values[`${CredentialBasicData[i].DisplayName}`] != null){
-                if ( i == CredentialBasicData.length){
-                return 1
-              }
-             }
-             else{
-                return 0
-             }
-        }else{
+  if (data.form.CredentialsManagementForm.hasOwnProperty('values')) {
+    var i = 0
+    for (i in CredentialBasicData) {
+      if (CredentialBasicData[i].IsDropDown) {
+        if (data.form.CredentialsManagementForm.values.hasOwnProperty(`${CredentialBasicData[i].DisplayName}`)) {
+          if (data.form.CredentialsManagementForm.values[`${CredentialBasicData[i].DisplayName}`] != null) {
+            if (i == CredentialBasicData.length) {
+              return 1
+            }
+          } else {
+            return 0
+          }
+        } else {
           return 0
         }
-       }
-       else{
-         if(data.form.CredentialsManagementForm.values.hasOwnProperty(`${CredentialBasicData[i].DisplayName}`)){
-              if ( i == CredentialBasicData.length){
-                return 1
-              }
-        }else{
+      } else {
+        if (data.form.CredentialsManagementForm.values.hasOwnProperty(`${CredentialBasicData[i].DisplayName}`)) {
+          if (i == CredentialBasicData.length) {
+            return 1
+          }
+        } else {
           return 0
         }
-       }
       }
+    }
 
 
-      
+
   }
   return 0
 }
-  
 
 
 
@@ -385,53 +387,39 @@ export function saveCompleteLocationWizard() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       console.log("state pro-", getState())
-      getState().form.BasicInfoForm.hasOwnProperty('values') 
-      ? Object.keys(getState().form.BasicInfoForm.values).length < 11 
-        ? Object.keys(getState().form.BasicInfoForm.values).length == 10 
-          ? !getState().form.BasicInfoForm.hasOwnProperty('parentLocation') 
-            ? (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null 
-              &&getState().form.BasicInfoForm.values.technologyType != null &&getState().form.BasicInfoForm.values.fuelClass != null &&getState().form.BasicInfoForm.values.physicalTimezone != null 
-              &&getState().form.BasicInfoForm.values.secondarytechnologyType != null &&getState().form.BasicInfoForm.values.owner != null 
-              ) 
-                ? (credentialdatavalidation(getState()))  && console.log(credentialdatavalidation(getState()))
-                  ?dispatch({
-                    type: 'ERROR',
-                    payload: 0})  && console.log('NOerror')
-                  : dispatch({
-                      type: 'ERROR',
-                      payload: 1}) && console.log('error')
-                :dispatch({
-                type: 'ERROR',
-                payload: 1}) 
-            :dispatch({
-              type: 'ERROR',
-             payload: 1}) 
-          :dispatch({
-              type: 'ERROR',
-             payload: 1})
-        : (getState().form.BasicInfoForm.values.technologyType == getState().form.BasicInfoForm.values.secondarytechnologyType) 
-            ? dispatch({
-              type: 'ERROR',
-               payload: 1}) 
-            : (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null 
-              &&getState().form.BasicInfoForm.values.technologyType != null &&getState().form.BasicInfoForm.values.fuelClass != null &&getState().form.BasicInfoForm.values.physicalTimezone != null 
-              &&getState().form.BasicInfoForm.values.secondarytechnologyType != null &&getState().form.BasicInfoForm.values.owner != null 
-              ) 
-                 ? (credentialdatavalidation(getState()))  && console.log(credentialdatavalidation(getState()))
-                  ?dispatch({
-                    type: 'ERROR',
-                    payload: 0})  && console.log('NOerror')
-                  : dispatch({
-                      type: 'ERROR',
-                      payload: 1}) && console.log('error')
-                :dispatch({
-                type: 'ERROR',
-                payload: 1}) 
+      getState().form.BasicInfoForm.hasOwnProperty('values') ? Object.keys(getState().form.BasicInfoForm.values).length < 11 ? Object.keys(getState().form.BasicInfoForm.values).length == 10 ? !getState().form.BasicInfoForm.hasOwnProperty('parentLocation') ? (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null && getState().form.BasicInfoForm.values.technologyType != null && getState().form.BasicInfoForm.values.fuelClass != null && getState().form.BasicInfoForm.values.physicalTimezone != null && getState().form.BasicInfoForm.values.secondarytechnologyType != null && getState().form.BasicInfoForm.values.owner != null) ? (credentialdatavalidation(getState())) && console.log(credentialdatavalidation(getState())) ? dispatch({
+        type: 'ERROR',
+        payload: 0
+      }) && console.log('NOerror') : dispatch({
+        type: 'ERROR',
+        payload: 1
+      }) && console.log('error') : dispatch({
+        type: 'ERROR',
+        payload: 1
+      }) : dispatch({
+        type: 'ERROR',
+        payload: 1
+      }) : dispatch({
+        type: 'ERROR',
+        payload: 1
+      }) : (getState().form.BasicInfoForm.values.technologyType == getState().form.BasicInfoForm.values.secondarytechnologyType) ? dispatch({
+        type: 'ERROR',
+        payload: 1
+      }) : (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null && getState().form.BasicInfoForm.values.technologyType != null && getState().form.BasicInfoForm.values.fuelClass != null && getState().form.BasicInfoForm.values.physicalTimezone != null && getState().form.BasicInfoForm.values.secondarytechnologyType != null && getState().form.BasicInfoForm.values.owner != null) ? (credentialdatavalidation(getState())) && console.log(credentialdatavalidation(getState())) ? dispatch({
+        type: 'ERROR',
+        payload: 0
+      }) && console.log('NOerror') : dispatch({
+        type: 'ERROR',
+        payload: 1
+      }) && console.log('error') : dispatch({
+        type: 'ERROR',
+        payload: 1
+      })
 
-        : dispatch({
-          type: 'ERROR',
-          payload: 1
-        })
+      : dispatch({
+        type: 'ERROR',
+        payload: 1
+      })
       console.log(Object.keys(getState().form.BasicInfoForm.values).length, 'stateobjectmo')
       var values = getState().form.BasicInfoForm ? getState().form.BasicInfoForm.values : {};
       var locationId = values.LocationId;
@@ -465,15 +453,15 @@ export function saveCompleteLocationWizard() {
       }
       var finalData = JSON.stringify(finalSaveObject)
       console.log("finalSaveObject", finalData)
-      // axios({
-      //   method: 'post',
-      //   url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
-      //   data: finalSaveObject
-      // }).then(function(response) {
-      //   console.log("success", response);
-      // }).catch(function(error) {
-      //   alert("error" + JSON.stringify(error));
-      // });
+        // axios({
+        //   method: 'post',
+        //   url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
+        //   data: finalSaveObject
+        // }).then(function(response) {
+        //   console.log("success", response);
+        // }).catch(function(error) {
+        //   alert("error" + JSON.stringify(error));
+        // });
 
     })
   }
@@ -516,7 +504,7 @@ export const ACTION_HANDLERS = {
 
 function changeObjectTypeOfLocations(allLocations) {
   var changedLocationsObject = [];
-  allLocations.forEach(function (item) {
+  allLocations.forEach(function(item) {
     changedLocationsObject.push({
       key: item.Id,
       value: item.Id,
