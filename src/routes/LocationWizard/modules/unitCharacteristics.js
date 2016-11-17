@@ -111,11 +111,11 @@ export const ACTION_HANDLERS = {
         attributes.map(att => {
           newState.unitCharacteristics.map(uc => {
             if (uc.id == att.AttributeId) {
-
+              uc.isDeletable = true;
               uc.LocationId = att.LocationId
               newState.defaultUnitCharacteristics.map(duc => {
                 if (duc.id == att.AttributeId) {
-                  uc.isDeletable = true;
+                  uc.isDeletable = false;
                 }
               })
               if (uc.defaultUnitOfMeasureId) {
