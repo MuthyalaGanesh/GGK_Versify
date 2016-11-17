@@ -27,11 +27,11 @@ export const CredentialsManagement = (props) => {
                                     component="input"
                                     className="form-control"
                                     type="text"
+                                    value={fieldElement.value || null}
                                     placeholder={fieldElement.DisplayName}>
                                 </Field>
                                 : <Field name={fieldElement.DisplayName}
-                                    component={CreatableDropdownListField}
-                                    
+                                          component={CreatableDropdownListField}                                    
                                            data={fieldElement.Field == "AliasName" 
                                            ?fieldElement.aliasNameDropDownItems
                                            :fieldElement.externalSystemLoginDropDownItems
