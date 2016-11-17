@@ -11,7 +11,7 @@ export const ParentLocationField = (props) => (
     choiceTransitionName="rc-tree-select-selection__choice-zoom"
     dropdownStyle={{ maxHeight: 200, overflow: 'auto' }}
     placeholder={"Select Parent Location"}
-    value={props.input.value !== '' ? props.input.value : -1 }
+    value={props.input.value !== '' ? props.input.value : 0 }
     allowClear={false}
     showSearch={false}
      treeLine     

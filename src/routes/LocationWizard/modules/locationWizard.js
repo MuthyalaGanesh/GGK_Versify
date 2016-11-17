@@ -32,7 +32,6 @@ export function toggleMenuClick(event) {
 export function leftMenuDropdownClickEvent(id, event) {
   console.log("LOCATIONS_MENUITEM_DROPDOWN_CLICK:", id);
   return (dispatch, getState) => {
-    let locations = basicInfoDropdowns.getLocations;
     let editObject = getOMSLocationwizardData(id);
     let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
     let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
@@ -342,7 +341,7 @@ function credentialdatavalidation(data) {
        if(CredentialBasicData[i].IsDropDown){
            if(data.form.CredentialsManagementForm.values.hasOwnProperty(`${CredentialBasicData[i].DisplayName}`)){
              if(data.form.CredentialsManagementForm.values[`${CredentialBasicData[i].DisplayName}`] != null){
-                if ( x == CredentialBasicData.length){
+                if ( i == CredentialBasicData.length){
                 return 1
               }
              }

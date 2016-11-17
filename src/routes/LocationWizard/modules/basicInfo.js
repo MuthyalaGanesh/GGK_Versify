@@ -88,7 +88,7 @@ export const ACTION_HANDLERS = {
         physicalTimezone: locationObj.PhysicalTz,
         ownerShipPercentage: locationObj.OwnershipPct,
       }
-      var marketDrivendata =PrepareCredentialBasicData(locationObj.PrimaryMarketId);     
+      var marketDrivendata = PrepareCredentialBasicData(locationObj.PrimaryMarketId);     
       var newState = Object.assign({}, state, {
         BasicInfo: basicInfo,
         CredentialBasicData: marketDrivendata
@@ -113,8 +113,7 @@ export const ACTION_HANDLERS = {
     })
   },
   [PRIMARY_MARKET_CHANGE_EVENT]: (state, action) => {
-    debugger;
-    marketDrivendata = PrepareCredentialBasicData(!!action.payload ? action.payload.id : null)
+    var marketDrivendata = PrepareCredentialBasicData(!!action.payload ? action.payload.id : null)
     return Object.assign({}, state, {
       CredentialBasicData: marketDrivendata
     })

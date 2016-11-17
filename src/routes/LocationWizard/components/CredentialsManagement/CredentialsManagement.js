@@ -5,7 +5,6 @@ import CreatableDropdownListField from 'components/DropdownList/CreatableDropdow
 export const CredentialsManagement = (props) => {
     const {formdata} = props
     console.log(props.basic.error)
-   // props.basic.CredentialBasicData.map((fieldElement) => {console.log(formdata.CredentialsManagementForm.values.hasOwnProperty(`${fieldElement.DisplayName}`),`${fieldElement.DisplayName}`)})
 return (
 <div className="row tab-pane fade in active" id="credentialsmanagement">
     <div className="col-xs-12">
