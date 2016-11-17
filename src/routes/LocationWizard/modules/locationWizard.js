@@ -222,6 +222,24 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, primaryMarketTypeId
   var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function(b) {
     return b.ExternalSystemName
   })
+  var staticPjmemktToAdd = {  
+               "LocationMappingId":0,
+               "ExternalSystemName":"pjmemkt",
+               "AliasName":"",
+               "ExternalSystemLogin":"",
+               "ExternalSystemPwd":"",
+               "ParameterList":"https://emkt.pjm.com/emkt/xml/query",
+               "FlaggedForDeletion":false
+            };
+  var staticVTraderToAdd = {  
+               "LocationMappingId":0,
+               "ExternalSystemName":"VTrader-Temp",
+               "AliasName":"",
+               "ExternalSystemLogin":"",
+               "ExternalSystemPwd":"",
+               "ParameterList":"",
+               "FlaggedForDeletion":false
+            }
   var assignedLocationMappings = omsLocationwizardData.GetOMSLocationWizardDataResult.AssignedLocationMappings;
   _.each(groupByItems, (item) => {
       var locationMappingDataItem = {};
@@ -239,8 +257,19 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, primaryMarketTypeId
       });
       locationMappingData.push(locationMappingDataItem);
     })
-    var finalLocationMappingData =[];
+
+    //ADD default location mappings
+    if(!(locationId>0)){
+        locationMappingData.push(staticVTraderToAdd);       
+    }
+    
+    var finalLocationMappingData =[];    
+
     _.each(locationMappingData, (mappedItem)=>{
+      if(mappedItem.ExternalSystemName == 'PJMeDart'){
+        mappedItem.AliasName ='PJMeDartUnitNumber';
+        
+      }
     _.each(omsLocationwizardData.GetOMSLocationWizardDataResult.AssignedLocationMappings, (wizardDataItem) => {    
       var id = wizardDataItem.LocationMappingId 
         if (wizardDataItem.LocationMappingId > 0) {
@@ -490,15 +519,15 @@ function saveObjectPreparationAndCall(getState, dispatch) {
   }
   var finalData = JSON.stringify(finalSaveObject)
   console.log("finalSaveObject", finalData)
-    // axios({
-    //   method: 'post',
-    //   url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
-    //   data: finalSaveObject
-    // }).then(function(response) {
-    //   console.log("success", response);
-    // }).catch(function(error) {
-    //   alert("error" + JSON.stringify(error));
-    // });
+    axios({
+      method: 'post',
+      url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
+      data: finalSaveObject
+    }).then(function(response) {
+      console.log("success", response);
+    }).catch(function(error) {
+      alert("error" + JSON.stringify(error));
+    });
 }
 
 function toArray(obj) {
