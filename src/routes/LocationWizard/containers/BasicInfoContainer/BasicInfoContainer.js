@@ -10,13 +10,13 @@ import validate from '../../validations/basicInfoValidation'
 import {
     onParentLoCationSelect,
     BindInitialValues,
-    onChangeEvent
+    onPrimaryMarketChangeEvent
 } from '../../modules/basicInfo';
 
 
 const mapDispatchToProps = {
     BindInitialValues,
-    onChangeEvent
+    onPrimaryMarketChangeEvent
 }
 
 const mapStateToProps = (state) => ({
@@ -26,15 +26,8 @@ const mapStateToProps = (state) => ({
     initialValues: state.basic.BasicInfo
 })
 
-function prePareDefult() {
-
-}
-
-
-
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
     form: 'BasicInfoForm', //Form name is first form
-    destroyOnUnmount: false,
-    
+    destroyOnUnmount: false,    
     validate
 })(BasicInfo));

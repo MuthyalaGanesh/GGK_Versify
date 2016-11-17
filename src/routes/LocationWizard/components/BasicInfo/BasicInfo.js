@@ -75,7 +75,7 @@ return (
                   <Field component={DropdownListField}
                   name="locationType"
                   data={locationTypes}
-                  valueKey='id'
+                  valueKey='name'
                   labelKey='displayName'
                   className={error && (formdata.BasicInfoForm.hasOwnProperty('values') ? formdata.BasicInfoForm.values.hasOwnProperty('locationType')?  (formdata.BasicInfoForm.values.locationType == null ): true : true)
                   ? "error"
@@ -115,7 +115,7 @@ return (
                 <div className='clear'></div>                
                 <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
                   <label className="control-label"> Primary Market </label>
-                  <Field component={DropdownListField} onChangeEvent={props.onChangeEvent}
+                  <Field component={DropdownListField} onChangeEvent={props.onPrimaryMarketChangeEvent}
                   name="primaryMarket"
                   className={error && (formdata.BasicInfoForm.hasOwnProperty('values') ? formdata.BasicInfoForm.values.hasOwnProperty('primaryMarket')?  (formdata.BasicInfoForm.values.primaryMarket == null ): true : true)
                   ? "error"

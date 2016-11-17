@@ -520,8 +520,8 @@ function AddDefaultParent(objectfuncntion) {
   var object = objectfuncntion
   var returnObj = []
   returnObj.push({
-    key: -1,
-    value: -1,
+    key: 0,
+    value: 0,
     label: 'LOCATIONS'
   })
   object.map((element) => {
