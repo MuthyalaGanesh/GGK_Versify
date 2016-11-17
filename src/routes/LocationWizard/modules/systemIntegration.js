@@ -6,6 +6,7 @@ export const ADD_SYSTEM_INTEGRATION = "ADD_SYSTEM_INTEGRATION"
 export const DELETE_SYS_INTEGRATION = "DELETE_SYS_INTEGRATION"
 export const TOGGLE_TYPEAHEAD = "TOGGLE_TYPEAHEAD"
 export const ALIAS_SAVE = "ALIAS_SAVE"
+export const STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION ="STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION"
 
 export function AliasGiven() {
     return (dispatch, getState) => {
@@ -18,6 +19,16 @@ export function AliasGiven() {
     }
 }
 
+export function editSystemIntegration(locationSystemIntegrations){
+     return (dispatch, getState) => {
+        return new Promise((resolve) => {
+            dispatch({
+              type:STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION,
+              payload:locationSystemIntegrations
+            })
+        })
+    }
+}
 export function deleteSystemIntegration(index) {
     return (dispatch, getState) => {
         return new Promise((resolve) => {
@@ -146,6 +157,15 @@ export const ACTION_HANDLERS = {
             selectedSystemIntegrationTypes: newSystemIntegrations,
             unSelectedSystemIntegrationTypes: newUnSelectedSysIntegrations
         })
+    },
+    [STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION]:(state,action) =>{
+      return  {
+            error: "",
+            systemIntegrationTypes: getSystemIntegrationTypes().GetOMSLocationWizardDataResult.AssignedLocationMappings,
+            selectedSystemIntegrationTypes: action.payload,
+            unSelectedSystemIntegrationTypes: getSystemIntegrationTypes().GetOMSLocationWizardDataResult.AssignedLocationMappings,
+            dropDownShow: true
+        };
     }
 }
 

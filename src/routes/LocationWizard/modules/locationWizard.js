@@ -9,6 +9,9 @@ import {
   BindInitialValues
 } from './basicInfo';
 
+
+import {editSystemIntegration} from "./systemIntegration"
+
 import axios from 'axios'
 
 export const TOGGLE_LEFTMENU_CLICK = 'TOGGLE_LEFTMENU_CLICK';
@@ -26,6 +29,17 @@ export function toggleMenuClick(event) {
 export function leftMenuDropdownClickEvent(id, event) {
   console.log("LOCATIONS_MENUITEM_DROPDOWN_CLICK:", id);
   return (dispatch, getState) => {
+    let locations = basicInfoDropdowns.getLocations;
+    let editObject = getOMSLocationwizardData(id);
+    let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
+    let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
+      var selected_system_integrations=[]
+      for(var i=0;i<locationsInfo.length;i++){
+          if(locationsInfo[i].AliasName && locationsInfo[i].LocationMappingId >0){
+              selected_system_integrations.push(locationsInfo[i]);
+          }
+      }
+    dispatch(editSystemIntegration(selected_system_integrations));
     dispatch({
       type: 'redux-form/DESTROY',
       meta: {
@@ -33,6 +47,63 @@ export function leftMenuDropdownClickEvent(id, event) {
       },
       payload: ''
     })
+    dispatch({
+      type: 'redux-form/DESTROY',
+      meta: {
+        form: "CredentialsManagementForm"
+      },
+      payload: ''
+    })
+    dispatch({
+      type: 'redux-form/DESTROY',
+      meta: {
+        form: "DataHistorianForm"
+      },
+      payload: ''
+    })
+    dispatch({
+      type: 'redux-form/DESTROY',
+      meta: {
+        form: "EquipmentsForm"
+      },
+      payload: ''
+    })
+    dispatch({
+      type: 'redux-form/DESTROY',
+      meta: {
+        form: "GatewayForm"
+      },
+      payload: ''
+    })
+    dispatch({
+      type: 'redux-form/DESTROY',
+      meta: {
+        form: "SystemIntegrationForm"
+      },
+      payload: ''
+    })
+    dispatch({
+      type: 'redux-form/DESTROY',
+      meta: {
+        form: "UnitCharacteristicsForm"
+      },
+      payload: ''
+    })
+    dispatch({
+      type: 'redux-form/DESTROY',
+      meta: {
+        form: "UsersForm"
+      },
+      payload: ''
+    })
+     dispatch({
+      type: 'redux-form/DESTROY',
+      meta: {
+        form: "WorkFlowForm"
+      },
+      payload: ''
+    })
+
     dispatch(BindInitialValues(id));
 
   };
