@@ -59,7 +59,7 @@ function findLocation(allLocations, locationId) {
 export function leftMenuDropdownClickEvent(id, event) {
   console.log("LOCATIONS_MENUITEM_DROPDOWN_CLICK:", id);
   return (dispatch, getState) => {
-    var allLocationdata = basicInfoDropdowns.getLocations;
+    var allLocationdata = basicInfoDropdowns.getLocations();
     findLocation(allLocationdata, id);
     var locationObj = currentLocation;
     currentLocation = null;
@@ -548,7 +548,7 @@ function AddDefaultParent(objectfuncntion) {
   return returnObj
 }
 
-const allParentLocationsObject = basicInfoDropdowns.getParentLocations;
+const allParentLocationsObject = basicInfoDropdowns.getParentLocations();
 
 const initialState = {
   error: null,

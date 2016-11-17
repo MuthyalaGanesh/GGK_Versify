@@ -11,7 +11,6 @@ var workFlows = require('./workFlowData.json');
 var userInfo = require('./userData.json');
 var gatewayInfo = require('./gatewayData.json');
 var dataHistorianInfo = require('./dataHistorianData.json');
-
 function mapWorkFlowInfo() {
     let workFlowData = XMLHttpRequestSyncGet(Constants.WORKFLOW_DATA).GetWorkflowDataResult.WorkflowGroupsWorkflows;
     let workFlows = XMLHttpRequestSyncGet(Constants.WORKFLOW_GROUPS);
@@ -57,7 +56,6 @@ export function getPrimaryMarkets() {
 
 }
 export function getLocations() {
-    console.log("Location data method is fired: ");
     return XMLHttpRequestSyncGet(Constants.LOCATIONS).GetAllLocationsResult;
 }
 
@@ -74,7 +72,7 @@ function changeObjectTypeOfLocations(allLocations) {
   return changedLocationsObject
 }
 
-export function getParentLocations() {
+export function getParentLocations() {    
     let data = XMLHttpRequestSyncGet(Constants.LOCATIONS).GetAllLocationsResult;
     return changeObjectTypeOfLocations(data);
 }
@@ -155,14 +153,14 @@ export function getSystemIntegrationTypes() {
 }
 
 export const basicInfoDropdowns = {
-    getLocationTypes: getLocationTypes(),
-    getPrimaryMarkets: getPrimaryMarkets(),
-    getLocations: getLocations(),
-    getParentLocations: getParentLocations(),
-    getOwners: getOwners(),
-    getTechnologyTypes: getTechnologyTypes(),
-    getFuelClasses: getFuelClasses(),
-    getTimezones: getTimezones()
+    getLocationTypes: getLocationTypes,
+    getPrimaryMarkets: getPrimaryMarkets,
+    getLocations: getLocations,
+    getParentLocations: getParentLocations,
+    getOwners: getOwners,
+    getTechnologyTypes: getTechnologyTypes,
+    getFuelClasses: getFuelClasses,
+    getTimezones: getTimezones
 }
 export default basicInfoDropdowns;
 

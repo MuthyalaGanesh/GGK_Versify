@@ -158,12 +158,12 @@ function PrepareCredentialBasicData(marketId, locationId = null) {
 
 const initialState = {
   error: null,
-  locationTypes: basicInfoDropdowns.getLocationTypes,
-  owners: basicInfoDropdowns.getOwners,
-  primaryMarkets: basicInfoDropdowns.getPrimaryMarkets,
-  technologyTypes: basicInfoDropdowns.getTechnologyTypes,
-  fuelClasses: basicInfoDropdowns.getFuelClasses,
-  timezones: basicInfoDropdowns.getTimezones,
+  locationTypes: basicInfoDropdowns.getLocationTypes(),
+  owners: basicInfoDropdowns.getOwners(),
+  primaryMarkets: basicInfoDropdowns.getPrimaryMarkets(),
+  technologyTypes: basicInfoDropdowns.getTechnologyTypes(),
+  fuelClasses: basicInfoDropdowns.getFuelClasses(),
+  timezones: basicInfoDropdowns.getTimezones(),
   initial: true,
   BasicInfo: {},
   CredentialInitialValues: {},
