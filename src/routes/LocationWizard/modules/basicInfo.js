@@ -13,6 +13,7 @@ import _ from 'lodash';
 export const ON_PARENT_LOCATION_SELECT = 'ON_PARENT_LOCATION_SELECT'
 export const BIND_INITIAL_VALUES = 'BIND_INITIAL_VALUES'
 export const PRIMARY_MARKET_CHANGE_EVENT = 'PRIMARY_MARKET_CHANGE_EVENT'
+export const CREDENTIAL_DROPDOWN_CHANGE_EVENT = 'CREDENTIAL_DROPDOWN_CHANGE_EVENT'
 
 
 export function BindInitialValues(locationId) {
@@ -22,6 +23,12 @@ export function BindInitialValues(locationId) {
   };
 };
 
+export function onCredentialDropdownChangeEvent(event) {
+  return {
+    type: CREDENTIAL_DROPDOWN_CHANGE_EVENT,
+    payload: event
+  };
+};
 
 export function onChangeEvent(event) {
   return {
@@ -38,6 +45,12 @@ export const ACTION_HANDLERS = {
         locationId: action.payload,
         locationName: "TEST LOCATION"
       }
+    })
+  },
+  [CREDENTIAL_DROPDOWN_CHANGE_EVENT]:(state, action) => {
+    console.log("CREDENTIAL_DROPDOWN_CHANGE_EVENT:", action.payload);
+    return Object.assign({}, state, {
+     
     })
   },
   [PRIMARY_MARKET_CHANGE_EVENT]: (state, action) => {

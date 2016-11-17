@@ -3,9 +3,10 @@ import {
     connect
 } from 'react-redux'
 import CredentialsManagement from '../../components/CredentialsManagement'
+import { onCredentialDropdownChangeEvent } from '../../modules/basicInfo';
 
 const mapDispatchToProps = {
- 
+ onCredentialDropdownChangeEvent :onCredentialDropdownChangeEvent
 }
 
 const mapStateToProps = (state) => ({

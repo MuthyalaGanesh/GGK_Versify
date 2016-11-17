@@ -20,7 +20,7 @@ return (
                     
                     { !!props.basic.CredentialBasicData && props.basic.CredentialBasicData.length >0
                     ?  <div className="row">
-                        {props.basic.CredentialBasicData.map((fieldElement) =>
+                        {props.basic.CredentialBasicData.map((fieldElement, i) =>
                         <div className="col-sm-12 col-md-6 form-group">
                             <label className="control-label" id={fieldElement.DisplayName}> {fieldElement.DisplayName} </label>
                             {!fieldElement.IsDropDown
@@ -29,16 +29,17 @@ return (
                             component="input"
                             className={props.basic.error && (formdata.CredentialsManagementForm.hasOwnProperty('values') ? !formdata.CredentialsManagementForm.values.hasOwnProperty(`${fieldElement.DisplayName}`)  : true)
                             ? "form-control error"
-                            :"form-control"}
+                            :"form-control control-border"}
                             
                             type="text"
                             placeholder={fieldElement.DisplayName}>
                             </Field>
                             : <Field name={fieldElement.DisplayName}
-                            component={CreatableDropdownListField}
-                            className={props.basic.error && (formdata.CredentialsManagementForm.hasOwnProperty('values') ? formdata.CredentialsManagementForm.values.hasOwnProperty(`${fieldElement.DisplayName}`)?  (formdata.CredentialsManagementForm.values[`${fieldElement.DisplayName}`] == null ): true : true)
+                            component={CreatableDropdownListField}                                                                          
+                             className={props.basic.error && (formdata.CredentialsManagementForm.hasOwnProperty('values') ? formdata.CredentialsManagementForm.values.hasOwnProperty(`${fieldElement.DisplayName}`)?  (formdata.CredentialsManagementForm.values[`${fieldElement.DisplayName}`] == null ): true : true)
                             ? "error"
-                            :null}
+                            :"control-border"}
+                             onChangeEvent={(e)=>props.onCredentialDropdownChangeEvent(e)}   
                             data={fieldElement.Field == "AliasName"
                             ?fieldElement.aliasNameDropDownItems
                             :fieldElement.externalSystemLoginDropDownItems
@@ -48,7 +49,9 @@ return (
                             placeholder={fieldElement.DisplayName}>
                             </Field>
                             }
-                        </div>                        )}
+                         {i%2 == 0? <div className='clear'></div>:null}                            
+                        </div> 
+                                   )}
                     </div>
                     : <div className="row">
                         <h6 style={{'textAlign':'center'}}>
