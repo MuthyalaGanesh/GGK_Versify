@@ -32,16 +32,39 @@ const EffectiveDateValues = (props) => (
                             className="form-control"
                             defaultvalue={props.defaultValues[i].Value}
                             touched = {props.touched.hasOwnProperty('UnitCharacteristicsForm') ?
-                                props.touched.UnitCharacteristicsForm.hasOwnProperty('fields') ? props.touched.UnitCharacteristicsForm.fields.hasOwnProperty("ucvalue") ? props.touched.UnitCharacteristicsForm.values.ucvalue[i] : false : false : false }/></td>
+                                props.touched.UnitCharacteristicsForm.hasOwnProperty('values') ?
+                                    props.touched.UnitCharacteristicsForm.values.hasOwnProperty("ucvalue") ?
+                                        props.touched.UnitCharacteristicsForm.values.ucvalue[i] : false : false : false }/>
+
+                            {props.defaultValues[i].Value ? null : (props.unitCharacteristics.error && !(props.touched.hasOwnProperty('UnitCharacteristicsForm') ?
+                                props.touched.UnitCharacteristicsForm.hasOwnProperty('values') ?
+                                    props.touched.UnitCharacteristicsForm.values.hasOwnProperty("ucvalue") ?
+                                        (props.touched.UnitCharacteristicsForm.values.ucvalue[i]) : false : false : false)) ?
+                                <span className="errorMessage">Value is required</span> : null }
+                        </td>
                         <td> <Field
                             name={`effectiveStartDate[${i}]`}
                             component={DatePickerField}
                             defaultValue={props.defaultValues[i].EffectiveStartDate}/>
+
+                            {props.defaultValues[i].EffectiveStartDate ? null : (props.unitCharacteristics.error && !(props.touched.hasOwnProperty('UnitCharacteristicsForm') ?
+                                props.touched.UnitCharacteristicsForm.hasOwnProperty('values') ?
+                                    props.touched.UnitCharacteristicsForm.values.hasOwnProperty("effectiveStartDate") ?
+                                        (props.touched.UnitCharacteristicsForm.values.effectiveStartDate[i]) : false : false : false)) ?
+                                <span className="errorMessage">Effective Start Date  is required</span> : null }
                         </td>
                         <td><Field
                             name={`effectiveEndDate[${i}]`}
                             component={DatePickerField}
-                            defaultValue={props.defaultValues[i].EffectiveEndDate}/></td>
+                            defaultValue={props.defaultValues[i].EffectiveEndDate}/>
+
+                            {props.defaultValues[i].EffectiveEndDate ? null : (props.unitCharacteristics.error && !(props.touched.hasOwnProperty('UnitCharacteristicsForm') ?
+                                props.touched.UnitCharacteristicsForm.hasOwnProperty('values') ?
+                                    props.touched.UnitCharacteristicsForm.values.hasOwnProperty("effectiveEndDate") ?
+                                        (props.touched.UnitCharacteristicsForm.values.effectiveEndDate[i]) : false : false : false)) ?
+                                <span className="errorMessage">Effective End Date  is required</span> : null }
+
+                        </td>
                         <td>{i == 0 ? <i onClick={() => props.fields.push({}) } className="fa fa-plus-circle fa-2x"></i> : <i type="button"
                             title="Remove"
                             className="fa fa-trash-o fa-2x"
@@ -54,14 +77,22 @@ const EffectiveDateValues = (props) => (
                             component={InputField}
                             className="form-control"
                             touched = {props.touched.hasOwnProperty('UnitCharacteristicsForm') ?
-                                props.touched.UnitCharacteristicsForm.hasOwnProperty('fields') ? props.touched.UnitCharacteristicsForm.fields.hasOwnProperty('ucvalue[0]') : false : false }/></td>
+                                props.touched.UnitCharacteristicsForm.hasOwnProperty('fields') ? props.touched.UnitCharacteristicsForm.fields.hasOwnProperty('ucvalue[0]') : false : false }/>
+                            {(props.unitCharacteristics.error && !(props.touched.hasOwnProperty('UnitCharacteristicsForm') ?
+                                props.touched.UnitCharacteristicsForm.hasOwnProperty('values') ? props.touched.UnitCharacteristicsForm.values.hasOwnProperty("ucvalue") ? props.touched.UnitCharacteristicsForm.values.ucvalue[0] : false : false : false)) ? <span className="errorMessage">Value is required</span> : null }
+                        </td>
                         <td> <Field
                             name="effectiveStartDate[0]"
                             component={DatePickerField}/>
+                            {(props.unitCharacteristics.error && !(props.touched.hasOwnProperty('UnitCharacteristicsForm') ?
+                                props.touched.UnitCharacteristicsForm.hasOwnProperty('values') ? props.touched.UnitCharacteristicsForm.values.hasOwnProperty("effectiveStartDate") ? props.touched.UnitCharacteristicsForm.values.effectiveStartDate[0] : false : false : false)) ? <span className="errorMessage">Effective Start Date is required</span> : null }
                         </td>
                         <td><Field
                             name="effectiveEndDate[0]"
-                            component={DatePickerField}/></td>
+                            component={DatePickerField}/>
+                            {(props.unitCharacteristics.error && !(props.touched.hasOwnProperty('UnitCharacteristicsForm') ?
+                                props.touched.UnitCharacteristicsForm.hasOwnProperty('values') ? props.touched.UnitCharacteristicsForm.values.hasOwnProperty("effectiveEndDate") ? props.touched.UnitCharacteristicsForm.values.effectiveEndDate[0] : false : false : false)) ? <span className="errorMessage">Effective End Date is required</span> : null }
+                        </td>
                         <td>
                             <i onClick={() => props.fields.push({}) } className="fa fa-plus-circle fa-2x"></i>
                         </td>
@@ -74,16 +105,28 @@ const EffectiveDateValues = (props) => (
                             component={InputField}
                             className="form-control"
                             touched = {props.touched.hasOwnProperty('UnitCharacteristicsForm') ?
-                                props.touched.UnitCharacteristicsForm.hasOwnProperty('fields') ? props.touched.UnitCharacteristicsForm.fields.hasOwnProperty("editableData") ? props.touched.UnitCharacteristicsForm.values.editableData : false : false : false }/></td>
+                                props.touched.UnitCharacteristicsForm.hasOwnProperty('fields') ? props.touched.UnitCharacteristicsForm.fields.hasOwnProperty("editableData") ? props.touched.UnitCharacteristicsForm.values.editableData : false : false : false }/>
+                            {(props.unitCharacteristics.error && !(props.touched.hasOwnProperty('UnitCharacteristicsForm') ?
+                                props.touched.UnitCharacteristicsForm.hasOwnProperty('values') ? props.touched.UnitCharacteristicsForm.values.hasOwnProperty("editableData") ? props.touched.UnitCharacteristicsForm.values.editableData[index].ucvalue : false : false : false)) ? <span className="errorMessage">Value is required</span> : null }
+                        </td>
                         <td> <Field
                             name={`${editableData}.effectiveStartDate`}
                             component={DatePickerField}
+                            defaultValue={
+                                props.touched.hasOwnProperty('UnitCharacteristicsForm') &&
+                                    props.touched.UnitCharacteristicsForm.hasOwnProperty('values') && props.touched.UnitCharacteristicsForm.values.hasOwnProperty("editableData") && props.touched.UnitCharacteristicsForm.values.editableData[index - 1] && props.touched.UnitCharacteristicsForm.values.editableData[index - 1].effectiveEndDate
+                                    ? props.touched.UnitCharacteristicsForm.values.editableData[index - 1].effectiveEndDate : props.defaultValues ? (props.defaultValues[props.defaultValues.length - 1].EffectiveEndDate) : (props.touched.UnitCharacteristicsForm.values && props.touched.UnitCharacteristicsForm.values.effectiveEndDate[0] ? props.touched.UnitCharacteristicsForm.values.effectiveEndDate[0] : new Date()) }
                             />
+                            {(props.unitCharacteristics.error && !(props.touched.hasOwnProperty('UnitCharacteristicsForm') &&
+                                props.touched.UnitCharacteristicsForm.hasOwnProperty('values') && props.touched.UnitCharacteristicsForm.values.hasOwnProperty("editableData") && props.touched.UnitCharacteristicsForm.values.editableData[index - 1] && props.touched.UnitCharacteristicsForm.values.editableData[index - 1].effectiveEndDate
+                                ? props.touched.UnitCharacteristicsForm.values.editableData[index - 1].effectiveEndDate : props.defaultValues ? (props.defaultValues[props.defaultValues.length - 1].EffectiveEndDate) : (props.touched.UnitCharacteristicsForm.values && props.touched.UnitCharacteristicsForm.values.effectiveEndDate[0] ? props.touched.UnitCharacteristicsForm.values.effectiveEndDate[0] : null))) ? <span className="errorMessage">Effective Start Date is required</span> : null }
                         </td>
                         <td><Field
                             name={`${editableData}.effectiveEndDate`}
                             component={DatePickerField}
-                            /></td>
+                            />
+                            {(props.unitCharacteristics.error && !(props.touched.hasOwnProperty('UnitCharacteristicsForm') ?
+                                props.touched.UnitCharacteristicsForm.hasOwnProperty('values') ? props.touched.UnitCharacteristicsForm.values.hasOwnProperty("editableData") ? props.touched.UnitCharacteristicsForm.values.editableData[index].effectiveEndDate : false : false : false)) ? <span className="errorMessage">Effective End Date is required</span> : null }</td>
                         <td>
                             <i type="button"
                                 title="Remove"
@@ -193,6 +236,12 @@ export const UnitCharacteristics = (props) => {
                                         placeholder="Select Unit Charateristic" onChangeEvent={props.characteristicNameSelected}
                                         defaultValue={props.unitCharacteristics.editableUnitCharacter && props.unitCharacteristics.editableUnitCharacter.id ? props.unitCharacteristics.editableUnitCharacter : null}>
                                     </Field>
+                                    {props.unitCharacteristics.editableUnitCharacter && props.unitCharacteristics.editableUnitCharacter.id ? null : (props.unitCharacteristics.error
+                                        && !(touched.hasOwnProperty('UnitCharacteristicsForm') ?
+                                            touched.UnitCharacteristicsForm.hasOwnProperty('values') ?
+                                                touched.UnitCharacteristicsForm.values.hasOwnProperty("charateristicName") ?
+                                                    true : false : false : false)) ?
+                                        <span className="errorMessage">select unit characteristic</span> : null}
                                 </div>
                             </div>
 
@@ -239,13 +288,21 @@ export const UnitCharacteristics = (props) => {
                                 defaultValues={props.unitCharacteristics.editableUnitCharacter ? props.unitCharacteristics.editableUnitCharacter.editableAttributes : null}
                                 removeEditableAttribute={props.removeEditableAttribute}
                                 isEditable={props.unitCharacteristics.isEditable}
-                                touched={touched}/>
+                                touched={touched}
+                                unitCharacteristics={props.unitCharacteristics}/>
 
+                        </div>
+                        <div className="errorMessage">
+                            {props.unitCharacteristics.error && props.unitCharacteristics.dateRangeValidation && props.unitCharacteristics.dateRangeValidation.length > 0 ?
+                                props.unitCharacteristics.dateRangeValidation.map(drv => (
+                                    <div><span>{drv}</span><br/></div>
+                                ))
+                                : null}
                         </div>
                     </Modal.Body>
 
                     <Modal.Footer>
-                        <div class="pull-right">
+                        <div>
                             {props.unitCharacteristics.isEditable ?
                                 <button className="btn btn-success" type="button" onClick={props.AddUnitCharateristic}>Add</button> :
                                 <button className="btn btn-success" type="button" onClick={props.updateRow}>Update</button>}
