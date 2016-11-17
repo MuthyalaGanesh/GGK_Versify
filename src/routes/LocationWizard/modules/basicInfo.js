@@ -88,10 +88,11 @@ export const ACTION_HANDLERS = {
         physicalTimezone: locationObj.PhysicalTz,
         ownerShipPercentage: locationObj.OwnershipPct,
       }
-      var marketDrivendata = PrepareCredentialBasicData(locationObj.PrimaryMarketId);     
+      var credentialData = PrepareCredentialBasicData(locationObj.PrimaryMarketId, action.payload);
       var newState = Object.assign({}, state, {
         BasicInfo: basicInfo,
-        CredentialBasicData: marketDrivendata
+        CredentialBasicData: credentialData.MarketDrivendata,
+        CredentialInitialValues: credentialData.CredentialInitialValues
       });
       return newState;
     }
@@ -113,9 +114,9 @@ export const ACTION_HANDLERS = {
     })
   },
   [PRIMARY_MARKET_CHANGE_EVENT]: (state, action) => {
-    var marketDrivendata = PrepareCredentialBasicData(!!action.payload ? action.payload.id : null)
+    var data = PrepareCredentialBasicData(!!action.payload ? action.payload.id : null)
     return Object.assign({}, state, {
-      CredentialBasicData: marketDrivendata
+      CredentialBasicData: data.MarketDrivendata
     })
   },
   ['ERROR']: (state, action) => {
@@ -125,11 +126,13 @@ export const ACTION_HANDLERS = {
   }
 }
 
-function PrepareCredentialBasicData(marketId) {
+function PrepareCredentialBasicData(marketId, locationId = null) {
+  debugger;
   //get MarketDrivenMappings from API based on marketType ID
   var data = getMarketDrivenMappings(marketId);
-  var omsLocationwizardData = getOMSLocationwizardData(marketId);
+  var omsLocationwizardData = getOMSLocationwizardData(locationId);
   var marketDrivendata = [];
+  var credentialInitialValues = {};
   _.each(data, (item) => {
     item.aliasNameDropDownItems = [];
     item.externalSystemLoginDropDownItems = [];
@@ -154,12 +157,21 @@ function PrepareCredentialBasicData(marketId) {
           });
         }
       }
+      
+        if (wizardDataItem.LocationMappingId > 0) {
+          if (wizardDataItem.ExternalSystemName == item.ExternalSystemName) {
+          credentialInitialValues[item.DisplayName] = wizardDataItem[item.Field];
+        }
+      }
     })
     item.aliasNameDropDownItems = _.uniqBy(aliasNameDropDownItems, 'key');
     item.externalSystemLoginDropDownItems = _.uniqBy(externalSystemLoginDropDownItems, 'key');
     marketDrivendata.push(item);
   });
-  return marketDrivendata;
+  return {
+    MarketDrivendata: marketDrivendata,
+    CredentialInitialValues: credentialInitialValues
+  };
 }
 
 
@@ -173,7 +185,7 @@ const initialState = {
   timezones: basicInfoDropdowns.getTimezones,
   initial: true,
   BasicInfo: {},
-  CredentialInitialValues:{},
+  CredentialInitialValues: {},
   CredentialBasicData: getMarketDrivenMappings()
 };
 
