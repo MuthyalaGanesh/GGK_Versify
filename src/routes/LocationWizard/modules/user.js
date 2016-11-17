@@ -4,6 +4,11 @@ import {
 import {
   getNewContactPopUpInfo
 } from 'api/locationWizardApi'
+import {
+  getContacts
+} from 'api/locationWizardApi'
+
+import axios from 'axios'
 
 export const BIND_USER_INFO = 'BIND_USER_INFO'
 export const BIND_CONTACT_TO_ROLE = 'BIND_CONTACT_TO_ROLE'
@@ -118,13 +123,49 @@ export function AddContactModalToggle() {
   }
 }
 
-export function saveNewContact(){
+export function saveNewContact() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      dispatch({
-        type: SAVE_NEW_CONTACT,
-        payload:getState().form.UsersForm
-      })
+      let Contact = {}
+      Contact.Id = 0
+      let userForm = getState().form.UsersForm;
+      Contact.Name = userForm.values.Name
+      Contact.OrgId = userForm.values.Org != null && userForm.values.Org != undefined ? userForm.values.Org.id : null
+      Contact.Title = userForm.values.Title
+      Contact.ContactTypeId = userForm.values.Type != null && userForm.values.Type != undefined ? userForm.values.Type.id : null
+      Contact.DefaultTimezone = userForm.values.TimeZone != null && userForm.values.TimeZone != undefined ? userForm.values.TimeZone.id : ""
+      Contact.Phone1 = userForm.values.Primary != null && userForm.values.Primary != undefined ? userForm.values.Primary : ''
+      Contact.Phone2 = userForm.values.Cell != null && userForm.values.Cell != undefined ? userForm.values.Cell : ''
+      Contact.Phone3 = userForm.values.OtherPhone != null && userForm.values.OtherPhone != undefined ? userForm.values.OtherPhone : ''
+      Contact.Email1 = userForm.values.PrimaryEmail != null && userForm.values.PrimaryEmail != undefined ? userForm.values.PrimaryEmail : ''
+      Contact.Email2 = userForm.values.SecondaryEmail != null && userForm.values.SecondaryEmail != undefined ? userForm.values.SecondaryEmail : ''
+      Contact.UDV1 = userForm.values.Custom1 != null && userForm.values.Custom1 != undefined ? userForm.values.Custom1 : ''
+      Contact.UDV2 = userForm.values.Custom2 != null && userForm.values.Custom2 != undefined ? userForm.values.Custom2 : ''
+      Contact.UDV3 = userForm.values.Custom3 != null && userForm.values.Custom3 != undefined ? userForm.values.Custom3 : ''
+      Contact.UDV4 = userForm.values.Custom4 != null && userForm.values.Custom4 != undefined ? userForm.values.Custom4 : ''
+      Contact.UDV5 = userForm.values.Custom5 != null && userForm.values.Custom5 != undefined ? userForm.values.Custom5 : ''
+      Contact.Status = userForm.values.status != null && userForm.values.status != undefined ? userForm.values.status.id : null
+      Contact.Login = userForm.values.userId != null && userForm.values.userId != undefined ? userForm.values.userId : ''
+      Contact.Password = userForm.values.Password != null && userForm.values.Password != undefined ? userForm.values.Password : ''
+      Contact.IsAdmin = userForm.values.SystemAdmin != null && userForm.values.SystemAdmin != undefined ? 'Y' : 'N'
+      var SaveObject = {
+        "saveData": {
+          Contact: Contact
+        }
+      }
+      axios({
+        method: 'post',
+        url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveContactBasic',
+        data: SaveObject
+      }).then(function(response) {
+        dispatch({
+          type: SAVE_NEW_CONTACT,
+
+        })
+      }).catch(function(error) {
+        alert("error" + JSON.stringify(error));
+      });
+
       dispatch({
         type: 'redux-form/DESTROY',
         meta: {
@@ -226,13 +267,13 @@ export const ACTION_HANDLERS = {
       })
     }
   },
-  [SAVE_NEW_CONTACT]:(state,action)=>{
-      let newContact = {}
-      if (action.payload) {
-      return Object.assign({}, state, {
-        showAddContactModal: !state.showAddContactModal
-      })
-    }
+  [SAVE_NEW_CONTACT]: (state, action) => {
+    let userInformation = state.userInformation
+    userInformation.Contacts = getContacts()
+    return Object.assign({}, state, {
+      userInformation: userInformation,
+      showAddContactModal: !state.showAddContactModal,
+    })
   },
   [BIND_CONTACT_TO_ROLE]: (state, action) => {
     let saveRoles = state.saveRoles
@@ -407,7 +448,7 @@ export const ACTION_HANDLERS = {
     let userInformation = state.userInformation
     let defaultContact = []
     let defaultRoles = []
-    defaultRoles = userInformation.Roles.map((role)=>role.Id)
+    defaultRoles = userInformation.Roles.map((role) => role.Id)
     userInformation.Roles.map((role, i) => {
       let contactindex = role.ContactIds.findIndex((c) => c = state.selectedContact.Id)
       if (contactindex != null && contactindex < 0) {

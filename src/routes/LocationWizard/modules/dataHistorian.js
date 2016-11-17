@@ -19,6 +19,7 @@ export const DELETE_DATAHISTORIAN = 'DELETE_DATAHISTORIAN'
 export const CLICKED_IS_DIGITAL_TAG = 'CLICKED_IS_DIGITAL_TAG'
 export const CONFIRM_DELETE_HISTORIAN = 'CONFIRM_DELETE_HISTORIAN'
 export const CLOSE_CONFIRMATION = "CLOSE_CONFIRMATION"
+export const BIND_DATA_HISTORIAN_LOCATIONID = "BIND_DATA_HISTORIAN_LOCATIONID"
 
 export function getGateways() {
   return {
@@ -40,6 +41,32 @@ export function getDataHistorians() {
     payload: getDataHistorian()
   };
 };
+
+export function bindLocationData(assignedScada) {
+  let defaultHistorians = getDataHistorian();
+  let finalData = []
+  defaultHistorians.map((data) => {
+    if (assignedScada) {
+      let index = assignedScada.map((scada) => scada.metricId === data.metricId);
+      if (index < 0) {
+        finalData.push(data);
+      }
+    }
+    else{
+      finalData.push(data);
+    }
+  })
+  assignedScada.map((data) => {
+    let scada = data
+    data.isEdited = false
+    data.isDefault = true
+    finalData.push(scada)
+  })
+  return {
+    type: BIND_DATA_HISTORIAN_LOCATIONID,
+    payload: finalData
+  }
+}
 
 export function ConfirmDataDelete(index) {
   return (dispatch, getState) => {
@@ -169,13 +196,13 @@ export const ACTION_HANDLERS = {
   [CONFIRM_DELETE_HISTORIAN]: (state, action) => {
     return Object.assign({}, state, {
       deleteDataIndex: action.payload,
-      showDataDeleteModal : !state.showDataDeleteModal
+      showDataDeleteModal: !state.showDataDeleteModal
     })
   },
   [CLOSE_CONFIRMATION]: (state, action) => {
     return Object.assign({}, state, {
       deleteDataIndex: null,
-      showDataDeleteModal : !state.showDataDeleteModal
+      showDataDeleteModal: !state.showDataDeleteModal
     })
   },
   [ADD_DATAHISTORIAN__MODAL]: (state, action) => {
@@ -201,7 +228,9 @@ export const ACTION_HANDLERS = {
         newDataHistorian.scadaTag = action.payload.values.Tag
         newDataHistorian.scadaServerAliasName = action.payload.values.Gateway.aliasName
         newDataHistorian.scadaServerId = action.payload.values.Gateway.id
-        newDataHistorian.locationId = '11020321'
+        newDataHistorian.locationId = 0
+        newDataHistorian.isDefault = false
+        newDataHistorian.isEdited = true
         newState.dataHistorian.push(newDataHistorian)
         newState.saveScada.push(newDataHistorian)
       }
@@ -218,6 +247,7 @@ export const ACTION_HANDLERS = {
       EditableData.scadaTag = EditData.scadaTag
       EditableData.scadaServerId = EditData.scadaServerId
       EditableData.index = action.payload
+      EditableData.isDefault = EditData.isDefault
     }
     let newState = Object.assign({}, state, {
       EditableDataHistorian: EditableData,
@@ -229,11 +259,6 @@ export const ACTION_HANDLERS = {
   [UPDATE_DATAHISTORIAN]: (state, action) => {
     let updatedDataHistorian = [];
     let saveDataHistorian = [];
-    state.saveScada.map((scada) => {
-      if (scada.id > 0) {
-        saveDataHistorian.push(scada);
-      }
-    })
     if (action.payload) {
       state.dataHistorian.map((dh, i) => {
         if (state.EditableDataHistorian != null && !isNaN(state.EditableDataHistorian.index)) {
@@ -241,9 +266,9 @@ export const ACTION_HANDLERS = {
             updatedDataHistorian.push(dh)
           } else {
             var newDataHistorian = {};
-            if (action.payload.fields) {
+            if (action.payload.values) {
               newDataHistorian.id = dh.id
-              if (action.payload.fields.metric && action.payload.fields.metric.touched) {
+              if (action.payload.values.metric) {
                 newDataHistorian.metricId = action.payload.values.metric.id
                 newDataHistorian.metricName = action.payload.values.metric.displayName
                 newDataHistorian.metricDescription = action.payload.values.metric.description
@@ -252,7 +277,7 @@ export const ACTION_HANDLERS = {
                 newDataHistorian.metricName = dh.metricName
                 newDataHistorian.metricDescription = dh.metricDescription
               }
-              if (action.payload.fields.Gateway && action.payload.fields.Gateway.touched) {
+              if (action.payload.values.Gateway) {
                 newDataHistorian.scadaServerAliasName = action.payload.values.Gateway.aliasName
                 newDataHistorian.scadaServerId = action.payload.values.Gateway.id
               } else {
@@ -260,27 +285,22 @@ export const ACTION_HANDLERS = {
                 newDataHistorian.scadaServerId = dh.scadaServerId
               }
               newDataHistorian.scadaTag = action.payload.fields.Tag && action.payload.fields.Tag.touched ? action.payload.values.Tag : dh.scadaTag
-              newDataHistorian.isDigitalState = action.payload.values && !isNaN(action.payload.values.isDigitalTag) ? action.payload.values.isDigitalTag : dh.isDigitalState
+              newDataHistorian.isDigitalState = state.clickedIsDigitalTag ? action.payload.values && !isNaN(action.payload.values.isDigitalTag) ? action.payload.values.isDigitalTag : false : dh.isDigitalState
               updatedDataHistorian.push(newDataHistorian)
-              if (dh.id > 0) {
-                let scadaIndex = saveDataHistorian.findIndex((s) => s.id === dh.id);
-                scadaIndex >= 0 ? saveDataHistorian[scadaIndex] = newDataHistorian : saveDataHistorian.push(newDataHistorian)
-              }
+              newDataHistorian.isDefault = dh.isDefault
+              newDataHistorian.isEdited = true
             } else if (state.clickedIsDigitalTag) {
               let data = dh;
               data.isDigitalState = action.payload.values && action.payload.values.isDigitalTag ? action.payload.values.isDigitalTag : false
+              data.isEdited = true
               updatedDataHistorian.push(dh)
-              if (dh.id > 0) {
-                let scadaIndex = saveDataHistorian.findIndex((s) => s.id === dh.id);
-                scadaIndex >= 0 ? saveDataHistorian[scadaIndex] = data : saveDataHistorian.push(data)
-              }
             } else {
               updatedDataHistorian.push(dh)
             }
-          }          
+          }
         }
         updatedDataHistorian.map((scada) => {
-          if (scada.id == 0) {
+          if (scada.isEdited) {
             saveDataHistorian.push(scada);
           }
         })
@@ -289,7 +309,7 @@ export const ACTION_HANDLERS = {
     return Object.assign({}, state, {
       dataHistorian: updatedDataHistorian,
       showAddDataHistorianModal: !state.showAddDataHistorianModal,
-      saveScada : saveDataHistorian
+      saveScada: saveDataHistorian
     })
   },
   [DELETE_DATAHISTORIAN]: (state, action) => {
@@ -303,13 +323,18 @@ export const ACTION_HANDLERS = {
     }
     return Object.assign({}, state, {
       dataHistorian: updatedDataHistorian,
-      showDataDeleteModal : !state.showDataDeleteModal,
-      deleteDataIndex : null
+      showDataDeleteModal: !state.showDataDeleteModal,
+      deleteDataIndex: null
     })
   },
   [CLICKED_IS_DIGITAL_TAG]: (state, action) => {
     return Object.assign({}, state, {
       clickedIsDigitalTag: true
+    })
+  },
+  [BIND_DATA_HISTORIAN_LOCATIONID]: (state, action) => {
+    return Object.assign({}, state, {
+      dataHistorian: action.payload
     })
   }
 }
@@ -323,8 +348,8 @@ const initialState = {
   showAddDataHistorianModal: false,
   clickedIsDigitalTag: false,
   saveScada: [],
-  showDataDeleteModal : false,
-  deleteDataIndex : null
+  showDataDeleteModal: false,
+  deleteDataIndex: null
 };
 
 export default function dataHistorianReducer(state = initialState, action) {

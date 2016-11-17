@@ -241,7 +241,7 @@ export const Users = (props) => {
                                         </div>                                
                                         <div className="col-xs-4">
                                             <label>Password</label>
-                                            <Field component={InputField} type="text" className="form-control" name="Custom5">
+                                            <Field component={InputField} type="text" className="form-control" name="Password">
                                             </Field>
                                         </div>
                                     </div>

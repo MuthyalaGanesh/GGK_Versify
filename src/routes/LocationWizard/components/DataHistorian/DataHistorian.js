@@ -79,7 +79,7 @@ export const DataHistorian = (props) => {
                                                                     <Tooltip id="tooltip">
                                                                         <strong>Delete {data.metricName}</strong>
                                                                     </Tooltip>}>
-                                                                    <i className={!isNaN(data.id) && data.id== 0 ? "show fa fa-trash-o" : "hide" } onClick={() => { props.ConfirmDataDelete(index) } }></i>
+                                                                    <i className={!data.isDefault ? "show fa fa-trash-o" : "hide" } onClick={() => { props.ConfirmDataDelete(index) } }></i>
                                                                 </OverlayTrigger> 
                                                                 
                                                             </td>
@@ -101,7 +101,7 @@ export const DataHistorian = (props) => {
                 </Modal.Header>
                 <Modal.Body>
                     <div className="row">
-                            <div className={props.dataHistorian.AddNewDataHistorian ||props.dataHistorian.EditableDataHistorian.id == 0 ? "col-xs-12 form-group show":"hide"}>
+                            <div className={props.dataHistorian.AddNewDataHistorian || !props.dataHistorian.EditableDataHistorian.isDefault ? "col-xs-12 form-group show":"hide"}>
                                 <div className="col-xs-6">
                                     <label>Metric</label>
                                 </div>                                

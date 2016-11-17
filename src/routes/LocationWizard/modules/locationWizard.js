@@ -2,7 +2,8 @@ import {
   basicInfoDropdowns,
   finalLocationSaveObject,
   getOMSLocationwizardData,
-  getMarketDrivenMappings
+  getMarketDrivenMappings,
+  getDataHistorian
 } from 'api/locationWizardApi'
 
 import {
@@ -11,7 +12,12 @@ import {
 import {
   BindUnitCharacteristicsInitialValues
 } from './unitCharacteristics';
-
+import{
+  bindLocationData
+} from './dataHistorian'
+import {
+  bindGatewayLocationData
+} from './gateways'
 
 import {editSystemIntegration} from "./systemIntegration"
 
@@ -35,13 +41,16 @@ export function leftMenuDropdownClickEvent(id, event) {
     let editObject = getOMSLocationwizardData(id);
     let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
     let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
+    dispatch(bindLocationData(dataHistorianParticularLocationObject));
       var selected_system_integrations=[]
       for(var i=0;i<locationsInfo.length;i++){
           if(locationsInfo[i].AliasName && locationsInfo[i].LocationMappingId >0){
               selected_system_integrations.push(locationsInfo[i]);
           }
       }
+    dispatch(bindGatewayLocationData(editObject.GetOMSLocationWizardDataResult.Gateways))
     dispatch(editSystemIntegration(selected_system_integrations));
+
     dispatch({
       type: 'redux-form/DESTROY',
       meta: {

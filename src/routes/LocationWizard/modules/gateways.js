@@ -18,6 +18,15 @@ export function getGateways() {
   };
 };
 
+export function bindGatewayLocationData(gateway){
+  let gateways = {}
+  gateways.Gateways =  gateway
+return {
+    type: GET_GATEWAY_INFO,
+    payload: gateways
+  };
+}
+
 export function ConfirmGatewayDelete(index) {
   return (dispatch, getState) => {
     return new Promise((resolve) => {

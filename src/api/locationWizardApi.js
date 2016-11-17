@@ -15,19 +15,21 @@ var dataHistorianInfo = require('./dataHistorianData.json');
 function mapWorkFlowInfo() {
     let workFlowData = XMLHttpRequestSyncGet(Constants.WORKFLOW_DATA).GetWorkflowDataResult.WorkflowGroupsWorkflows;
     let workFlows = XMLHttpRequestSyncGet(Constants.WORKFLOW_GROUPS);
-    var finalArray = _.map(workFlows, function(workflow){
-    return _.extend(workflow, _.omit(_.find(workFlowData, {Key: workflow.id}), 'Key'));
-    });    
+    var finalArray = _.map(workFlows, function(workflow) {
+        return _.extend(workflow, _.omit(_.find(workFlowData, {
+            Key: workflow.id
+        }), 'Key'));
+    });
     let workFlowGroup = []
-    finalArray.map((final)=>{
-            let newData = {}; 
-            newData.WorkflowGroupLocationId = 0         
-            newData.WorkflowGroupId = final.id  
-            newData.WorkflowGroupName = final.name
-            newData.isActive = final.isActive
-            newData.workflowTypeId = final.workflowTypeId
-            newData.title = final.Value!=null && final.Value.length > 0 ? final.Value.join('\n') : null
-            workFlowGroup.push(newData)
+    finalArray.map((final) => {
+        let newData = {};
+        newData.WorkflowGroupLocationId = 0
+        newData.WorkflowGroupId = final.id
+        newData.WorkflowGroupName = final.name
+        newData.isActive = final.isActive
+        newData.workflowTypeId = final.workflowTypeId
+        newData.title = final.Value != null && final.Value.length > 0 ? final.Value.join('\n') : null
+        workFlowGroup.push(newData)
     });
     return workFlowGroup;
 }
@@ -170,8 +172,16 @@ export function getWorkFlows() {
 export function getUserInfo() {
     let roles = XMLHttpRequestSyncGet(Constants.ROLE).GetRolesResult;
     let contacts = XMLHttpRequestSyncGet(Constants.AUTO_COMPLETE_CONTACTS).GetAutoCompleteContactsResult;
-    let userInfo = {Roles : roles.Roles,Contacts : contacts.Contacts}
-    return userInfo ;
+    let userInfo = {
+        Roles: roles.Roles,
+        Contacts: contacts.Contacts
+    }
+    return userInfo;
+}
+
+export function getContacts(){
+    let contacts = XMLHttpRequestSyncGet(Constants.AUTO_COMPLETE_CONTACTS).GetAutoCompleteContactsResult;
+    return contacts.Contacts
 }
 
 export function getGatewayInfo() {
@@ -184,20 +194,40 @@ export function getMetricInfo() {
 }
 
 export function getDataHistorian() {
-    var data = dataHistorianInfo.AssignedScadaPoints;
+    var metricData = XMLHttpRequestSyncGet(Constants.DEFAULTMETRICS);
+    var allMetrics = XMLHttpRequestSyncGet(Constants.METRICS);
+    var data = []
+    metricData.map((metric) => {
+        let index = allMetrics.findIndex((m) => m.id === metric.id)
+        if (index >= 0) {
+            let defaultMetric = allMetrics[index]
+            let scada = {}
+            scada.id = 0
+            scada.isDigitalState = false
+            scada.locationId = 0
+            scada.metricDescription = defaultMetric.description
+            scada.metricId = defaultMetric.id
+            scada.metricName = defaultMetric.displayName
+            scada.scadaServerAliasName = ""
+            scada.scadaServerId = ''
+            scada.scadaTag = ""
+            scada.isDefault = "true"
+            scada.isEdited = "fasle"
+            data.push(scada);
+        }
+    })
     return data;
 }
 
 export function getNewContactPopUpInfo() {
     var ContactPopup = {};
     ContactPopup.status = []
-    XMLHttpRequestSyncGet(Constants.CONTACT_STATUS).GetContactStatusesResult.map((status)=>
-        {
-            let obj = {}
-            obj.id = status.charAt(0)
-            obj.value = status
-            ContactPopup.status.push(obj)
-        });
+    XMLHttpRequestSyncGet(Constants.CONTACT_STATUS).GetContactStatusesResult.map((status) => {
+        let obj = {}
+        obj.id = status.charAt(0)
+        obj.value = status
+        ContactPopup.status.push(obj)
+    });
     ContactPopup.type = XMLHttpRequestSyncGet(Constants.CONTACT_TYPE);
     ContactPopup.org = XMLHttpRequestSyncGet(Constants.ORGANIZATION);
     ContactPopup.Timezones = getTimezones();

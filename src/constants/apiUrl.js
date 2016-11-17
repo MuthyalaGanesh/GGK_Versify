@@ -23,7 +23,8 @@ export const ApiUrl = {
 	ORGANIZATION: baseAddress + "/Organizations",
 	AUTO_COMPLETE_CONTACTS: baseAddress + "/AutoCompleteContacts?searchText=",
 	ROLE: baseAddress + "/Roles",
-	SAVE_OMSLOCATION_DATA: baseAddress + "/SaveOMSLocationWizardData"
+	SAVE_OMSLOCATION_DATA: baseAddress + "/SaveOMSLocationWizardData",
+	DEFAULTMETRICS : baseAddress+"/LWDefaultMetricIds"
 }
 
 export default ApiUrl
