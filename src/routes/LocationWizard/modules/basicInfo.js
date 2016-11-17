@@ -24,10 +24,14 @@ export function BindInitialValues(locationId) {
 };
 
 export function onCredentialDropdownChangeEvent(event) {
-  return {
-    type: CREDENTIAL_DROPDOWN_CHANGE_EVENT,
-    payload: event
-  };
+  
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      dispatch({ type: CREDENTIAL_DROPDOWN_CHANGE_EVENT, 
+        payload:{ formData: getState().form.CredentialsManagementForm, selected:event }})
+      
+    })
+  }
 };
 
 export function onChangeEvent(event) {
@@ -49,8 +53,17 @@ export const ACTION_HANDLERS = {
   },
   [CREDENTIAL_DROPDOWN_CHANGE_EVENT]:(state, action) => {
     console.log("CREDENTIAL_DROPDOWN_CHANGE_EVENT:", action.payload);
+    var stateObj =[];
+    try{
+       var dropdownItem = action.payload.selected;
+       stateObj = action.payload.formData;
+       stateObj.values['Encrypted Password']= dropdownItem.item.ExternalSystemPwd;
+    }catch(e){
+
+    }
+    
     return Object.assign({}, state, {
-     
+     stateObj
     })
   },
   [PRIMARY_MARKET_CHANGE_EVENT]: (state, action) => {
@@ -72,11 +85,13 @@ export const ACTION_HANDLERS = {
           if (!!dropdownItem && dropdownItem != '') {
             aliasNameDropDownItems.push({
               key: wizardDataItem.AliasName,
-              value: wizardDataItem.AliasName
+              value: wizardDataItem.AliasName,
+              item:wizardDataItem
             });
             externalSystemLoginDropDownItems.push({
               key: wizardDataItem.ExternalSystemLogin,
-              value: wizardDataItem.ExternalSystemLogin
+              value: wizardDataItem.ExternalSystemLogin,
+              item:wizardDataItem              
             });
           }
         }
