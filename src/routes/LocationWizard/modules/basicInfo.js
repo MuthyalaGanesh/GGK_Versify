@@ -11,15 +11,15 @@ import {
 import _ from 'lodash';
 
 export const ON_PARENT_LOCATION_SELECT = 'ON_PARENT_LOCATION_SELECT'
-export const BIND_INITIAL_VALUES = 'BIND_INITIAL_VALUES'
+export const BIND_BASIC_INITIAL_VALUES = 'BIND_BASIC_INITIAL_VALUES'
 export const PRIMARY_MARKET_CHANGE_EVENT = 'PRIMARY_MARKET_CHANGE_EVENT'
 export const CREDENTIAL_DROPDOWN_CHANGE_EVENT = 'CREDENTIAL_DROPDOWN_CHANGE_EVENT'
 
 
-export function BindInitialValues(locationId) {
+export function BindInitialValues(currentlcoation) {
   return {
-    type: BIND_INITIAL_VALUES,
-    payload: locationId
+    type: BIND_BASIC_INITIAL_VALUES,
+    payload: currentlcoation
   };
 };
 
@@ -45,33 +45,15 @@ export function onPrimaryMarketChangeEvent(event) {
     payload: event
   };
 };
-var currentLocation = null;
-
-function findLocation(allLocations, locationId) {
-  _.each(allLocations, (item) => {
-    if (currentLocation != null) {
-      return false;
-    }
-    if (item.Id == locationId) {
-      if (currentLocation == null) {
-        currentLocation = item;
-        return false;
-      }
-    } else {
-      findLocation(item.Children, locationId)
-    }
-  });
-}
 
 export const ACTION_HANDLERS = {
-  [BIND_INITIAL_VALUES]: (state, action) => {
-    var allLocationdata = basicInfoDropdowns.getLocations;
-    findLocation(allLocationdata, action.payload);
-    var locationObj = currentLocation;
-    if (!!locationObj) {
-      currentLocation = null;
+  [BIND_BASIC_INITIAL_VALUES]: (state, action) => {   
+    
+    if (!!action.payload) {
+      var locationId=action.payload.Id;
+      let locationObj =action.payload;
       var basicInfo = {
-        locationId: action.payload,
+        locationId: locationId,
         locationName: locationObj.Name,
         timezone: locationObj.Tz,
         parentLocation: locationObj.ParentId,
@@ -88,7 +70,7 @@ export const ACTION_HANDLERS = {
         physicalTimezone: locationObj.PhysicalTz,
         ownerShipPercentage: locationObj.OwnershipPct,
       }
-      var credentialData = PrepareCredentialBasicData(locationObj.PrimaryMarketId, action.payload);
+      var credentialData = PrepareCredentialBasicData(locationObj.PrimaryMarketId, locationId);
       var newState = Object.assign({}, state, {
         BasicInfo: basicInfo,
         CredentialBasicData: credentialData.MarketDrivendata,
@@ -127,7 +109,6 @@ export const ACTION_HANDLERS = {
 }
 
 function PrepareCredentialBasicData(marketId, locationId = null) {
-  debugger;
   //get MarketDrivenMappings from API based on marketType ID
   var data = getMarketDrivenMappings(marketId);
   var omsLocationwizardData = getOMSLocationwizardData(locationId);
