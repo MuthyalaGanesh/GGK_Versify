@@ -5,12 +5,15 @@ import {
     XMLHttpRequestSyncGet,
     XMLHttpRequestSyncSaveLocationPost
 } from "./serviceCall"
+import axios from 'axios'
+
 var jsonObject = require('./testData.json');
 var allLocations = require('./allLocationsTestData.json');
 var workFlows = require('./workFlowData.json');
 var userInfo = require('./userData.json');
 var gatewayInfo = require('./gatewayData.json');
 var dataHistorianInfo = require('./dataHistorianData.json');
+
 function mapWorkFlowInfo() {
     let workFlowData = XMLHttpRequestSyncGet(Constants.WORKFLOW_DATA).GetWorkflowDataResult.WorkflowGroupsWorkflows;
     let workFlows = XMLHttpRequestSyncGet(Constants.WORKFLOW_GROUPS);
@@ -59,7 +62,7 @@ export function getLocations() {
     return XMLHttpRequestSyncGet(Constants.LOCATIONS).GetAllLocationsResult;
 }
 
-function changeObjectTypeOfLocations(allLocations) {
+/*function changeObjectTypeOfLocations(allLocations) {
   var changedLocationsObject = [];
   allLocations.forEach(function(item) {
     changedLocationsObject.push({
@@ -71,10 +74,15 @@ function changeObjectTypeOfLocations(allLocations) {
   });
   return changedLocationsObject
 }
+*/
+export function getParentLocations() {   
+   return axios({
+              method: 'get',
+              url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/locations',
+    })
 
-export function getParentLocations() {    
-    let data = XMLHttpRequestSyncGet(Constants.LOCATIONS).GetAllLocationsResult;
-    return changeObjectTypeOfLocations(data);
+   // let data = XMLHttpRequestSyncGet(Constants.LOCATIONS).GetAllLocationsResult;
+    //return changeObjectTypeOfLocations(data);
 }
 
 export function getMarketDrivenMappings(marketId = null) {

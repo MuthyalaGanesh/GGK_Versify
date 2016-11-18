@@ -8,6 +8,9 @@ import {
   bindLocationTypes
 } from './modules/locationWizard'
 
+import { getLocationsInformation } from './modules/locationWizard'
+
+
 export default (store) => ({
   path: 'location',  
   getComponent(nextState, cb) {
@@ -35,7 +38,7 @@ export default (store) => ({
       injectReducer(store, { key: 'unitCharacteristics', reducer: unitCharacteristicsReducer })
       injectReducer(store, { key: 'users', reducer: userReducer })
       injectReducer(store, { key: 'workFlows', reducer: workflowReducer })
-      
+      store.dispatch(getLocationsInformation())
         /*  Return getComponent   */
       cb(null, LocationWizard)
 

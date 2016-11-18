@@ -38,6 +38,8 @@ export const TOGGLE_LEFTMENU_CLICK = 'TOGGLE_LEFTMENU_CLICK';
 
 export const LOCATIONS_MENUITEM_DROPDOWN_CLICK = 'LOCATIONS_MENUITEM_DROPDOWN_CLICK';
 
+export const GET_ALL_LOCATIONS_INFORMATION ="GET_ALL_LOCATIONS_INFORMATION";
+
 export function toggleMenuClick(event) {
   return {
     type: TOGGLE_LEFTMENU_CLICK,
@@ -570,11 +572,17 @@ export const ACTION_HANDLERS = {
     }
     return Object.assign({}, state)
   },
+  [GET_ALL_LOCATIONS_INFORMATION]: (state, action) => {
+    return Object.assign({}, state, {
+        allLocations: action.payload,
+        parentLocations:AddDefaultParent(changeObjectTypeOfLocations(action.payload))
+    })
+  }
 }
 
 function changeObjectTypeOfLocations(allLocations) {
   var changedLocationsObject = [];
-  allLocations.forEach(function (item) {
+  allLocations.forEach(function(item) {
     changedLocationsObject.push({
       key: item.Id,
       value: item.Id,
@@ -600,18 +608,28 @@ function AddDefaultParent(objectfuncntion) {
   return returnObj
 }
 
-const allParentLocationsObject = basicInfoDropdowns.getParentLocations();
+export function getLocationsInformation(){
+    return (dispatch, getState) => {
+    return new Promise((resolve) => {
+         basicInfoDropdowns.getParentLocations().then(function(response){
+              dispatch( {
+                type:GET_ALL_LOCATIONS_INFORMATION ,
+                payload: response.data.GetAllLocationsResult
+              });
+        })
+    })
+  }
+}
+
+//const allParentLocationsObject = basicInfoDropdowns.getParentLocations();
 
 const initialState = {
   error: null,
-  allLocations: allParentLocationsObject,
-  parentLocations: AddDefaultParent(changeObjectTypeOfLocations(allParentLocationsObject)),
-
+  allLocations: [],
+  parentLocations: []
 };
 
 export default function locationWizardReducer(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
-
-
   return handler ? handler(state, action) : state;
 }
