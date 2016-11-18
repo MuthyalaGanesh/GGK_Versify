@@ -53,7 +53,6 @@ export function onPrimaryMarketChangeEvent(event) {
 
 export const ACTION_HANDLERS = {
   [BIND_BASIC_INITIAL_VALUES]: (state, action) => {   
-    
     if (!!action.payload) {
       var locationId=action.payload.Id;
       let locationObj =action.payload;

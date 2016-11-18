@@ -46,22 +46,12 @@ export function getPrimaryMarkets() {
 }
 
 export function getLocations() {
-    return XMLHttpRequestSyncGet(Constants.LOCATIONS).GetAllLocationsResult;
+    return axios({
+              method: 'get',
+              url: Constants.LOCATIONS,
+    })
 }
 
-/*function changeObjectTypeOfLocations(allLocations) {
-  var changedLocationsObject = [];
-  allLocations.forEach(function(item) {
-    changedLocationsObject.push({
-      Id: item.Id,
-      Name: item.Name,
-      IsOutageLevel: item.IsOutageLevel,
-      Children: changeObjectTypeOfLocations(item.Children)
-    });
-  });
-  return changedLocationsObject
-}
-*/
 export function getParentLocations() {   
    return axios({
               method: 'get',
@@ -126,7 +116,11 @@ export function getAllUOMValues() {
 }
 
 export function getSystemIntegrationTypes() {
-    return XMLHttpRequestSyncGet(Constants.OMS_LOCATION_WIZARD_DATA);
+     return axios({
+              method: 'get',
+              url: Constants.OMS_LOCATION_WIZARD_DATA,
+    })
+   // return XMLHttpRequestSyncGet(Constants.OMS_LOCATION_WIZARD_DATA);
 }
 
 export const basicInfoDropdowns = {

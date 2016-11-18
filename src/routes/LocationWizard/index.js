@@ -16,6 +16,7 @@ import { getLocationTypesService,
          getFuelClassesService,
          getTimezonesService } from './modules/basicInfo'
 import { getDefaultUnitCharacteristicsService } from './modules/unitCharacteristics'
+import { getSystemIntegrationTypesService } from './modules/systemIntegration'
 
 
 export default (store) => ({
@@ -53,6 +54,7 @@ export default (store) => ({
       store.dispatch(getFuelClassesService())
       store.dispatch(getTimezonesService())
       store.dispatch(getDefaultUnitCharacteristicsService())
+      store.dispatch(getSystemIntegrationTypesService())
         /*  Return getComponent   */
       cb(null, LocationWizard)
 

@@ -143,10 +143,15 @@ return (dispatch, getState) => {
     })
     //If Location Id > 0, only bind data. otherwise load new forms
     if (id > 0) {
-      var allLocationdata = basicInfoDropdowns.getLocations();
-      findLocation(allLocationdata, id);
+      basicInfoDropdowns.getLocations().then(function(allLocationdata){
+      findLocation(allLocationdata.data.GetAllLocationsResult, id);
       var locationObj = currentLocation;
       currentLocation = null;
+
+      dispatch(BindInitialValues(locationObj));
+
+      
+      });
       let editObject = getOMSLocationwizardData(id);
       let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
       let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
@@ -161,9 +166,7 @@ return (dispatch, getState) => {
       dispatch(editSystemIntegration(selected_system_integrations));
       dispatch(bindWorkLocationData(editObject.GetOMSLocationWizardDataResult.AssignedWorkflowGroups));
       dispatch(bindUserLocationData(editObject.GetOMSLocationWizardDataResult.AssignedContacts, id));
-      dispatch(BindInitialValues(locationObj));
-
-      dispatch(BindUnitCharacteristicsInitialValues(editObject.GetOMSLocationWizardDataResult.AllLocationAttributeWithValues))
+      dispatch(BindUnitCharacteristicsInitialValues(editObject.GetOMSLocationWizardDataResult.AllLocationAttributeWithValues))   
     }
 
   };

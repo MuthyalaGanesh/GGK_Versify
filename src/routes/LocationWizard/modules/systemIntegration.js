@@ -6,6 +6,7 @@ export const ADD_SYSTEM_INTEGRATION = "ADD_SYSTEM_INTEGRATION"
 export const DELETE_SYS_INTEGRATION = "DELETE_SYS_INTEGRATION"
 export const ALIAS_SAVE = "ALIAS_SAVE"
 export const STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION = "STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION"
+export const GET_SYSTEM_INTEGRATION_TYPE_SERVICE = "GET_SYSTEM_INTEGRATION_TYPE_SERVICE"
 
 export function AliasGiven() {
     return (dispatch, getState) => {
@@ -21,9 +22,16 @@ export function AliasGiven() {
 export function editSystemIntegration(locationSystemIntegrations) {
     return (dispatch, getState) => {
         return new Promise((resolve) => {
-            dispatch({
-                type: STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION,
-                payload: locationSystemIntegrations
+            getSystemIntegrationTypes().then(function(response){
+                 dispatch({
+                    type: STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION,
+                    payload: {
+                        error: "",
+                        systemIntegrationTypes: response.data.GetOMSLocationWizardDataResult.AssignedLocationMappings,
+                        selectedSystemIntegrationTypes: locationSystemIntegrations,
+                        unSelectedSystemIntegrationTypes: []
+                    }
+                })
             })
         })
     }
@@ -61,6 +69,20 @@ export function AddSystemIntegration() {
         })
     }
 };
+
+
+export function getSystemIntegrationTypesService() {
+    return (dispatch, getState) => {
+        return new Promise((resolve) => {
+           getSystemIntegrationTypes().then(function(response){
+                 dispatch({
+                    type: GET_SYSTEM_INTEGRATION_TYPE_SERVICE, 
+                    payload:  response.data.GetOMSLocationWizardDataResult.AssignedLocationMappings
+                })
+           })
+        })
+    }
+}
 
 export const ACTION_HANDLERS = {
     [ALIAS_SAVE]: (state, action) => {
@@ -143,18 +165,18 @@ export const ACTION_HANDLERS = {
         })
     },
     [STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION]: (state, action) => {
-        return {
-            error: "",
-            systemIntegrationTypes: getSystemIntegrationTypes().GetOMSLocationWizardDataResult.AssignedLocationMappings,
-            selectedSystemIntegrationTypes: action.payload,
-            unSelectedSystemIntegrationTypes: []
-        };
+        return action.payload
+    },
+    [GET_SYSTEM_INTEGRATION_TYPE_SERVICE]: (state, action) => {
+            return Object.assign({}, state, {
+            systemIntegrationTypes: action.payload
+        })
     }
 }
 
 const initialState = {
     error: "",
-    systemIntegrationTypes: getSystemIntegrationTypes().GetOMSLocationWizardDataResult.AssignedLocationMappings,
+    systemIntegrationTypes: [],
     selectedSystemIntegrationTypes: [],
     unSelectedSystemIntegrationTypes: []
 };
