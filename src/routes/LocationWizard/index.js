@@ -18,6 +18,7 @@ import { getLocationTypesService,
 import { getDefaultUnitCharacteristicsService } from './modules/unitCharacteristics'
 import { getSystemIntegrationTypesService } from './modules/systemIntegration'
 import { getWorkFlowsService } from './modules/workFlow'
+import { getUserInfoService } from './modules/user'
 
 
 export default (store) => ({
@@ -57,6 +58,7 @@ export default (store) => ({
       store.dispatch(getDefaultUnitCharacteristicsService())
       store.dispatch(getSystemIntegrationTypesService())
       store.dispatch(getWorkFlowsService())
+      store.dispatch(getUserInfoService())
         /*  Return getComponent   */
       cb(null, LocationWizard)
 

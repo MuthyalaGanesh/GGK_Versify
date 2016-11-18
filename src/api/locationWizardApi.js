@@ -151,13 +151,24 @@ export function getWorkFlows() {
 }
 
 export function getUserInfo() {
-    let roles = XMLHttpRequestSyncGet(Constants.ROLE).GetRolesResult;
+    return axios({
+              method: 'get',
+              url:Constants.AUTO_COMPLETE_CONTACTS,
+    })
+    /*let roles = XMLHttpRequestSyncGet(Constants.ROLE).GetRolesResult;
     let contacts = XMLHttpRequestSyncGet(Constants.AUTO_COMPLETE_CONTACTS).GetAutoCompleteContactsResult;
+
     let userInfo = {
         Roles: roles.Roles,
         Contacts: contacts.Contacts
     }
-    return userInfo;
+    return userInfo;*/
+}
+export function getRoleInfo(){
+   return axios({
+              method: 'get',
+              url:Constants.ROLE,
+    })
 }
 
 export function getContacts(){

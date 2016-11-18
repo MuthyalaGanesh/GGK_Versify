@@ -1,5 +1,6 @@
 import {
-  getUserInfo
+  getUserInfo,
+  getRoleInfo
 } from 'api/locationWizardApi'
 import {
   getNewContactPopUpInfo
@@ -25,6 +26,7 @@ export const SAVE_NEW_CONTACT = 'SAVE_NEW_CONTACT'
 export const BIND_LOCATION_USER_DATA = 'BIND_LOCATION_USER_DATA'
 export const ROLE_BY_ROLE = 'ROLE_BY_ROLE'
 export const ROLE_BY_CONTACT = 'ROLE_BY_CONTACT'
+export const GET_USER_INFO_SERVICE = 'GET_USER_INFO_SERVICE'
 
 export function bindUserLocationData(assignedcontacts, locationId) {
   return (dispatch, getState) => {
@@ -119,16 +121,6 @@ export function unSelectAllRoles() {
   }
 };
 
-export function bindUserInformation() {
-  return (dispatch, getState) => {
-    return new Promise((resolve) => {
-      dispatch({
-        type: BIND_USER_INFO,
-        payload: getUserInfo()
-      })
-    })
-  }
-};
 
 export function AddContactModalToggle() {
   return (dispatch, getState) => {
@@ -197,6 +189,25 @@ export function saveNewContact() {
         },
         payload: ""
       })
+    })
+  }
+}
+
+export function getUserInfoService() {
+    return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      getUserInfo().then(function(contactsResponse){
+          getRoleInfo().then(function(rolesResponse){
+             let userInfo = {
+                      Roles: rolesResponse.data.GetRolesResult.Roles,
+                      Contacts: contactsResponse.data.GetAutoCompleteContactsResult.Contacts
+             }
+             dispatch({
+                type: GET_USER_INFO_SERVICE,
+                payload: userInfo
+            })
+          })
+      }) 
     })
   }
 }
@@ -794,11 +805,16 @@ export const ACTION_HANDLERS = {
       fetchedRoles: fetchedRoles,
       disableRoles: false
     })
+  },
+  [GET_USER_INFO_SERVICE]: (state,action) => {
+      return Object.assign({}, state, {
+      userInformation: action.payload
+    })
   }
 }
 const initialState = {
   error: null,
-  userInformation: getUserInfo(),
+  userInformation:[],
   selectedRole: {},
   selectedContact: {},
   defaultContacts: [],
