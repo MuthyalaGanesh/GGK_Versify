@@ -9,7 +9,8 @@ import axios from 'axios'
 
 
 
-function mapWorkFlowInfo() {
+/*function mapWorkFlowInfo() {
+    
     let workFlowData = XMLHttpRequestSyncGet(Constants.WORKFLOW_DATA).GetWorkflowDataResult.WorkflowGroupsWorkflows;
     let workFlows = XMLHttpRequestSyncGet(Constants.WORKFLOW_GROUPS);
     var finalArray = _.map(workFlows, function(workflow) {
@@ -30,7 +31,7 @@ function mapWorkFlowInfo() {
     });
     return workFlowGroup;
 }
-
+*/
 export function getLocationTypes() {
       return axios({
               method: 'get',
@@ -38,6 +39,12 @@ export function getLocationTypes() {
     })
 };
 
+export function getWorkFlowGroups() {
+   return axios({
+              method: 'get',
+              url:Constants.WORKFLOW_GROUPS,
+    })
+}
 export function getPrimaryMarkets() {
         return axios({
               method: 'get',
@@ -136,7 +143,11 @@ export const basicInfoDropdowns = {
 export default basicInfoDropdowns;
 
 export function getWorkFlows() {
-    return mapWorkFlowInfo();
+     return axios({
+              method: 'get',
+              url:Constants.WORKFLOW_DATA,
+    })
+   // return mapWorkFlowInfo();
 }
 
 export function getUserInfo() {

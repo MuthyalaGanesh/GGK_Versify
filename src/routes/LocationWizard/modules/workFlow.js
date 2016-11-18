@@ -1,5 +1,6 @@
 import {
-  getWorkFlows
+  getWorkFlows,
+  getWorkFlowGroups
 } from 'api/locationWizardApi'
 
 export const BIND_WORKFLOW_ITEMS = 'BIND_WORKFLOW_ITEMS'
@@ -7,42 +8,13 @@ export const SELECT_ALL = 'SELECT_ALL'
 export const REMOVE_ALL = 'REMOVE_ALL'
 export const WORKFLOW_CHANGE = 'WORKFLOW_CHANGE'
 export const BIND_LOCATION_WORKFOW = 'BIND_LOCATION_WORKFOW'
-
-export function bindWorkflowItems() {
-  return (dispatch, getState) => {
-    return new Promise((resolve) => {
-      dispatch({
-        type: BIND_WORKFLOW_ITEMS,
-        payload: getWorkFlows()
-      })
-    })
-  }
-};
+export const GET_WORKFLOW_SERVICE = "GET_WORKFLOW_SERVICE"
 
 export function bindWorkLocationData(assignedWorkflows) {
-  let Work = {}
-  Work.allWorkflows = getWorkFlows();
-  Work.defaultWorkFlow = []
-  if (assignedWorkflows != null) {
-    assignedWorkflows.map((assigned) => {
-      let index = Work.allWorkflows.findIndex((workflow) => workflow.WorkflowGroupId === assigned.WorkflowGroupId);
-      if(index>0)
-      {
-        let workflowinfo = Work.allWorkflows[index];
-        workflowinfo.WorkflowGroupLocationId = assigned.WorkflowGroupLocationId;
-        Work.allWorkflows[index]=workflowinfo
-        Work.defaultWorkFlow.push(workflowinfo);
-      }
-      else
-      {
-        Work.allWorkflows.push(assigned);
-        Work.defaultWorkFlow.push(assigned);
-      }
-    })
-  }
+  
   return {
     type: BIND_LOCATION_WORKFOW,
-    payload: Work
+    payload: assignedWorkflows
   };
 }
 
@@ -98,6 +70,40 @@ export function workFlowChange() {
   }
 };
 
+export function getWorkFlowsService() {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      getWorkFlows().then(function(workFlowDataResponse){
+          getWorkFlowGroups().then(function(response){
+                  let workFlowData = workFlowDataResponse.data.GetWorkflowDataResult.WorkflowGroupsWorkflows;
+                  let workFlows = response.data;
+                  var finalArray = _.map(workFlows, function(workflow) {
+                      return _.extend(workflow, _.omit(_.find(workFlowData, {
+                          Key: workflow.id
+                      }), 'Key'));
+                  });
+                  let workFlowGroup = []
+                  finalArray.map((final) => {
+                      let newData = {};
+                      newData.WorkflowGroupLocationId = 0
+                      newData.WorkflowGroupId = final.id
+                      newData.WorkflowGroupName = final.name
+                      newData.isActive = final.isActive
+                      newData.workflowTypeId = final.workflowTypeId
+                      newData.title = final.Value != null && final.Value.length > 0 ? final.Value.join('\n') : null
+                      workFlowGroup.push(newData)
+                  });
+                   dispatch({
+                      type: GET_WORKFLOW_SERVICE,
+                      payload: workFlowGroup
+                  })
+          })
+      })
+      
+    })
+  }
+}
+
 export const ACTION_HANDLERS = {
   [BIND_WORKFLOW_ITEMS]: (state, action) => {
     return Object.assign({}, state, {
@@ -121,16 +127,44 @@ export const ACTION_HANDLERS = {
     })
   },
   [BIND_LOCATION_WORKFOW]:(state,action)=>{
+        let work = {}
+        let assignedWorkflows = action.payload
+        work.allWorkflows = state.staticServiceWorkflows;
+        work.defaultWorkFlow = []
+        if (assignedWorkflows != null) {
+          assignedWorkflows.map((assigned) => {
+            let index = work.allWorkflows.findIndex((workflow) => workflow.WorkflowGroupId === assigned.WorkflowGroupId);
+            if(index>0)
+            {
+              let workflowinfo = work.allWorkflows[index];
+              workflowinfo.WorkflowGroupLocationId = assigned.WorkflowGroupLocationId;
+              work.allWorkflows[index]=workflowinfo
+              work.defaultWorkFlow.push(workflowinfo);
+            }
+            else
+            {
+              work.allWorkflows.push(assigned);
+              work.defaultWorkFlow.push(assigned);
+            }
+          })
+        }
     return Object.assign({}, state, {
-      workFlowItems: action.payload.allWorkflows,
-      defaultWorkFlow : action.payload.defaultWorkFlow
+      workFlowItems: work.allWorkflows,
+      defaultWorkFlow : work.defaultWorkFlow
+    })
+  },
+  [GET_WORKFLOW_SERVICE]: (state,action) => {
+    return Object.assign({}, state, {
+      workFlowItems: action.payload,
+      staticServiceWorkflows:action.payload
     })
   }
 }
 const initialState = {
   error: null,
-  workFlowItems: getWorkFlows(),
-  defaultWorkFlow: []
+  workFlowItems: [],
+  defaultWorkFlow: [],
+  staticServiceWorkflows:[]
 };
 
 export default function workFlowReducer(state = initialState, action) {

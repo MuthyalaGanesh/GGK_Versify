@@ -17,6 +17,7 @@ import { getLocationTypesService,
          getTimezonesService } from './modules/basicInfo'
 import { getDefaultUnitCharacteristicsService } from './modules/unitCharacteristics'
 import { getSystemIntegrationTypesService } from './modules/systemIntegration'
+import { getWorkFlowsService } from './modules/workFlow'
 
 
 export default (store) => ({
@@ -55,6 +56,7 @@ export default (store) => ({
       store.dispatch(getTimezonesService())
       store.dispatch(getDefaultUnitCharacteristicsService())
       store.dispatch(getSystemIntegrationTypesService())
+      store.dispatch(getWorkFlowsService())
         /*  Return getComponent   */
       cb(null, LocationWizard)
 
