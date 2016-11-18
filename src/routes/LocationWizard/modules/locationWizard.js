@@ -619,7 +619,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
 
     })
     var finalData = JSON.stringify(finalSaveObject)
-    console.log("finalSaveObject", finalData)
+/*    console.log("finalSaveObject", finalData)
     axios({
       method: 'post',
       url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
@@ -646,7 +646,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
         }
       });
     });
-  }
+  }*/
 
   dispatch({
     type:DEFAULT_NODE_EXPANDED,
@@ -672,6 +672,7 @@ console.log(k)
   });*/
 
 }
+}
 function test(Id,allLocations){
   console.log('check2')
   let array = []
@@ -692,6 +693,7 @@ function findanddestroy(Location, Id) {
           return 
       }else{
         if(!Location.Children){
+          console.log(Location)
           return Location 
         }
         else{
