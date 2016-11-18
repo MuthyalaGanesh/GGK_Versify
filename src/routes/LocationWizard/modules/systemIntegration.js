@@ -5,7 +5,7 @@ export const SYSTEM_INTEGRATION_TYPES = "SYSTEM_INTEGRATION_TYPES"
 export const ADD_SYSTEM_INTEGRATION = "ADD_SYSTEM_INTEGRATION"
 export const DELETE_SYS_INTEGRATION = "DELETE_SYS_INTEGRATION"
 export const ALIAS_SAVE = "ALIAS_SAVE"
-export const STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION ="STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION"
+export const STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION = "STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION"
 
 export function AliasGiven() {
     return (dispatch, getState) => {
@@ -18,12 +18,12 @@ export function AliasGiven() {
     }
 }
 
-export function editSystemIntegration(locationSystemIntegrations){
-     return (dispatch, getState) => {
+export function editSystemIntegration(locationSystemIntegrations) {
+    return (dispatch, getState) => {
         return new Promise((resolve) => {
             dispatch({
-              type:STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION,
-              payload:locationSystemIntegrations
+                type: STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION,
+                payload: locationSystemIntegrations
             })
         })
     }
@@ -50,7 +50,7 @@ export function AddSystemIntegration() {
                 type: ADD_SYSTEM_INTEGRATION,
                 payload: getState().form.SystemIntegrationForm &&
                     getState().form.SystemIntegrationForm.values &&
-                    getState().form.SystemIntegrationForm.values.newSystemIntegration?
+                    getState().form.SystemIntegrationForm.values.newSystemIntegration ?
                     getState().form.SystemIntegrationForm.values.newSystemIntegration.ExternalSystemName : null
             })
             dispatch({
@@ -91,7 +91,7 @@ export const ACTION_HANDLERS = {
             state.systemIntegrationTypes.map(ssit => {
                 if (ssit.ExternalSystemName == action.payload) {
                     stateObject = ssit;
-                    stateObject.LocationMappingId = 0;
+                    stateObject.LocationMappingId = ssit.LocationMappingId < 0 ? 0 : ssit.LocationMappingId;
                 }
                 else {
                     newUnSelectedSysIntegrations.push(ssit);
@@ -99,7 +99,7 @@ export const ACTION_HANDLERS = {
             })
             if (valuePresent == 0) {
 
-                if (stateObject.LocationMappingId != 0) {
+                if (stateObject.LocationMappingId == null || stateObject.LocationMappingId == undefined) {
                     stateObject = new Object({
                         LocationMappingId: 0,
                         ExternalSystemName: action.payload,
@@ -142,12 +142,12 @@ export const ACTION_HANDLERS = {
             unSelectedSystemIntegrationTypes: newUnSelectedSysIntegrations
         })
     },
-    [STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION]:(state,action) =>{
-      return  {
+    [STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION]: (state, action) => {
+        return {
             error: "",
             systemIntegrationTypes: getSystemIntegrationTypes().GetOMSLocationWizardDataResult.AssignedLocationMappings,
             selectedSystemIntegrationTypes: action.payload,
-            unSelectedSystemIntegrationTypes: getSystemIntegrationTypes().GetOMSLocationWizardDataResult.AssignedLocationMappings
+            unSelectedSystemIntegrationTypes: []
         };
     }
 }
@@ -156,7 +156,7 @@ const initialState = {
     error: "",
     systemIntegrationTypes: getSystemIntegrationTypes().GetOMSLocationWizardDataResult.AssignedLocationMappings,
     selectedSystemIntegrationTypes: [],
-    unSelectedSystemIntegrationTypes: getSystemIntegrationTypes().GetOMSLocationWizardDataResult.AssignedLocationMappings
+    unSelectedSystemIntegrationTypes: []
 };
 
 export default function systemIntegrationReducer(state = initialState, action) {

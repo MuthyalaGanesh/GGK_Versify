@@ -6,7 +6,13 @@ import InputField from 'components/InputField/InputField'
 import CreatableDropdownListField from 'components/DropdownList/CreatableDropdownListField'
 
 export const SystemIntegration = (props) => {
-    const systemIntegrationData = props.systemIntegration.unSelectedSystemIntegrationTypes;
+    const systemIntegrationData = [];
+    props.systemIntegration.systemIntegrationTypes.map(ssit => {
+        if (ssit.LocationMappingId < 0) {
+            systemIntegrationData.push(ssit)
+        }
+    })
+    console.log(systemIntegrationData, "systemIntegrationData")
     const touched = props.formdata
     return (
         <div className="row tab-pane fade in active" id="systemintegration">
