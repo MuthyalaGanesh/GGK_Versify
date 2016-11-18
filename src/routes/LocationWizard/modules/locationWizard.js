@@ -647,15 +647,11 @@ function saveObjectPreparationAndCall(getState, dispatch) {
       });
     });
   }
-<<<<<<<
+
   dispatch({
     type:DEFAULT_NODE_EXPANDED,
     payload: basicInfoObj.Id
-=======
 
->>>>>>>
-
-<<<<<<<
   })
   console.log('check')
  var k = test(basicInfoObj.Id,getState().location.allLocations)
@@ -674,10 +670,7 @@ console.log(k)
   }).catch(function(error) {
     alert("error" + JSON.stringify(error));
   });*/
-})
-=======
 
->>>>>>>
 }
 function test(Id,allLocations){
   console.log('check2')
