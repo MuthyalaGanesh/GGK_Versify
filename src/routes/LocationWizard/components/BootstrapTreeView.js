@@ -34,6 +34,7 @@ class TreeView extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps.defaultNodeExpanded)
     this.setState({data: this.setNodeId(_.clone({Children: nextProps.data}))});
   }
 
@@ -56,26 +57,23 @@ class TreeView extends React.Component {
   }
 
   recusrsiveexpansion(node) {
-  let k=0
-    if(node.Id == this.nodevalue){
-      console.log('found')
+  let flag=0
+    if(node.Id == this.defaultNodeExpanded){
       return 1
     }
     else{
       if(!node.Children){
-         console.log('no Children', node.Id)
         return 0
       }
       else{
-        console.log(node.Name)
         let i = 0
         for( i in node.Children){
           if(this.recusrsiveexpansion(node.Children[i])){
-              k = 1
+              flag = 1
               break 
           }
         }
-        if( k == 1){
+        if( flag == 1){
           return 1
         }
         else{
