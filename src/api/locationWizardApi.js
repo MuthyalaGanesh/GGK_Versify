@@ -108,32 +108,21 @@ export function getOMSLocationwizardData(locationId = null) {
 }
 
 export function getUnitCharacteristics() {
-
-    return XMLHttpRequestSyncGet(Constants.ATTRIBUTES);
-}
-
-export function getDefaultUnitCharacteristics() {
-    var unitCharacteristicsJson = []
-    var allUOMValues=getAllUOMValues();
-    getUnitCharacteristics().map((uc) => {
-        if (uc.name.toLowerCase() == "capacity" || uc.name.toLowerCase() == "eco min" || uc.name.toLowerCase() == "eco max") {
-            uc.editableAttributes = [{}]
-            uc.isDeletable = false;
-            uc.isSavable = false;
-            allUOMValues.map((uom) => {
-                if (uc.defaultUnitOfMeasureId == uom.id) {
-                    uc.UOM = uom.name;
-                }
-            })
-            unitCharacteristicsJson.push(uc);
-        }
+    return axios({
+              method: 'get',
+              url: Constants.ATTRIBUTES,
     })
-
-    return unitCharacteristicsJson;
+    //return XMLHttpRequestSyncGet(Constants.ATTRIBUTES);
 }
+
+
 
 export function getAllUOMValues() {
-    return XMLHttpRequestSyncGet(Constants.UNITS_OF_MEASURE);
+    return axios({
+              method: 'get',
+              url: Constants.UNITS_OF_MEASURE,
+    })
+    //return XMLHttpRequestSyncGet(Constants.UNITS_OF_MEASURE);
 }
 
 export function getSystemIntegrationTypes() {

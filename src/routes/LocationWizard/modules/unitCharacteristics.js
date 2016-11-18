@@ -1,4 +1,7 @@
-import {getAllUOMValues, getUnitCharacteristics, getDefaultUnitCharacteristics} from 'api/locationWizardApi'
+import {
+  getAllUOMValues,
+  getUnitCharacteristics
+} from 'api/locationWizardApi'
 import moment from 'moment';
 
 export const DELETE_MODAL = 'DELETE_MODAL'
@@ -10,6 +13,9 @@ export const INSERT_ROW = "INSERT_ROW"
 export const REMOVE_EDIT_ATTRIBUTE = "REMOVE_EDIT_ATTRIBUTE"
 export const TOGGLE_MODAL = "TOGGLE_MODAL"
 export const BIND_INITIAL_ATTRIBUTES = "BIND_INITIAL_ATTRIBUTES"
+export const GET_ALL_UOM_VALUES = "GET_ALL_UOM_VALUES"
+export const GET_UNIT_CHARACTERSTICS = "GET_UNIT_CHARACTERSTICS"
+export const GET_SELECTED_AND_DEFAULT_UNIT_CHARACTERSTICS = "GET_SELECTED_AND_DEFAULT_UNIT_CHARACTERSTICS"
 
 //helps in binding initial values
 export function BindUnitCharacteristicsInitialValues(locationObj) {
@@ -23,10 +29,15 @@ export function BindUnitCharacteristicsInitialValues(locationObj) {
 export function ToggleAddEditModal(index) {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      dispatch({ type: TOGGLE_MODAL, payload: index })
+      dispatch({
+        type: TOGGLE_MODAL,
+        payload: index
+      })
       dispatch({
         type: 'redux-form/DESTROY',
-        meta: { form: "UnitCharacteristicsForm" },
+        meta: {
+          form: "UnitCharacteristicsForm"
+        },
         payload: ""
       })
     })
@@ -50,7 +61,9 @@ export function updateRow(event) {
       })
       dispatch({
         type: 'redux-form/DESTROY',
-        meta: { form: "UnitCharacteristicsForm" },
+        meta: {
+          form: "UnitCharacteristicsForm"
+        },
         payload: ""
       })
     })
@@ -60,7 +73,10 @@ export function updateRow(event) {
 export function AddUnitCharateristic() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      dispatch({ type: INSERT_ROW, payload: getState().form.UnitCharacteristicsForm })
+      dispatch({
+        type: INSERT_ROW,
+        payload: getState().form.UnitCharacteristicsForm
+      })
 
     })
   }
@@ -103,8 +119,7 @@ export const ACTION_HANDLERS = {
       if (!attributes || (attributes && attributes.length == 0)) {
         newState.selectedunitCharacteristics = [];
         newState.selectedunitCharacteristics = newState.defaultUnitCharacteristics;
-      }
-      else {
+      } else {
         newState.selectedunitCharacteristics = [];
         attributes.map(att => {
           newState.unitCharacteristics.map(uc => {
@@ -148,7 +163,12 @@ export const ACTION_HANDLERS = {
     if (action.payload != null) {
       if (!isNaN(action.payload)) {
         if (action.payload == -1) {
-          var newState = Object.assign({}, state, { showModal: !state.showModal, isEditable: true, editableUnitCharacter: null, error: null })
+          var newState = Object.assign({}, state, {
+            showModal: !state.showModal,
+            isEditable: true,
+            editableUnitCharacter: null,
+            error: null
+          })
           newState.UOMLabel = "",
             newState.descriptionLabel = "",
             newState.displayNameLabel = ""
@@ -169,18 +189,23 @@ export const ACTION_HANDLERS = {
             }
           })
           return newState;
-        }
-        else {
+        } else {
           var editIndex = 0
           if (action.payload != null && !isNaN(action.payload) && state.selectedunitCharacteristics) {
             state.editableUnitCharacter = state.selectedunitCharacteristics[action.payload]
             state.editableIndex = action.payload;
           }
-          return Object.assign({}, state, { showModal: !state.showModal, isEditable: false, error: null })
+          return Object.assign({}, state, {
+            showModal: !state.showModal,
+            isEditable: false,
+            error: null
+          })
         }
-      }
-      else {
-        return Object.assign({}, state, { showModal: !state.showModal, error: null })
+      } else {
+        return Object.assign({}, state, {
+          showModal: !state.showModal,
+          error: null
+        })
       }
     }
   },
@@ -190,7 +215,9 @@ export const ACTION_HANDLERS = {
     if (action.payload != null) {
       state.deletingUnitIndex = action.payload;
     }
-    return Object.assign({}, state, { showDeleteModal: !state.showDeleteModal })
+    return Object.assign({}, state, {
+      showDeleteModal: !state.showDeleteModal
+    })
   },
   //deleting object after confirmation
   [DELETE_UNIT_CHARACTERISTIC]: (state, action) => {
@@ -202,11 +229,18 @@ export const ACTION_HANDLERS = {
         }
       })
     }
-    return Object.assign({}, state, { showDeleteModal: !state.showDeleteModal, selectedunitCharacteristics: newSelectedUC })
+    return Object.assign({}, state, {
+      showDeleteModal: !state.showDeleteModal,
+      selectedunitCharacteristics: newSelectedUC
+    })
   },
   //update edited row
   [UPDATE_ROW]: (state, action) => {
-    var newState = Object.assign({}, state, { showModal: !state.showModal, error: null, dateRangeValidation: [] })
+    var newState = Object.assign({}, state, {
+      showModal: !state.showModal,
+      error: null,
+      dateRangeValidation: []
+    })
 
     if (action.payload) {
       var errorStatus = null;
@@ -219,12 +253,9 @@ export const ACTION_HANDLERS = {
 
           for (var index = 0; index < state.editableUnitCharacter.editableAttributes.length; index++) {
             var initialAttribute = {
-              Value: (action.payload.values && action.payload.values.ucvalue && action.payload.values.ucvalue[index])
-                ? action.payload.values.ucvalue[index] : state.editableUnitCharacter.editableAttributes[index].Value,
-              EffectiveStartDate: (action.payload.values && action.payload.values.effectiveStartDate && action.payload.values.effectiveStartDate[index])
-                ? action.payload.values.effectiveStartDate[index] : state.editableUnitCharacter.editableAttributes[index].EffectiveStartDate,
-              EffectiveEndDate: (action.payload.values && action.payload.values.effectiveEndDate && action.payload.values.effectiveEndDate[index])
-                ? action.payload.values.effectiveEndDate[index] : state.editableUnitCharacter.editableAttributes[index].EffectiveEndDate
+              Value: (action.payload.values && action.payload.values.ucvalue && action.payload.values.ucvalue[index]) ? action.payload.values.ucvalue[index] : state.editableUnitCharacter.editableAttributes[index].Value,
+              EffectiveStartDate: (action.payload.values && action.payload.values.effectiveStartDate && action.payload.values.effectiveStartDate[index]) ? action.payload.values.effectiveStartDate[index] : state.editableUnitCharacter.editableAttributes[index].EffectiveStartDate,
+              EffectiveEndDate: (action.payload.values && action.payload.values.effectiveEndDate && action.payload.values.effectiveEndDate[index]) ? action.payload.values.effectiveEndDate[index] : state.editableUnitCharacter.editableAttributes[index].EffectiveEndDate
             }
             finalAttributes.push(initialAttribute)
           }
@@ -233,11 +264,7 @@ export const ACTION_HANDLERS = {
 
               var newEditableAttributes = {
                 EffectiveEndDate: ed.effectiveEndDate,
-                EffectiveStartDate: ed.effectiveStartDate ? ed.effectiveStartDate
-                  : (action.payload.values.editableData[i - 1]
-                    && action.payload.values.editableData[i - 1].effectiveEndDate
-                    ? action.payload.values.editableData[i - 1].effectiveEndDate
-                    : (uc.editableAttributes[0].EffectiveEndDate)),
+                EffectiveStartDate: ed.effectiveStartDate ? ed.effectiveStartDate : (action.payload.values.editableData[i - 1] && action.payload.values.editableData[i - 1].effectiveEndDate ? action.payload.values.editableData[i - 1].effectiveEndDate : (uc.editableAttributes[0].EffectiveEndDate)),
                 Value: ed.ucvalue
               }
               finalAttributes.push(newEditableAttributes);
@@ -248,16 +275,12 @@ export const ACTION_HANDLERS = {
           uc.editableAttributes.map((ea, i) => {
             if (!ea.EffectiveEndDate || !ea.EffectiveStartDate || !ea.Value) {
               errorStatus = 1;
-            }
-            else {
-              var dateVariations = (uc.editableAttributes[i - 1] && uc.editableAttributes[i - 1].EffectiveEndDate
-                ? (new Date(uc.editableAttributes[i - 1].EffectiveEndDate) - new Date(ea.EffectiveStartDate))
-                : (i > 0) ? (new Date(uc.editableAttributes[0].EffectiveEndDate) - new Date(ea.EffectiveStartDate)) : null);
+            } else {
+              var dateVariations = (uc.editableAttributes[i - 1] && uc.editableAttributes[i - 1].EffectiveEndDate ? (new Date(uc.editableAttributes[i - 1].EffectiveEndDate) - new Date(ea.EffectiveStartDate)) : (i > 0) ? (new Date(uc.editableAttributes[0].EffectiveEndDate) - new Date(ea.EffectiveStartDate)) : null);
               if (dateVariations) {
                 errorStatus = 1;
                 dateValidations.push(dateVariations < 0 ?
-                  "Effective end date and start dates shouldn't have gaps"
-                  : "Effective end date and start dates shouldn't overlap")
+                  "Effective end date and start dates shouldn't have gaps" : "Effective end date and start dates shouldn't overlap")
               }
               if ((new Date(ea.EffectiveEndDate) - new Date(ea.EffectiveStartDate)) < 0) {
                 errorStatus = 1;
@@ -302,15 +325,19 @@ export const ACTION_HANDLERS = {
         }
       })
       return Object.assign({}, newState, {
-        editableUnitCharacter: (!errorStatus && dateValidations.length == 0) ? null :
-          state.editableUnitCharacter, error: errorStatus, showModal: (!errorStatus && dateValidations.length == 0) ?
-            (!state.showModal) : (state.showModal), dateRangeValidation: dateValidations
+        editableUnitCharacter: (!errorStatus && dateValidations.length == 0) ? null : state.editableUnitCharacter,
+        error: errorStatus,
+        showModal: (!errorStatus && dateValidations.length == 0) ?
+          (!state.showModal) : (state.showModal),
+        dateRangeValidation: dateValidations
       });
     }
   },
   //helps in prepopulating unit characteristic values after changing unit character
   [CHARACTERISTIC_SELECTED]: (state, action) => {
-    var newState = Object.assign({}, state, { error: null })
+    var newState = Object.assign({}, state, {
+      error: null
+    })
     if (action.payload != null && action.payload != undefined) {
       newState.unitCharacteristics.map((uc) => {
         var updatedRow = {}
@@ -321,8 +348,7 @@ export const ACTION_HANDLERS = {
               updatedRow.uom = uom.name
             }
           })
-        }
-        else {
+        } else {
           updatedRow.uom = "String"
         }
         updatedRow.description = uc.description
@@ -333,8 +359,7 @@ export const ACTION_HANDLERS = {
             newState.UOMLabel = updatedRow.uom
             newState.descriptionLabel = updatedRow.description
             newState.displayNameLabel = updatedRow.displayName
-          }
-          else {
+          } else {
             var attributes = newState.editableUnitCharacter.editableAttributes;
             newState.editableUnitCharacter = uc;
             newState.editableUnitCharacter.UOM = updatedRow.uom
@@ -348,7 +373,10 @@ export const ACTION_HANDLERS = {
     return newState
   },
   [INSERT_ROW]: (state, action) => {
-    var newState = Object.assign({}, state, { error: null, dateRangeValidation: [] })
+    var newState = Object.assign({}, state, {
+      error: null,
+      dateRangeValidation: []
+    })
     if (action.payload && action.payload.values && action.payload.values.charateristicName) {
       var errorStatus = null;
       var dateValidations = []
@@ -365,10 +393,7 @@ export const ACTION_HANDLERS = {
             action.payload.values.editableData.map((ed, i) => {
               var newEditableAttributes = {
                 EffectiveEndDate: ed.effectiveEndDate,
-                EffectiveStartDate: ed.effectiveStartDate ? ed.effectiveStartDate
-                  : (action.payload.values.editableData[i - 1]
-                    && action.payload.values.editableData[i - 1].effectiveEndDate
-                    ? action.payload.values.editableData[i - 1].effectiveEndDate : (uc.editableAttributes[0].EffectiveEndDate)),
+                EffectiveStartDate: ed.effectiveStartDate ? ed.effectiveStartDate : (action.payload.values.editableData[i - 1] && action.payload.values.editableData[i - 1].effectiveEndDate ? action.payload.values.editableData[i - 1].effectiveEndDate : (uc.editableAttributes[0].EffectiveEndDate)),
                 Value: ed.ucvalue
               }
               uc.editableAttributes.push(newEditableAttributes);
@@ -378,16 +403,12 @@ export const ACTION_HANDLERS = {
           uc.editableAttributes.map((ea, i) => {
             if (!ea.EffectiveEndDate || !ea.EffectiveStartDate || !ea.Value) {
               errorStatus = 1;
-            }
-            else {
-              var dateVariations = (uc.editableAttributes[i - 1] && uc.editableAttributes[i - 1].EffectiveEndDate
-                ? (new Date(uc.editableAttributes[i - 1].EffectiveEndDate) - new Date(ea.EffectiveStartDate))
-                : (i > 0) ? (new Date(uc.editableAttributes[0].EffectiveEndDate) - new Date(ea.EffectiveStartDate)) : null);
+            } else {
+              var dateVariations = (uc.editableAttributes[i - 1] && uc.editableAttributes[i - 1].EffectiveEndDate ? (new Date(uc.editableAttributes[i - 1].EffectiveEndDate) - new Date(ea.EffectiveStartDate)) : (i > 0) ? (new Date(uc.editableAttributes[0].EffectiveEndDate) - new Date(ea.EffectiveStartDate)) : null);
               if (dateVariations) {
                 errorStatus = 1;
                 dateValidations.push(dateVariations < 0 ?
-                  "Effective end date and start dates shouldn't have gaps"
-                  : "Effective end date and start dates shouldn't overlap")
+                  "Effective end date and start dates shouldn't have gaps" : "Effective end date and start dates shouldn't overlap")
               }
               if ((new Date(ea.EffectiveEndDate) - new Date(ea.EffectiveStartDate)) < 0) {
                 errorStatus = 1;
@@ -435,12 +456,14 @@ export const ACTION_HANDLERS = {
       })
 
       return Object.assign({}, newState, {
-        error: errorStatus, showModal: (!errorStatus && dateValidations.length == 0)
-          ? (!state.showModal) : (state.showModal), dateRangeValidation: dateValidations
+        error: errorStatus,
+        showModal: (!errorStatus && dateValidations.length == 0) ? (!state.showModal) : (state.showModal),
+        dateRangeValidation: dateValidations
       })
-    }
-    else {
-      return Object.assign({}, newState, { error: 1 })
+    } else {
+      return Object.assign({}, newState, {
+        error: 1
+      })
     }
 
   },
@@ -464,16 +487,90 @@ export const ACTION_HANDLERS = {
 
       state.editableUnitCharacter = [];
     }
-    return Object.assign({}, state, { editableUnitCharacter: newEditableUnitCharacter[0] });
+    return Object.assign({}, state, {
+      editableUnitCharacter: newEditableUnitCharacter[0]
+    });
+  },
+
+  [GET_ALL_UOM_VALUES]: (state, action) => {
+
+    return Object.assign({}, state, {
+      allUOMvalues: action.payload
+    })
+  },
+  [GET_UNIT_CHARACTERSTICS]: (state, action) => {
+    return Object.assign({}, state, {
+      unitCharacteristics: action.payload
+    })
+  },
+  [GET_SELECTED_AND_DEFAULT_UNIT_CHARACTERSTICS]: (state, action) => {
+    return Object.assign({}, state, {
+      selectedunitCharacteristics: action.payload,
+      defaultUnitCharacteristics: action.payload
+    })
+  }
+
+}
+export function getDefaultUnitCharacteristics(allUOMValues) {
+  var unitCharacteristicsJson = []
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      getUnitCharacteristics().then(function(response) {
+
+        dispatch({
+          type: GET_UNIT_CHARACTERSTICS,
+          payload: response.data
+        })
+
+        response.data.map((uc) => {
+          if (uc.name.toLowerCase() == "capacity" || uc.name.toLowerCase() == "eco min" || uc.name.toLowerCase() == "eco max") {
+            uc.editableAttributes = [{}]
+            uc.isDeletable = false;
+            uc.isSavable = false;
+            allUOMValues.map((uom) => {
+              if (uc.defaultUnitOfMeasureId == uom.id) {
+                uc.UOM = uom.name;
+              }
+            })
+            unitCharacteristicsJson.push(uc);
+          }
+        })
+        dispatch({
+          type: GET_SELECTED_AND_DEFAULT_UNIT_CHARACTERSTICS,
+          payload: unitCharacteristicsJson
+        })
+
+      })
+    })
+  }
+
+}
+
+export function getDefaultUnitCharacteristicsService() {
+
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      getAllUOMValues().then(function(response) {
+        dispatch({
+          type: GET_ALL_UOM_VALUES,
+          payload: response.data
+        });
+        dispatch(getDefaultUnitCharacteristics(response.data))
+
+      })
+    })
   }
 }
+
+
+
 const initialState = {
   error: "",
-  unitCharacteristics: getUnitCharacteristics(),
-  allUOMvalues: getAllUOMValues(),
-  selectedunitCharacteristics: getDefaultUnitCharacteristics(),
+  unitCharacteristics: [],
+  allUOMvalues: [],
+  selectedunitCharacteristics: [],
   unSelectedUnitCharacteristics: [],
-  defaultUnitCharacteristics: getDefaultUnitCharacteristics(),
+  defaultUnitCharacteristics: [],
   finalUnitCharacteristics: [],
   showModal: false,
   showDeleteModal: false,
