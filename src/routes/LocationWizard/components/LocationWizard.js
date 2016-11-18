@@ -105,6 +105,23 @@ return (
                     </div>
                 </Modal.Footer>
             </Modal>
+
+            <Modal show={props.location.showLocationSaveResponsePopup}>
+                <Modal.Header>
+                    <Modal.Title>Save : Information</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                <Alert>
+                    <h5 style={{'textAlign':'center'}}>{props.location.responseMessage}</h5>      
+                </Alert>
+                     
+                </Modal.Body>
+                <Modal.Footer>
+                    <div className="pull-right">
+                        <button className="btn btn-danger" type="button" onClick={(e)=>props.toggleSaveResponsePopup(e)}>OK</button>
+                    </div>
+                </Modal.Footer>
+            </Modal>
     </section>
 </div>
                

@@ -8,7 +8,8 @@ import {
 	leftMenuDropdownClickEvent,
 	toggleMenuClick,
 	toggleAlertPopup,
-	LoadAndRefreshForms
+	LoadAndRefreshForms,
+	toggleSaveResponsePopup 
 } from '../modules/locationWizard';
 
 
@@ -27,6 +28,9 @@ const mapDispatchToProps = (dispatch) => ({
 	},
 	LoadAndRefreshForms:(e)=>{
 		dispatch(LoadAndRefreshForms(e))
+	},
+	toggleSaveResponsePopup:(e)=>{
+		dispatch(toggleSaveResponsePopup(e))
 	}
 })
 
