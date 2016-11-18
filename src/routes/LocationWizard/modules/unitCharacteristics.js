@@ -99,9 +99,7 @@ export const ACTION_HANDLERS = {
   [BIND_INITIAL_ATTRIBUTES]: (state, action) => {
     if (action.payload) {
       var newState = Object.assign({}, state)
-      var attributes = action.payload.Attributes
-      console.log(attributes)
-      debugger;
+      var attributes = action.payload
       if (!attributes || (attributes && attributes.length == 0)) {
         newState.selectedunitCharacteristics = [];
         newState.selectedunitCharacteristics = newState.defaultUnitCharacteristics;
@@ -112,26 +110,21 @@ export const ACTION_HANDLERS = {
           newState.unitCharacteristics.map(uc => {
             if (uc.id == att.AttributeId) {
               uc.isDeletable = true;
+              uc.isSavable = true;
               uc.LocationId = att.LocationId
               newState.defaultUnitCharacteristics.map(duc => {
                 if (duc.id == att.AttributeId) {
                   uc.isDeletable = false;
                 }
               })
-              if (uc.defaultUnitOfMeasureId) {
-                state.allUOMvalues.map(uom => {
-                  if (uc.defaultUnitOfMeasureId == uom.id) {
-                    uc.UOM = uom.name
-                  }
-                })
-              }
-
+              uc.defaultUnitOfMeasureId = att.UnitOfMeasureId
+              uc.UOM = att.UnitOfMeasureName
+              uc.LocationAttributeId = att.LocationAttributeId
               var editableAttributes = {
-                EffectiveEndDate: (new Date(parseInt(att.EffEndDate.substring(att.EffEndDate.indexOf("(") + 1, (att.EffEndDate.indexOf(")")))))).toLocaleDateString(),
-                EffectiveStartDate: (new Date(parseInt(att.EffStartDate.substring(att.EffStartDate.indexOf("(") + 1, (att.EffStartDate.indexOf(")")))))).toLocaleDateString(),
+                EffectiveEndDate: (new Date(parseInt(att.EffectiveEndDate.substring(att.EffectiveEndDate.indexOf("(") + 1, (att.EffectiveEndDate.indexOf(")")))))).toLocaleDateString(),
+                EffectiveStartDate: (new Date(parseInt(att.EffectiveStartDate.substring(att.EffectiveStartDate.indexOf("(") + 1, (att.EffectiveStartDate.indexOf(")")))))).toLocaleDateString(),
                 Value: att.Value
               }
-
               var valuePresence = 1;
               newState.selectedunitCharacteristics.map(suc => {
                 if (suc.id == att.AttributeId) {
@@ -273,11 +266,41 @@ export const ACTION_HANDLERS = {
             }
           })
         }
+        if (!errorStatus && dateValidations.length == 0) {
+          var todayDate = new Date();
+          var effDate = new Date(uc.editableAttributes[0].EffectiveStartDate);
+          var timeDiff = Math.abs(effDate.getTime() - todayDate.getTime());
+          var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+          var minDiff = diffDays < 0 ? (-1)(diffDays) : diffDays;
 
+          uc.editableAttributes.map((ea, i) => {
+            var effDate = new Date(ea.EffectiveStartDate);
+            var timeDiff = Math.abs(effDate.getTime() - todayDate.getTime());
+            var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            diffDays = diffDays < 0 ? (-1)(diffDays) : diffDays
+
+            if (diffDays < minDiff) {
+              minDiff = diffDays;
+              var initialDate = new Object({
+                EffectiveEndDate: uc.editableAttributes[0].EffectiveEndDate,
+                EffectiveStartDate: uc.editableAttributes[0].EffectiveStartDate,
+                Value: uc.editableAttributes[0].Value
+              });
+              var swapDate = new Object({
+                EffectiveEndDate: ea.EffectiveEndDate,
+                EffectiveStartDate: ea.EffectiveStartDate,
+                Value: ea.Value
+              })
+              uc.editableAttributes[0].EffectiveEndDate = swapDate.EffectiveEndDate;
+              uc.editableAttributes[0].EffectiveStartDate = swapDate.EffectiveStartDate;
+              uc.editableAttributes[0].Value = swapDate.Value;
+              ea.EffectiveEndDate = initialDate.EffectiveEndDate;
+              ea.EffectiveStartDate = initialDate.EffectiveStartDate;
+              ea.Value = initialDate.Value;
+            }
+          })
+        }
       })
-      // if (!errorStatus && dateValidations.length == 0) {
-
-      // }
 
       return Object.assign({}, newState, {
         editableUnitCharacter: (!errorStatus && dateValidations.length == 0) ? {} :
@@ -365,19 +388,38 @@ export const ACTION_HANDLERS = {
           })
           uc.UOM = newState.UOMLabel
           if (!errorStatus && dateValidations.length == 0) {
-            // var minDiff = 0;
-            // var todayDate = new Date();
-            // uc.editableAttributes.map((ea, i) => {
-            //   var effDate = new Date(ea.EffectiveStartDate);
-            //   var timeDiff = Math.abs(effDate.getTime() - todayDate.getTime());
-            //   var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-            //   if (diffDays < minDiff || minDiff == 0) {
-            //     minDiff = diffDays;
-            //     var initialDate = uc.editableAttributes[0];
-            //     uc.editableAttributes[0] = ea;
-            //     ea = initialDate;
-            //   }
-            // })
+            var todayDate = new Date();
+            var effDate = new Date(uc.editableAttributes[0].EffectiveStartDate);
+            var timeDiff = Math.abs(effDate.getTime() - todayDate.getTime());
+            var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            var minDiff = diffDays < 0 ? (-1)(diffDays) : diffDays;
+
+            uc.editableAttributes.map((ea, i) => {
+              var effDate = new Date(ea.EffectiveStartDate);
+              var timeDiff = Math.abs(effDate.getTime() - todayDate.getTime());
+              var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+              diffDays = diffDays < 0 ? (-1)(diffDays) : diffDays
+
+              if (diffDays < minDiff) {
+                minDiff = diffDays;
+                var initialDate = new Object({
+                  EffectiveEndDate: uc.editableAttributes[0].EffectiveEndDate,
+                  EffectiveStartDate: uc.editableAttributes[0].EffectiveStartDate,
+                  Value: uc.editableAttributes[0].Value
+                });
+                var swapDate = new Object({
+                  EffectiveEndDate: ea.EffectiveEndDate,
+                  EffectiveStartDate: ea.EffectiveStartDate,
+                  Value: ea.Value
+                })
+                uc.editableAttributes[0].EffectiveEndDate = swapDate.EffectiveEndDate;
+                uc.editableAttributes[0].EffectiveStartDate = swapDate.EffectiveStartDate;
+                uc.editableAttributes[0].Value = swapDate.Value;
+                ea.EffectiveEndDate = initialDate.EffectiveEndDate;
+                ea.EffectiveStartDate = initialDate.EffectiveStartDate;
+                ea.Value = initialDate.Value;
+              }
+            })
             newState.selectedunitCharacteristics.push(uc)
           }
         }

@@ -143,7 +143,7 @@ export function leftMenuDropdownClickEvent(id, event) {
 
     dispatch(BindInitialValues(locationObj));
 
-    dispatch(BindUnitCharacteristicsInitialValues(locationObj))
+    dispatch(BindUnitCharacteristicsInitialValues(editObject.GetOMSLocationWizardDataResult.AllLocationAttributeWithValues))
   };
 };
 
@@ -219,68 +219,68 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, primaryMarketTypeId
     }
     itemDatawithMarketDrivenMappings.push(itemData);
   });
-  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function(b) {
+  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function (b) {
     return b.ExternalSystemName
   })
-  var staticPjmemktToAdd = {  
-               "LocationMappingId":0,
-               "ExternalSystemName":"pjmemkt",
-               "AliasName":"",
-               "ExternalSystemLogin":"",
-               "ExternalSystemPwd":"",
-               "ParameterList":"https://emkt.pjm.com/emkt/xml/query",
-               "FlaggedForDeletion":false
-            };
-  var staticVTraderToAdd = {  
-               "LocationMappingId":0,
-               "ExternalSystemName":"VTrader-Temp",
-               "AliasName":"",
-               "ExternalSystemLogin":"",
-               "ExternalSystemPwd":"",
-               "ParameterList":"",
-               "FlaggedForDeletion":false
-            }
+  var staticPjmemktToAdd = {
+    "LocationMappingId": 0,
+    "ExternalSystemName": "pjmemkt",
+    "AliasName": "",
+    "ExternalSystemLogin": "",
+    "ExternalSystemPwd": "",
+    "ParameterList": "https://emkt.pjm.com/emkt/xml/query",
+    "FlaggedForDeletion": false
+  };
+  var staticVTraderToAdd = {
+    "LocationMappingId": 0,
+    "ExternalSystemName": "VTrader-Temp",
+    "AliasName": "",
+    "ExternalSystemLogin": "",
+    "ExternalSystemPwd": "",
+    "ParameterList": "",
+    "FlaggedForDeletion": false
+  }
   var assignedLocationMappings = omsLocationwizardData.GetOMSLocationWizardDataResult.AssignedLocationMappings;
   _.each(groupByItems, (item) => {
-      var locationMappingDataItem = {};
-      locationMappingDataItem.LocationMappingId = 0;
-      locationMappingDataItem.ExternalSystemName = '',
-        locationMappingDataItem.AliasName = '',
-        locationMappingDataItem.ExternalSystemLogin = '',
-        locationMappingDataItem.ExternalSystemPwd = '',
-        locationMappingDataItem.ParameterList = '',
-        locationMappingDataItem.FlaggedForDeletion = false
-      _.each(item, (itemData) => {
-        locationMappingDataItem[itemData.Field] = itemData.value || '';
-        locationMappingDataItem.ExternalSystemName = itemData.ExternalSystemName;
+    var locationMappingDataItem = {};
+    locationMappingDataItem.LocationMappingId = 0;
+    locationMappingDataItem.ExternalSystemName = '',
+      locationMappingDataItem.AliasName = '',
+      locationMappingDataItem.ExternalSystemLogin = '',
+      locationMappingDataItem.ExternalSystemPwd = '',
+      locationMappingDataItem.ParameterList = '',
+      locationMappingDataItem.FlaggedForDeletion = false
+    _.each(item, (itemData) => {
+      locationMappingDataItem[itemData.Field] = itemData.value || '';
+      locationMappingDataItem.ExternalSystemName = itemData.ExternalSystemName;
 
-      });
-      locationMappingData.push(locationMappingDataItem);
-    })
+    });
+    locationMappingData.push(locationMappingDataItem);
+  })
 
-    //ADD default location mappings
-    if(!(locationId>0)){
-        locationMappingData.push(staticVTraderToAdd);       
+  //ADD default location mappings
+  if (!(locationId > 0)) {
+    locationMappingData.push(staticVTraderToAdd);
+  }
+
+  var finalLocationMappingData = [];
+
+  _.each(locationMappingData, (mappedItem) => {
+    if (mappedItem.ExternalSystemName == 'PJMeDart') {
+      mappedItem.AliasName = 'PJMeDartUnitNumber';
+
     }
-    
-    var finalLocationMappingData =[];    
-
-    _.each(locationMappingData, (mappedItem)=>{
-      if(mappedItem.ExternalSystemName == 'PJMeDart'){
-        mappedItem.AliasName ='PJMeDartUnitNumber';
-        
-      }
-    _.each(omsLocationwizardData.GetOMSLocationWizardDataResult.AssignedLocationMappings, (wizardDataItem) => {    
-      var id = wizardDataItem.LocationMappingId 
-        if (wizardDataItem.LocationMappingId > 0) {
-          if (wizardDataItem.ExternalSystemName == mappedItem.ExternalSystemName) {
-            mappedItem.LocationMappingId=wizardDataItem.LocationMappingId;
+    _.each(omsLocationwizardData.GetOMSLocationWizardDataResult.AssignedLocationMappings, (wizardDataItem) => {
+      var id = wizardDataItem.LocationMappingId
+      if (wizardDataItem.LocationMappingId > 0) {
+        if (wizardDataItem.ExternalSystemName == mappedItem.ExternalSystemName) {
+          mappedItem.LocationMappingId = wizardDataItem.LocationMappingId;
         }
       }
     })
     finalLocationMappingData.push(mappedItem);
-    });
-    //Final  Credentials And Identifiers Object
+  });
+  //Final  Credentials And Identifiers Object
   credentialsAndIdentifiersObj = [{
     LocationMappingRecords: finalLocationMappingData
   }];
@@ -328,11 +328,11 @@ function unitCharacterSticObjectPreparation(stateTree, dispatch) {
       suc.editableAttributes.map(ea => {
         if (suc.isSavable) {
           unitCharacteristicsObj.push(new Object({
-            LocationId: 0,
+            LocationId: suc.LocationId != 0 ? suc.LocationId : 0,
             AttributeId: suc.id != 0 ? suc.id : 0,
             AttributeName: suc.name,
             AttributeDescription: suc.description,
-            LocationAttributeId: 0,
+            LocationAttributeId: suc.LocationAttributeId != 0 ? suc.LocationAttributeId : 0,
             UnitOfMeasureId: suc.defaultUnitOfMeasureId,
             UnitOfMeasureName: suc.UOM,
             Value: ea.Value,
@@ -445,8 +445,8 @@ function credentialdatavalidation(data) {
 export function saveCompleteLocationWizard() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      getState().form.BasicInfoForm.hasOwnProperty('values') ? Object.keys(getState().form.BasicInfoForm.values).length < 10 ? Object.keys(getState().form.BasicInfoForm.values).length == 9 ? !getState().form.BasicInfoForm.hasOwnProperty('parentLocation') ? (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null && getState().form.BasicInfoForm.values.technologyType != null && getState().form.BasicInfoForm.values.fuelClass != null && getState().form.BasicInfoForm.values.physicalTimezone != null && getState().form.BasicInfoForm.values.owner != null) ? (credentialdatavalidation(getState())) 
-      ? //Save
+      getState().form.BasicInfoForm.hasOwnProperty('values') ? Object.keys(getState().form.BasicInfoForm.values).length < 10 ? Object.keys(getState().form.BasicInfoForm.values).length == 9 ? !getState().form.BasicInfoForm.hasOwnProperty('parentLocation') ? (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null && getState().form.BasicInfoForm.values.technologyType != null && getState().form.BasicInfoForm.values.fuelClass != null && getState().form.BasicInfoForm.values.physicalTimezone != null && getState().form.BasicInfoForm.values.owner != null) ? (credentialdatavalidation(getState()))
+        ? //Save
         saveObjectPreparationAndCall(getState, dispatch) : dispatch({
           type: 'ERROR',
           payload: 1
@@ -462,20 +462,20 @@ export function saveCompleteLocationWizard() {
         }) : (getState().form.BasicInfoForm.values.technologyType == getState().form.BasicInfoForm.values.secondarytechnologyType) ? dispatch({
           type: 'ERROR',
           payload: 1
-        }) && console.log('check here') : (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null && getState().form.BasicInfoForm.values.technologyType != null && getState().form.BasicInfoForm.values.fuelClass != null && getState().form.BasicInfoForm.values.physicalTimezone != null && getState().form.BasicInfoForm.values.owner != null) ? (credentialdatavalidation(getState())) 
-        ? //Save
-        saveObjectPreparationAndCall(getState, dispatch) : dispatch({
-          type: 'ERROR',
-          payload: 1
-        }) && console.log('error') : dispatch({
+        }) && console.log('check here') : (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null && getState().form.BasicInfoForm.values.technologyType != null && getState().form.BasicInfoForm.values.fuelClass != null && getState().form.BasicInfoForm.values.physicalTimezone != null && getState().form.BasicInfoForm.values.owner != null) ? (credentialdatavalidation(getState()))
+          ? //Save
+          saveObjectPreparationAndCall(getState, dispatch) : dispatch({
+            type: 'ERROR',
+            payload: 1
+          }) && console.log('error') : dispatch({
+            type: 'ERROR',
+            payload: 1
+          })
+
+        : dispatch({
           type: 'ERROR',
           payload: 1
         })
-
-      : dispatch({
-        type: 'ERROR',
-        payload: 1
-      })
       console.log(Object.keys(getState().form.BasicInfoForm.values).length, 'stateobjectmo')
 
 
@@ -519,15 +519,15 @@ function saveObjectPreparationAndCall(getState, dispatch) {
   }
   var finalData = JSON.stringify(finalSaveObject)
   console.log("finalSaveObject", finalData)
-    axios({
-      method: 'post',
-      url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
-      data: finalSaveObject
-    }).then(function(response) {
-      console.log("success", response);
-    }).catch(function(error) {
-      alert("error" + JSON.stringify(error));
-    });
+  axios({
+    method: 'post',
+    url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
+    data: finalSaveObject
+  }).then(function (response) {
+    console.log("success", response);
+  }).catch(function (error) {
+    alert("error" + JSON.stringify(error));
+  });
 }
 
 function toArray(obj) {
@@ -567,7 +567,7 @@ export const ACTION_HANDLERS = {
 
 function changeObjectTypeOfLocations(allLocations) {
   var changedLocationsObject = [];
-  allLocations.forEach(function(item) {
+  allLocations.forEach(function (item) {
     changedLocationsObject.push({
       key: item.Id,
       value: item.Id,
