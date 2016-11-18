@@ -35,14 +35,12 @@ import {
 import axios from 'axios'
 
 export const TOGGLE_LEFTMENU_CLICK = 'TOGGLE_LEFTMENU_CLICK';
-
 export const LOCATIONS_MENUITEM_DROPDOWN_CLICK = 'LOCATIONS_MENUITEM_DROPDOWN_CLICK';
-
 export const GET_ALL_LOCATIONS_INFORMATION = "GET_ALL_LOCATIONS_INFORMATION";
-
 export const DEFAULT_NODE_EXPANDED = "DEFAULT_NODE_EXPANDED";
-
 export const SHOW_HIDE_ALERT = 'SHOW_HIDE_ALERT';
+export const SAVE_RESPONSE_HANDLER = 'SAVE_RESPONSE_HANDLER';
+
 
 export function toggleMenuClick(event) {
   return {
@@ -64,6 +62,23 @@ function findLocation(allLocations, locationId) {
       }
     } else {
       findLocation(item.Children, locationId)
+    }
+  });
+}
+var isLocationNameExists = false;
+
+function CheckLocationNameIsExists(allLocations, locationName) {
+  _.each(allLocations, (item) => {
+    if (isLocationNameExists) {
+      return false;
+    }
+    if (item.Name == locationName) {
+      if (!isLocationNameExists) {
+        isLocationNameExists = true;
+        return false;
+      }
+    } else {
+      CheckLocationNameIsExists(item.Children, locationName)
     }
   });
 }
@@ -135,13 +150,13 @@ export function LoadAndRefreshForms(id, event) {
       payload: ''
     })
     dispatch({
-      type: 'redux-form/DESTROY',
-      meta: {
-        form: "WorkFlowForm"
-      },
-      payload: ''
-    })
-    //If Location Id > 0, only bind data. otherwise load new forms
+        type: 'redux-form/DESTROY',
+        meta: {
+          form: "WorkFlowForm"
+        },
+        payload: ''
+      })
+      //If Location Id > 0, only bind data. otherwise load new forms
     if (id > 0) {
       basicInfoDropdowns.getLocations().then(function (allLocationdata) {
         findLocation(allLocationdata.data.GetAllLocationsResult, id);
@@ -183,6 +198,19 @@ export function toggleAlertPopup(event) {
     })
   }
 }
+export function toggleSaveResponsePopup(event) {
+  return (dispatch, getState) => {
+    dispatch({
+      type: SAVE_RESPONSE_HANDLER,
+      payload: {
+        response: null,
+        message: "",
+        openSavePopup: false
+      }
+    })
+  }
+}
+
 
 export function leftMenuDropdownClickEvent(id, event) {
   console.log("LOCATIONS_MENUITEM_DROPDOWN_CLICK:", id);
@@ -532,56 +560,89 @@ export function saveCompleteLocationWizard() {
 }
 
 function saveObjectPreparationAndCall(getState, dispatch) {
-  dispatch({
-    type: 'ERROR',
-    payload: 0
-  });
-
   var values = getState().form.BasicInfoForm ? getState().form.BasicInfoForm.values : {};
-  var locationId = values.locationId;
-  var primaryMarketTypeId = values.primaryMarket.id || values.primaryMarket;
-  var basicInfoObj = basicInforObjectPreparation(values)
-  var credentialsAndIdentifier = prepareCredentialsAndIdentifiersObj(
-    getState().form.CredentialsManagementForm ? getState().form.CredentialsManagementForm.values : {},
-    primaryMarketTypeId,
-    locationId)
-  var equipmentsObj = equipmentObjectPreparation(getState(), dispatch)
-  var systemIntegrationObj = SystemIntegrationObjectPreparation(getState(), dispatch)
-  var unitCharacteristicsObj = unitCharacterSticObjectPreparation(getState(), dispatch)
-  var rolesObj = rolesObjectPreparation(getState(), dispatch)
-  var workflowObj = workflowsObjectPreparation(getState(), dispatch);
-  var gatewayObj = gateWayObjectPreparation(getState(), dispatch);
-  var dataHistorianObj = dataHistorianObjectPreparation(getState(), dispatch);
+  CheckLocationNameIsExists(getState().location.allLocations, values.locationName);
+  var isLocationNamePresent = isLocationNameExists;
+  if (isLocationNamePresent) {
+    isLocationNameExists = false;
+    dispatch({
+      type: SAVE_RESPONSE_HANDLER,
+      payload: {
+        response: null,
+        message: "Location Name is already present. Name should be unique",
+        openSavePopup: true
+      }
+    });
+  } else {
+    isLocationNameExists = false;
+    dispatch({
+      type: 'ERROR',
+      payload: 0
+    });
 
-  var finalSaveObject = {
-    "saveData": {
-      Location: basicInfoObj,
-      UnitCharacteristics: unitCharacteristicsObj,
-      CredentialsAndIdentifiers: credentialsAndIdentifier,
-      SupportInformation: systemIntegrationObj,
-      WorkflowGroups: workflowObj,
-      Roles: rolesObj,
-      Gateways: gatewayObj,
-      ScadaPoints: dataHistorianObj,
-      Equipments: equipmentsObj
+    var locationId = values.locationId;
+    var primaryMarketTypeId = values.primaryMarket.id || values.primaryMarket;
+    var basicInfoObj = basicInforObjectPreparation(values)
+    var credentialsAndIdentifier = prepareCredentialsAndIdentifiersObj(
+      getState().form.CredentialsManagementForm ? getState().form.CredentialsManagementForm.values : {},
+      primaryMarketTypeId,
+      locationId)
+    var equipmentsObj = equipmentObjectPreparation(getState(), dispatch)
+    var systemIntegrationObj = SystemIntegrationObjectPreparation(getState(), dispatch)
+    var unitCharacteristicsObj = unitCharacterSticObjectPreparation(getState(), dispatch)
+    var rolesObj = rolesObjectPreparation(getState(), dispatch)
+    var workflowObj = workflowsObjectPreparation(getState(), dispatch);
+    var gatewayObj = gateWayObjectPreparation(getState(), dispatch);
+    var dataHistorianObj = dataHistorianObjectPreparation(getState(), dispatch);
+
+    var finalSaveObject = {
+      "saveData": {
+        Location: basicInfoObj,
+        UnitCharacteristics: unitCharacteristicsObj,
+        CredentialsAndIdentifiers: credentialsAndIdentifier,
+        SupportInformation: systemIntegrationObj,
+        WorkflowGroups: workflowObj,
+        Roles: rolesObj,
+        Gateways: gatewayObj,
+        ScadaPoints: dataHistorianObj,
+        Equipments: equipmentsObj
+      }
     }
-  }
-  dispatch({
-    type: DEFAULT_NODE_EXPANDED,
-    payload: basicInfoObj.Id
+    dispatch({
+      type: DEFAULT_NODE_EXPANDED,
+      payload: basicInfoObj.Id
 
-  })
-  var finalData = JSON.stringify(finalSaveObject)
-  console.log("finalSaveObject", finalData)
-  axios({
-    method: 'post',
-    url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
-    data: finalSaveObject
-  }).then(function (response) {
-    console.log("success", response);
-  }).catch(function (error) {
-    alert("error" + JSON.stringify(error));
-  });
+    })
+    var finalData = JSON.stringify(finalSaveObject)
+    console.log("finalSaveObject", finalData)
+    axios({
+      method: 'post',
+      url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
+      data: finalSaveObject
+    }).then(function(response) {
+      console.log("success", response);
+      if (response.status === 200) {
+        dispatch({
+          type: SAVE_RESPONSE_HANDLER,
+          payload: {
+            response: response,
+            message: "Location saved successfully",
+            openSavePopup: true
+          }
+        });
+      }
+    }).catch(function(error) {
+      dispatch({
+        type: SAVE_RESPONSE_HANDLER,
+        payload: {
+          response: null,
+          message: error,
+          openSavePopup: true
+        }
+      });
+    });
+  }
+
 }
 
 function toArray(obj) {
@@ -592,6 +653,7 @@ function toArray(obj) {
   }
   return array;
 }
+
 function changeObjectTypeOfLocations(allLocations) {
   var changedLocationsObject = [];
   allLocations.forEach(function (item) {
@@ -664,7 +726,9 @@ export const ACTION_HANDLERS = {
     })
   },
   [DEFAULT_NODE_EXPANDED]: (state, action) => {
-    return Object.assign({}, state, { defaultNodeExpanded: action.payload })
+    return Object.assign({}, state, {
+      defaultNodeExpanded: action.payload
+    })
   },
   [SHOW_HIDE_ALERT]: (state, action) => {
     if (action.payload.locationState.showClickChangePopUp) {
@@ -678,12 +742,25 @@ export const ACTION_HANDLERS = {
         currentLocationId: action.payload.currentLocationId || 0
       })
     }
-  }
+  },
+  [SAVE_RESPONSE_HANDLER]: (state, action) => {
+    //action.response:.message:.isSaved: 
+    if (action.payload.openSavePopup) {
+      return Object.assign({}, state, {
+        showLocationSaveResponsePopup: true,
+        responseMessage: action.payload.message || ''
+      })
+
+    } else {
+      return Object.assign({}, state, {
+        showLocationSaveResponsePopup: false,
+        responseMessage: ''
+      })
+    }
+
+
+  },
 }
-
-
-
-//const allParentLocationsObject = basicInfoDropdowns.getParentLocations();
 
 const initialState = {
   error: null,
@@ -691,6 +768,8 @@ const initialState = {
   parentLocations: [],
   defaultNodeExpanded: null,
   showClickChangePopUp: false,
+  showLocationSaveResponsePopup: false,
+  responseMessage: '',
   currentLocationId: 0
 };
 
