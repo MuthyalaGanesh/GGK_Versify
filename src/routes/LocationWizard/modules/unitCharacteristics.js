@@ -301,9 +301,8 @@ export const ACTION_HANDLERS = {
           })
         }
       })
-
       return Object.assign({}, newState, {
-        editableUnitCharacter: (!errorStatus && dateValidations.length == 0) ? {} :
+        editableUnitCharacter: (!errorStatus && dateValidations.length == 0) ? null :
           state.editableUnitCharacter, error: errorStatus, showModal: (!errorStatus && dateValidations.length == 0) ?
             (!state.showModal) : (state.showModal), dateRangeValidation: dateValidations
       });
@@ -314,21 +313,28 @@ export const ACTION_HANDLERS = {
     var newState = Object.assign({}, state, { error: null })
     if (action.payload != null && action.payload != undefined) {
       newState.unitCharacteristics.map((uc) => {
+        var updatedRow = {}
+
+        if (uc.defaultUnitOfMeasureId && state.allUOMvalues) {
+          state.allUOMvalues.map(uom => {
+            if (uom.id == uc.defaultUnitOfMeasureId) {
+              updatedRow.uom = uom.name
+            }
+          })
+        }
+        updatedRow.description = uc.description
+        updatedRow.displayName = uc.display
+
         if (uc.id == parseInt(action.payload.id)) {
           if (!state.editableUnitCharacter) {
-            if (uc.defaultUnitOfMeasureId && state.allUOMvalues) {
-              state.allUOMvalues.map(uom => {
-                if (uom.id == uc.defaultUnitOfMeasureId) {
-                  newState.UOMLabel = uom.name
-                }
-              })
-            }
-            newState.descriptionLabel = uc.description
-            newState.displayNameLabel = uc.display
+            newState.UOMLabel = updatedRow.uom
+            newState.descriptionLabel = updatedRow.description
+            newState.displayNameLabel = updatedRow.displayName
           }
           else {
             var attributes = newState.editableUnitCharacter.editableAttributes;
             newState.editableUnitCharacter = uc;
+            newState.editableUnitCharacter.UOM = updatedRow.uom
             newState.editableUnitCharacter.editableAttributes = attributes;
           }
 
