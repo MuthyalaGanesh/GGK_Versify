@@ -670,7 +670,6 @@ console.log(k)
   }).catch(function(error) {
     alert("error" + JSON.stringify(error));
   });*/
-})
 
 }
 function test(Id,allLocations){
