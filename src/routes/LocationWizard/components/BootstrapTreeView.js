@@ -14,13 +14,11 @@ class TreeView extends React.Component {
     super(props);
 
     this.nodesQuantity = 0;
-    this.nodevalue= !!props.defaultNodeExpanded 
-    this.defaultNodeExpanded = !!props.defaultNodeExpanded ? props.defaultNodeExpanded : -1  
     /*this.state = {data: props.data};
      this.someData = _.clone(props.data);
      this.setNodeId({Children: this.state.data});*/
 
-    this.state = {data: this.setNodeId(_.clone({Children: props.data}))};    
+    this.state = {data: this.setNodeId(_.clone({Children: props.data})),defaultNodeExpanded:props.defaultNodeExpanded,nodevalue:!!props.defaultNodeExpanded};    
 
     this.findNodeById = this.findNodeById.bind(this);
     this.setChildrenState = this.setChildrenState.bind(this);
@@ -35,7 +33,8 @@ class TreeView extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     console.log(nextProps.defaultNodeExpanded)
-    this.setState({data: this.setNodeId(_.clone({Children: nextProps.data}))});
+
+    this.setState({data: this.setNodeId(_.clone({Children: nextProps.data})),defaultNodeExpanded:nextProps.defaultNodeExpanded });
   }
 
   setNodeId(node) {
@@ -47,7 +46,7 @@ class TreeView extends React.Component {
         parentNode: node,
         state: {
           selected: childNode.state ? !!childNode.state.selected : false ,
-          expanded: !this.nodevalue ? false :this.recusrsiveexpansion(childNode)? true : childNode.state ? !!childNode.state.expanded : false 
+          expanded: !!this.state.defaultNodeExpanded ? this.recusrsiveexpansion(childNode)? true : childNode.state ? !!childNode.state.expanded : false : false 
         },
         Name: childNode.Name,
         icon: childNode.icon
@@ -58,7 +57,7 @@ class TreeView extends React.Component {
 
   recusrsiveexpansion(node) {
   let flag=0
-    if(node.Id == this.defaultNodeExpanded){
+    if(node.Id == this.state.defaultNodeExpanded){
       return 1
     }
     else{

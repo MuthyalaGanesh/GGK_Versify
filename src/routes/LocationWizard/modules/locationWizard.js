@@ -187,6 +187,11 @@ export function toggleAlertPopup(event) {
 export function leftMenuDropdownClickEvent(id, event) {
   console.log("LOCATIONS_MENUITEM_DROPDOWN_CLICK:", id);
   return (dispatch, getState) => {
+      dispatch({
+    type:DEFAULT_NODE_EXPANDED,
+    payload: id
+
+  })
     dispatch({
       type: SHOW_HIDE_ALERT,
       payload: {
@@ -532,6 +537,7 @@ export function saveCompleteLocationWizard() {
 }
 
 function saveObjectPreparationAndCall(getState, dispatch) {
+  return new Promise((resolve) => {
   dispatch({
     type: 'ERROR',
     payload: 0
@@ -568,12 +574,18 @@ function saveObjectPreparationAndCall(getState, dispatch) {
   }
   dispatch({
     type:DEFAULT_NODE_EXPANDED,
-    payload:basicInfoObj.Id
+    payload: basicInfoObj.Id
 
   })
+  console.log('check')
+ var k = test(basicInfoObj.Id,getState().location.allLocations)
+console.log(k)
+
+
+
   var finalData = JSON.stringify(finalSaveObject)
-  console.log("finalSaveObject", finalData)
-  axios({
+  /*console.log("finalSaveObject", finalData)*/
+/*  axios({
     method: 'post',
     url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
     data: finalSaveObject
@@ -581,8 +593,44 @@ function saveObjectPreparationAndCall(getState, dispatch) {
     console.log("success", response);
   }).catch(function(error) {
     alert("error" + JSON.stringify(error));
-  });
+  });*/
+})
 }
+function test(Id,allLocations){
+  console.log('check2')
+  let array = []
+  let i =0  
+    for(i in allLocations){
+   let  element = findanddestroy(allLocations[i],Id) 
+    !!element ? array.push(element):null
+
+  }
+  console.log(array)
+  return array
+ 
+}
+
+function findanddestroy(Location, Id) {
+  let array = [] 
+      if(Location.id == Id ){
+          return 
+      }else{
+        if(!Location.Children){
+          return Location 
+        }
+        else{
+          Location.Children.map((children,i)=>{
+            let  element = findanddestroy(children,Id) 
+            !!element ? array.push(element):null
+
+          })
+          return array
+        }
+      }
+  
+}
+
+
 
 function toArray(obj) {
   var array = [];

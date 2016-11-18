@@ -100,7 +100,7 @@ return (
                   }</label>
                   <div className='clear'></div>
                   <Field component={DropdownListField}
-                  className={error && (formdata.BasicInfoForm.hasOwnProperty('values') ? formdata.BasicInfoForm.values.hasOwnProperty('secondarytechnologyType') ? (formdata.BasicInfoForm.values.secondarytechnologyType == null )? true:(formdata.BasicInfoForm.values.secondarytechnologyType == formdata.BasicInfoForm.values.technologyType) :true : true)
+                  className={error && (formdata.BasicInfoForm.hasOwnProperty('values') ? formdata.BasicInfoForm.values.hasOwnProperty('secondarytechnologyType') ? (formdata.BasicInfoForm.values.secondarytechnologyType == null )? false:(formdata.BasicInfoForm.values.secondarytechnologyType == formdata.BasicInfoForm.values.technologyType) :false : false)
                   ? "error"
                   :null}
                   name="secondarytechnologyType"
