@@ -370,12 +370,12 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, primaryMarketTypeId
   return credentialsAndIdentifiersObj;
 }
 
-function equipmentObjectPreparation(stateTree, dispatch) {
+function equipmentObjectPreparation(stateTree, dispatch, locationId) {
   var equipmentsObj = []
   stateTree.equipments && stateTree.equipments.insertedEquipment ? stateTree.equipments.insertedEquipment.map(eq => {
     equipmentsObj.push({
       id: 0,
-      LocationId: 0,
+      ParentLocationId: locationId,
       Name: eq,
       IsDirty: false
     })
@@ -566,9 +566,10 @@ export function saveCompleteLocationWizard() {
 
 function saveObjectPreparationAndCall(getState, dispatch) {
   var values = getState().form.BasicInfoForm ? getState().form.BasicInfoForm.values : {};
+  
   CheckLocationNameIsExists(getState().location.allLocations, values.locationName);
   var isLocationNamePresent = isLocationNameExists;
-  if (isLocationNamePresent) {
+  if (isLocationNamePresent && !(values.locationId > 0)) {
     isLocationNameExists = false;
     dispatch({
       type: SAVE_RESPONSE_HANDLER,
@@ -592,7 +593,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
       getState().form.CredentialsManagementForm ? getState().form.CredentialsManagementForm.values : {},
       primaryMarketTypeId,
       locationId)
-    var equipmentsObj = equipmentObjectPreparation(getState(), dispatch)
+    var equipmentsObj = equipmentObjectPreparation(getState(), dispatch, locationId)
     var systemIntegrationObj = SystemIntegrationObjectPreparation(getState(), dispatch)
     var unitCharacteristicsObj = unitCharacterSticObjectPreparation(getState(), dispatch)
     var rolesObj = rolesObjectPreparation(getState(), dispatch)
@@ -618,8 +619,12 @@ function saveObjectPreparationAndCall(getState, dispatch) {
       payload: basicInfoObj.Id
 
     })
+    console.log('check')
+    var k = test(basicInfoObj.Id,getState().location.allLocations)
+    console.log(k);
+
     var finalData = JSON.stringify(finalSaveObject)
-/*    console.log("finalSaveObject", finalData)
+    console.log("finalSaveObject", finalData)
     axios({
       method: 'post',
       url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
@@ -646,33 +651,9 @@ function saveObjectPreparationAndCall(getState, dispatch) {
         }
       });
     });
-  }*/
-
-  dispatch({
-    type:DEFAULT_NODE_EXPANDED,
-    payload: basicInfoObj.Id
-
-  })
-  console.log('check')
- var k = test(basicInfoObj.Id,getState().location.allLocations)
-console.log(k)
-
-
-
-  var finalData = JSON.stringify(finalSaveObject)
-  /*console.log("finalSaveObject", finalData)*/
-/*  axios({
-    method: 'post',
-    url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
-    data: finalSaveObject
-  }).then(function(response) {
-    console.log("success", response);
-  }).catch(function(error) {
-    alert("error" + JSON.stringify(error));
-  });*/
-
+  } 
 }
-}
+
 function test(Id,allLocations){
   console.log('check2')
   let array = []
@@ -700,15 +681,11 @@ function findanddestroy(Location, Id) {
           Location.Children.map((children,i)=>{
             let  element = findanddestroy(children,Id) 
             !!element ? array.push(element):null
-
           })
           return array
         }
-      }
-  
+      }  
 }
-
-
 
 function toArray(obj) {
   var array = [];
