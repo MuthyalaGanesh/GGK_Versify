@@ -9,6 +9,12 @@ import {
 } from './modules/locationWizard'
 
 import { getLocationsInformation } from './modules/locationWizard'
+import { getLocationTypesService, 
+         getOwnersService, 
+         getPrimaryMarketsService,
+         getTechnologyTypesService,
+         getFuelClassesService,
+         getTimezonesService } from './modules/basicInfo'
 
 
 export default (store) => ({
@@ -39,6 +45,12 @@ export default (store) => ({
       injectReducer(store, { key: 'users', reducer: userReducer })
       injectReducer(store, { key: 'workFlows', reducer: workflowReducer })
       store.dispatch(getLocationsInformation())
+      store.dispatch(getLocationTypesService())
+      store.dispatch(getOwnersService())
+      store.dispatch(getPrimaryMarketsService())
+      store.dispatch(getTechnologyTypesService())
+      store.dispatch(getFuelClassesService())
+      store.dispatch(getTimezonesService())
         /*  Return getComponent   */
       cb(null, LocationWizard)
 

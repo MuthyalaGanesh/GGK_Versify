@@ -7,12 +7,7 @@ import {
 } from "./serviceCall"
 import axios from 'axios'
 
-var jsonObject = require('./testData.json');
-var allLocations = require('./allLocationsTestData.json');
-var workFlows = require('./workFlowData.json');
-var userInfo = require('./userData.json');
-var gatewayInfo = require('./gatewayData.json');
-var dataHistorianInfo = require('./dataHistorianData.json');
+
 
 function mapWorkFlowInfo() {
     let workFlowData = XMLHttpRequestSyncGet(Constants.WORKFLOW_DATA).GetWorkflowDataResult.WorkflowGroupsWorkflows;
@@ -37,27 +32,19 @@ function mapWorkFlowInfo() {
 }
 
 export function getLocationTypes() {
-    var data = jsonObject;
-    //return data.locationTypes;
-
-    //  return axiosGet(Constants.LOCATION_TYPES)
-    //    .then((response) => {        
-    //        console.log("Location Types: ", response.data);
-    //        return response.data;
-    //    })
-    //    .catch((error) => {
-    //      console.error("Location Types Error: ", error);
-    //   }); 
-    return XMLHttpRequestSyncGet(Constants.LOCATION_TYPES);
+      return axios({
+              method: 'get',
+              url:Constants.LOCATION_TYPES,
+    })
 };
 
 export function getPrimaryMarkets() {
-    var data = jsonObject;
-    //return data.ISOMarkets;
-
-    return XMLHttpRequestSyncGet(Constants.ISO_MARKETS);
-
+        return axios({
+              method: 'get',
+              url:Constants.ISO_MARKETS,
+    })
 }
+
 export function getLocations() {
     return XMLHttpRequestSyncGet(Constants.LOCATIONS).GetAllLocationsResult;
 }
@@ -78,11 +65,8 @@ export function getLocations() {
 export function getParentLocations() {   
    return axios({
               method: 'get',
-              url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/locations',
+              url: Constants.LOCATIONS,
     })
-
-   // let data = XMLHttpRequestSyncGet(Constants.LOCATIONS).GetAllLocationsResult;
-    //return changeObjectTypeOfLocations(data);
 }
 
 export function getMarketDrivenMappings(marketId = null) {
@@ -90,36 +74,32 @@ export function getMarketDrivenMappings(marketId = null) {
 }
 
 export function getOwners() {
-    var data = jsonObject;
-    //return data.Organisations;
-    return XMLHttpRequestSyncGet(Constants.ORGANIZATIONS);
+    return axios({
+              method: 'get',
+              url: Constants.ORGANIZATIONS,
+    })
 }
 
 export function getTechnologyTypes() {
-    var data = jsonObject;
-    //return data.TechnologyTypes;
-    return XMLHttpRequestSyncGet(Constants.TECHNOLOGYTYPES);
+     return axios({
+              method: 'get',
+              url: Constants.TECHNOLOGYTYPES,
+    })
 }
 
 export function getFuelClasses() {
-    var data = jsonObject;
-    //return data.FuelClasses;
-    return XMLHttpRequestSyncGet(Constants.FUEL_CLASSES);
+     return axios({
+              method: 'get',
+              url: Constants.FUEL_CLASSES,
+    })
 
 }
 
 export function getTimezones() {
-    //var data = jsonObject.Timezones;
-    var data = XMLHttpRequestSyncGet(Constants.TIME_ZONES);
-    var arrTimezones = [];
-    data.GetTimeZonesResult.forEach(function(item, index) {
-        arrTimezones.push({
-            id: item,
-            value: item
-        });
-
-    });
-    return arrTimezones;
+    return axios({
+              method: 'get',
+              url: Constants.TIME_ZONES,
+    })
 }
 
 

@@ -14,7 +14,12 @@ export const ON_PARENT_LOCATION_SELECT = 'ON_PARENT_LOCATION_SELECT'
 export const BIND_BASIC_INITIAL_VALUES = 'BIND_BASIC_INITIAL_VALUES'
 export const PRIMARY_MARKET_CHANGE_EVENT = 'PRIMARY_MARKET_CHANGE_EVENT'
 export const CREDENTIAL_DROPDOWN_CHANGE_EVENT = 'CREDENTIAL_DROPDOWN_CHANGE_EVENT'
-
+export const GET_LOCATION_TYPES ="GET_LOCATION_TYPES"
+export const GET_OWNERS ="GET_OWNERS"
+export const GET_PRIMARY_MARKETS = "GET_PRIMARY_MARKETS"
+export const GET_TECHNOLOGY_TYPES = "GET_TECHNOLOGY_TYPES"
+export const GET_FUEL_CLASSES = "GET_FUEL_CLASSES"
+export const GET_TIME_ZONE = "GET_TIME_ZONE"
 
 export function BindInitialValues(currentlcoation) {
   return {
@@ -101,6 +106,36 @@ export const ACTION_HANDLERS = {
       CredentialBasicData: data.MarketDrivendata
     })
   },
+  [GET_LOCATION_TYPES]: (state,action) => {
+      return Object.assign({}, state, {
+      locationTypes: action.payload
+    })
+  },
+  [GET_OWNERS]: (state,action) => {
+    return Object.assign({}, state, {
+      owners: action.payload
+    })
+  },
+  [GET_PRIMARY_MARKETS]: (state,action) =>{
+     return Object.assign({}, state, {
+      primaryMarkets: action.payload
+    })
+  },
+  [GET_TECHNOLOGY_TYPES]: (state,action) => {
+     return Object.assign({}, state, {
+      technologyTypes: action.payload
+    })
+   },
+  [GET_FUEL_CLASSES]: (state,action) => {
+     return Object.assign({}, state, {
+      fuelClasses: action.payload
+    })
+   },
+   [GET_TIME_ZONE]: (state,action) => {
+     return Object.assign({}, state, {
+      timezones: action.payload
+    })
+   },
   ['ERROR']: (state, action) => {
     return Object.assign({}, state, {
       error: action.payload
@@ -158,15 +193,96 @@ function PrepareCredentialBasicData(marketId, locationId = null) {
   };
 }
 
+export function getLocationTypesService() {
+   return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      basicInfoDropdowns.getLocationTypes().then(function(response){
+                dispatch({
+                    type: GET_LOCATION_TYPES,
+                    payload: response.data
+                });
+            })   
+      })
+  }
+}
+export function getOwnersService() {
+   return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      basicInfoDropdowns.getOwners().then(function(response){
+                dispatch({
+                    type: GET_OWNERS,
+                    payload: response.data
+                });
+            })   
+      })
+  }
+}
+
+export function getPrimaryMarketsService() {
+   return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      basicInfoDropdowns.getPrimaryMarkets().then(function(response){
+                dispatch({
+                    type: GET_PRIMARY_MARKETS,
+                    payload: response.data
+                });
+            })   
+      })
+  }
+}
+export function getTechnologyTypesService() {
+   return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      basicInfoDropdowns.getTechnologyTypes().then(function(response){
+                dispatch({
+                    type: GET_TECHNOLOGY_TYPES,
+                    payload: response.data
+                });
+            })   
+      })
+  }
+}
+export function getFuelClassesService() {
+   return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      basicInfoDropdowns.getFuelClasses().then(function(response){
+                dispatch({
+                    type: GET_FUEL_CLASSES,
+                    payload: response.data
+                });
+            })   
+      })
+  }
+}
+export function getTimezonesService() {
+   return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      basicInfoDropdowns.getTimezones().then(function(response){
+              var arrTimezones = [];
+              response.data.GetTimeZonesResult.forEach(function(item, index) {
+                arrTimezones.push({
+                    id: item,
+                    value: item
+                });
+
+              });
+                dispatch({
+                    type: GET_TIME_ZONE,
+                    payload: arrTimezones
+                });
+            })   
+      })
+  }
+}
 
 const initialState = {
   error: null,
-  locationTypes: basicInfoDropdowns.getLocationTypes(),
-  owners: basicInfoDropdowns.getOwners(),
-  primaryMarkets: basicInfoDropdowns.getPrimaryMarkets(),
-  technologyTypes: basicInfoDropdowns.getTechnologyTypes(),
-  fuelClasses: basicInfoDropdowns.getFuelClasses(),
-  timezones: basicInfoDropdowns.getTimezones(),
+  locationTypes: [],//basicInfoDropdowns.getLocationTypes(),
+  owners:[],// basicInfoDropdowns.getOwners(),
+  primaryMarkets: [], //basicInfoDropdowns.getPrimaryMarkets(),
+  technologyTypes:  [], // basicInfoDropdowns.getTechnologyTypes(),
+  fuelClasses:  [], //basicInfoDropdowns.getFuelClasses(),
+  timezones:  [], //basicInfoDropdowns.getTimezones(),
   initial: true,
   BasicInfo: {},
   CredentialInitialValues: {},
