@@ -13,13 +13,18 @@
 	    border:1px solid rgba(5, 10, 100, 0.12);   
       border-radius: 5px !important;      
 }
+#location-header{
+  padding: 2px;
+}
 #location-header .fa.fa-plus-circle.fa-2x{
     color: #FFF !important;
     cursor: pointer;    
 }
+#location-header h5{
+    float: left;
+}
 #location-header a{
     float: right;
-    margin-top: -40px;
 }
 span.fa.fa-plus-circle.fa-2x {
     color: #64b448;
