@@ -627,8 +627,10 @@ export function getLocationsInformation() {
 
 const initialState = {
   error: null,
-  allLocations: [],
-  parentLocations: []
+  allLocations: allParentLocationsObject,
+  parentLocations: AddDefaultParent(changeObjectTypeOfLocations(allParentLocationsObject)),
+  defaultNodeExpanded:null
+
 };
 
 export default function locationWizardReducer(state = initialState, action) {

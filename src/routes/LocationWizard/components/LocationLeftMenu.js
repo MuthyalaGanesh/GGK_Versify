@@ -33,7 +33,7 @@ var leftMenuHeight = w.innerHeight||e.clientHeight||g.clientHeight;
     <Scrollbars style={{ height: leftMenuHeight }}>
         <div className="tab-content">
             <div className="tab-pane active" id="control-sidebar-menutree-tab">
-                <TreeView data={props.Locations} leftMenuDropdownClickEvent={props.leftMenuDropdownClickEvent} />
+                <TreeView data={props.Locations} leftMenuDropdownClickEvent={props.leftMenuDropdownClickEvent} defaultNodeExpanded={props.defaultNodeExpanded} />
             </div>
         </div>
     </Scrollbars>
