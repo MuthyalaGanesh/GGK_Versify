@@ -6,7 +6,9 @@ import LocationWizard from '../components/LocationWizard'
 import {
 	saveCompleteLocationWizard,
 	leftMenuDropdownClickEvent,
-	toggleMenuClick
+	toggleMenuClick,
+	toggleAlertPopup,
+	LoadAndRefreshForms
 } from '../modules/locationWizard';
 
 
@@ -19,6 +21,12 @@ const mapDispatchToProps = (dispatch) => ({
 	},
 	saveCompleteLocationWizard: () => {
 		dispatch(saveCompleteLocationWizard())
+	},
+	toggleAlertPopup :(e) => {
+		dispatch(toggleAlertPopup(e))
+	},
+	LoadAndRefreshForms:(e)=>{
+		dispatch(LoadAndRefreshForms(e))
 	}
 })
 

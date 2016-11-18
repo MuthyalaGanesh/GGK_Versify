@@ -42,13 +42,14 @@ export const GET_ALL_LOCATIONS_INFORMATION = "GET_ALL_LOCATIONS_INFORMATION";
 
 export const DEFAULT_NODE_EXPANDED = "DEFAULT_NODE_EXPANDED";
 
+export const SHOW_HIDE_ALERT='SHOW_HIDE_ALERT';
+
 export function toggleMenuClick(event) {
   return {
     type: TOGGLE_LEFTMENU_CLICK,
     payload: event
   };
 }
-
 var currentLocation = null;
 
 function findLocation(allLocations, locationId) {
@@ -67,10 +68,16 @@ function findLocation(allLocations, locationId) {
   });
 }
 
-export function leftMenuDropdownClickEvent(id, event) {
-  console.log("LOCATIONS_MENUITEM_DROPDOWN_CLICK:", id);
-  return (dispatch, getState) => {
-
+export function LoadAndRefreshForms(id, event){
+return (dispatch, getState) => {
+  
+  dispatch({
+      type: SHOW_HIDE_ALERT,
+      payload: {
+        locationState: getState().location,
+        currentLocationId:id
+      }
+    })
     dispatch({
       type: 'redux-form/DESTROY',
       meta: {
@@ -160,6 +167,31 @@ export function leftMenuDropdownClickEvent(id, event) {
     }
 
   };
+}
+
+export function toggleAlertPopup(event) {
+  return (dispatch, getState) => {
+    dispatch({
+      type: SHOW_HIDE_ALERT,
+      payload: {
+        locationState: getState().location,
+        currentLocationId:0
+      }
+    })
+  }
+}
+
+export function leftMenuDropdownClickEvent(id, event) {
+  console.log("LOCATIONS_MENUITEM_DROPDOWN_CLICK:", id);
+  return (dispatch, getState) => {
+    dispatch({
+      type: SHOW_HIDE_ALERT,
+      payload: {
+        locationState: getState().location,
+        currentLocationId:id
+      }
+    })
+  }
 };
 
 
@@ -630,6 +662,19 @@ export const ACTION_HANDLERS = {
   },
   [DEFAULT_NODE_EXPANDED]: (state,action) => {
     return  Object.assign({}, state, {defaultNodeExpanded:action.payload})
+  },
+  [SHOW_HIDE_ALERT]: (state, action) => {
+    if (action.payload.locationState.showClickChangePopUp) {
+      return Object.assign({}, state, {
+        showClickChangePopUp: false,
+        currentLocationId:action.payload.currentLocationId || 0
+      })
+    } else {
+      return Object.assign({}, state, {
+        showClickChangePopUp: true,
+        currentLocationId:action.payload.currentLocationId || 0
+      })
+    }
   }
 }
 
@@ -641,8 +686,9 @@ const initialState = {
   error: null,
   allLocations: [],
   parentLocations: [],
-  defaultNodeExpanded:null
-
+  defaultNodeExpanded:null,
+  showClickChangePopUp:false,
+  currentLocationId:0
 };
 
 export default function locationWizardReducer(state = initialState, action) {

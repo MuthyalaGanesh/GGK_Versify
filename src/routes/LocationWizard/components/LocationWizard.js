@@ -1,6 +1,6 @@
 import React from 'react'
 import 'styles/locationStyles.scss'
-import {Panel, Nav, NavItem} from 'react-bootstrap'
+import {Panel, Nav, NavItem, Modal,Alert} from 'react-bootstrap'
 import {Button} from 'react-bootstrap/lib'
 //import {Link}from 'react-router'
 import WizardTabs from "./WizardTabs"
@@ -29,7 +29,7 @@ var scrollSpy  = Scroll.scrollSpy;
 export const LocationWizard =(props)=> {
 return (
    <div>
-    <LocationLeftMenu Locations={props.location.allLocations} leftMenuDropdownClickEvent={props.leftMenuDropdownClickEvent} defaultNodeExpanded ={props.location.defaultNodeExpanded}/>
+    <LocationLeftMenu Locations={props.location.allLocations} leftMenuDropdownClickEvent={props.leftMenuDropdownClickEvent} defaultNodeExpanded ={props.location.defaultNodeExpanded} />
     <section id="content_header" className="content-header col-xs-12 col-md-10">
          <Link to='#' onClick={props.toggleMenuClick} id="sidebar_toggle" className="sidebar-toggle" data-toggle="offcanvas" role="button">
           <span className="glyphicon glyphicon-align-justify">
@@ -87,6 +87,24 @@ return (
                 </div>
             </div>
         </div>
+        <Modal show={props.location.showClickChangePopUp}>
+                <Modal.Header>
+                    <Modal.Title>Information</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                <Alert bsStyle="danger" >
+                    <h4>Screen contained unsaved changes.</h4>
+                     <h5>Do you want to continue...?</h5>          
+                </Alert>
+                     
+                </Modal.Body>
+                <Modal.Footer>
+                    <div className="pull-right">
+                        <button className="btn btn-warning" type="button" onClick={(e)=>props.LoadAndRefreshForms(props.location.currentLocationId, e)}>Yes</button>
+                        <button className="btn btn-danger" type="button" onClick={(e)=>props.toggleAlertPopup(0)}>No</button>
+                    </div>
+                </Modal.Footer>
+            </Modal>
     </section>
 </div>
                
