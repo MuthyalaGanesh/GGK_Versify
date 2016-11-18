@@ -47,7 +47,7 @@ export function bindLocationData(assignedScada) {
   let finalData = []
   defaultHistorians.map((data) => {
     if (assignedScada) {
-      let index = assignedScada.map((scada) => scada.metricId === data.metricId);
+      let index = assignedScada.findIndex((scada) => scada.metricId === data.metricId);
       if (index < 0) {
         finalData.push(data);
       }
@@ -149,6 +149,13 @@ export function EditDataHistorian(index) {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       dispatch({
+        type: 'redux-form/DESTROY',
+        meta: {
+          form: "DataHistorianForm"
+        },
+        payload: ""
+      })
+      dispatch({
         type: EDIT_DATAHISTORIAN,
         payload: index
       })
@@ -206,8 +213,20 @@ export const ACTION_HANDLERS = {
     })
   },
   [ADD_DATAHISTORIAN__MODAL]: (state, action) => {
+    let metricDropdown = []
+    let allmetrics = state.allmetrics
+    let data = state.dataHistorian
+    allmetrics.map((metric)=>
+    {
+          let index = data.findIndex((info) => info.metricId === metric.id);
+          if(index < 0)
+          {
+            metricDropdown.push(metric)
+          }
+    })
     let newState = Object.assign({}, state, {
-      showAddDataHistorianModal: !state.showAddDataHistorianModal
+      showAddDataHistorianModal: !state.showAddDataHistorianModal,
+      metrics : metricDropdown
     })
     newState.AddNewDataHistorian = true
     newState.EditableDataHistorian = {}
@@ -238,6 +257,17 @@ export const ACTION_HANDLERS = {
     return newState
   },
   [EDIT_DATAHISTORIAN]: (state, action) => {
+    let metricDropdown = []
+    let allmetrics = state.allmetrics
+    let data = state.dataHistorian
+    allmetrics.map((metric)=>
+    {
+          let index = data.findIndex((info) => info.metricId === metric.id);
+          if(index < 0)
+          {
+            metricDropdown.push(metric)
+          }
+    })
     if (!isNaN(action.payload) && state.dataHistorian) {
       let EditData = state.dataHistorian[action.payload]
       var EditableData = {};
@@ -248,10 +278,16 @@ export const ACTION_HANDLERS = {
       EditableData.scadaServerId = EditData.scadaServerId
       EditableData.index = action.payload
       EditableData.isDefault = EditData.isDefault
+      let metricindex = allmetrics.findIndex((m) => m.id === EditData.metricId);
+      if(metricindex>=0)
+      {
+        metricDropdown.push(allmetrics[metricindex])
+      }
     }
     let newState = Object.assign({}, state, {
-      EditableDataHistorian: EditableData,
-      showAddDataHistorianModal: !state.showAddDataHistorianModal
+      EditableDataHistorian: EditableData,      
+      showAddDataHistorianModal: !state.showAddDataHistorianModal,
+      metrics : metricDropdown
     })
     newState.AddNewDataHistorian = false
     return newState
@@ -342,8 +378,9 @@ export const ACTION_HANDLERS = {
 const initialState = {
   error: null,
   dataHistorian: getDataHistorian(),
-  EditableDataHistorian: {},
-  metrics: getMetricInfo(),
+  EditableDataHistorian: {},  
+  allmetrics: getMetricInfo(),
+  metrics: [],
   gateways: getGatewayInfo(),
   showAddDataHistorianModal: false,
   clickedIsDigitalTag: false,

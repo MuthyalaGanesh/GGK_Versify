@@ -3,7 +3,8 @@ import {
   finalLocationSaveObject,
   getOMSLocationwizardData,
   getMarketDrivenMappings,
-  getDataHistorian
+  getDataHistorian,
+  getUserInfo
 } from 'api/locationWizardApi'
 
 import {
@@ -25,6 +26,11 @@ import {
 import {
   editSystemIntegration
 } from "./systemIntegration"
+
+import {
+  bindUserLocationData
+} from "./user"
+
 
 import axios from 'axios'
 
@@ -74,9 +80,10 @@ export function leftMenuDropdownClickEvent(id, event) {
         selected_system_integrations.push(locationsInfo[i]);
       }
     }
-    dispatch(bindGatewayLocationData(editObject.GetOMSLocationWizardDataResult.Gateways))
+    dispatch(bindGatewayLocationData(editObject.GetOMSLocationWizardDataResult.Gateways));
     dispatch(editSystemIntegration(selected_system_integrations));
-    dispatch(bindWorkLocationData(editObject.GetOMSLocationWizardDataResult.AssignedWorkflowGroups));
+    dispatch(bindWorkLocationData(editObject.GetOMSLocationWizardDataResult.AssignedWorkflowGroups));    
+    dispatch(bindUserLocationData(editObject.GetOMSLocationWizardDataResult.AssignedContacts,id));
     dispatch({
       type: 'redux-form/DESTROY',
       meta: {

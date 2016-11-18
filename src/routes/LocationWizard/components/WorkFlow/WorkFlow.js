@@ -28,7 +28,7 @@ export const WorkFlow = (props) => {
                                                 <div className="col-sm-5 col-md-7 col-lg-7 MultipleSelect">
                                                     <Field
                                                         component={DropdownListField}
-                                                        defaultValue={props.workFlow.defaultWorkFlow}
+                                                        defaultvalue={props.workFlow.defaultWorkFlow}
                                                         name = 'workFlowItem'
                                                         data={workFlowItems}                                                                                                              
                                                         labelKey='WorkflowGroupName'                                             

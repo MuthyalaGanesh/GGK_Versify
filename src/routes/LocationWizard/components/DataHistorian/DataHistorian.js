@@ -108,7 +108,7 @@ export const DataHistorian = (props) => {
                                 <div className="col-xs-6">
                                     <Field component={DropdownListField} name = 'metric'
                                                         data={metrics} 
-                                                        defaultValue = {props.dataHistorian.EditableDataHistorian.metricId}                                                   
+                                                        defaultvalue = {props.dataHistorian.EditableDataHistorian.metricId}                                                   
                                                         labelKey='displayName'                                             
                                                         valueKey='id'
                                                         placeholder="Select a Metric"
@@ -132,7 +132,7 @@ export const DataHistorian = (props) => {
                                 <div className="col-xs-6">
                                     <Field component={DropdownListField} name = 'Gateway'
                                                         data={gateways} 
-                                                        defaultValue = {props.dataHistorian.EditableDataHistorian.scadaServerId}                                                   
+                                                        defaultvalue = {props.dataHistorian.EditableDataHistorian.scadaServerId}                                                   
                                                         labelKey='aliasName'                                             
                                                         valueKey='id'
                                                         placeholder="Select Gateway"

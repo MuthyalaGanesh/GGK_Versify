@@ -10,6 +10,7 @@ import {
 
 import axios from 'axios'
 
+const baseAddress = "https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc";
 export const BIND_USER_INFO = 'BIND_USER_INFO'
 export const BIND_CONTACT_TO_ROLE = 'BIND_CONTACT_TO_ROLE'
 export const BIND_ROLE_TO_CONTACT = 'BIND_ROLE_TO_CONTACT'
@@ -21,7 +22,26 @@ export const SELECTED_ALL_ROLE = 'SELECTED_ALL_ROLE'
 export const UNSELECTED_ALL_CONTACT = 'UNSELECTED_ALL_CONTACT'
 export const UNSELECTED_ALL_ROLE = 'UNSELECTED_ALL_ROLE'
 export const SAVE_NEW_CONTACT = 'SAVE_NEW_CONTACT'
+export const BIND_LOCATION_USER_DATA = 'BIND_LOCATION_USER_DATA'
+export const ROLE_BY_ROLE = 'ROLE_BY_ROLE'
 
+export function bindUserLocationData(locationId) {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      dispatch({
+        type: BIND_LOCATION_USER_DATA,
+        payload: locationId
+      })
+      dispatch({
+        type: 'redux-form/DESTROY',
+        meta: {
+          form: "UsersForm"
+        },
+        payload: ""
+      })
+    })
+  }
+}
 
 export function selectAllContacts() {
   return (dispatch, getState) => {
@@ -216,17 +236,58 @@ export function bindRoleToContact() {
 export function selectRole() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      dispatch({
-        type: SELECTED_ROLE,
-        payload: getState().form.UsersForm
-      })
-      dispatch({
-        type: 'redux-form/DESTROY',
-        meta: {
-          form: "UsersForm"
-        },
-        payload: ""
-      })
+      let locationId = getState().users.locationId;
+      if (locationId === 0) {
+        dispatch({
+          type: SELECTED_ROLE,
+          payload: getState().form.UsersForm
+        })
+        dispatch({
+          type: 'redux-form/DESTROY',
+          meta: {
+            form: "UsersForm"
+          },
+          payload: ""
+        })
+      } else if(getState().form.UsersForm.values.RoleByRoles) {
+        let roleinfo = {};
+        roleinfo.roleByRole = getState().form.UsersForm.values.RoleByRoles
+        axios({
+          method: 'get',
+          url: baseAddress + '/LWContactsByRole?locationId=' + locationId + '&roleId=' + roleByRole.Id,
+        }).then(function(response) {
+          roleinfo.roleByRole.contactIds = response.Contacts.map((contact) => contact.Id)
+          if (roleByRole.contactIds.findIndex((c) => c.Id === state.selectedContact.Id) >= 0) {
+            axios({
+              method: 'get',
+              url: baseAddress + '/LWRolesByContact?locationId=' + locationId + '&roleId=' + state.selectedContact.Id,
+            }).then(function(response) {
+              roleinfo.rolesbycontact = response.GetLWRolesByContactResult
+              dispatch({
+                Type: 'ROLE_BY_ROLE',
+                payload: roleinfo
+              })
+            }).catch(function(error) {
+              alert("error" + JSON.stringify(error));
+            });
+
+          } else {
+            dispatch({
+              type: SELECTED_ROLE,
+              payload: getState().form.UsersForm
+            })
+            dispatch({
+              type: 'redux-form/DESTROY',
+              meta: {
+                form: "UsersForm"
+              },
+              payload: ""
+            })
+          }
+        }).catch(function(error) {
+          alert("error" + JSON.stringify(error));
+        });
+      }
     })
   }
 };
@@ -544,6 +605,46 @@ export const ACTION_HANDLERS = {
       defaultContacts: defaultContact,
       saveRoles: saveRoles
     })
+  },
+  [BIND_LOCATION_USER_DATA]: (state, action) => {
+    let userInfo = state.userInformation
+    userInfo.Roles.map((role) => {
+      role.ContactIds = []
+    })
+    return Object.assign({}, state, {
+      userInfo: userInfo,
+      locationId: action.payload
+    })
+  },  
+  [ROLE_BY_ROLE]: (state, action) => {
+    let saveRoles = state.saveRoles
+    let userInformation = state.userInformation
+    let selectRole = action.payload.roleByRole
+    let defaultContacts = action.payload.roleByRole.contacts
+    let index = userInformation.Roles.findIndex((role) => role.Id === selectedRole.Id)
+    let defaultRoles = []
+    if (index >= 0) {
+      userInformation.Roles[index].ContactIds = defaultContacts
+
+      if (saveRoles != null && saveRoles.length == 0) {
+        saveRoles.push(userInformation.Roles[index])
+      } else {
+        let savedRoleIndex = saveRoles.findIndex((role) => role.Id === selectRole.Id)
+        savedRoleIndex >= 0 ? saveRoles[savedRoleIndex] = userInformation.Roles[index] : saveRoles.push(userInformation.Roles[index])
+      }
+
+      if (state.selectedContact != null &&
+        userInformation.Roles[index].ContactIds.findIndex((contact) => contact === state.selectedContact.Id) >= 0) {
+        let rolebycontact = action.payload.rolesbycontact;
+
+        if (rolebycontact != null) {
+          rolebycontact.Roles.map((role) => {
+            defaultRoles.push(role.Id)
+            let roleindex = userInformation.Roles.findIndex((r) => r.Id === role.Id)
+          })
+        }
+      }
+    }
   }
 }
 const initialState = {
@@ -557,7 +658,8 @@ const initialState = {
   showAddContactModal: false,
   disableRoles: true,
   disableContacts: true,
-  saveRoles: []
+  saveRoles: [],
+  locationId: 0
 };
 
 export default function userInfoReducer(state = initialState, action) {
