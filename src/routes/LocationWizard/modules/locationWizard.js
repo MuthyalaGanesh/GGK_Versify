@@ -346,7 +346,7 @@ function unitCharacterSticObjectPreparation(stateTree, dispatch) {
             AttributeName: suc.name,
             AttributeDescription: suc.description,
             LocationAttributeId: suc.LocationAttributeId != 0 ? suc.LocationAttributeId : 0,
-            UnitOfMeasureId: suc.defaultUnitOfMeasureId,
+            UnitOfMeasureId: suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
             UnitOfMeasureName: suc.UOM,
             Value: ea.Value,
             EffectiveStartDate: !!ea.EffectiveStartDate ? '/Date(' + (new Date(ea.EffectiveStartDate)).getTime() + ')/' : null,

@@ -322,6 +322,9 @@ export const ACTION_HANDLERS = {
             }
           })
         }
+        else {
+          updatedRow.uom = "String"
+        }
         updatedRow.description = uc.description
         updatedRow.displayName = uc.display
 
