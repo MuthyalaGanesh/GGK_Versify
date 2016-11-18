@@ -14,11 +14,11 @@ class TreeView extends React.Component {
     super(props);
 
     this.nodesQuantity = 0;
-
+    this.nodevalue= !!props.defaultNodeExpanded ? 1 : 0
+    this.defaultNodeExpanded = !!props.defaultNodeExpanded ? props.defaultNodeExpanded : -1  
     /*this.state = {data: props.data};
      this.someData = _.clone(props.data);
      this.setNodeId({Children: this.state.data});*/
-
 
     this.state = {data: this.setNodeId(_.clone({Children: props.data}))};    
 
@@ -30,24 +30,24 @@ class TreeView extends React.Component {
     this.nodeDoubleClicked = this.nodeDoubleClicked.bind(this);
     this.addNode = this.addNode.bind(this);
     this.removeNode = this.removeNode.bind(this);
+    this.recusrsiveexpansion = this.recusrsiveexpansion.bind(this)
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(nextProps.defaultNodeExpanded)
     this.setState({data: this.setNodeId(_.clone({Children: nextProps.data}))});
   }
 
   setNodeId(node) {
-
     if (!node.Children) return;
-
     return node.Children.map(childNode => {
       return {
         nodeId: childNode.Id,
         Children: this.setNodeId(childNode),
         parentNode: node,
         state: {
-          selected: childNode.state ? !!childNode.state.selected : false,
-          expanded: childNode.state ? !!childNode.state.expanded : false
+          selected: childNode.state ? !!childNode.state.selected : false ,
+          expanded: !this.nodevalue ? false :this.recusrsiveexpansion(childNode)? true : childNode.state ? !!childNode.state.expanded : false 
         },
         Name: childNode.Name,
         icon: childNode.icon
@@ -55,6 +55,36 @@ class TreeView extends React.Component {
     });
 
   }
+
+  recusrsiveexpansion(node) {
+  let flag=0
+    if(node.Id == this.defaultNodeExpanded){
+      return 1
+    }
+    else{
+      if(!node.Children){
+        return 0
+      }
+      else{
+        let i = 0
+        for( i in node.Children){
+          if(this.recusrsiveexpansion(node.Children[i])){
+              flag = 1
+              break 
+          }
+        }
+        if( flag == 1){
+          return 1
+        }
+        else{
+          return 0
+        }
+      }
+
+    }
+
+  }
+
 
   findNodeById(Children, id) {
     let _this = this;
@@ -254,7 +284,7 @@ TreeView.defaultProps = {
   borderColor: undefined,
   onhoverColor: '#F5F5F5',
   selectedColor: '#000000',
-  selectedBackColor: '#FFFFFF',
+  selectedBackColor: undefined,
 
   enableLinks: false,
   highlightSelected: true,
@@ -268,7 +298,8 @@ export class TreeNode extends React.Component {
 
   constructor(props) {
     super(props);    
-    this.state = {node: props.node, expanded: false};
+    this.state = {node: props.node, expanded:props.node.state && props.node.state.hasOwnProperty('expanded') ?
+     props.node.state.expanded : false};
     /*this.expanded = (props.node.state && props.node.state.hasOwnProperty('expanded')) ?
      props.node.state.expanded :
      (this.props.level < this.props.options.levels);*/
@@ -286,7 +317,8 @@ export class TreeNode extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({node: nextProps.node, expanded: false});
+    this.setState({node: nextProps.node, expanded:nextProps.node.state && nextProps.node.state.hasOwnProperty('expanded') ?
+     nextProps.node.state.expanded : false})
     /*this.expanded = (nextProps.node.state && nextProps.node.state.hasOwnProperty('expanded')) ?
      nextProps.node.state.expanded :
      (this.props.level < this.props.options.levels);*/

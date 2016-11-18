@@ -40,6 +40,8 @@ export const LOCATIONS_MENUITEM_DROPDOWN_CLICK = 'LOCATIONS_MENUITEM_DROPDOWN_CL
 
 export const GET_ALL_LOCATIONS_INFORMATION = "GET_ALL_LOCATIONS_INFORMATION";
 
+export const DEFAULT_NODE_EXPANDED = "DEFAULT_NODE_EXPANDED";
+
 export function toggleMenuClick(event) {
   return {
     type: TOGGLE_LEFTMENU_CLICK,
@@ -499,6 +501,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
     type: 'ERROR',
     payload: 0
   });
+
   var values = getState().form.BasicInfoForm ? getState().form.BasicInfoForm.values : {};
   var locationId = values.locationId;
   var primaryMarketTypeId = values.primaryMarket.id || values.primaryMarket;
@@ -528,6 +531,11 @@ function saveObjectPreparationAndCall(getState, dispatch) {
       Equipments: equipmentsObj
     }
   }
+  dispatch({
+    type:DEFAULT_NODE_EXPANDED,
+    payload:basicInfoObj.Id
+
+  })
   var finalData = JSON.stringify(finalSaveObject)
   console.log("finalSaveObject", finalData)
   axios({
@@ -549,39 +557,6 @@ function toArray(obj) {
   }
   return array;
 }
-
-export const ACTION_HANDLERS = {
-  [TOGGLE_LEFTMENU_CLICK]: (state, action) => {
-    //Handling adding claases  sidebar-open,sidebar-collapse based on screen resolution
-    var bodyClassList = toArray(document.getElementsByTagName('body')[0].classList);
-    var w = window,
-      d = document,
-      e = d.documentElement,
-      g = d.getElementsByTagName('body')[0],
-      x = w.innerWidth || e.clientWidth || g.clientWidth;
-    if (x <= 768) {
-      if (bodyClassList.indexOf('sidebar-open') > 0) {
-        document.getElementsByTagName('body')[0].className = "skin-qc fixed sidebar-mini";
-      } else {
-        document.getElementsByTagName('body')[0].className += " sidebar-open"
-      }
-    } else {
-      if (bodyClassList.indexOf('sidebar-collapse') > 0) {
-        document.getElementsByTagName('body')[0].className = "skin-qc fixed sidebar-mini";
-      } else {
-        document.getElementsByTagName('body')[0].className += " sidebar-collapse"
-      }
-    }
-    return Object.assign({}, state)
-  },
-  [GET_ALL_LOCATIONS_INFORMATION]: (state, action) => {
-    return Object.assign({}, state, {
-      allLocations: action.payload,
-      parentLocations: AddDefaultParent(changeObjectTypeOfLocations(action.payload))
-    })
-  }
-}
-
 function changeObjectTypeOfLocations(allLocations) {
   var changedLocationsObject = [];
   allLocations.forEach(function(item) {
@@ -623,12 +598,51 @@ export function getLocationsInformation() {
   }
 }
 
+export const ACTION_HANDLERS = {
+  [TOGGLE_LEFTMENU_CLICK]: (state, action) => {
+    //Handling adding claases  sidebar-open,sidebar-collapse based on screen resolution
+    var bodyClassList = toArray(document.getElementsByTagName('body')[0].classList);
+    var w = window,
+      d = document,
+      e = d.documentElement,
+      g = d.getElementsByTagName('body')[0],
+      x = w.innerWidth || e.clientWidth || g.clientWidth;
+    if (x <= 768) {
+      if (bodyClassList.indexOf('sidebar-open') > 0) {
+        document.getElementsByTagName('body')[0].className = "skin-qc fixed sidebar-mini";
+      } else {
+        document.getElementsByTagName('body')[0].className += " sidebar-open"
+      }
+    } else {
+      if (bodyClassList.indexOf('sidebar-collapse') > 0) {
+        document.getElementsByTagName('body')[0].className = "skin-qc fixed sidebar-mini";
+      } else {
+        document.getElementsByTagName('body')[0].className += " sidebar-collapse"
+      }
+    }
+    return Object.assign({}, state)
+  },
+  [GET_ALL_LOCATIONS_INFORMATION]: (state, action) => {
+    return Object.assign({}, state, {
+      allLocations: action.payload,
+      parentLocations: AddDefaultParent(changeObjectTypeOfLocations(action.payload))
+    })
+  },
+  [DEFAULT_NODE_EXPANDED]: (state,action) => {
+    return  Object.assign({}, state, {defaultNodeExpanded:action.payload})
+  }
+}
+
+
+
 //const allParentLocationsObject = basicInfoDropdowns.getParentLocations();
 
 const initialState = {
   error: null,
   allLocations: [],
-  parentLocations: []
+  parentLocations: [],
+  defaultNodeExpanded:null
+
 };
 
 export default function locationWizardReducer(state = initialState, action) {

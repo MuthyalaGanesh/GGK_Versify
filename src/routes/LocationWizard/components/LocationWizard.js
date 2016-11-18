@@ -29,7 +29,7 @@ var scrollSpy  = Scroll.scrollSpy;
 export const LocationWizard =(props)=> {
 return (
    <div>
-    <LocationLeftMenu Locations={props.location.allLocations} leftMenuDropdownClickEvent={props.leftMenuDropdownClickEvent} />
+    <LocationLeftMenu Locations={props.location.allLocations} leftMenuDropdownClickEvent={props.leftMenuDropdownClickEvent} defaultNodeExpanded ={props.location.defaultNodeExpanded}/>
     <section id="content_header" className="content-header col-xs-12 col-md-10">
          <Link to='#' onClick={props.toggleMenuClick} id="sidebar_toggle" className="sidebar-toggle" data-toggle="offcanvas" role="button">
           <span className="glyphicon glyphicon-align-justify">

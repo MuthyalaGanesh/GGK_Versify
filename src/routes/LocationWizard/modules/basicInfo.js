@@ -144,8 +144,7 @@ export const ACTION_HANDLERS = {
 }
 
 function PrepareCredentialBasicData(marketId, locationId = null) {
-  //get MarketDrivenMappings from API based on marketType ID
-  debugger;
+
   var data = getMarketDrivenMappings(marketId);
   var omsLocationwizardData = getOMSLocationwizardData(locationId);
   var marketDrivendata = [];
