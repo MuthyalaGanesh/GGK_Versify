@@ -18,7 +18,7 @@ export const WizardTabs =(props)=> {
       g = d.getElementsByTagName('body')[0],
       x = w.innerWidth || e.clientWidth || g.clientWidth;
 var offsetValue = x < 768 ? -125 : -165;
-
+scrollSpy.update();
 return (
   
 <div className="board-inner">
