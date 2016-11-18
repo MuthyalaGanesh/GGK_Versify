@@ -24,13 +24,17 @@ export const UNSELECTED_ALL_ROLE = 'UNSELECTED_ALL_ROLE'
 export const SAVE_NEW_CONTACT = 'SAVE_NEW_CONTACT'
 export const BIND_LOCATION_USER_DATA = 'BIND_LOCATION_USER_DATA'
 export const ROLE_BY_ROLE = 'ROLE_BY_ROLE'
+export const ROLE_BY_CONTACT = 'ROLE_BY_CONTACT'
 
-export function bindUserLocationData(locationId) {
+export function bindUserLocationData(assignedcontacts, locationId) {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
+      let info = {}
+      info.assignedcontacts = assignedcontacts,
+        info.locationId = locationId
       dispatch({
         type: BIND_LOCATION_USER_DATA,
-        payload: locationId
+        payload: info
       })
       dispatch({
         type: 'redux-form/DESTROY',
@@ -237,6 +241,7 @@ export function selectRole() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       let locationId = getState().users.locationId;
+      let fetchedRoles = getState().users.fetchedRoles;
       if (locationId === 0) {
         dispatch({
           type: SELECTED_ROLE,
@@ -249,32 +254,29 @@ export function selectRole() {
           },
           payload: ""
         })
-      } else if(getState().form.UsersForm.values.RoleByRoles) {
+      } else if (getState().form.UsersForm.values.RoleByRoles) {
         let roleinfo = {};
         roleinfo.roleByRole = getState().form.UsersForm.values.RoleByRoles
-        axios({
-          method: 'get',
-          url: baseAddress + '/LWContactsByRole?locationId=' + locationId + '&roleId=' + roleByRole.Id,
-        }).then(function(response) {
-          roleinfo.roleByRole.contactIds = response.Contacts.map((contact) => contact.Id)
-          if (roleByRole.contactIds.findIndex((c) => c.Id === state.selectedContact.Id) >= 0) {
-            axios({
-              method: 'get',
-              url: baseAddress + '/LWRolesByContact?locationId=' + locationId + '&roleId=' + state.selectedContact.Id,
-            }).then(function(response) {
-              roleinfo.rolesbycontact = response.GetLWRolesByContactResult
-              dispatch({
-                Type: 'ROLE_BY_ROLE',
-                payload: roleinfo
-              })
-            }).catch(function(error) {
-              alert("error" + JSON.stringify(error));
-            });
+        if (fetchedRoles.findIndex((fetchedId) => fetchedId === roleinfo.roleByRole.Id) < 0) {
+          axios({
+            method: 'get',
+            url: baseAddress + '/LWContactsByRole?locationId=' + locationId + '&roleId=' + roleinfo.roleByRole.Id,
+          }).then(function(response) {
 
-          } else {
+            if (response.data && response.data.GetLWContactsByRoleResult && response.data.GetLWContactsByRoleResult.Contacts) {
+              let result = response.data.GetLWContactsByRoleResult.Contacts
+              result.map((contact) => {
+                if (roleinfo.roleByRole.ContactIds == undefined || roleinfo.roleByRole.ContactIds == null) {
+                  roleinfo.roleByRole.ContactIds = []
+                  roleinfo.roleByRole.ContactIds.push(contact.Id)
+                } else if (roleinfo.roleByRole.ContactIds.findIndex((id) => id === contact.Id) < 0) {
+                  roleinfo.roleByRole.ContactIds.push(contact.Id)
+                }
+              })
+            }
             dispatch({
-              type: SELECTED_ROLE,
-              payload: getState().form.UsersForm
+              type: ROLE_BY_ROLE,
+              payload: roleinfo
             })
             dispatch({
               type: 'redux-form/DESTROY',
@@ -283,10 +285,22 @@ export function selectRole() {
               },
               payload: ""
             })
-          }
-        }).catch(function(error) {
-          alert("error" + JSON.stringify(error));
-        });
+          }).catch(function(error) {
+            alert("error" + JSON.stringify(error));
+          });
+        } else {
+          dispatch({
+            type: SELECTED_ROLE,
+            payload: getState().form.UsersForm
+          })
+          dispatch({
+            type: 'redux-form/DESTROY',
+            meta: {
+              form: "UsersForm"
+            },
+            payload: ""
+          })
+        }
       }
     })
   }
@@ -295,17 +309,60 @@ export function selectRole() {
 export function selectContact() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      dispatch({
-        type: SELECTED_CONTACT,
-        payload: getState().form.UsersForm
-      })
-      dispatch({
-        type: 'redux-form/DESTROY',
-        meta: {
-          form: "UsersForm"
-        },
-        payload: ""
-      })
+      let locationId = getState().users.locationId;
+      let fetchedContacts = getState().users.fetchedContacts;
+      if (locationId === 0) {
+        dispatch({
+          type: SELECTED_CONTACT,
+          payload: getState().form.UsersForm
+        })
+        dispatch({
+          type: 'redux-form/DESTROY',
+          meta: {
+            form: "UsersForm"
+          },
+          payload: ""
+        })
+      } else if (getState().form.UsersForm.values.ContactsByContact) {
+        let roleinfo = {};
+        roleinfo.contactsByContacts = getState().form.UsersForm.values.ContactsByContact
+        if (fetchedContacts.findIndex((fetchedId) => fetchedId === roleinfo.contactsByContacts.Id) < 0) {
+          axios({
+            method: 'get',
+            url: baseAddress + '/LWRolesByContact?locationId=' + locationId + '&contactId=' + roleinfo.contactsByContacts.Id,
+          }).then(function(response) {
+            if (response.data && response.data.GetLWRolesByContactResult) {
+              roleinfo.roles = response.data.GetLWRolesByContactResult.Roles
+              roleinfo.sharedRoles = response.data.GetLWRolesByContactResult.ContactsWhoShareRoles
+            }
+            dispatch({
+              type: ROLE_BY_CONTACT,
+              payload: roleinfo
+            })
+            dispatch({
+              type: 'redux-form/DESTROY',
+              meta: {
+                form: "UsersForm"
+              },
+              payload: ""
+            })
+          }).catch(function(error) {
+            alert("error" + JSON.stringify(error));
+          });
+        } else {
+          dispatch({
+            type: ROLE_BY_CONTACT,
+            payload: getState().form.UsersForm
+          })
+          dispatch({
+            type: 'redux-form/DESTROY',
+            meta: {
+              form: "UsersForm"
+            },
+            payload: ""
+          })
+        }
+      }
     })
   }
 };
@@ -613,38 +670,130 @@ export const ACTION_HANDLERS = {
     })
     return Object.assign({}, state, {
       userInfo: userInfo,
-      locationId: action.payload
+      locationId: action.payload.locationId,
+      selectedRole: {},
+      selectedContact: {},
+      defaultContacts: [],
+      defaultRoles: [],
+      newContactPopUp: {},
+      showAddContactModal: false,
+      disableRoles: true,
+      disableContacts: true,
+      saveRoles: [],
     })
-  },  
+  },
   [ROLE_BY_ROLE]: (state, action) => {
     let saveRoles = state.saveRoles
     let userInformation = state.userInformation
-    let selectRole = action.payload.roleByRole
-    let defaultContacts = action.payload.roleByRole.contacts
+    let selectedRole = action.payload.roleByRole
+    let roleContacts = action.payload.roleByRole.ContactIds
+    let fetchedRoles = state.fetchedRoles
+    if (fetchedRoles.findIndex((fetchedId) => fetchedId === selectedRole.Id) < 0) {
+      fetchedRoles.push(selectedRole.Id)
+    }
     let index = userInformation.Roles.findIndex((role) => role.Id === selectedRole.Id)
     let defaultRoles = []
+    let defaultContacts = []
     if (index >= 0) {
-      userInformation.Roles[index].ContactIds = defaultContacts
-
+      defaultContacts = userInformation.Roles[index].ContactIds
       if (saveRoles != null && saveRoles.length == 0) {
         saveRoles.push(userInformation.Roles[index])
       } else {
-        let savedRoleIndex = saveRoles.findIndex((role) => role.Id === selectRole.Id)
+        let savedRoleIndex = saveRoles.findIndex((role) => role.Id === selectedRole.Id)
         savedRoleIndex >= 0 ? saveRoles[savedRoleIndex] = userInformation.Roles[index] : saveRoles.push(userInformation.Roles[index])
       }
-
-      if (state.selectedContact != null &&
-        userInformation.Roles[index].ContactIds.findIndex((contact) => contact === state.selectedContact.Id) >= 0) {
-        let rolebycontact = action.payload.rolesbycontact;
-
-        if (rolebycontact != null) {
-          rolebycontact.Roles.map((role) => {
+      let Contact = state.selectedContact;
+      if (Contact != undefined || Contact != null && Contact.Id != undefined && Contact.Id != null) {
+        userInformation.Roles.map((role) => {
+          if (role.ContactIds.indexOf(Contact.Id) >= 0) {
             defaultRoles.push(role.Id)
-            let roleindex = userInformation.Roles.findIndex((r) => r.Id === role.Id)
-          })
-        }
+          }
+        })
       }
     }
+    return Object.assign({}, state, {
+      userInformation: userInformation,
+      selectedRole: selectedRole,
+      defaultRoles: defaultRoles,
+      defaultContacts: defaultContacts,
+      saveRoles: saveRoles,
+      fetchedRoles: fetchedRoles,
+      disableContacts: false
+    })
+  },
+  [ROLE_BY_CONTACT]: (state, action) => {
+    let saveRoles = state.saveRoles
+    let fetchedRoles = state.fetchedRoles
+    let fetchedContacts = state.fetchedContacts
+    let userInformation = state.userInformation
+    let selectedContact = action.payload.contactsByContacts
+    if (fetchedContacts.findIndex((fetchedId) => fetchedId === selectedContact.Id) < 0) {
+      fetchedContacts.push(selectedContact.Id)
+    }
+    let mappedRoles = action.payload.roles
+    let sharedRoles = action.payload.sharedRoles
+    let defaultRoles = []
+    let defaultContacts = []
+    if (mappedRoles && mappedRoles.length > 0) {
+      mappedRoles.map((mappedrole) => {
+        let index = userInformation.Roles.findIndex((role) => role.Id === mappedrole.Id)
+        if (index >= 0 &&
+          userInformation.Roles[index].ContactIds.findIndex((contact) => contact === selectedContact.Id) < 0) {
+          userInformation.Roles[index].ContactIds.push(selectedContact.Id)
+          if (saveRoles != null && saveRoles.length == 0) {
+            saveRoles.push(userInformation.Roles[index])
+          } else {
+            let savedRoleIndex = saveRoles.findIndex((role) => role.Id === mappedrole.Id)
+            savedRoleIndex >= 0 ? saveRoles[savedRoleIndex] = userInformation.Roles[index] : saveRoles.push(userInformation.Roles[index])
+          }
+        }
+      })
+    }
+    if (sharedRoles && sharedRoles.length > 0) {
+      sharedRoles.map((sharedRole) => {
+        let index = userInformation.Roles.findIndex((role) => role.Id === sharedRole.RoleId)
+        let fetchedindex = fetchedRoles.findIndex((id) => id === sharedRole.RoleId)
+        if (index >= 0 && fetchedindex < 0 &&
+          userInformation.Roles[index].ContactIds.findIndex((contact) => contact === sharedRole.ContactId) < 0) {
+          userInformation.Roles[index].ContactIds.push(sharedRole.ContactId)
+          if (saveRoles != null && saveRoles.length == 0) {
+            saveRoles.push(userInformation.Roles[index])
+          } else {
+            let savedRoleIndex = saveRoles.findIndex((role) => role.Id === sharedRole.RoleId)
+            savedRoleIndex >= 0 ? saveRoles[savedRoleIndex] = userInformation.Roles[index] : saveRoles.push(userInformation.Roles[index])
+          }
+        }
+      })
+      sharedRoles.map((sharedRole) => {
+        if (fetchedRoles.findIndex((id) => id === sharedRole.RoleId) < 0) {
+          fetchedRoles.push(sharedRole.RoleId);
+        }
+      })
+    }
+    let Contact = selectedContact;
+    if (Contact != undefined || Contact != null && Contact.Id != undefined && Contact.Id != null) {
+      userInformation.Roles.map((role) => {
+        if (role.ContactIds.indexOf(Contact.Id) >= 0) {
+          defaultRoles.push(role.Id)
+        }
+      })
+    }
+    if (state.selectedRole != undefined && state.selectedRole != null) {
+      let roleindex = userInformation.Roles.findIndex((r) => r.Id === state.selectedRole.Id)
+      if (roleindex >= 0) {
+        userInformation.Roles[roleindex].ContactIds.map((c) => defaultContacts.push(c))
+      }
+    }
+    return Object.assign({}, state, {
+      userInformation: userInformation,
+      selectedContact: selectedContact,
+      defaultRoles: defaultRoles,
+      defaultContacts: defaultContacts,
+      saveRoles: saveRoles,
+      fetchedContacts: fetchedContacts,
+      fetchedRoles: fetchedRoles,
+      disableRoles: false
+    })
   }
 }
 const initialState = {
@@ -659,7 +808,10 @@ const initialState = {
   disableRoles: true,
   disableContacts: true,
   saveRoles: [],
-  locationId: 0
+  assignedcontacts: [],
+  locationId: 0,
+  fetchedRoles: [],
+  fetchedContacts: []
 };
 
 export default function userInfoReducer(state = initialState, action) {
