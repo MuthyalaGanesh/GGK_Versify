@@ -19,17 +19,46 @@ export function AliasGiven() {
     }
 }
 
+export function getUnselectedSystemIntegrations(allSystemIntegrations) {
+    var UnSelected = []
+    allSystemIntegrations.map(si => {
+        if (si.LocationMappingId < 0) {
+            UnSelected.push(si)
+        }
+    })
+    return UnSelected;
+}
 export function editSystemIntegration(locationSystemIntegrations) {
+    var selectedSystemIntegrations=[]
+         for (var i = 0; i < locationSystemIntegrations.locationsInfo.length; i++) {
+        if (locationSystemIntegrations.locationsInfo[i].AliasName && locationSystemIntegrations.locationsInfo[i].LocationMappingId > 0) {
+            var valuePresence = 1;
+            if (locationSystemIntegrations.locationsInfo[i]) {
+
+                locationSystemIntegrations.marketDrivenMappings.map(mdm => {
+                    if (mdm.ExternalSystemName == locationSystemIntegrations.locationsInfo[i].ExternalSystemName) {
+                        valuePresence++;
+                    }
+                })
+
+                if (valuePresence == 1) {
+                    selectedSystemIntegrations.push(locationSystemIntegrations.locationsInfo[i]);
+                }
+            }
+
+        }
+    }
+
     return (dispatch, getState) => {
         return new Promise((resolve) => {
-            getSystemIntegrationTypes().then(function(response){
-                 dispatch({
+            getSystemIntegrationTypes().then(function(response) {
+                dispatch({
                     type: STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION,
                     payload: {
                         error: "",
                         systemIntegrationTypes: response.data.GetOMSLocationWizardDataResult.AssignedLocationMappings,
-                        selectedSystemIntegrationTypes: locationSystemIntegrations,
-                        unSelectedSystemIntegrationTypes: []
+                        selectedSystemIntegrationTypes: selectedSystemIntegrations,
+                        unSelectedSystemIntegrationTypes: getUnselectedSystemIntegrations(response.data.GetOMSLocationWizardDataResult.AssignedLocationMappings)
                     }
                 })
             })
@@ -53,6 +82,8 @@ export function deleteSystemIntegration(index) {
 
 export function AddSystemIntegration() {
     return (dispatch, getState) => {
+        console.log(getState().form.SystemIntegrationForm)
+        debugger;
         return new Promise((resolve) => {
             dispatch({
                 type: ADD_SYSTEM_INTEGRATION,
@@ -74,12 +105,12 @@ export function AddSystemIntegration() {
 export function getSystemIntegrationTypesService() {
     return (dispatch, getState) => {
         return new Promise((resolve) => {
-           getSystemIntegrationTypes().then(function(response){
-                 dispatch({
-                    type: GET_SYSTEM_INTEGRATION_TYPE_SERVICE, 
-                    payload:  response.data.GetOMSLocationWizardDataResult.AssignedLocationMappings
+            getSystemIntegrationTypes().then(function(response) {
+                dispatch({
+                    type: GET_SYSTEM_INTEGRATION_TYPE_SERVICE,
+                    payload: response.data.GetOMSLocationWizardDataResult.AssignedLocationMappings
                 })
-           })
+            })
         })
     }
 }
@@ -98,7 +129,6 @@ export const ACTION_HANDLERS = {
     },
 
     [ADD_SYSTEM_INTEGRATION]: (state, action) => {
-
         if (action.payload) {
             var stateObject = {};
             var newSelectedSysIntegrations = [];
@@ -168,8 +198,15 @@ export const ACTION_HANDLERS = {
         return action.payload
     },
     [GET_SYSTEM_INTEGRATION_TYPE_SERVICE]: (state, action) => {
-            return Object.assign({}, state, {
-            systemIntegrationTypes: action.payload
+        var unselectedSysIntegrations=[];
+        action.payload.map(ssit=>{
+            if (ssit.LocationMappingId<0) {
+                unselectedSysIntegrations.push(ssit)
+            }
+        })
+        return Object.assign({}, state, {
+            systemIntegrationTypes: action.payload,
+            unSelectedSystemIntegrationTypes:unselectedSysIntegrations
         })
     }
 }

@@ -42,7 +42,7 @@ export const GET_ALL_LOCATIONS_INFORMATION = "GET_ALL_LOCATIONS_INFORMATION";
 
 export const DEFAULT_NODE_EXPANDED = "DEFAULT_NODE_EXPANDED";
 
-export const SHOW_HIDE_ALERT='SHOW_HIDE_ALERT';
+export const SHOW_HIDE_ALERT = 'SHOW_HIDE_ALERT';
 
 export function toggleMenuClick(event) {
   return {
@@ -68,14 +68,14 @@ function findLocation(allLocations, locationId) {
   });
 }
 
-export function LoadAndRefreshForms(id, event){
-return (dispatch, getState) => {
-  
-  dispatch({
+export function LoadAndRefreshForms(id, event) {
+  return (dispatch, getState) => {
+
+    dispatch({
       type: SHOW_HIDE_ALERT,
       payload: {
         locationState: getState().location,
-        currentLocationId:id
+        currentLocationId: id
       }
     })
     dispatch({
@@ -143,30 +143,30 @@ return (dispatch, getState) => {
     })
     //If Location Id > 0, only bind data. otherwise load new forms
     if (id > 0) {
-      basicInfoDropdowns.getLocations().then(function(allLocationdata){
-      findLocation(allLocationdata.data.GetAllLocationsResult, id);
-      var locationObj = currentLocation;
-      currentLocation = null;
+      basicInfoDropdowns.getLocations().then(function (allLocationdata) {
+        findLocation(allLocationdata.data.GetAllLocationsResult, id);
+        var locationObj = currentLocation;
+        currentLocation = null;
 
-      dispatch(BindInitialValues(locationObj));
+        dispatch(BindInitialValues(locationObj));
 
-      
+        var marketDrivenMappings = getMarketDrivenMappings(locationObj.PrimaryMarketId);
+        var editSysIntegration = new Object({
+          locationsInfo: locationsInfo
+          , marketDrivenMappings: marketDrivenMappings
+        })
+        dispatch(editSystemIntegration(editSysIntegration));
+
       });
       let editObject = getOMSLocationwizardData(id);
       let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
       let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
       dispatch(bindLocationData(dataHistorianParticularLocationObject));
-      var selected_system_integrations = []
-      for (var i = 0; i < locationsInfo.length; i++) {
-        if (locationsInfo[i].AliasName && locationsInfo[i].LocationMappingId > 0) {
-          selected_system_integrations.push(locationsInfo[i]);
-        }
-      }
+
       dispatch(bindGatewayLocationData(editObject.GetOMSLocationWizardDataResult.Gateways));
-      dispatch(editSystemIntegration(selected_system_integrations));
       dispatch(bindWorkLocationData(editObject.GetOMSLocationWizardDataResult.AssignedWorkflowGroups));
       dispatch(bindUserLocationData(editObject.GetOMSLocationWizardDataResult.AssignedContacts, id));
-      dispatch(BindUnitCharacteristicsInitialValues(editObject.GetOMSLocationWizardDataResult.AllLocationAttributeWithValues))   
+      dispatch(BindUnitCharacteristicsInitialValues(editObject.GetOMSLocationWizardDataResult.AllLocationAttributeWithValues))
     }
 
   };
@@ -178,7 +178,7 @@ export function toggleAlertPopup(event) {
       type: SHOW_HIDE_ALERT,
       payload: {
         locationState: getState().location,
-        currentLocationId:0
+        currentLocationId: 0
       }
     })
   }
@@ -191,7 +191,7 @@ export function leftMenuDropdownClickEvent(id, event) {
       type: SHOW_HIDE_ALERT,
       payload: {
         locationState: getState().location,
-        currentLocationId:id
+        currentLocationId: id
       }
     })
   }
@@ -269,7 +269,7 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, primaryMarketTypeId
     }
     itemDatawithMarketDrivenMappings.push(itemData);
   });
-  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function(b) {
+  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function (b) {
     return b.ExternalSystemName
   })
   var staticPjmemktToAdd = {
@@ -512,18 +512,18 @@ export function saveCompleteLocationWizard() {
           type: 'ERROR',
           payload: 1
         }) && console.log('check here') : (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null && getState().form.BasicInfoForm.values.technologyType != null && getState().form.BasicInfoForm.values.fuelClass != null && getState().form.BasicInfoForm.values.physicalTimezone != null && getState().form.BasicInfoForm.values.owner != null) ? (credentialdatavalidation(getState())) ? //Save
-        saveObjectPreparationAndCall(getState, dispatch) : dispatch({
-          type: 'ERROR',
-          payload: 1
-        }) && console.log('error') : dispatch({
+          saveObjectPreparationAndCall(getState, dispatch) : dispatch({
+            type: 'ERROR',
+            payload: 1
+          }) && console.log('error') : dispatch({
+            type: 'ERROR',
+            payload: 1
+          })
+
+        : dispatch({
           type: 'ERROR',
           payload: 1
         })
-
-      : dispatch({
-        type: 'ERROR',
-        payload: 1
-      })
       console.log(Object.keys(getState().form.BasicInfoForm.values).length, 'stateobjectmo')
 
 
@@ -567,8 +567,8 @@ function saveObjectPreparationAndCall(getState, dispatch) {
     }
   }
   dispatch({
-    type:DEFAULT_NODE_EXPANDED,
-    payload:basicInfoObj.Id
+    type: DEFAULT_NODE_EXPANDED,
+    payload: basicInfoObj.Id
 
   })
   var finalData = JSON.stringify(finalSaveObject)
@@ -577,9 +577,9 @@ function saveObjectPreparationAndCall(getState, dispatch) {
     method: 'post',
     url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
     data: finalSaveObject
-  }).then(function(response) {
+  }).then(function (response) {
     console.log("success", response);
-  }).catch(function(error) {
+  }).catch(function (error) {
     alert("error" + JSON.stringify(error));
   });
 }
@@ -594,7 +594,7 @@ function toArray(obj) {
 }
 function changeObjectTypeOfLocations(allLocations) {
   var changedLocationsObject = [];
-  allLocations.forEach(function(item) {
+  allLocations.forEach(function (item) {
     changedLocationsObject.push({
       key: item.Id,
       value: item.Id,
@@ -623,7 +623,7 @@ function AddDefaultParent(objectfuncntion) {
 export function getLocationsInformation() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      basicInfoDropdowns.getParentLocations().then(function(response) {
+      basicInfoDropdowns.getParentLocations().then(function (response) {
         dispatch({
           type: GET_ALL_LOCATIONS_INFORMATION,
           payload: response.data.GetAllLocationsResult
@@ -663,19 +663,19 @@ export const ACTION_HANDLERS = {
       parentLocations: AddDefaultParent(changeObjectTypeOfLocations(action.payload))
     })
   },
-  [DEFAULT_NODE_EXPANDED]: (state,action) => {
-    return  Object.assign({}, state, {defaultNodeExpanded:action.payload})
+  [DEFAULT_NODE_EXPANDED]: (state, action) => {
+    return Object.assign({}, state, { defaultNodeExpanded: action.payload })
   },
   [SHOW_HIDE_ALERT]: (state, action) => {
     if (action.payload.locationState.showClickChangePopUp) {
       return Object.assign({}, state, {
         showClickChangePopUp: false,
-        currentLocationId:action.payload.currentLocationId || 0
+        currentLocationId: action.payload.currentLocationId || 0
       })
     } else {
       return Object.assign({}, state, {
         showClickChangePopUp: true,
-        currentLocationId:action.payload.currentLocationId || 0
+        currentLocationId: action.payload.currentLocationId || 0
       })
     }
   }
@@ -689,9 +689,9 @@ const initialState = {
   error: null,
   allLocations: [],
   parentLocations: [],
-  defaultNodeExpanded:null,
-  showClickChangePopUp:false,
-  currentLocationId:0
+  defaultNodeExpanded: null,
+  showClickChangePopUp: false,
+  currentLocationId: 0
 };
 
 export default function locationWizardReducer(state = initialState, action) {

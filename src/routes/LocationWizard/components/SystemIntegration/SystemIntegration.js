@@ -7,12 +7,18 @@ import CreatableDropdownListField from 'components/DropdownList/CreatableDropdow
 
 export const SystemIntegration = (props) => {
     const systemIntegrationData = [];
-    props.systemIntegration.systemIntegrationTypes.map(ssit => {
-        if (ssit.LocationMappingId < 0) {
+    props.systemIntegration.unSelectedSystemIntegrationTypes.map((ssit) => {
+        var valuePresence = 1;
+        props.systemIntegration.selectedSystemIntegrationTypes.map((sel) => {
+            if (ssit.ExternalSystemName == sel.ExternalSystemName) {
+                valuePresence++
+            }
+        })
+        if (valuePresence == 1 && ssit.LocationMappingId < 0) {
             systemIntegrationData.push(ssit)
         }
     })
-    console.log(systemIntegrationData, "systemIntegrationData")
+
     const touched = props.formdata
     return (
         <div className="row tab-pane fade in active" id="systemintegration">
@@ -72,7 +78,7 @@ export const SystemIntegration = (props) => {
                                                         <td className="align-text-col"><label>{ssit.ExternalSystemName}</label></td>
                                                         <td><Field component={InputField} name={`AliasName[${i}]`} onblur={() => props.AliasGiven() }
                                                             touched = {touched.hasOwnProperty('SystemIntegrationForm') ?
-                                                                touched.SystemIntegrationForm.hasOwnProperty('values') ? touched.SystemIntegrationForm.values.hasOwnProperty("AliasName") : false : false }
+                                                                touched.SystemIntegrationForm.hasOwnProperty('values') ? touched.SystemIntegrationForm.values.hasOwnProperty("AliasName") ? touched.SystemIntegrationForm.values.AliasName[i] : false : false : false }
 
                                                             className="form-control" defaultvalue={ssit.AliasName}/></td>
                                                         <td className="text-align-col text-center">
