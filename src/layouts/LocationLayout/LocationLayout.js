@@ -3,10 +3,10 @@ import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 
 
-export const CoreLayout = ({ children }) => (
+export const LocationLayout = ({ children }) => (
   <div>
     <Header />
-   <div>
+   <div className="content-wrapper">
 		  <div id="content_frame" className="content-frame" style={{width:"100%",position:'relative',display:"block"}}>
 			  {children}
       </div>
@@ -16,4 +16,4 @@ export const CoreLayout = ({ children }) => (
 )
 
 
-export default CoreLayout
+export default LocationLayout
