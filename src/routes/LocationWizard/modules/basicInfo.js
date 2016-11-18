@@ -110,6 +110,7 @@ export const ACTION_HANDLERS = {
 
 function PrepareCredentialBasicData(marketId, locationId = null) {
   //get MarketDrivenMappings from API based on marketType ID
+  debugger;
   var data = getMarketDrivenMappings(marketId);
   var omsLocationwizardData = getOMSLocationwizardData(locationId);
   var marketDrivendata = [];
@@ -122,20 +123,22 @@ function PrepareCredentialBasicData(marketId, locationId = null) {
 
     _.each(omsLocationwizardData.GetOMSLocationWizardDataResult.AssignedLocationMappings, (wizardDataItem) => {
       if (item.IsDropDown) {
-        var dropdownItem = _(wizardDataItem).find(function(x) {
-          return x => x.ExternalSystemName === item.ExternalSystemName && x.Field === item.Field
-        });
-        if (!!dropdownItem && dropdownItem != '') {
+       
+        if (wizardDataItem.ExternalSystemName == item.ExternalSystemName) {
+          if(!!wizardDataItem.AliasName){
           aliasNameDropDownItems.push({
             key: wizardDataItem.AliasName,
             value: wizardDataItem.AliasName,
             item: wizardDataItem
           });
+          }
+          if(!!wizardDataItem.ExternalSystemLogin){
           externalSystemLoginDropDownItems.push({
             key: wizardDataItem.ExternalSystemLogin,
             value: wizardDataItem.ExternalSystemLogin,
             item: wizardDataItem
           });
+          }
         }
       }
       
