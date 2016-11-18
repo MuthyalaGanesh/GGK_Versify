@@ -150,13 +150,13 @@ export function LoadAndRefreshForms(id, event) {
       payload: ''
     })
     dispatch({
-        type: 'redux-form/DESTROY',
-        meta: {
-          form: "WorkFlowForm"
-        },
-        payload: ''
-      })
-      //If Location Id > 0, only bind data. otherwise load new forms
+      type: 'redux-form/DESTROY',
+      meta: {
+        form: "WorkFlowForm"
+      },
+      payload: ''
+    })
+    //If Location Id > 0, only bind data. otherwise load new forms
     if (id > 0) {
       basicInfoDropdowns.getLocations().then(function (allLocationdata) {
         findLocation(allLocationdata.data.GetAllLocationsResult, id);
@@ -215,11 +215,11 @@ export function toggleSaveResponsePopup(event) {
 export function leftMenuDropdownClickEvent(id, event) {
   console.log("LOCATIONS_MENUITEM_DROPDOWN_CLICK:", id);
   return (dispatch, getState) => {
-      dispatch({
-    type:DEFAULT_NODE_EXPANDED,
-    payload: id
+    dispatch({
+      type: DEFAULT_NODE_EXPANDED,
+      payload: id
 
-  })
+    })
     dispatch({
       type: SHOW_HIDE_ALERT,
       payload: {
@@ -392,7 +392,12 @@ function equipmentObjectPreparation(stateTree, dispatch, locationId) {
 function SystemIntegrationObjectPreparation(stateTree, dispatch) {
   var systemIntegrationObj = []
   if (stateTree.systemIntegration) {
-    systemIntegrationObj = stateTree.systemIntegration.selectedSystemIntegrationTypes;
+    stateTree.systemIntegration.selectedSystemIntegrationTypes.map(ssit => {
+      systemIntegrationObj.push(ssit)
+    })
+    stateTree.systemIntegration.deletedSystemIntegrations.map(del => {
+      systemIntegrationObj.push(del)
+    })
     console.log(systemIntegrationObj, "SystemIntegrations")
   } else {
     dispatch({
@@ -566,7 +571,7 @@ export function saveCompleteLocationWizard() {
 
 function saveObjectPreparationAndCall(getState, dispatch) {
   var values = getState().form.BasicInfoForm ? getState().form.BasicInfoForm.values : {};
-  
+
   CheckLocationNameIsExists(getState().location.allLocations, values.locationName);
   var isLocationNamePresent = isLocationNameExists;
   if (isLocationNamePresent && !(values.locationId > 0)) {
@@ -620,7 +625,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
 
     })
     console.log('check')
-    var k = test(basicInfoObj.Id,getState().location.allLocations)
+    var k = test(basicInfoObj.Id, getState().location.allLocations)
     console.log(k);
 
     var finalData = JSON.stringify(finalSaveObject)
@@ -629,7 +634,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
       method: 'post',
       url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
       data: finalSaveObject
-    }).then(function(response) {
+    }).then(function (response) {
       console.log("success", response);
       if (response.status === 200) {
         dispatch({
@@ -641,7 +646,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
           }
         });
       }
-    }).catch(function(error) {
+    }).catch(function (error) {
       dispatch({
         type: SAVE_RESPONSE_HANDLER,
         payload: {
@@ -651,40 +656,40 @@ function saveObjectPreparationAndCall(getState, dispatch) {
         }
       });
     });
-  } 
+  }
 }
 
-function test(Id,allLocations){
+function test(Id, allLocations) {
   console.log('check2')
   let array = []
-  let i =0  
-    for(i in allLocations){
-   let  element = findanddestroy(allLocations[i],Id) 
-    !!element ? array.push(element):null
+  let i = 0
+  for (i in allLocations) {
+    let element = findanddestroy(allLocations[i], Id)
+    !!element ? array.push(element) : null
 
   }
   console.log(array)
   return array
- 
+
 }
 
 function findanddestroy(Location, Id) {
-  let array = [] 
-      if(Location.id == Id ){
-          return 
-      }else{
-        if(!Location.Children){
-          console.log(Location)
-          return Location 
-        }
-        else{
-          Location.Children.map((children,i)=>{
-            let  element = findanddestroy(children,Id) 
-            !!element ? array.push(element):null
-          })
-          return array
-        }
-      }  
+  let array = []
+  if (Location.id == Id) {
+    return
+  } else {
+    if (!Location.Children) {
+      console.log(Location)
+      return Location
+    }
+    else {
+      Location.Children.map((children, i) => {
+        let element = findanddestroy(children, Id)
+        !!element ? array.push(element) : null
+      })
+      return array
+    }
+  }
 }
 
 function toArray(obj) {

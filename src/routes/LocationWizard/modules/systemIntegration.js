@@ -29,8 +29,8 @@ export function getUnselectedSystemIntegrations(allSystemIntegrations) {
     return UnSelected;
 }
 export function editSystemIntegration(locationSystemIntegrations) {
-    var selectedSystemIntegrations=[]
-         for (var i = 0; i < locationSystemIntegrations.locationsInfo.length; i++) {
+    var selectedSystemIntegrations = []
+    for (var i = 0; i < locationSystemIntegrations.locationsInfo.length; i++) {
         if (locationSystemIntegrations.locationsInfo[i].AliasName && locationSystemIntegrations.locationsInfo[i].LocationMappingId > 0) {
             var valuePresence = 1;
             if (locationSystemIntegrations.locationsInfo[i]) {
@@ -58,7 +58,8 @@ export function editSystemIntegration(locationSystemIntegrations) {
                         error: "",
                         systemIntegrationTypes: response.data.GetOMSLocationWizardDataResult.AssignedLocationMappings,
                         selectedSystemIntegrationTypes: selectedSystemIntegrations,
-                        unSelectedSystemIntegrationTypes: getUnselectedSystemIntegrations(response.data.GetOMSLocationWizardDataResult.AssignedLocationMappings)
+                        unSelectedSystemIntegrationTypes: getUnselectedSystemIntegrations(response.data.GetOMSLocationWizardDataResult.AssignedLocationMappings),
+                        deletedSystemIntegrations: []
                     }
                 })
             })
@@ -82,8 +83,6 @@ export function deleteSystemIntegration(index) {
 
 export function AddSystemIntegration() {
     return (dispatch, getState) => {
-        console.log(getState().form.SystemIntegrationForm)
-        debugger;
         return new Promise((resolve) => {
             dispatch({
                 type: ADD_SYSTEM_INTEGRATION,
@@ -122,6 +121,7 @@ export const ACTION_HANDLERS = {
             action.payload.values.AliasName.map((alias, index) => {
                 if (alias) {
                     newState.selectedSystemIntegrationTypes[index].AliasName = alias;
+                    newState.selectedSystemIntegrationTypes[index].FlaggedForDeletion = false;
                 }
             })
         }
@@ -142,7 +142,19 @@ export const ACTION_HANDLERS = {
             })
             state.systemIntegrationTypes.map(ssit => {
                 if (ssit.ExternalSystemName == action.payload) {
+                    if (state.deletedSystemIntegrations && state.deletedSystemIntegrations.length > 0) {
+
+                        var finalDeleted = []
+
+                        state.deletedSystemIntegrations.map(del => {
+                            if (del.ExternalSystemName != ssit.ExternalSystemName) {
+                                finalDeleted.push(del)
+                            }
+                        })
+                        state.deletedSystemIntegrations = finalDeleted;
+                    }
                     stateObject = ssit;
+                    stateObject.FlaggedForDeletion = true
                     stateObject.LocationMappingId = ssit.LocationMappingId < 0 ? 0 : ssit.LocationMappingId;
                 }
                 else {
@@ -159,7 +171,7 @@ export const ACTION_HANDLERS = {
                         ExternalSystemLogin: "",
                         ExternalSystemPwd: "",
                         ParameterList: "",
-                        FlaggedForDeletion: false
+                        FlaggedForDeletion: true
                     })
                 }
                 newSelectedSysIntegrations.push(stateObject);
@@ -178,13 +190,16 @@ export const ACTION_HANDLERS = {
         if (action.payload != null && action.payload != undefined && !isNaN(action.payload)) {
             var newSystemIntegrations = [];
             var newUnSelectedSysIntegrations = state.unSelectedSystemIntegrationTypes;
+            !state.deletedSystemIntegrations ? state.deletedSystemIntegrations = [] : null
             state.selectedSystemIntegrationTypes.map((ssit, index) => {
                 if (index != action.payload) {
                     newSystemIntegrations.push(ssit)
                 }
                 else {
-                    ssit.LocationMappingId = -1;
+                    ssit.LocationMappingId = ssit.LocationMappingId > -1 ? ssit.LocationMappingId : -1;
+                    ssit.FlaggedForDeletion = true;
                     newUnSelectedSysIntegrations.push(ssit)
+                    state.deletedSystemIntegrations.push(ssit)
                 }
             })
         }
@@ -198,15 +213,15 @@ export const ACTION_HANDLERS = {
         return action.payload
     },
     [GET_SYSTEM_INTEGRATION_TYPE_SERVICE]: (state, action) => {
-        var unselectedSysIntegrations=[];
-        action.payload.map(ssit=>{
-            if (ssit.LocationMappingId<0) {
+        var unselectedSysIntegrations = [];
+        action.payload.map(ssit => {
+            if (ssit.LocationMappingId < 0) {
                 unselectedSysIntegrations.push(ssit)
             }
         })
         return Object.assign({}, state, {
             systemIntegrationTypes: action.payload,
-            unSelectedSystemIntegrationTypes:unselectedSysIntegrations
+            unSelectedSystemIntegrationTypes: unselectedSysIntegrations
         })
     }
 }
@@ -215,7 +230,8 @@ const initialState = {
     error: "",
     systemIntegrationTypes: [],
     selectedSystemIntegrationTypes: [],
-    unSelectedSystemIntegrationTypes: []
+    unSelectedSystemIntegrationTypes: [],
+    deletedSystemIntegrations: []
 };
 
 export default function systemIntegrationReducer(state = initialState, action) {
