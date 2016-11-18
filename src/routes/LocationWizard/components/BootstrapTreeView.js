@@ -14,7 +14,7 @@ class TreeView extends React.Component {
     super(props);
 
     this.nodesQuantity = 0;
-    this.nodevalue= !!props.defaultNodeExpanded ? 1 : 0
+    this.nodevalue= !!props.defaultNodeExpanded 
     this.defaultNodeExpanded = !!props.defaultNodeExpanded ? props.defaultNodeExpanded : -1  
     /*this.state = {data: props.data};
      this.someData = _.clone(props.data);
