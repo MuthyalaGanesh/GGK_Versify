@@ -41,7 +41,6 @@ export const DEFAULT_NODE_EXPANDED = "DEFAULT_NODE_EXPANDED";
 export const SHOW_HIDE_ALERT = 'SHOW_HIDE_ALERT';
 export const SAVE_RESPONSE_HANDLER = 'SAVE_RESPONSE_HANDLER';
 
-
 export function toggleMenuClick(event) {
   return {
     type: TOGGLE_LEFTMENU_CLICK,
@@ -637,6 +636,9 @@ function saveObjectPreparationAndCall(getState, dispatch) {
     }).then(function (response) {
       console.log("success", response);
       if (response.status === 200) {
+        getState().form.BasicInfoForm.values.locationId = response.data.SaveOMSLocationWizardDataResult.Location.Id;
+        
+
         dispatch({
           type: SAVE_RESPONSE_HANDLER,
           payload: {
@@ -774,9 +776,9 @@ export const ACTION_HANDLERS = {
   },
   [DEFAULT_NODE_EXPANDED]: (state, action) => {
     return Object.assign({}, state, {
-      defaultNodeExpanded: action.payload
+      defaultNodeExpanded: action.payload || 0
     })
-  },
+  },  
   [SHOW_HIDE_ALERT]: (state, action) => {
     if (action.payload.locationState.showClickChangePopUp) {
       return Object.assign({}, state, {

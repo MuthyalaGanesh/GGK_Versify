@@ -23,7 +23,7 @@ return (
   <div className="col-xs-12">
     <div className="box">
       <div className="box-header">
-        <h3 className="box-title">Basic Information</h3>
+        <h3 className="box-title">Basic Information </h3>
         <div className="box-tools pull-right">
         </div>
       </div>
@@ -33,10 +33,10 @@ return (
               {error ?  <div className='col-sm-12 errorMessage' style={{textAlign:'center'}}> Please complete the  highlighted fields </div> : null }
             <div className="col-sm-12">
               <div className="row">
-                <Field name="LocationId"
+                <Field name="locationId"
                 component="input"
                 type="hidden"
-                value={props.LocationId ||0}
+                value={props.locationId ||0}
                 >
                 </Field>
                 <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
