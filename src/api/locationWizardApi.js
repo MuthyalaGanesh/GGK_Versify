@@ -150,6 +150,14 @@ export function getWorkFlows() {
    // return mapWorkFlowInfo();
 }
 
+export function getWorkFlowTypes()
+{
+    return axios({
+              method: 'get',
+              url:Constants.WORKFLOW_TYPES,
+    })
+}
+
 export function getUserInfo() {
     return axios({
               method: 'get',

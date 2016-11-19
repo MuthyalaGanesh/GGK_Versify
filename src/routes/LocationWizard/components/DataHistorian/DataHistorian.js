@@ -28,7 +28,8 @@ export const DataHistorian = (props) => {
     const gateways = props.dataHistorian.gateways.Gateways;
     const dataHistorian = props.dataHistorian.dataHistorian;
     const touched = props.formdata;
-
+    const error = props.dataHistorian.error
+    const validations = props.dataHistorian.validationMessages
     return (
             <div className="row tab-pane fade in active" id="datahistorian">
                 <div className="col-xs-12">
@@ -109,10 +110,12 @@ export const DataHistorian = (props) => {
                                     <Field component={DropdownListField} name = 'metric'
                                                         data={metrics} 
                                                         defaultvalue = {props.dataHistorian.EditableDataHistorian.metricId}                                                   
-                                                        labelKey='displayName'                                             
+                                                        labelKey='displayName'
+                                                        clearable = {props.dataHistorian.EditableDataHistorian.metricId ? false : true}                                          
                                                         valueKey='id'
                                                         placeholder="Select a Metric"
-                                                        onChangeEvent = {props.selectRole}/> 
+                                                        onChangeEvent = {props.validateData}/> 
+                                    {error && validations.Metric && <span className="errorMessage">{validations.Metric}</span>}
                                 </div>
                             </div>
                             <div className="col-xs-12 form-group">
@@ -120,9 +123,10 @@ export const DataHistorian = (props) => {
                                     <label>Tag</label>
                                 </div>
                                 <div className="col-xs-6">
-                                    <Field component={InputField} type="text" className="form-control" name="Tag" defaultvalue={props.dataHistorian.EditableDataHistorian.scadaTag}
+                                    <Field component={InputField} type="text" className="form-control" name="Tag" defaultvalue={props.dataHistorian.EditableDataHistorian.scadaTag} onblur ={props.validateData}
                                          placeholder="Tag" touched = {touched.hasOwnProperty('DataHistorianForm')?touched.DataHistorianForm.hasOwnProperty('fields') ? touched.DataHistorianForm.fields.hasOwnProperty('Tag') : false :false }>
                                     </Field>
+                                    {error && validations.Tag && <span className="errorMessage">{validations.Tag}</span>}
                                 </div>
                             </div>
                             <div className="col-xs-12 form-group">
@@ -133,10 +137,12 @@ export const DataHistorian = (props) => {
                                     <Field component={DropdownListField} name = 'Gateway'
                                                         data={gateways} 
                                                         defaultvalue = {props.dataHistorian.EditableDataHistorian.scadaServerId}                                                   
-                                                        labelKey='aliasName'                                             
+                                                        labelKey='aliasName'  
+                                                        clearable = {props.dataHistorian.EditableDataHistorian.scadaServerId ? false : true}                                           
                                                         valueKey='id'
                                                         placeholder="Select Gateway"
-                                                        onChangeEvent = {props.selectRole}/> 
+                                                        onChangeEvent = {props.validateData}/> 
+                                    {error && validations.Gateway && <span className="errorMessage">{validations.Gateway}</span>}
                                 </div>
                             </div>
                             <div className="col-xs-12 form-group">

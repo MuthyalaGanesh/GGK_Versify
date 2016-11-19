@@ -16,7 +16,8 @@ import {
 	EditDataHistorian,
 	DeleteDataHistorian,
 	ConfirmDataDelete,
-	CloseDataConfirmation
+	CloseDataConfirmation,
+	validateData
 } from '../../modules/dataHistorian';
 
 
@@ -36,7 +37,8 @@ const mapDispatchToProps = {
 	EditDataHistorian,
 	DeleteDataHistorian,
 	ConfirmDataDelete,
-	CloseDataConfirmation
+	CloseDataConfirmation,
+	validateData
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({

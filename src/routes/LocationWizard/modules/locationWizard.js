@@ -205,8 +205,12 @@ export function LoadAndRefreshForms(id, event) {
       let editObject = getOMSLocationwizardData(id);
       let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
       let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
+
       dispatch(bindLocationData(dataHistorianParticularLocationObject));
       dispatch(BindInitialEquipments(editObject.GetOMSLocationWizardDataResult.Equipment));
+
+      dispatch(bindLocationData(dataHistorianParticularLocationObject,id));
+
       dispatch(bindGatewayLocationData(editObject.GetOMSLocationWizardDataResult.Gateways));
       dispatch(bindWorkLocationData(editObject.GetOMSLocationWizardDataResult.AssignedWorkflowGroups));
       dispatch(bindUserLocationData(editObject.GetOMSLocationWizardDataResult.AssignedContacts, id));
