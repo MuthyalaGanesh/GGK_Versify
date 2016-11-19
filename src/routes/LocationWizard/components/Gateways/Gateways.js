@@ -7,7 +7,9 @@ import 'styles/commonStyles.scss'
 export const Gateways = (props) => {
     const Gateways = props.gateways.gateway.Gateways;
     const editableGateway = props.gateways.EditableGateway; 
-    const touched = props.formdata
+    const touched = props.formdata;    
+    const error = props.gateways.error
+    const validations = props.gateways.validationMessages
     return (
             <div className="row tab-pane fade in active" id='gateway'>
                 <div className="col-xs-12">
@@ -84,9 +86,10 @@ export const Gateways = (props) => {
                                     <label>Name</label>
                                 </div>
                                 <div className="col-xs-6">
-                                    <Field component={InputField} type="text" className="form-control" name="GatewayName" 
+                                    <Field component={InputField} type="text" className="form-control" name="GatewayName" onblur ={props.validateGateway}
                                     defaultvalue={editableGateway.GatewayName} touched = {touched.hasOwnProperty('GatewayForm')?touched.GatewayForm.hasOwnProperty('fields') ? touched.GatewayForm.fields.hasOwnProperty('GatewayName') : false :false }>
                                     </Field>
+                                    {error && validations.GatewayName && <span className="errorMessage">{validations.GatewayName}</span>}
                                 </div>
                             </div>
                             <div className="col-xs-12 form-group">
@@ -95,8 +98,8 @@ export const Gateways = (props) => {
                                 </div>
                                 <div className="col-xs-6">
                                     <Field component={InputField} type="text" touched = {touched.hasOwnProperty('GatewayForm')?touched.GatewayForm.hasOwnProperty('fields') ? touched.GatewayForm.fields.hasOwnProperty('GatewayURL') : false :false } className="form-control" name="GatewayURL"
-                                    defaultvalue={editableGateway.GatewayURL} />
-                                   
+                                    defaultvalue={editableGateway.GatewayURL} onblur ={props.validateGateway}/>
+                                    {error && validations.GatewayURL && <span className="errorMessage">{validations.GatewayURL}</span>}
                                 </div>
                             </div>
                             <div className="col-xs-12 form-group">

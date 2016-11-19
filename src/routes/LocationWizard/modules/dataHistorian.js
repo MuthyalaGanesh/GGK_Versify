@@ -514,7 +514,7 @@ const initialState = {
   saveScada: [],
   showDataDeleteModal: false,
   deleteDataIndex: null,
-  validationMessages: {},
+  validationMessages: {}
 };
 
 export default function dataHistorianReducer(state = initialState, action) {

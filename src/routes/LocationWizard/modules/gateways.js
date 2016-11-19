@@ -10,6 +10,7 @@ export const UPDATE_GATEWAY = 'UPDATE_GATEWAY'
 export const DELETE_GATEWAY = 'DELETE_GATEWAY'
 export const CONFIRM_DELETE_GATEWAY = 'CONFIRM_DELETE_GATEWAY'
 export const CLOSE_GATEWAY_CONFIRMATION = "CLOSE_GATEWAY_CONFIRMATION"
+export const SHOW_GATEWAY_ERRORS = "SHOW_GATEWAY_ERRORS"
 
 export function getGateways() {
   return {
@@ -18,10 +19,10 @@ export function getGateways() {
   };
 };
 
-export function bindGatewayLocationData(gateway){
+export function bindGatewayLocationData(gateway) {
   let gateways = {}
-  gateways.Gateways =  gateway
-return {
+  gateways.Gateways = gateway
+  return {
     type: GET_GATEWAY_INFO,
     payload: gateways
   };
@@ -82,17 +83,46 @@ export function AddGatewayModalToggle() {
 export function AddGateway() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      dispatch({
-        type: ADD_GATEWAY,
-        payload: getState().form.GatewayForm
-      })
-      dispatch({
-        type: 'redux-form/DESTROY',
-        meta: {
-          form: "GatewayForm"
-        },
-        payload: ""
-      })
+      let values = {}
+      let messages = {}
+      let invalid = false
+      getState().form.GatewayForm.hasOwnProperty('values') ?
+        values = getState().form.GatewayForm.values : null
+      if (values != null) {
+        if (!values.GatewayName) {
+          invalid = true
+          messages.GatewayName = 'Please specify Name'
+        }
+        if (!values.GatewayURL) {
+          invalid = true
+          messages.GatewayURL = 'Please specify url'
+        }
+        if (invalid == true) {
+          dispatch({
+            type: SHOW_GATEWAY_ERRORS,
+            payload: messages
+          })
+        } else {
+          dispatch({
+            type: ADD_GATEWAY,
+            payload: getState().form.GatewayForm
+          })
+          dispatch({
+            type: 'redux-form/DESTROY',
+            meta: {
+              form: "GatewayForm"
+            },
+            payload: ""
+          })
+        }
+      } else {
+        messages.GatewayName = 'Please specify Name'
+        messages.GatewayURL = 'Please specify url'
+        dispatch({
+          type: SHOW_GATEWAY_ERRORS,
+          payload: values
+        })
+      }
     })
   }
 }
@@ -100,17 +130,46 @@ export function AddGateway() {
 export function UpdateGateway() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      dispatch({
-        type: UPDATE_GATEWAY,
-        payload: getState().form.GatewayForm
-      })
-      dispatch({
-        type: 'redux-form/DESTROY',
-        meta: {
-          form: "GatewayForm"
-        },
-        payload: ""
-      })
+      let values = {}
+      let fields = {}
+      let messages = {}
+      let invalid = false
+      let editedGateway = getState().gateways.EditableGateway
+      getState().form.GatewayForm.hasOwnProperty('values') ?
+        values = getState().form.GatewayForm.values : null
+      getState().form.GatewayForm.hasOwnProperty('fields') ?
+        fields = getState().form.GatewayForm.fields : null
+      if (!values.GatewayName) {
+        messages.GatewayName = 'Please specify Name',
+          fields && fields.hasOwnProperty('GatewayName') && fields.GatewayName.hasOwnProperty('touched') &&
+          fields.GatewayName.touched ?
+          invalid = true : editedGateway.GatewayName ? messages.GatewayName = null : invalid = true
+      }
+      if (!values.GatewayURL) {
+        messages.GatewayURL = 'Please specify url'
+        fields && fields.hasOwnProperty('GatewayURL') && fields.GatewayURL.hasOwnProperty('touched') &&
+          fields.GatewayURL.touched ?
+          invalid = true : editedGateway.GatewayURL ? messages.GatewayURL = null : invalid = true
+      }
+      if (invalid == true) {
+        dispatch({
+          type: SHOW_GATEWAY_ERRORS,
+          payload: messages
+        })
+      } else {
+        dispatch({
+          type: UPDATE_GATEWAY,
+          payload: getState().form.GatewayForm
+        })
+        dispatch({
+          type: 'redux-form/DESTROY',
+          meta: {
+            form: "GatewayForm"
+          },
+          payload: ""
+        })
+      }
+
     })
   }
 }
@@ -136,6 +195,49 @@ export function DeleteGateway() {
   }
 }
 
+export function validateGateway() {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      let gateway = getState().gateways
+      if (gateway.error) {
+        let editedGateway = gateway.EditableGateway
+        let values = {}
+        let messages = {}
+        getState().form.GatewayForm.hasOwnProperty('values') ?
+          values = getState().form.GatewayForm.values : null
+        if (!editedGateway.hasOwnProperty('Id')) {
+          if (values != null) {
+            values.GatewayName ? messages.GatewayName = null : messages.GatewayName = 'Please specify Name'
+            values.GatewayURL ? messages.GatewayURL = null : messages.GatewayURL = 'Please specify url'
+          } else {
+            messages.GatewayName = 'Please specify Name'
+            messages.GatewayURL = 'Please specify url'
+          }
+        } else {
+          if (values != null) {
+            let fields
+            getState().form.GatewayForm.hasOwnProperty('fields') ?
+              fields = getState().form.GatewayForm.hasOwnProperty('fields') : fields = {}
+
+            fields.hasOwnProperty('GatewayName') && fields.GatewayName.hasOwnProperty('touched') &&
+              fields.GatewayName.touched ?
+              values.GatewayName ? messages.GatewayName = null : messages.GatewayName = 'Please specify Name' : editedGateway.GatewayName ? messages.GatewayName = null : messages.GatewayName = 'Please specify Name'
+
+            fields.hasOwnProperty('GatewayURL') && fields.GatewayURL.hasOwnProperty('touched') &&
+            fields.GatewayURL.touched ?
+              values.GatewayURL ? messages.GatewayURL = null : messages.GatewayURL = 'Please specify url' : editedGateway.GatewayURL ? messages.GatewayURL = null : messages.GatewayURL = 'Please specify url'
+
+          }
+        }
+        dispatch({
+          type: SHOW_GATEWAY_ERRORS,
+          payload: messages
+        })
+      }
+    })
+  }
+}
+
 export const ACTION_HANDLERS = {
   [GET_GATEWAY_INFO]: (state, action) => {
     return Object.assign({}, state, {
@@ -151,12 +253,14 @@ export const ACTION_HANDLERS = {
   [CLOSE_GATEWAY_CONFIRMATION]: (state, action) => {
     return Object.assign({}, state, {
       GatewayDeleteIndex: null,
-      showGatewayDeleteModal: !state.showGatewayDeleteModal
+      showGatewayDeleteModal: !state.showGatewayDeleteModal,
     })
   },
   [ADD_MODAL]: (state, action) => {
     let newState = Object.assign({}, state, {
-      showAddModal: !state.showAddModal
+      showAddModal: !state.showAddModal,
+      validationMessages: {},
+      error: null
     })
     newState.AddNewGateway = true
     newState.EditableGateway = {}
@@ -195,11 +299,12 @@ export const ACTION_HANDLERS = {
             updatedGateways.push(gw)
           } else {
             var newGateway = {};
+            let fields = action.payload.fields
             newGateway.id = gw.id
-            newGateway.aliasName = action.payload.fields.GatewayName && action.payload.fields.GatewayName.touched ? action.payload.values.GatewayName : gw.aliasName
-            newGateway.piInterfaceRootUrl = action.payload.fields.GatewayURL && action.payload.fields.GatewayURL.touched ? action.payload.values.GatewayURL : gw.piInterfaceRootUrl
-            newGateway.externalSystemLogin = action.payload.fields.GatewayLogin && action.payload.fields.GatewayLogin.touched ? action.payload.values.GatewayLogin : gw.externalSystemLogin
-            newGateway.externalSystemPwd = action.payload.fields.GatewayPassword && action.payload.fields.GatewayPassword.touched ? action.payload.values.GatewayPassword : gw.externalSystemPwd
+            newGateway.aliasName = fields && fields.GatewayName && fields.GatewayName.touched ? action.payload.values.GatewayName : gw.aliasName
+            newGateway.piInterfaceRootUrl = fields && fields.GatewayURL && fields.GatewayURL.touched ? action.payload.values.GatewayURL : gw.piInterfaceRootUrl
+            newGateway.externalSystemLogin = fields && fields.GatewayLogin && fields.GatewayLogin.touched ? action.payload.values.GatewayLogin : gw.externalSystemLogin
+            newGateway.externalSystemPwd = fields && fields.GatewayPassword && fields.GatewayPassword.touched ? action.payload.values.GatewayPassword : gw.externalSystemPwd
             newGateway.hasChanged = true
             newGateway.canDelete = gw.canDelete == true ? true : false
             updatedGateways.push(newGateway)
@@ -221,7 +326,9 @@ export const ACTION_HANDLERS = {
         Gateways: updatedGateways
       },
       showAddModal: !state.showAddModal,
-      saveGateway: saveGateway
+      saveGateway: saveGateway,
+      validationMessages: {},
+      error: null
     })
   },
   [DELETE_GATEWAY]: (state, action) => {
@@ -243,7 +350,9 @@ export const ACTION_HANDLERS = {
   },
   [ADD_GATEWAY]: (state, action) => {
     var newState = Object.assign({}, state, {
-      showAddModal: !state.showAddModal
+      showAddModal: !state.showAddModal,
+      validationMessages: {},
+      error: null
     })
     if (action.payload != null) {
       if (action.payload.values.GatewayName) {
@@ -261,6 +370,12 @@ export const ACTION_HANDLERS = {
 
     }
     return newState
+  },
+  [SHOW_GATEWAY_ERRORS]: (state, action) => {
+    return Object.assign({}, state, {
+      error: 1,
+      validationMessages: action.payload
+    })
   }
 }
 
@@ -271,7 +386,8 @@ const initialState = {
   showAddModal: false,
   saveGateway: [],
   GatewayDeleteIndex: null,
-  showGatewayDeleteModal: false
+  showGatewayDeleteModal: false,
+  validationMessages: {}
 };
 
 export default function gateWayReducer(state = initialState, action) {

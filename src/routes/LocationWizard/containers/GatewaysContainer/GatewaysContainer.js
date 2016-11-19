@@ -13,7 +13,8 @@ import {
 	UpdateGateway,
 	DeleteGateway,
 	ConfirmGatewayDelete,
-	CloseGatewayConfirmation
+	CloseGatewayConfirmation,
+	validateGateway
 } from '../../modules/gateways';
 
 const mapStateToProps = (state) => ({
@@ -30,7 +31,8 @@ const mapDispatchToProps = {
 	UpdateGateway,
 	DeleteGateway,
 	ConfirmGatewayDelete,
-	CloseGatewayConfirmation
+	CloseGatewayConfirmation,
+	validateGateway
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
