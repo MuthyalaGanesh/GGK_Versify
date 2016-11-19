@@ -42,6 +42,26 @@ export const GET_ALL_LOCATIONS_INFORMATION = "GET_ALL_LOCATIONS_INFORMATION";
 export const DEFAULT_NODE_EXPANDED = "DEFAULT_NODE_EXPANDED";
 export const SHOW_HIDE_ALERT = 'SHOW_HIDE_ALERT';
 export const SAVE_RESPONSE_HANDLER = 'SAVE_RESPONSE_HANDLER';
+export const SHOW_SPINNER = 'SHOW_SPINNER';
+export const HIDE_SPINNER = 'HIDE_SPINNER';
+
+
+export function showSpinner() {
+ return (dispatch, getState) => {
+    dispatch({
+      type: SHOW_SPINNER,
+      payload:true
+    })
+ }
+}
+export function hideSpinner() {
+  return (dispatch, getState) => {
+    dispatch({
+      type: HIDE_SPINNER,
+      payload:false
+    })
+ }
+}
 
 export function toggleMenuClick(event) {
   return {
@@ -86,7 +106,10 @@ function CheckLocationNameIsExists(allLocations, locationName) {
 
 export function LoadAndRefreshForms(id, event) {
   return (dispatch, getState) => {
-
+    dispatch({
+        type: SHOW_SPINNER,
+        payload:true
+      })
     dispatch({
       type: SHOW_HIDE_ALERT,
       payload: {
@@ -173,6 +196,11 @@ export function LoadAndRefreshForms(id, event) {
         })
         dispatch(editSystemIntegration(editSysIntegration));
 
+      }).then(function(){
+         dispatch({
+        type: HIDE_SPINNER,
+        payload:false
+      })
       });
       let editObject = getOMSLocationwizardData(id);
       let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
@@ -183,6 +211,11 @@ export function LoadAndRefreshForms(id, event) {
       dispatch(bindWorkLocationData(editObject.GetOMSLocationWizardDataResult.AssignedWorkflowGroups));
       dispatch(bindUserLocationData(editObject.GetOMSLocationWizardDataResult.AssignedContacts, id));
       dispatch(BindUnitCharacteristicsInitialValues(editObject.GetOMSLocationWizardDataResult.AllLocationAttributeWithValues))
+    }else{
+       dispatch({
+        type: HIDE_SPINNER,
+        payload:false
+      })
     }
 
   };
@@ -768,9 +801,16 @@ export const ACTION_HANDLERS = {
   [GET_ALL_LOCATIONS_INFORMATION]: (state, action) => {
     return Object.assign({}, state, {
       allLocations: action.payload,
-      parentLocations: AddDefaultParent(changeObjectTypeOfLocations(action.payload))
+      parentLocations: AddDefaultParent(changeObjectTypeOfLocations(action.payload)),
+      isLoading:false
     })
   },
+  [SHOW_SPINNER]: (state, action) => {
+    return Object.assign({}, state, {isLoading: action.payload || true})
+  },  
+  [HIDE_SPINNER]: (state, action) => {
+        return Object.assign({}, state, {isLoading: action.payload || false})
+  },  
   [DEFAULT_NODE_EXPANDED]: (state, action) => {
     return Object.assign({}, state, {
       defaultNodeExpanded: action.payload || 0
@@ -816,7 +856,8 @@ const initialState = {
   showClickChangePopUp: false,
   showLocationSaveResponsePopup: false,
   responseMessage: '',
-  currentLocationId: 0
+  currentLocationId: 0,
+  isLoading:true
 };
 
 export default function locationWizardReducer(state = initialState, action) {
