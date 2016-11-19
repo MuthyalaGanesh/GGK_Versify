@@ -109,13 +109,49 @@ export function DeleteUnitCharateristic() {
     payload: true
   };
 };
+//Making Near Date First
+export function DateSwap(editableAttributes) {
+  var todayDate = new Date();
+  var effDate = new Date(editableAttributes[0].EffectiveStartDate);
+  var timeDiff = Math.abs(effDate.getTime() - todayDate.getTime());
+  var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+  var minDiff = diffDays < 0 ? (-1)(diffDays) : diffDays;
 
+  editableAttributes.map((ea, i) => {
+    var effDate = new Date(ea.EffectiveStartDate);
+    var timeDiff = Math.abs(effDate.getTime() - todayDate.getTime());
+    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    diffDays = diffDays < 0 ? (-1)(diffDays) : diffDays
+
+    if (diffDays < minDiff) {
+      minDiff = diffDays;
+      var initialDate = new Object({
+        EffectiveEndDate: editableAttributes[0].EffectiveEndDate,
+        EffectiveStartDate: editableAttributes[0].EffectiveStartDate,
+        Value: editableAttributes[0].Value
+      });
+      var swapDate = new Object({
+        EffectiveEndDate: ea.EffectiveEndDate,
+        EffectiveStartDate: ea.EffectiveStartDate,
+        Value: ea.Value
+      })
+      editableAttributes[0].EffectiveEndDate = swapDate.EffectiveEndDate;
+      editableAttributes[0].EffectiveStartDate = swapDate.EffectiveStartDate;
+      editableAttributes[0].Value = swapDate.Value;
+      ea.EffectiveEndDate = initialDate.EffectiveEndDate;
+      ea.EffectiveStartDate = initialDate.EffectiveStartDate;
+      ea.Value = initialDate.Value;
+    }
+  })
+  return editableAttributes;
+}
 export const ACTION_HANDLERS = {
 
   [BIND_INITIAL_ATTRIBUTES]: (state, action) => {
     if (action.payload) {
       var newState = Object.assign({}, state)
       var attributes = action.payload
+      var selectedDefault = []
       if (!attributes || (attributes && attributes.length == 0)) {
         newState.selectedunitCharacteristics = [];
         newState.selectedunitCharacteristics = newState.defaultUnitCharacteristics;
@@ -130,6 +166,7 @@ export const ACTION_HANDLERS = {
               newState.defaultUnitCharacteristics.map(duc => {
                 if (duc.id == att.AttributeId) {
                   uc.isDeletable = false;
+                  selectedDefault.push(duc.id)
                 }
               })
               uc.defaultUnitOfMeasureId = att.UnitOfMeasureId
@@ -150,11 +187,31 @@ export const ACTION_HANDLERS = {
               if (valuePresence == 1) {
                 uc.editableAttributes = [];
                 uc.editableAttributes.push(editableAttributes);
+                //making nearby date first
+                uc.editableAttributes = DateSwap(uc.editableAttributes);
                 newState.selectedunitCharacteristics.push(uc);
               }
             }
           })
         })
+        if (selectedDefault.length > 0) {
+          newState.defaultUnitCharacteristics.map(duc => {
+            var valuePresence = 1
+            selectedDefault.map(def => {
+              if (def.id == duc.id) {
+                valuePresence++;
+              }
+            })
+            if (valuePresence == 1) {
+              newState.selectedunitCharacteristics.push(duc);
+            }
+          })
+        }
+        else {
+          newState.defaultUnitCharacteristics.map(duc => {
+            newState.selectedunitCharacteristics.push(duc)
+          })
+        }
       }
       return newState;
     }
@@ -290,38 +347,7 @@ export const ACTION_HANDLERS = {
           })
         }
         if (!errorStatus && dateValidations.length == 0) {
-          var todayDate = new Date();
-          var effDate = new Date(uc.editableAttributes[0].EffectiveStartDate);
-          var timeDiff = Math.abs(effDate.getTime() - todayDate.getTime());
-          var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-          var minDiff = diffDays < 0 ? (-1)(diffDays) : diffDays;
-
-          uc.editableAttributes.map((ea, i) => {
-            var effDate = new Date(ea.EffectiveStartDate);
-            var timeDiff = Math.abs(effDate.getTime() - todayDate.getTime());
-            var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-            diffDays = diffDays < 0 ? (-1)(diffDays) : diffDays
-
-            if (diffDays < minDiff) {
-              minDiff = diffDays;
-              var initialDate = new Object({
-                EffectiveEndDate: uc.editableAttributes[0].EffectiveEndDate,
-                EffectiveStartDate: uc.editableAttributes[0].EffectiveStartDate,
-                Value: uc.editableAttributes[0].Value
-              });
-              var swapDate = new Object({
-                EffectiveEndDate: ea.EffectiveEndDate,
-                EffectiveStartDate: ea.EffectiveStartDate,
-                Value: ea.Value
-              })
-              uc.editableAttributes[0].EffectiveEndDate = swapDate.EffectiveEndDate;
-              uc.editableAttributes[0].EffectiveStartDate = swapDate.EffectiveStartDate;
-              uc.editableAttributes[0].Value = swapDate.Value;
-              ea.EffectiveEndDate = initialDate.EffectiveEndDate;
-              ea.EffectiveStartDate = initialDate.EffectiveStartDate;
-              ea.Value = initialDate.Value;
-            }
-          })
+          uc.editableAttributes = DateSwap(uc.editableAttributes);
         }
       })
       return Object.assign({}, newState, {
@@ -418,38 +444,7 @@ export const ACTION_HANDLERS = {
           })
           uc.UOM = newState.UOMLabel
           if (!errorStatus && dateValidations.length == 0) {
-            var todayDate = new Date();
-            var effDate = new Date(uc.editableAttributes[0].EffectiveStartDate);
-            var timeDiff = Math.abs(effDate.getTime() - todayDate.getTime());
-            var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-            var minDiff = diffDays < 0 ? (-1)(diffDays) : diffDays;
-
-            uc.editableAttributes.map((ea, i) => {
-              var effDate = new Date(ea.EffectiveStartDate);
-              var timeDiff = Math.abs(effDate.getTime() - todayDate.getTime());
-              var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-              diffDays = diffDays < 0 ? (-1)(diffDays) : diffDays
-
-              if (diffDays < minDiff) {
-                minDiff = diffDays;
-                var initialDate = new Object({
-                  EffectiveEndDate: uc.editableAttributes[0].EffectiveEndDate,
-                  EffectiveStartDate: uc.editableAttributes[0].EffectiveStartDate,
-                  Value: uc.editableAttributes[0].Value
-                });
-                var swapDate = new Object({
-                  EffectiveEndDate: ea.EffectiveEndDate,
-                  EffectiveStartDate: ea.EffectiveStartDate,
-                  Value: ea.Value
-                })
-                uc.editableAttributes[0].EffectiveEndDate = swapDate.EffectiveEndDate;
-                uc.editableAttributes[0].EffectiveStartDate = swapDate.EffectiveStartDate;
-                uc.editableAttributes[0].Value = swapDate.Value;
-                ea.EffectiveEndDate = initialDate.EffectiveEndDate;
-                ea.EffectiveStartDate = initialDate.EffectiveStartDate;
-                ea.Value = initialDate.Value;
-              }
-            })
+            uc.editableAttributes = DateSwap(uc.editableAttributes);
             newState.selectedunitCharacteristics.push(uc)
           }
         }
@@ -515,7 +510,7 @@ export function getDefaultUnitCharacteristics(allUOMValues) {
   var unitCharacteristicsJson = []
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      getUnitCharacteristics().then(function(response) {
+      getUnitCharacteristics().then(function (response) {
 
         dispatch({
           type: GET_UNIT_CHARACTERSTICS,
@@ -550,7 +545,7 @@ export function getDefaultUnitCharacteristicsService() {
 
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      getAllUOMValues().then(function(response) {
+      getAllUOMValues().then(function (response) {
         dispatch({
           type: GET_ALL_UOM_VALUES,
           payload: response.data
