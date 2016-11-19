@@ -45,11 +45,11 @@ export const Equipments = (props) => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {
+                                           {
                                                 props.equipments.insertedEquipment.map((eq, index) =>
                                                     (
                                                         <tr key={index}>
-                                                            <td className="col-md-3 col-sm-3 name-cell text-center">{eq}</td>
+                                                            <td className="col-md-3 col-sm-3 name-cell text-center">{eq.Name}</td>
                                                             <td className="col-md-1 col-sm-3">
                                                                 <div className="text-center">
                                                                     <i className="fa fa-edit fa-2x" onClick={() => { props.EditEquipment(index) } }></i>
@@ -74,7 +74,7 @@ export const Equipments = (props) => {
                                     type="text"
                                     className="form-control"
                                     name="editedEquipment"
-                                    defaultvalue={props.equipments.editableEquipment}
+                                    defaultvalue={props.equipments.editableEquipment.Name}
                                     touched = {touched.hasOwnProperty('EquipmentsForm') ? touched.EquipmentsForm.hasOwnProperty('values') ? touched.EquipmentsForm.values.hasOwnProperty('editedEquipment') : false : false }></Field>
                             </Modal.Body>
                             <Modal.Footer>

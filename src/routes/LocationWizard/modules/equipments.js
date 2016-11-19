@@ -2,6 +2,7 @@ export const ADD_EQUIPMENT = 'ADD_EQUIPMENT'
 export const EDIT_EQUIPMENT = 'EDIT_EQUIPMENT'
 export const APPLY_EQUIPMENT = 'APPLY_EQUIPMENT'
 export const DELETE_EQUIPMENT = 'DELETE_EQUIPMENT'
+export const STATE_CHANGE_EDIT_FOR_EQUIPMENT = 'STATE_CHANGE_EDIT_FOR_EQUIPMENT'
 
 export function AddEquipment() {
   return (dispatch, getState) => {
@@ -18,7 +19,12 @@ export function AddEquipment() {
     })
   }
 }
-
+export function BindInitialEquipments(equipments) {
+  return {
+    type: STATE_CHANGE_EDIT_FOR_EQUIPMENT,
+    payload: equipments
+  }
+}
 export function EditEquipment(index) {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
@@ -51,7 +57,13 @@ export function DeleteEquipment(index) {
   }
 }
 export const ACTION_HANDLERS = {
-
+  [STATE_CHANGE_EDIT_FOR_EQUIPMENT]: (state, action) => {
+    var parentLocationId = action.payload ? action.payload[0] ? action.payload[0].ParentLocationId : 0 : 0
+    return Object.assign({}, state, {
+      insertedEquipment: action.payload,
+      ParentLocationId: parentLocationId
+    })
+  },
   [ADD_EQUIPMENT]: (state, action) => {
 
     if (action.payload != null && action.payload != undefined && typeof action.payload == "string") {
@@ -62,12 +74,17 @@ export const ACTION_HANDLERS = {
       }
       state.insertedEquipment.map((eq) => {
         newEquipmentData.push(eq);
-        if (eq == action.payload) {
+        if (eq.Name == action.payload) {
           valuePresence++;
         }
       })
       if (valuePresence == 1) {
-        newEquipmentData.push(action.payload);
+        newEquipmentData.push(new Object({
+          Id: 0,
+          Name: action.payload,
+          ParentLocationId: state.ParentLocationId,
+          IsDirty: false
+        }));
       }
       return Object.assign({}, state, { insertedEquipment: newEquipmentData })
     }
@@ -83,8 +100,13 @@ export const ACTION_HANDLERS = {
     if (action.payload) {
       var updatedEquipments = []
       state.insertedEquipment.map((eq) => {
-        if (eq == state.editableEquipment) {
-          updatedEquipments.push(action.payload);
+        if (eq.Name == state.editableEquipment.Name) {
+          updatedEquipments.push(new Object({
+            Id: eq.Id,
+            Name: action.payload,
+            ParentLocationId: eq.ParentLocationId,
+            IsDirty: false
+          }));
         }
         else {
           updatedEquipments.push(eq)
@@ -111,8 +133,9 @@ export const ACTION_HANDLERS = {
 const initialState = {
   error: "",
   insertedEquipment: [],
-  editableEquipment: "",
-  showEditModal: false
+  editableEquipment: [],
+  showEditModal: false,
+  ParentLocationId: 0
 };
 
 export default function equipmentsReducer(state = initialState, action) {

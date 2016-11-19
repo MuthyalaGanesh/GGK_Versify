@@ -30,7 +30,9 @@ import {
 import {
   bindUserLocationData
 } from "./user"
-
+import {
+  BindInitialEquipments
+} from "./equipments"
 
 import axios from 'axios'
 
@@ -176,7 +178,7 @@ export function LoadAndRefreshForms(id, event) {
       let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
       let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
       dispatch(bindLocationData(dataHistorianParticularLocationObject));
-
+      dispatch(BindInitialEquipments(editObject.GetOMSLocationWizardDataResult.Equipment));
       dispatch(bindGatewayLocationData(editObject.GetOMSLocationWizardDataResult.Gateways));
       dispatch(bindWorkLocationData(editObject.GetOMSLocationWizardDataResult.AssignedWorkflowGroups));
       dispatch(bindUserLocationData(editObject.GetOMSLocationWizardDataResult.AssignedContacts, id));
@@ -369,15 +371,10 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, primaryMarketTypeId
   return credentialsAndIdentifiersObj;
 }
 
-function equipmentObjectPreparation(stateTree, dispatch, locationId) {
-  var equipmentsObj = []
-  stateTree.equipments && stateTree.equipments.insertedEquipment ? stateTree.equipments.insertedEquipment.map(eq => {
-    equipmentsObj.push({
-      id: 0,
-      ParentLocationId: locationId,
-      Name: eq,
-      IsDirty: false
-    })
+function equipmentObjectPreparation(stateTree, dispatch) {
+  var equipmentsObj = [];
+  stateTree.equipments && stateTree.equipments.insertedEquipment ? stateTree.equipments.insertedEquipment.map(ie => {
+    equipmentsObj.push(ie)
   }) : dispatch({
     type: 'ERROR',
     payload: 1
@@ -597,7 +594,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
       getState().form.CredentialsManagementForm ? getState().form.CredentialsManagementForm.values : {},
       primaryMarketTypeId,
       locationId)
-    var equipmentsObj = equipmentObjectPreparation(getState(), dispatch, locationId)
+    var equipmentsObj = equipmentObjectPreparation(getState(), dispatch)
     var systemIntegrationObj = SystemIntegrationObjectPreparation(getState(), dispatch)
     var unitCharacteristicsObj = unitCharacterSticObjectPreparation(getState(), dispatch)
     var rolesObj = rolesObjectPreparation(getState(), dispatch)
