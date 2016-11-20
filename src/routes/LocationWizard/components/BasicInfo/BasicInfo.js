@@ -56,7 +56,7 @@ return (
                   <label className="checkbox-inline control-label">
                     <Field name="isOutageLevel"
                     component='input' type="checkbox"
-                    text='Allow Outages at Location' className='checkbox' />
+                    className='checkbox' />
                     &nbsp;&nbsp;Allow Outages at Location
                   </label>
                 </FormGroup>

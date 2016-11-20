@@ -48,21 +48,21 @@ var currentLocation = null;
 var isLocationNameExists = false;
 
 export function showSpinner() {
- return (dispatch, getState) => {
+  return (dispatch, getState) => {
     dispatch({
       type: SHOW_SPINNER,
-      payload:true
+      payload: true
     })
- }
+  }
 }
 
 export function hideSpinner() {
   return (dispatch, getState) => {
     dispatch({
       type: HIDE_SPINNER,
-      payload:false
+      payload: false
     })
- }
+  }
 }
 
 export function toggleMenuClick(event) {
@@ -100,11 +100,6 @@ export function toggleSaveResponsePopup(event) {
 export function leftMenuDropdownClickEvent(id, event) {
   console.log("LOCATIONS_MENUITEM_DROPDOWN_CLICK:", id);
   return (dispatch, getState) => {
-    dispatch({
-      type: DEFAULT_NODE_EXPANDED,
-      payload: id
-
-    })
     dispatch({
       type: SHOW_HIDE_ALERT,
       payload: {
@@ -150,9 +145,14 @@ function CheckLocationNameIsExists(allLocations, locationName) {
 export function LoadAndRefreshForms(id, event) {
   return (dispatch, getState) => {
     dispatch({
-        type: SHOW_SPINNER,
-        payload:true
-      })
+      type: DEFAULT_NODE_EXPANDED,
+      payload: id
+
+    })
+    dispatch({
+      type: SHOW_SPINNER,
+      payload: true
+    })
     dispatch({
       type: SHOW_HIDE_ALERT,
       payload: {
@@ -217,15 +217,16 @@ export function LoadAndRefreshForms(id, event) {
       payload: ''
     })
     dispatch({
-      type: 'redux-form/DESTROY',
-      meta: {
-        form: "WorkFlowForm"
-      },
-      payload: ''
-    })
-    //If Location Id > 0, only bind data. otherwise load new forms
+        type: 'redux-form/DESTROY',
+        meta: {
+          form: "WorkFlowForm"
+        },
+        payload: ''
+      })
+      //If Location Id > 0, only bind data. otherwise load new forms
     if (id > 0) {
-      basicInfoDropdowns.getLocations().then(function (allLocationdata) {
+
+      basicInfoDropdowns.getLocations().then(function(allLocationdata) {
         findLocation(allLocationdata.data.GetAllLocationsResult, id);
         var locationObj = currentLocation;
         currentLocation = null;
@@ -234,16 +235,16 @@ export function LoadAndRefreshForms(id, event) {
 
         var marketDrivenMappings = getMarketDrivenMappings(locationObj.PrimaryMarketId);
         var editSysIntegration = new Object({
-          locationsInfo: locationsInfo
-          , marketDrivenMappings: marketDrivenMappings
+          locationsInfo: locationsInfo,
+          marketDrivenMappings: marketDrivenMappings
         })
         dispatch(editSystemIntegration(editSysIntegration));
 
-      }).then(function(){
-         dispatch({
-        type: HIDE_SPINNER,
-        payload:false
-      })
+      }).then(function() {
+        dispatch({
+          type: HIDE_SPINNER,
+          payload: false
+        })
       });
       let editObject = getOMSLocationwizardData(id);
       let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
@@ -252,16 +253,16 @@ export function LoadAndRefreshForms(id, event) {
       dispatch(bindLocationData(dataHistorianParticularLocationObject));
       dispatch(BindInitialEquipments(editObject.GetOMSLocationWizardDataResult.Equipment));
 
-      dispatch(bindLocationData(dataHistorianParticularLocationObject,id));
+      dispatch(bindLocationData(dataHistorianParticularLocationObject, id));
 
       dispatch(bindGatewayLocationData(editObject.GetOMSLocationWizardDataResult.Gateways));
       dispatch(bindWorkLocationData(editObject.GetOMSLocationWizardDataResult.AssignedWorkflowGroups));
       dispatch(bindUserLocationData(editObject.GetOMSLocationWizardDataResult.AssignedContacts, id));
       dispatch(BindUnitCharacteristicsInitialValues(editObject.GetOMSLocationWizardDataResult.AllLocationAttributeWithValues))
-    }else{
-       dispatch({
+    } else {
+      dispatch({
         type: HIDE_SPINNER,
-        payload:false
+        payload: false
       })
     }
 
@@ -339,7 +340,7 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, primaryMarketTypeId
     }
     itemDatawithMarketDrivenMappings.push(itemData);
   });
-  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function (b) {
+  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function(b) {
     return b.ExternalSystemName
   })
   var staticPjmemktToAdd = {
@@ -577,18 +578,18 @@ export function saveCompleteLocationWizard() {
           type: 'ERROR',
           payload: 1
         }) && console.log('check here') : (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null && getState().form.BasicInfoForm.values.technologyType != null && getState().form.BasicInfoForm.values.fuelClass != null && getState().form.BasicInfoForm.values.physicalTimezone != null && getState().form.BasicInfoForm.values.owner != null) ? (credentialdatavalidation(getState())) ? //Save
-          saveObjectPreparationAndCall(getState, dispatch) : dispatch({
-            type: 'ERROR',
-            payload: 1
-          }) && console.log('error') : dispatch({
-            type: 'ERROR',
-            payload: 1
-          })
-
-        : dispatch({
+        saveObjectPreparationAndCall(getState, dispatch) : dispatch({
+          type: 'ERROR',
+          payload: 1
+        }) && console.log('error') : dispatch({
           type: 'ERROR',
           payload: 1
         })
+
+      : dispatch({
+        type: 'ERROR',
+        payload: 1
+      })
       console.log(Object.keys(getState().form.BasicInfoForm.values).length, 'stateobjectmo')
 
     })
@@ -645,27 +646,30 @@ function saveObjectPreparationAndCall(getState, dispatch) {
         Equipments: equipmentsObj
       }
     }
-    dispatch({
-      type: DEFAULT_NODE_EXPANDED,
-      payload: basicInfoObj.Id
 
-    })
     console.log('check')
     var k = test(basicInfoObj.Id, getState().location.allLocations)
     console.log(k);
 
     var finalData = JSON.stringify(finalSaveObject)
     console.log("finalSaveObject", finalData)
+    dispatch({
+      type: SHOW_SPINNER,
+      payload: true
+    })
     axios({
       method: 'post',
       url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
       data: finalSaveObject
-    }).then(function (response) {
+    }).then(function(response) {
       console.log("success", response);
       if (response.status === 200) {
-        getState().form.BasicInfoForm.values.locationId = response.data.SaveOMSLocationWizardDataResult.Location.Id;
+        //ADD Location ID to Object
+        var locationID = response.data.SaveOMSLocationWizardDataResult.Location.Id;
+        getState().form.BasicInfoForm.values.locationId = locationID;
+        //Refresh left menu
+        debugger;
         
-
         dispatch({
           type: SAVE_RESPONSE_HANDLER,
           payload: {
@@ -674,8 +678,19 @@ function saveObjectPreparationAndCall(getState, dispatch) {
             openSavePopup: true
           }
         });
+         basicInfoDropdowns.getParentLocations().then(function(response) {
+        dispatch({
+          type: GET_ALL_LOCATIONS_INFORMATION,
+          payload: response.data.GetAllLocationsResult
+        });
+        console.log('locations-',response.data.GetAllLocationsResult);
+      })
+        dispatch({
+          type: HIDE_SPINNER,
+          payload: false
+        })
       }
-    }).catch(function (error) {
+    }).catch(function(error) {
       dispatch({
         type: SAVE_RESPONSE_HANDLER,
         payload: {
@@ -684,7 +699,12 @@ function saveObjectPreparationAndCall(getState, dispatch) {
           openSavePopup: true
         }
       });
+      dispatch({
+        type: HIDE_SPINNER,
+        payload: false
+      })
     });
+
   }
 }
 
@@ -693,9 +713,8 @@ function test(Id, allLocations) {
   let array = []
   let i = 0
   for (i in allLocations) {
-    let element = findanddestroy(allLocations[i], Id)
+    let element = findanddestroy(allLocations[i], Id);
     !!element ? array.push(element) : null
-
   }
   console.log(array)
   return array
@@ -710,10 +729,9 @@ function findanddestroy(Location, Id) {
     if (!Location.Children) {
       console.log(Location)
       return Location
-    }
-    else {
+    } else {
       Location.Children.map((children, i) => {
-        let element = findanddestroy(children, Id)
+        let element = findanddestroy(children, Id);
         !!element ? array.push(element) : null
       })
       return array
@@ -732,7 +750,7 @@ function toArray(obj) {
 
 function changeObjectTypeOfLocations(allLocations) {
   var changedLocationsObject = [];
-  allLocations.forEach(function (item) {
+  allLocations.forEach(function(item) {
     changedLocationsObject.push({
       key: item.Id,
       value: item.Id,
@@ -760,13 +778,19 @@ function AddDefaultParent(objectfuncntion) {
 
 export function getLocationsInformation() {
   return (dispatch, getState) => {
-    return new Promise((resolve) => {
-      basicInfoDropdowns.getParentLocations().then(function (response) {
+    return new Promise((resolve) => {     
+      basicInfoDropdowns.getParentLocations().then(function(response) {
         dispatch({
           type: GET_ALL_LOCATIONS_INFORMATION,
           payload: response.data.GetAllLocationsResult
         });
+        console.log('locations-',response.data.GetAllLocationsResult);
       })
+    }).then(function() {
+      dispatch({
+        type: HIDE_SPINNER,
+        payload: false
+      });
     })
   }
 }
@@ -799,20 +823,24 @@ export const ACTION_HANDLERS = {
     return Object.assign({}, state, {
       allLocations: action.payload,
       parentLocations: AddDefaultParent(changeObjectTypeOfLocations(action.payload)),
-      isLoading:false
+      isLoading: false
     })
   },
   [SHOW_SPINNER]: (state, action) => {
-    return Object.assign({}, state, {isLoading: action.payload || true})
-  },  
+    return Object.assign({}, state, {
+      isLoading: action.payload || true
+    })
+  },
   [HIDE_SPINNER]: (state, action) => {
-        return Object.assign({}, state, {isLoading: action.payload || false})
-  },  
+    return Object.assign({}, state, {
+      isLoading: action.payload || false
+    })
+  },
   [DEFAULT_NODE_EXPANDED]: (state, action) => {
     return Object.assign({}, state, {
       defaultNodeExpanded: action.payload || 0
     })
-  },  
+  },
   [SHOW_HIDE_ALERT]: (state, action) => {
     if (action.payload.locationState.showClickChangePopUp) {
       return Object.assign({}, state, {
@@ -849,12 +877,12 @@ const initialState = {
   error: null,
   allLocations: [],
   parentLocations: [],
-  defaultNodeExpanded: null,
+  defaultNodeExpanded: 0,
   showClickChangePopUp: false,
   showLocationSaveResponsePopup: false,
   responseMessage: '',
   currentLocationId: 0,
-  isLoading:true
+  isLoading: true
 };
 
 export default function locationWizardReducer(state = initialState, action) {
