@@ -147,7 +147,6 @@ export function LoadAndRefreshForms(id, event) {
     dispatch({
       type: DEFAULT_NODE_EXPANDED,
       payload: id
-
     })
     dispatch({
       type: SHOW_SPINNER,
@@ -667,9 +666,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
         //ADD Location ID to Object
         var locationID = response.data.SaveOMSLocationWizardDataResult.Location.Id;
         getState().form.BasicInfoForm.values.locationId = locationID;
-        //Refresh left menu
-        debugger;
-        
+        //Refresh left menu        
         dispatch({
           type: SAVE_RESPONSE_HANDLER,
           payload: {
@@ -678,13 +675,18 @@ function saveObjectPreparationAndCall(getState, dispatch) {
             openSavePopup: true
           }
         });
-         basicInfoDropdowns.getParentLocations().then(function(response) {
-        dispatch({
-          type: GET_ALL_LOCATIONS_INFORMATION,
-          payload: response.data.GetAllLocationsResult
-        });
-        console.log('locations-',response.data.GetAllLocationsResult);
-      })
+        basicInfoDropdowns.getParentLocations().then(function(response) {
+          dispatch({
+            type: GET_ALL_LOCATIONS_INFORMATION,
+            payload: response.data.GetAllLocationsResult
+          });
+        }).then(function() {
+          //Expnd ADD Node in left menu
+          dispatch({
+            type: DEFAULT_NODE_EXPANDED,
+            payload: locationID
+          })
+        })
         dispatch({
           type: HIDE_SPINNER,
           payload: false
@@ -778,13 +780,12 @@ function AddDefaultParent(objectfuncntion) {
 
 export function getLocationsInformation() {
   return (dispatch, getState) => {
-    return new Promise((resolve) => {     
+    return new Promise((resolve) => {
       basicInfoDropdowns.getParentLocations().then(function(response) {
         dispatch({
           type: GET_ALL_LOCATIONS_INFORMATION,
           payload: response.data.GetAllLocationsResult
         });
-        console.log('locations-',response.data.GetAllLocationsResult);
       })
     }).then(function() {
       dispatch({
