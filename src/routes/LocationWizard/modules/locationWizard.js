@@ -249,7 +249,6 @@ export function LoadAndRefreshForms(id, event) {
       let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
       let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
 
-      dispatch(bindLocationData(dataHistorianParticularLocationObject));
       dispatch(BindInitialEquipments(editObject.GetOMSLocationWizardDataResult.Equipment));
 
       dispatch(bindLocationData(dataHistorianParticularLocationObject, id));
@@ -406,18 +405,18 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, primaryMarketTypeId
   }];
   return credentialsAndIdentifiersObj;
 }
+var equipmentsObj = [];
 
 function equipmentObjectPreparation(stateTree, dispatch, locationId) {
-  var equipmentsObj = [];
   stateTree.equipments && stateTree.equipments.insertedEquipment ? stateTree.equipments.insertedEquipment.map(ie => {
     equipmentsObj.push(ie)
   }) : dispatch({
     type: 'ERROR',
     payload: 1
   })
-   _.each(equipmentsObj, (equipment) => {
-            equipment.ParentLocationId =locationId;
-   });
+  _.each(equipmentsObj, (equipment) => {
+    equipment.ParentLocationId = locationId;
+  });
   console.log(equipmentsObj, "Equipments")
   return equipmentsObj;
 
@@ -620,7 +619,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
       payload: 0
     });
 
-    var locationId = values.locationId;
+    var locationId = values.locationId || 0;
     var primaryMarketTypeId = values.primaryMarket.id || values.primaryMarket;
     var basicInfoObj = basicInforObjectPreparation(values)
     var credentialsAndIdentifier = prepareCredentialsAndIdentifiersObj(
@@ -645,7 +644,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
         Roles: rolesObj,
         Gateways: gatewayObj,
         ScadaPoints: dataHistorianObj,
-        Equipments: equipmentsObj
+        Equipments: locationId > 0 ? equipmentsObj : []
       }
     }
 
@@ -659,6 +658,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
       type: SHOW_SPINNER,
       payload: true
     })
+    //SAVE LOCATION
     axios({
       method: 'post',
       url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
@@ -669,6 +669,32 @@ function saveObjectPreparationAndCall(getState, dispatch) {
         //ADD Location ID to Object
         var locationID = response.data.SaveOMSLocationWizardDataResult.Location.Id;
         getState().form.BasicInfoForm.values.locationId = locationID;
+
+        //Save equipment
+        if (locationId == 'undefined' || locationId == 0) {
+          basicInfoObj.Id = locationID
+          basicInfoObj.LocationId = locationID;
+          _.each(equipmentsObj, (equipment) => {
+            equipment.ParentLocationId = locationID;
+          });
+          var saveObjectwithEquipment = {
+            "saveData": {
+              Location: basicInfoObj,
+              Equipments: locationID > 0 ? equipmentsObj : []
+            }
+          }
+          console.log("saveObjectwithEquipment",JSON.stringify(saveObjectwithEquipment));          
+          axios({
+            method: 'post',
+            url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
+            data: saveObjectwithEquipment
+          }).then(function(response) {
+            if (response.status === 200) {
+              console.log("equipment saved", response);
+            }
+          })
+        }
+
         //Refresh left menu        
         dispatch({
           type: SAVE_RESPONSE_HANDLER,
@@ -694,16 +720,16 @@ function saveObjectPreparationAndCall(getState, dispatch) {
           type: HIDE_SPINNER,
           payload: false
         })
-      }else{
+      } else {
         dispatch({
-        type: SAVE_RESPONSE_HANDLER,
-        payload: {
-          response: null,
-          message: "Error occured while saving the Location",
-          openSavePopup: true
-        }
-      });
-         dispatch({
+          type: SAVE_RESPONSE_HANDLER,
+          payload: {
+            response: null,
+            message: "Error occured while saving the Location",
+            openSavePopup: true
+          }
+        });
+        dispatch({
           type: HIDE_SPINNER,
           payload: false
         })
