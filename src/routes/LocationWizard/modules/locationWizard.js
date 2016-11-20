@@ -44,7 +44,8 @@ export const SHOW_HIDE_ALERT = 'SHOW_HIDE_ALERT';
 export const SAVE_RESPONSE_HANDLER = 'SAVE_RESPONSE_HANDLER';
 export const SHOW_SPINNER = 'SHOW_SPINNER';
 export const HIDE_SPINNER = 'HIDE_SPINNER';
-
+var currentLocation = null;
+var isLocationNameExists = false;
 
 export function showSpinner() {
  return (dispatch, getState) => {
@@ -54,6 +55,7 @@ export function showSpinner() {
     })
  }
 }
+
 export function hideSpinner() {
   return (dispatch, getState) => {
     dispatch({
@@ -69,7 +71,49 @@ export function toggleMenuClick(event) {
     payload: event
   };
 }
-var currentLocation = null;
+
+export function toggleAlertPopup(event) {
+  return (dispatch, getState) => {
+    dispatch({
+      type: SHOW_HIDE_ALERT,
+      payload: {
+        locationState: getState().location,
+        currentLocationId: 0
+      }
+    })
+  }
+}
+
+export function toggleSaveResponsePopup(event) {
+  return (dispatch, getState) => {
+    dispatch({
+      type: SAVE_RESPONSE_HANDLER,
+      payload: {
+        response: null,
+        message: "",
+        openSavePopup: false
+      }
+    })
+  }
+}
+
+export function leftMenuDropdownClickEvent(id, event) {
+  console.log("LOCATIONS_MENUITEM_DROPDOWN_CLICK:", id);
+  return (dispatch, getState) => {
+    dispatch({
+      type: DEFAULT_NODE_EXPANDED,
+      payload: id
+
+    })
+    dispatch({
+      type: SHOW_HIDE_ALERT,
+      payload: {
+        locationState: getState().location,
+        currentLocationId: id
+      }
+    })
+  }
+}
 
 function findLocation(allLocations, locationId) {
   _.each(allLocations, (item) => {
@@ -86,7 +130,6 @@ function findLocation(allLocations, locationId) {
     }
   });
 }
-var isLocationNameExists = false;
 
 function CheckLocationNameIsExists(allLocations, locationName) {
   _.each(allLocations, (item) => {
@@ -224,50 +267,6 @@ export function LoadAndRefreshForms(id, event) {
 
   };
 }
-
-export function toggleAlertPopup(event) {
-  return (dispatch, getState) => {
-    dispatch({
-      type: SHOW_HIDE_ALERT,
-      payload: {
-        locationState: getState().location,
-        currentLocationId: 0
-      }
-    })
-  }
-}
-export function toggleSaveResponsePopup(event) {
-  return (dispatch, getState) => {
-    dispatch({
-      type: SAVE_RESPONSE_HANDLER,
-      payload: {
-        response: null,
-        message: "",
-        openSavePopup: false
-      }
-    })
-  }
-}
-
-
-export function leftMenuDropdownClickEvent(id, event) {
-  console.log("LOCATIONS_MENUITEM_DROPDOWN_CLICK:", id);
-  return (dispatch, getState) => {
-    dispatch({
-      type: DEFAULT_NODE_EXPANDED,
-      payload: id
-
-    })
-    dispatch({
-      type: SHOW_HIDE_ALERT,
-      payload: {
-        locationState: getState().location,
-        currentLocationId: id
-      }
-    })
-  }
-};
-
 
 function basicInforObjectPreparation(values) {
   var todayDate = new Date();
@@ -554,14 +553,9 @@ function credentialdatavalidation(data) {
         }
       }
     }
-
-
-
   }
   return 0
 }
-
-
 
 export function saveCompleteLocationWizard() {
   return (dispatch, getState) => {
@@ -596,7 +590,6 @@ export function saveCompleteLocationWizard() {
           payload: 1
         })
       console.log(Object.keys(getState().form.BasicInfoForm.values).length, 'stateobjectmo')
-
 
     })
   }
