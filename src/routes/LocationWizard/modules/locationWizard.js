@@ -407,7 +407,7 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, primaryMarketTypeId
   return credentialsAndIdentifiersObj;
 }
 
-function equipmentObjectPreparation(stateTree, dispatch) {
+function equipmentObjectPreparation(stateTree, dispatch, locationId) {
   var equipmentsObj = [];
   stateTree.equipments && stateTree.equipments.insertedEquipment ? stateTree.equipments.insertedEquipment.map(ie => {
     equipmentsObj.push(ie)
@@ -415,6 +415,9 @@ function equipmentObjectPreparation(stateTree, dispatch) {
     type: 'ERROR',
     payload: 1
   })
+   _.each(equipmentsObj, (equipment) => {
+            equipment.ParentLocationId =locationId;
+   });
   console.log(equipmentsObj, "Equipments")
   return equipmentsObj;
 
@@ -624,7 +627,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
       getState().form.CredentialsManagementForm ? getState().form.CredentialsManagementForm.values : {},
       primaryMarketTypeId,
       locationId)
-    var equipmentsObj = equipmentObjectPreparation(getState(), dispatch)
+    var equipmentsObj = equipmentObjectPreparation(getState(), dispatch, locationId)
     var systemIntegrationObj = SystemIntegrationObjectPreparation(getState(), dispatch)
     var unitCharacteristicsObj = unitCharacterSticObjectPreparation(getState(), dispatch)
     var rolesObj = rolesObjectPreparation(getState(), dispatch)
@@ -646,9 +649,9 @@ function saveObjectPreparationAndCall(getState, dispatch) {
       }
     }
 
-    console.log('check')
-    var k = test(basicInfoObj.Id, getState().location.allLocations)
-    console.log(k);
+    // console.log('check')
+    // var k = test(basicInfoObj.Id, getState().location.allLocations)
+    // console.log(k);
 
     var finalData = JSON.stringify(finalSaveObject)
     console.log("finalSaveObject", finalData)
@@ -688,6 +691,19 @@ function saveObjectPreparationAndCall(getState, dispatch) {
           })
         })
         dispatch({
+          type: HIDE_SPINNER,
+          payload: false
+        })
+      }else{
+        dispatch({
+        type: SAVE_RESPONSE_HANDLER,
+        payload: {
+          response: null,
+          message: "Error occured while saving the Location",
+          openSavePopup: true
+        }
+      });
+         dispatch({
           type: HIDE_SPINNER,
           payload: false
         })

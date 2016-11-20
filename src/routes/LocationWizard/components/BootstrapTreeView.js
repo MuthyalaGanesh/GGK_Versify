@@ -57,7 +57,6 @@ class TreeView extends React.Component {
   }
 
   recusrsiveexpansion(node) {
-    console.log('recusrsiveexpansion-',this.state.defaultNodeExpanded);
   let flag=0
     if(node.Id == this.state.defaultNodeExpanded){
       return 1
