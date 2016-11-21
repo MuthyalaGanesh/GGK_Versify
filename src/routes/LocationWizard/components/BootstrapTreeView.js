@@ -44,7 +44,7 @@ class TreeView extends React.Component {
     return node.Children.map(childNode => {
       return {
         nodeId: childNode.Id,
-        Children: this.setNodeId(childNode),
+        Children: this.setNodeId(childNode,defaultNodeExpanded),
         parentNode: node,
         state: {
           selected: childNode.state ? !!childNode.state.selected : false ,
@@ -60,6 +60,7 @@ class TreeView extends React.Component {
   recusrsiveexpansion(node,defaultNodeExpanded) {
   let flag=0
     if(node.Id == defaultNodeExpanded){
+      console.log(defaultNodeExpanded)
       return 1
     }
     else{
