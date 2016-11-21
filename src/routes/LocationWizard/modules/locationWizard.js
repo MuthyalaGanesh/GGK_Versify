@@ -99,24 +99,26 @@ export function toggleSaveResponsePopup(event) {
   }
 }
 
+
+
 export function leftMenuDropdownClickEvent(id, event) {
   return (dispatch, getState) => {
-    return new Promise((resolve) => {
-      dispatch(showSpinner());
-      if (getState().form.BasicInfoForm.hasOwnProperty('anyTouched') ||
-        getState().form.CredentialsManagementForm.hasOwnProperty('anyTouched')) {
-        dispatch({
-          type: SHOW_ALERT,
-          payload: {
-            locationState: getState().location,
-            currentLocationId: id
-          }
-        })
-      } else {
-        dispatch(LoadAndRefreshForms(id, event))
-      }
-      dispatch(hideSpinner());
-    })
+    if (getState().form.BasicInfoForm.hasOwnProperty('anyTouched') ||
+      getState().form.CredentialsManagementForm.hasOwnProperty('anyTouched')) {
+      dispatch({
+        type: SHOW_ALERT,
+        payload: {
+          locationState: getState().location,
+          currentLocationId: id
+        }
+      })
+    } else {
+         dispatch(showSpinner())
+         setTimeout(function(){
+          dispatch(LoadAndRefreshForms(id, event))
+         },1)
+    }
+
   }
 }
 
@@ -155,6 +157,7 @@ function CheckLocationNameIsExists(allLocations, locationName) {
 export function LoadAndRefreshForms(id, event) {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
+     
       dispatch({
         type: HIDE_ALERT,
         payload: {
@@ -166,11 +169,7 @@ export function LoadAndRefreshForms(id, event) {
         type: DEFAULT_NODE_EXPANDED,
         payload: id
       })
-      dispatch({
-        type: SHOW_SPINNER,
-        payload: true
-      })
-
+   
       dispatch({
         type: 'redux-form/INITIALIZE',
         meta: {
@@ -228,55 +227,44 @@ export function LoadAndRefreshForms(id, event) {
         payload: ''
       })
       dispatch({
-        type: 'redux-form/INITIALIZE',
-        meta: {
-          form: "WorkFlowForm"
-        },
-        payload: ''
-      })
-
-      //If Location Id > 0, only bind data. otherwise load new forms
-      if (id > 0) {
-        try {
-
-          var allLocationdata = getState().location.allLocations;
-          findLocation(allLocationdata, id);
-          var locationObj = currentLocation;
-          currentLocation = null;
-
-          dispatch(BindInitialValues(locationObj));
-          let editObject = getOMSLocationwizardData(id);
-          let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
-          let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
-          var marketDrivenMappings = getMarketDrivenMappings(locationObj.PrimaryMarketId);
-          var editSysIntegration = new Object({
-            locationsInfo: locationsInfo,
-            marketDrivenMappings: marketDrivenMappings
-          })
-          dispatch(editSystemIntegration(editSysIntegration));
-
-          dispatch(BindInitialEquipments(editObject.GetOMSLocationWizardDataResult.Equipment));
-          dispatch(bindLocationData(dataHistorianParticularLocationObject, id));
-          dispatch(bindGatewayLocationData(editObject.GetOMSLocationWizardDataResult.Gateways));
-          dispatch(bindWorkLocationData(editObject.GetOMSLocationWizardDataResult.AssignedWorkflowGroups));
-          dispatch(bindUserLocationData(editObject.GetOMSLocationWizardDataResult.AssignedContacts, id));
-          dispatch(BindUnitCharacteristicsInitialValues(editObject.GetOMSLocationWizardDataResult.AllLocationAttributeWithValues))
-          dispatch({
-            type: HIDE_SPINNER,
-            payload: false
-          })
-        } catch (e) {
-          dispatch({
-            type: HIDE_SPINNER,
-            payload: false
-          })
-        }
-      } else {
-        dispatch({
-          type: HIDE_SPINNER,
-          payload: false
+          type: 'redux-form/INITIALIZE',
+          meta: {
+            form: "WorkFlowForm"
+          },
+          payload: ''
         })
+        //If Location Id > 0, only bind data. otherwise load new forms
+      if (id > 0) {
+
+
+        var allLocationdata = getState().location.allLocations;
+        findLocation(allLocationdata, id);
+        var locationObj = currentLocation;
+        currentLocation = null;
+
+        dispatch(BindInitialValues(locationObj));
+        let editObject = getOMSLocationwizardData(id);
+        let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
+        let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
+        var marketDrivenMappings = getMarketDrivenMappings(locationObj.PrimaryMarketId);
+        var editSysIntegration = new Object({
+          locationsInfo: locationsInfo,
+          marketDrivenMappings: marketDrivenMappings
+        })
+        dispatch(editSystemIntegration(editSysIntegration));
+
+        dispatch(BindInitialEquipments(editObject.GetOMSLocationWizardDataResult.Equipment));
+        dispatch(bindLocationData(dataHistorianParticularLocationObject, id));
+        dispatch(bindGatewayLocationData(editObject.GetOMSLocationWizardDataResult.Gateways));
+        dispatch(bindWorkLocationData(editObject.GetOMSLocationWizardDataResult.AssignedWorkflowGroups));
+        dispatch(bindUserLocationData(editObject.GetOMSLocationWizardDataResult.AssignedContacts, id));
+        dispatch(BindUnitCharacteristicsInitialValues(editObject.GetOMSLocationWizardDataResult.AllLocationAttributeWithValues))
+          
       }
+        dispatch({
+            type: HIDE_SPINNER,
+            payload: false
+          })
     })
   }
 }
@@ -789,35 +777,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
   }
 }
 
-function test(Id, allLocations) {
-  let array = []
-  let i = 0
-  for (i in allLocations) {
-    let element = findanddestroy(allLocations[i], Id);
-    !!element ? array.push(element) : null
-  }
-  console.log(array)
-  return array
 
-}
-
-function findanddestroy(Location, Id) {
-  let array = []
-  if (Location.id == Id) {
-    return
-  } else {
-    if (!Location.Children) {
-      console.log(Location)
-      return Location
-    } else {
-      Location.Children.map((children, i) => {
-        let element = findanddestroy(children, Id);
-        !!element ? array.push(element) : null
-      })
-      return array
-    }
-  }
-}
 
 function toArray(obj) {
   var array = [];
@@ -968,5 +928,6 @@ const initialState = {
 
 export default function locationWizardReducer(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
+  console.log(action.payload)
   return handler ? handler(state, action) : state;
 }

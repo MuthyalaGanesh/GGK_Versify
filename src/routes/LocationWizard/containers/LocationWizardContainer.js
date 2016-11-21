@@ -35,6 +35,6 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 const mapStateToProps = (state, ownProps) => ({
-	location: state.location,
+	location: state.location
 })
 export default connect(mapStateToProps, mapDispatchToProps)(LocationWizard)
