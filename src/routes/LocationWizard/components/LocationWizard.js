@@ -16,6 +16,7 @@ import UsersContainer from '../containers/UsersContainer'
 import EquipmentsContainer from '../containers/EquipmentsContainer'
 import GatewaysContainer from '../containers/GatewaysContainer'
 import DataHistorianContainer from '../containers/DataHistorianContainer'
+import LoaderImage from 'public/assets/images/loading_ripple.svg'
 
 var Scroll    = require('react-scroll');
 
@@ -31,7 +32,12 @@ var scrollToTop = function() {
 export const LocationWizard =(props)=> {
 return (
    <div>
-   {props.location.isLoading ? <div className='loading'>Loading&#8230;</div> : null}
+   {props.location.isLoading ?
+   <div className="black_overlay" id="loader">
+        <div className="loading" style={{'backgroundImage':'url('+LoaderImage+')'}}>
+        </div>
+    </div> 
+    : null}
    
     <LocationLeftMenu Locations={props.location.allLocations} leftMenuDropdownClickEvent={props.leftMenuDropdownClickEvent} defaultNodeExpanded ={props.location.defaultNodeExpanded} />
     <section id="content_header" className="content-header col-xs-12 col-md-10">
