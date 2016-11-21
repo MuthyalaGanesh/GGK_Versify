@@ -171,20 +171,48 @@ export function LoadAndRefreshForms(id, event) {
       })
    
       dispatch({
-        type: 'redux-form/INITIALIZE',
-        meta: {
-          form: "BasicInfoForm"
-        },
-        payload: ''
+        type: SHOW_SPINNER,
+        payload: true
       })
-      dispatch({
-        type: 'redux-form/INITIALIZE',
-        meta: {
-          form: "CredentialsManagementForm"
-        },
-        payload: ''
-      })
-      dispatch({
+
+
+      //If Location Id > 0, only bind data. otherwise load new forms
+      if (id > 0) {
+        try {
+
+          var allLocationdata = getState().location.allLocations;
+          findLocation(allLocationdata, id);
+          var locationObj = currentLocation;
+          currentLocation = null;
+
+          dispatch(BindInitialValues(locationObj));
+          let editObject = getOMSLocationwizardData(id);
+          let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
+          let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
+          var marketDrivenMappings = getMarketDrivenMappings(locationObj.PrimaryMarketId);
+          var editSysIntegration = new Object({
+            locationsInfo: locationsInfo,
+            marketDrivenMappings: marketDrivenMappings
+          })
+          dispatch(editSystemIntegration(editSysIntegration));
+
+          dispatch(BindInitialEquipments(editObject.GetOMSLocationWizardDataResult.Equipment));
+          dispatch(bindLocationData(dataHistorianParticularLocationObject, id));
+          dispatch(bindGatewayLocationData(editObject.GetOMSLocationWizardDataResult.Gateways));
+          dispatch(bindWorkLocationData(editObject.GetOMSLocationWizardDataResult.AssignedWorkflowGroups));
+          dispatch(bindUserLocationData(editObject.GetOMSLocationWizardDataResult.AssignedContacts, id));
+          dispatch(BindUnitCharacteristicsInitialValues(editObject.GetOMSLocationWizardDataResult.AllLocationAttributeWithValues))
+          dispatch({
+                type:'redux-form/INITIALIZE',
+                meta:{form:'BasicInfoForm',keepDirty:false},
+                payload:getState().basic.BasicInfo
+          })
+           dispatch({
+                type:'redux-form/INITIALIZE',
+                meta:{form:'CredentialsManagementForm',keepDirty:false},
+                payload:getState().basic.CredentialInitialValues
+          })
+ dispatch({
         type: 'redux-form/INITIALIZE',
         meta: {
           form: "DataHistorianForm"
@@ -227,44 +255,30 @@ export function LoadAndRefreshForms(id, event) {
         payload: ''
       })
       dispatch({
-          type: 'redux-form/INITIALIZE',
-          meta: {
-            form: "WorkFlowForm"
-          },
-          payload: ''
-        })
-        //If Location Id > 0, only bind data. otherwise load new forms
-      if (id > 0) {
+        type: 'redux-form/INITIALIZE',
+        meta: {
+          form: "WorkFlowForm"
+        },
+        payload: ''
+      })
 
-
-        var allLocationdata = getState().location.allLocations;
-        findLocation(allLocationdata, id);
-        var locationObj = currentLocation;
-        currentLocation = null;
-
-        dispatch(BindInitialValues(locationObj));
-        let editObject = getOMSLocationwizardData(id);
-        let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
-        let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
-        var marketDrivenMappings = getMarketDrivenMappings(locationObj.PrimaryMarketId);
-        var editSysIntegration = new Object({
-          locationsInfo: locationsInfo,
-          marketDrivenMappings: marketDrivenMappings
-        })
-        dispatch(editSystemIntegration(editSysIntegration));
-
-        dispatch(BindInitialEquipments(editObject.GetOMSLocationWizardDataResult.Equipment));
-        dispatch(bindLocationData(dataHistorianParticularLocationObject, id));
-        dispatch(bindGatewayLocationData(editObject.GetOMSLocationWizardDataResult.Gateways));
-        dispatch(bindWorkLocationData(editObject.GetOMSLocationWizardDataResult.AssignedWorkflowGroups));
-        dispatch(bindUserLocationData(editObject.GetOMSLocationWizardDataResult.AssignedContacts, id));
-        dispatch(BindUnitCharacteristicsInitialValues(editObject.GetOMSLocationWizardDataResult.AllLocationAttributeWithValues))
-          
-      }
-        dispatch({
+          dispatch({
             type: HIDE_SPINNER,
             payload: false
           })
+        } catch (e) {
+          console.log(e)
+          dispatch({
+            type: HIDE_SPINNER,
+            payload: false
+          })
+        }
+      } else {
+        dispatch({
+          type: HIDE_SPINNER,
+          payload: false
+        })
+      }
     })
   }
 }

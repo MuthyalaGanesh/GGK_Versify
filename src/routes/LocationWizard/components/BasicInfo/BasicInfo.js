@@ -16,7 +16,7 @@ fuelClasses,
 timezones,
 error
 } = props.basic
-
+console.log(props.initialValues)
 const {formdata} = props;
 return (
 <div className="row tab-pane fade in active" id="basicinfo">
