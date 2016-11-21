@@ -101,19 +101,22 @@ export function toggleSaveResponsePopup(event) {
 
 export function leftMenuDropdownClickEvent(id, event) {
   return (dispatch, getState) => {
-    if(getState().form.BasicInfoForm.hasOwnProperty('anyTouched') ||
-      getState().form.CredentialsManagementForm.hasOwnProperty('anyTouched') ){
-      dispatch({
-      type: SHOW_ALERT,
-      payload: {
-        locationState: getState().location,
-        currentLocationId: id
+    return new Promise((resolve) => {
+      dispatch(showSpinner());
+      if (getState().form.BasicInfoForm.hasOwnProperty('anyTouched') ||
+        getState().form.CredentialsManagementForm.hasOwnProperty('anyTouched')) {
+        dispatch({
+          type: SHOW_ALERT,
+          payload: {
+            locationState: getState().location,
+            currentLocationId: id
+          }
+        })
+      } else {
+        dispatch(LoadAndRefreshForms(id, event))
       }
+      dispatch(hideSpinner());
     })
-    }else{
-      dispatch(LoadAndRefreshForms(id,event))
-    }
-    
   }
 }
 
@@ -169,69 +172,70 @@ export function LoadAndRefreshForms(id, event) {
       })
 
       dispatch({
-        type: 'redux-form/DESTROY',
+        type: 'redux-form/INITIALIZE',
         meta: {
           form: "BasicInfoForm"
         },
         payload: ''
       })
       dispatch({
-        type: 'redux-form/DESTROY',
+        type: 'redux-form/INITIALIZE',
         meta: {
           form: "CredentialsManagementForm"
         },
         payload: ''
       })
       dispatch({
-        type: 'redux-form/DESTROY',
+        type: 'redux-form/INITIALIZE',
         meta: {
           form: "DataHistorianForm"
         },
         payload: ''
       })
       dispatch({
-        type: 'redux-form/DESTROY',
+        type: 'redux-form/INITIALIZE',
         meta: {
           form: "EquipmentsForm"
         },
         payload: ''
       })
       dispatch({
-        type: 'redux-form/DESTROY',
+        type: 'redux-form/INITIALIZE',
         meta: {
           form: "GatewayForm"
         },
         payload: ''
       })
       dispatch({
-        type: 'redux-form/DESTROY',
+        type: 'redux-form/INITIALIZE',
         meta: {
           form: "SystemIntegrationForm"
         },
         payload: ''
       })
       dispatch({
-        type: 'redux-form/DESTROY',
+        type: 'redux-form/INITIALIZE',
         meta: {
           form: "UnitCharacteristicsForm"
         },
         payload: ''
       })
       dispatch({
-        type: 'redux-form/DESTROY',
+        type: 'redux-form/INITIALIZE',
         meta: {
           form: "UsersForm"
         },
         payload: ''
       })
       dispatch({
-          type: 'redux-form/DESTROY',
-          meta: {
-            form: "WorkFlowForm"
-          },
-          payload: ''
-        })
-        //If Location Id > 0, only bind data. otherwise load new forms
+        type: 'redux-form/INITIALIZE',
+        meta: {
+          form: "WorkFlowForm"
+        },
+        payload: ''
+      })
+
+      //If Location Id > 0, only bind data. otherwise load new forms
       if (id > 0) {
         try {
 
@@ -727,7 +731,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
           });
         }).then(function() {
           //Expnd ADD Node in left menu
-          console.log('new locationID',newLocationID)
+          console.log('new locationID', newLocationID)
           dispatch({
             type: DEFAULT_NODE_EXPANDED,
             payload: newLocationID
@@ -902,18 +906,18 @@ export const ACTION_HANDLERS = {
   },
   [HIDE_ALERT]: (state, action) => {
 
-      return Object.assign({}, state, {
-        showClickChangePopUp: false,
-        currentLocationId: action.payload.currentLocationId || 0
-      })
-    } ,
-    [SHOW_ALERT] :(state, action) => {
+    return Object.assign({}, state, {
+      showClickChangePopUp: false,
+      currentLocationId: action.payload.currentLocationId || 0
+    })
+  },
+  [SHOW_ALERT]: (state, action) => {
 
-      return Object.assign({}, state, {
-        showClickChangePopUp: true,
-        currentLocationId: action.payload.currentLocationId || 0
-      })
-    } ,
+    return Object.assign({}, state, {
+      showClickChangePopUp: true,
+      currentLocationId: action.payload.currentLocationId || 0
+    })
+  },
   [SAVE_RESPONSE_HANDLER]: (state, action) => {
     //action.response:.message:.isSaved: 
     if (action.payload.openSavePopup) {
@@ -943,7 +947,7 @@ const initialState = {
   responseMessage: '',
   currentLocationId: 0,
   isLoading: true,
-  isEditable:0
+  isEditable: 0
 };
 
 export default function locationWizardReducer(state = initialState, action) {
