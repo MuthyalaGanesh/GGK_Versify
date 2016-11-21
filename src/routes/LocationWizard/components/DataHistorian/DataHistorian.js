@@ -6,12 +6,6 @@ import DropdownListField from 'components/DropdownList/DropdownListField'
 import InputField from 'components/InputField/InputField'
 import 'styles/commonStyles.scss'
 
-const RenderDropdownList = ({ input, ...rest }) =>
-  <DropdownList {...input}
-    onBlur={() => input.onBlur()}
-    value={input.value || rest.defaultValue} //requires value to be an array
-    {...rest}/>
-
  const RenderCheckBox = ({ input, ...rest })=>{
     console.log(rest.defaultvalue)
     return(

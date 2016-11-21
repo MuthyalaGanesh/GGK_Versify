@@ -8,6 +8,8 @@ import 'styles/widgetStyle.scss'
 export const Users = (props) => {    
         const {Roles,Contacts} = props.userInfo.userInformation;
         const ContactPopUpInfo = props.userInfo.newContactPopUp;
+        const error = props.userInfo.error
+        const validations = props.userInfo.validationMessages
         return (
             <div className="row tab-pane fade in active" id='users'>
                 <div className="col-xs-12">
@@ -130,7 +132,8 @@ export const Users = (props) => {
                                         <div className="col-xs-4">
                                             <label>Name</label>
                                             <Field component={InputField} className="form-control" name="Name" type="text"  placeholder="Name"
-                                             />
+                                             onblur = {props.validateContact}/>
+                                             {error && validations.Name && <span className="errorMessage">{validations.Name}</span>}
                                         </div>
                                         <div className="col-xs-4">
                                             <label>Primary Phone</label>
@@ -168,12 +171,14 @@ export const Users = (props) => {
                                 <div className="col-xs-4">
                                     <label>Org</label>
                                     <Field component={DropdownListField} name="Org"  placeholder="Select Org"
-                                            data = {ContactPopUpInfo.org} labelKey ='name' valueKey='id'/>
+                                            data = {ContactPopUpInfo.org} labelKey ='name' valueKey='id' onChangeEvent = {props.validateContact}/>
+                                    {error && validations.Org && <span className="errorMessage">{validations.Org}</span>}
                                 </div>
                                 <div className="col-xs-4">
                                     <label>type</label>
                                     <Field component={DropdownListField} name="Type"  placeholder="Select type"
-                                             data = {ContactPopUpInfo.type} labelKey ='name' valueKey='id'/>
+                                             data = {ContactPopUpInfo.type} labelKey ='name' valueKey='id' onChangeEvent = {props.validateContact}/>
+                                    {error && validations.Type && <span className="errorMessage">{validations.Type}</span>}
                                 </div>
                                 <div className="col-xs-4">
                                     <label>Custom 3</label>
@@ -187,7 +192,8 @@ export const Users = (props) => {
                                 <div className="col-xs-4">
                                     <label>Primary Email</label>
                                     <Field component={InputField} className="form-control" name="PrimaryEmail" type="text"  placeholder="Primary Email"
-                                             />
+                                       onblur = {props.validateContact} />
+                                    {error && validations.PrimaryEmail && <span className="errorMessage">{validations.PrimaryEmail}</span>}
                                 </div>
                                 <div className="col-xs-4">
                                     <label>Secondary Email</label>
@@ -211,13 +217,14 @@ export const Users = (props) => {
                                 <div className="col-xs-4">
                                     <label>TimeZone</label>
                                     <Field component={DropdownListField} name="TimeZone"  placeholder="Select TimeZone"
-                                            data = {ContactPopUpInfo.Timezones} labelKey ='value' valueKey='id' />
+                                            data = {ContactPopUpInfo.Timezones} labelKey ='value' valueKey='id' onChangeEvent = {props.validateContact}/>
+                                    {error && validations.TimeZone && <span className="errorMessage">{validations.TimeZone}</span>}
                                 </div>
                                 <div className="col-xs-4">
                                     <label>Custom 5</label>
                                     <Field component={InputField} type="text" className="form-control" name="Custom5">
                                     </Field>
-                                </div>
+                                </div>                                
                             </div>
                                 </div> 
                             </div> 
@@ -232,17 +239,20 @@ export const Users = (props) => {
                                         <div className="col-xs-4">
                                             <label>status</label>
                                             <Field component={DropdownListField} name="status"  placeholder="Select type"
-                                                 data = {ContactPopUpInfo.status} labelKey ='value' valueKey='id'/>
+                                                 data = {ContactPopUpInfo.status} labelKey ='value' valueKey='id' onChangeEvent = {props.validateContact}/>
+                                            {error && validations.status && <span className="errorMessage">{validations.status}</span>}
                                         </div>
                                         <div className="col-xs-4">
                                             <label>User ID</label>
                                             <Field component={InputField} className="form-control" name="userId" type="text"  placeholder="Primary Email"
-                                             />
+                                             onblur = {props.validateContact} />
+                                             {error && validations.userId && <span className="errorMessage">{validations.userId}</span>}
                                         </div>                                
                                         <div className="col-xs-4">
                                             <label>Password</label>
-                                            <Field component={InputField} type="text" className="form-control" name="Password">
+                                            <Field component={InputField} type="password" className="form-control" name="Password" onblur = {props.validateContact}>
                                             </Field>
+                                            {error && validations.Password && <span className="errorMessage">{validations.Password}</span>}
                                         </div>
                                     </div>
                                 </div>
@@ -254,10 +264,13 @@ export const Users = (props) => {
                                         </div>
                                     </div>
                                 </div>
+                                <div>
+                                    {error && validations.PasswordFormat && <span className="errorMessage">{validations.PasswordFormat}</span>}
+                                </div>
                             </div>  
                         </div>          
                     </Modal.Body>
-                    <Modal.Footer>   
+                    <Modal.Footer>                                
                                 <button className="btn btn-success" type="button" onClick={props.saveNewContact}>Add</button> 
                                 <button className="btn btn-warning" type="button"  onClick={props.AddContactModalToggle}>Cancel</button>  
                         
