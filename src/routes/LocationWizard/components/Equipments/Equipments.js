@@ -67,7 +67,7 @@ export const Equipments = (props) => {
 
                         <Modal show={props.equipments.showEditModal}>
                             <Modal.Header>
-                                <Modal.Title>Edit</Modal.Title>
+                                <Modal.Title>Edit Equipment</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
                                 <Field component={InputField}
