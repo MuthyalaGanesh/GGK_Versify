@@ -331,7 +331,12 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, primaryMarketTypeId
     itemData.value = null;
     if (credentialsObj.hasOwnProperty(item.DisplayName)) {
       if (item.IsDropDown) {
-        itemData.value = credentialsObj[item.DisplayName].key;
+        if(typeof credentialsObj[item.DisplayName] == "string"){
+          itemData.value = credentialsObj[item.DisplayName];
+        }else{
+          itemData.value = credentialsObj[item.DisplayName].key;
+        }
+        
       } else {
         itemData.value = credentialsObj[item.DisplayName];
       }
