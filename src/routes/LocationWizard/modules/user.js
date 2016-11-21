@@ -27,6 +27,7 @@ export const BIND_LOCATION_USER_DATA = 'BIND_LOCATION_USER_DATA'
 export const ROLE_BY_ROLE = 'ROLE_BY_ROLE'
 export const ROLE_BY_CONTACT = 'ROLE_BY_CONTACT'
 export const GET_USER_INFO_SERVICE = 'GET_USER_INFO_SERVICE'
+export const SHOW_NEWCONTACT_ERRORS = 'SHOW_NEWCONTACT_ERRORS'
 
 export function bindUserLocationData(assignedcontacts, locationId) {
   return (dispatch, getState) => {
@@ -127,7 +128,7 @@ export function AddContactModalToggle() {
     return new Promise((resolve) => {
       dispatch({
         type: ADD_CONTACT_MODAL,
-        payload:getState().basic.timezones
+        payload: getState().basic.timezones
       })
       dispatch({
         type: 'redux-form/DESTROY',
@@ -143,72 +144,135 @@ export function AddContactModalToggle() {
 export function saveNewContact() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      let Contact = {}
-      Contact.Id = 0
-      let userForm = getState().form.UsersForm;
-      Contact.Name = userForm.values.Name
-      Contact.OrgId = userForm.values.Org != null && userForm.values.Org != undefined ? userForm.values.Org.id : null
-      Contact.Title = userForm.values.Title
-      Contact.ContactTypeId = userForm.values.Type != null && userForm.values.Type != undefined ? userForm.values.Type.id : null
-      Contact.DefaultTimezone = userForm.values.TimeZone != null && userForm.values.TimeZone != undefined ? userForm.values.TimeZone.id : ""
-      Contact.Phone1 = userForm.values.Primary != null && userForm.values.Primary != undefined ? userForm.values.Primary : ''
-      Contact.Phone2 = userForm.values.Cell != null && userForm.values.Cell != undefined ? userForm.values.Cell : ''
-      Contact.Phone3 = userForm.values.OtherPhone != null && userForm.values.OtherPhone != undefined ? userForm.values.OtherPhone : ''
-      Contact.Email1 = userForm.values.PrimaryEmail != null && userForm.values.PrimaryEmail != undefined ? userForm.values.PrimaryEmail : ''
-      Contact.Email2 = userForm.values.SecondaryEmail != null && userForm.values.SecondaryEmail != undefined ? userForm.values.SecondaryEmail : ''
-      Contact.UDV1 = userForm.values.Custom1 != null && userForm.values.Custom1 != undefined ? userForm.values.Custom1 : ''
-      Contact.UDV2 = userForm.values.Custom2 != null && userForm.values.Custom2 != undefined ? userForm.values.Custom2 : ''
-      Contact.UDV3 = userForm.values.Custom3 != null && userForm.values.Custom3 != undefined ? userForm.values.Custom3 : ''
-      Contact.UDV4 = userForm.values.Custom4 != null && userForm.values.Custom4 != undefined ? userForm.values.Custom4 : ''
-      Contact.UDV5 = userForm.values.Custom5 != null && userForm.values.Custom5 != undefined ? userForm.values.Custom5 : ''
-      Contact.Status = userForm.values.status != null && userForm.values.status != undefined ? userForm.values.status.id : null
-      Contact.Login = userForm.values.userId != null && userForm.values.userId != undefined ? userForm.values.userId : ''
-      Contact.Password = userForm.values.Password != null && userForm.values.Password != undefined ? userForm.values.Password : ''
-      Contact.IsAdmin = userForm.values.SystemAdmin != null && userForm.values.SystemAdmin != undefined ? 'Y' : 'N'
-      var SaveObject = {
-        "saveData": {
-          Contact: Contact
+      let values = getState().form.UsersForm.values;
+      let messages = {}
+      let invalid = false
+      let regularExpression = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!_@#$%^&*])[a-zA-Z0-9!_@#$%^&*]{6,20}$/;
+      if (values != null) {
+        if (!values.Name) {
+          invalid = true
+          messages.Name = 'Please specify Name'
         }
-      }
-      axios({
-        method: 'post',
-        url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveContactBasic',
-        data: SaveObject
-      }).then(function(response) {
+        if (!values.Org) {
+          invalid = true
+          messages.Org = 'Please select Organization'
+        }
+        if (!values.Type) {
+          invalid = true
+          messages.Type = 'Please select Type'
+        }
+        if (!values.TimeZone) {
+          invalid = true
+          messages.TimeZone = 'Please select Time Zone'
+        }
+        if (!values.PrimaryEmail) {
+          invalid = true
+          messages.PrimaryEmail = 'Please specify Primary Email'
+        }
+        if (!values.status) {
+          invalid = true
+          messages.status = 'Please select status'
+        }
+        if (!values.userId) {
+          invalid = true
+          messages.userId = 'Please specify User Id'
+        }
+        if (!values.Password) {
+          invalid = true
+          messages.Password = 'Please specify Password'
+        }
+        else
+        {
+          messages.PasswordFormat = 'Password must be 6-20 characters in length,contain special characters,'+
+          '+and must contain atleast one lower case letter,one upper case letter,and one digit'
+          regularExpression.test(values.Password) ? messages.PasswordFormat = null : invalid = true
+        }
+        if (invalid == true) {
+          dispatch({
+            type: SHOW_NEWCONTACT_ERRORS,
+            payload: messages
+          })
+        } else {
+          let Contact = {}
+          Contact.Id = 0
+          let userForm = getState().form.UsersForm;
+          Contact.Name = userForm.values.Name
+          Contact.OrgId = userForm.values.Org != null && userForm.values.Org != undefined ? userForm.values.Org.id : null
+          Contact.Title = userForm.values.Title
+          Contact.ContactTypeId = userForm.values.Type != null && userForm.values.Type != undefined ? userForm.values.Type.id : null
+          Contact.DefaultTimezone = userForm.values.TimeZone != null && userForm.values.TimeZone != undefined ? userForm.values.TimeZone.id : ""
+          Contact.Phone1 = userForm.values.Primary != null && userForm.values.Primary != undefined ? userForm.values.Primary : ''
+          Contact.Phone2 = userForm.values.Cell != null && userForm.values.Cell != undefined ? userForm.values.Cell : ''
+          Contact.Phone3 = userForm.values.OtherPhone != null && userForm.values.OtherPhone != undefined ? userForm.values.OtherPhone : ''
+          Contact.Email1 = userForm.values.PrimaryEmail != null && userForm.values.PrimaryEmail != undefined ? userForm.values.PrimaryEmail : ''
+          Contact.Email2 = userForm.values.SecondaryEmail != null && userForm.values.SecondaryEmail != undefined ? userForm.values.SecondaryEmail : ''
+          Contact.UDV1 = userForm.values.Custom1 != null && userForm.values.Custom1 != undefined ? userForm.values.Custom1 : ''
+          Contact.UDV2 = userForm.values.Custom2 != null && userForm.values.Custom2 != undefined ? userForm.values.Custom2 : ''
+          Contact.UDV3 = userForm.values.Custom3 != null && userForm.values.Custom3 != undefined ? userForm.values.Custom3 : ''
+          Contact.UDV4 = userForm.values.Custom4 != null && userForm.values.Custom4 != undefined ? userForm.values.Custom4 : ''
+          Contact.UDV5 = userForm.values.Custom5 != null && userForm.values.Custom5 != undefined ? userForm.values.Custom5 : ''
+          Contact.Status = userForm.values.status != null && userForm.values.status != undefined ? userForm.values.status.id : null
+          Contact.Login = userForm.values.userId != null && userForm.values.userId != undefined ? userForm.values.userId : ''
+          Contact.Password = userForm.values.Password != null && userForm.values.Password != undefined ? userForm.values.Password : ''
+          Contact.IsAdmin = userForm.values.SystemAdmin != null && userForm.values.SystemAdmin != undefined ? 'Y' : 'N'
+          var SaveObject = {
+            "saveData": {
+              Contact: Contact
+            }
+          }
+          axios({
+            method: 'post',
+            url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveContactBasic',
+            data: SaveObject
+          }).then(function(response) {
+            dispatch({
+              type: SAVE_NEW_CONTACT,
+
+            })
+          }).catch(function(error) {
+            alert("error" + JSON.stringify(error));
+          });
+          dispatch({
+            type: 'redux-form/DESTROY',
+            meta: {
+              form: "UsersForm"
+            },
+            payload: ""
+          })
+        }
+      } else {
+        messages.Name = 'Please specify Name'
+        messages.Org = 'Please select Organization'
+        messages.Type = 'Please select Type'
+        messages.TimeZone = 'Please select Time Zone'
+        messages.status = 'Please select status'
+        messages.userId = 'Please specify User Id'
+        messages.Password = 'Please specify Password'
+        messages.PrimaryEmail = 'Please specify Primary Email'
         dispatch({
-          type: SAVE_NEW_CONTACT,
-
+          type: SHOW_NEWCONTACT_ERRORS,
+          payload: messages
         })
-      }).catch(function(error) {
-        alert("error" + JSON.stringify(error));
-      });
-
-      dispatch({
-        type: 'redux-form/DESTROY',
-        meta: {
-          form: "UsersForm"
-        },
-        payload: ""
-      })
+      }
     })
   }
 }
 
 export function getUserInfoService() {
-    return (dispatch, getState) => {
+  return (dispatch, getState) => {
     return new Promise((resolve) => {
-      getUserInfo().then(function(contactsResponse){
-          getRoleInfo().then(function(rolesResponse){
-             let userInfo = {
-                      Roles: rolesResponse.data.GetRolesResult.Roles,
-                      Contacts: contactsResponse.data.GetAutoCompleteContactsResult.Contacts
-             }
-             dispatch({
-                type: GET_USER_INFO_SERVICE,
-                payload: userInfo
-            })
+      getUserInfo().then(function(contactsResponse) {
+        getRoleInfo().then(function(rolesResponse) {
+          let userInfo = {
+            Roles: rolesResponse.data.GetRolesResult.Roles,
+            Contacts: contactsResponse.data.GetAutoCompleteContactsResult.Contacts
+          }
+          dispatch({
+            type: GET_USER_INFO_SERVICE,
+            payload: userInfo
           })
-      }) 
+        })
+      })
     })
   }
 }
@@ -379,6 +443,47 @@ export function selectContact() {
   }
 };
 
+export function validateContact() {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      let users = getState().users
+      if (users.error) {
+        let values = {}
+        let messages = {}
+        let regularExpression = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!_@#$%^&*])[a-zA-Z0-9!_@#$%^&*]{6,20}$/;
+        let PasswordFormat = 'Password must be 6-20 characters in length,contain special characters,'+
+          '+and must contain atleast one lower case letter,one upper case letter,and one digit'
+        getState().form.UsersForm.hasOwnProperty('values') ?
+          values = getState().form.UsersForm.values : null
+        if (values != null) {
+          values.Name ? messages.Name = null : messages.Name = 'Please specify Name'
+          values.Org ? messages.Org = null : messages.Org = 'Please select Organization'
+          values.Type ? messages.Type = null : messages.Type = 'Please select Type'
+          values.TimeZone ? messages.TimeZone = null : messages.TimeZone = 'Please select Time Zone'
+          values.PrimaryEmail ? messages.PrimaryEmail = null : messages.PrimaryEmail = 'Please specify Primary Email'
+          values.status ? messages.status = null : messages.status = 'Please select status'
+          values.userId ? messages.userId = null : messages.userId = 'Please specify User Id'
+          values.Password ? messages.Password = null : messages.Password = 'Please specify Password'
+          values.Password ? regularExpression.test(values.Password) ? messages.PasswordFormat = null : messages.PasswordFormat = PasswordFormat : messages.PasswordFormat = null
+        } else {
+          messages.Name = 'Please specify Name'
+          messages.Org = 'Please select Organization'
+          messages.Type = 'Please select Type'
+          messages.TimeZone = 'Please select Time Zone'
+          messages.status = 'Please select status'
+          messages.userId = 'Please specify User Id'
+          messages.Password = 'Please specify Password'
+          messages.PrimaryEmail = 'Please specify Primary Email'
+        }
+        dispatch({
+          type: SHOW_NEWCONTACT_ERRORS,
+          payload: messages
+        })
+      }
+    })
+  }
+}
+
 export const ACTION_HANDLERS = {
   [BIND_USER_INFO]: (state, action) => {
     return Object.assign({}, state, {
@@ -388,14 +493,19 @@ export const ACTION_HANDLERS = {
   [ADD_CONTACT_MODAL]: (state, action) => {
     if (state.showAddContactModal) {
       return Object.assign({}, state, {
-        showAddContactModal: !state.showAddContactModal
+        showAddContactModal: !state.showAddContactModal,
+        error: null,
+        validationMessages: {}
       })
     } else {
       let contactInfo = getNewContactPopUpInfo();
-        contactInfo.Timezones=action.payload
+      contactInfo.Timezones = action.payload
       return Object.assign({}, state, {
+        error: null,
+        validationMessages: {},
         newContactPopUp: contactInfo,
-        showAddContactModal: !state.showAddContactModal
+        showAddContactModal: !state.showAddContactModal,
+
       })
     }
   },
@@ -403,6 +513,8 @@ export const ACTION_HANDLERS = {
     let userInformation = state.userInformation
     userInformation.Contacts = getContacts()
     return Object.assign({}, state, {
+      error: null,
+      validationMessages: {},
       userInformation: userInformation,
       showAddContactModal: !state.showAddContactModal,
     })
@@ -809,15 +921,21 @@ export const ACTION_HANDLERS = {
       disableRoles: false
     })
   },
-  [GET_USER_INFO_SERVICE]: (state,action) => {
-      return Object.assign({}, state, {
+  [GET_USER_INFO_SERVICE]: (state, action) => {
+    return Object.assign({}, state, {
       userInformation: action.payload
+    })
+  },
+  [SHOW_NEWCONTACT_ERRORS]: (state, action) => {
+    return Object.assign({}, state, {
+      error: 1,
+      validationMessages: action.payload
     })
   }
 }
 const initialState = {
   error: null,
-  userInformation:[],
+  userInformation: [],
   selectedRole: {},
   selectedContact: {},
   defaultContacts: [],
@@ -830,7 +948,8 @@ const initialState = {
   assignedcontacts: [],
   locationId: 0,
   fetchedRoles: [],
-  fetchedContacts: []
+  fetchedContacts: [],
+  validationMessages: {}
 };
 
 export default function userInfoReducer(state = initialState, action) {
