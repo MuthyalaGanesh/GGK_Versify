@@ -86,6 +86,7 @@ export function AddGateway() {
       let values = {}
       let messages = {}
       let invalid = false
+      let gateways = getState().gateways.gateway.Gateways
       getState().form.GatewayForm.hasOwnProperty('values') ?
         values = getState().form.GatewayForm.values : null
       if (values != null) {
@@ -96,6 +97,10 @@ export function AddGateway() {
         if (!values.GatewayURL) {
           invalid = true
           messages.GatewayURL = 'Please specify url'
+        }
+        if (values.GatewayName && gateways.findIndex((gateway) => gateway.aliasName === values.GatewayName) >=0) {
+            invalid = true
+            messages.GatewayName = 'Name must be unique'
         }
         if (invalid == true) {
           dispatch({
@@ -133,6 +138,7 @@ export function UpdateGateway() {
       let values = {}
       let fields = {}
       let messages = {}
+      let gateways = getState().gateways.gateway
       let invalid = false
       let editedGateway = getState().gateways.EditableGateway
       getState().form.GatewayForm.hasOwnProperty('values') ?
@@ -144,6 +150,13 @@ export function UpdateGateway() {
           fields && fields.hasOwnProperty('GatewayName') && fields.GatewayName.hasOwnProperty('touched') &&
           fields.GatewayName.touched ?
           invalid = true : editedGateway.GatewayName ? messages.GatewayName = null : invalid = true
+      }
+      if (values.GatewayName) {
+        let index = gateways.Gateways.findIndex((gateway) => gateway.aliasName === values.GatewayName)
+        if (index >= 0 && index != editedGateway.index) {
+          invalid = true
+          messages.GatewayName = 'Name must be unique'
+        }
       }
       if (!values.GatewayURL) {
         messages.GatewayURL = 'Please specify url'
@@ -199,6 +212,7 @@ export function validateGateway() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       let gateway = getState().gateways
+      let gateways = getState().gateways.gateway
       if (gateway.error) {
         let editedGateway = gateway.EditableGateway
         let values = {}
@@ -209,6 +223,12 @@ export function validateGateway() {
           if (values != null) {
             values.GatewayName ? messages.GatewayName = null : messages.GatewayName = 'Please specify Name'
             values.GatewayURL ? messages.GatewayURL = null : messages.GatewayURL = 'Please specify url'
+            if (values.GatewayName) {
+              let index = gateways.Gateways.findIndex((gateway) => gateway.aliasName === values.GatewayName)
+              if (index >= 0 && index != editedGateway.index) {
+                messages.GatewayName = 'Name must be unique'
+              }
+            }
           } else {
             messages.GatewayName = 'Please specify Name'
             messages.GatewayURL = 'Please specify url'
@@ -224,7 +244,7 @@ export function validateGateway() {
               values.GatewayName ? messages.GatewayName = null : messages.GatewayName = 'Please specify Name' : editedGateway.GatewayName ? messages.GatewayName = null : messages.GatewayName = 'Please specify Name'
 
             fields.hasOwnProperty('GatewayURL') && fields.GatewayURL.hasOwnProperty('touched') &&
-            fields.GatewayURL.touched ?
+              fields.GatewayURL.touched ?
               values.GatewayURL ? messages.GatewayURL = null : messages.GatewayURL = 'Please specify url' : editedGateway.GatewayURL ? messages.GatewayURL = null : messages.GatewayURL = 'Please specify url'
 
           }
@@ -241,7 +261,8 @@ export function validateGateway() {
 export const ACTION_HANDLERS = {
   [GET_GATEWAY_INFO]: (state, action) => {
     return Object.assign({}, state, {
-      gateway: action.payload
+      gateway: action.payload,
+      saveGateway: []
     })
   },
   [CONFIRM_DELETE_GATEWAY]: (state, action) => {
@@ -360,8 +381,8 @@ export const ACTION_HANDLERS = {
         newGateway.id = -1
         newGateway.aliasName = action.payload.values.GatewayName
         newGateway.piInterfaceRootUrl = action.payload.values.GatewayURL
-        newGateway.externalSystemLogin = action.payload.values.GatewayLogin
-        newGateway.externalSystemPwd = action.payload.values.GatewayPassword
+        newGateway.externalSystemLogin = action.payload.values.GatewayLogin ? action.payload.values.GatewayLogin : ""
+        newGateway.externalSystemPwd = action.payload.values.GatewayPassword ? action.payload.values.GatewayPassword : ""
         newGateway.hasChanged = true
         newGateway.canDelete = true
         newState.gateway.Gateways.push(newGateway)

@@ -184,7 +184,7 @@ export function saveNewContact() {
         else
         {
           messages.PasswordFormat = 'Password must be 6-20 characters in length,contain special characters,'+
-          '+and must contain atleast one lower case letter,one upper case letter,and one digit'
+          'and must contain atleast one lower case letter,one upper case letter,and one digit'
           regularExpression.test(values.Password) ? messages.PasswordFormat = null : invalid = true
         }
         if (invalid == true) {
@@ -226,9 +226,15 @@ export function saveNewContact() {
             data: SaveObject
           }).then(function(response) {
             dispatch({
-              type: SAVE_NEW_CONTACT,
-
+              type: SAVE_NEW_CONTACT,              
             })
+            dispatch({
+            type: 'redux-form/DESTROY',
+            meta: {
+              form: "UsersForm"
+            },
+            payload: ""
+          })
           }).catch(function(error) {
             alert("error" + JSON.stringify(error));
           });
@@ -378,6 +384,19 @@ export function selectRole() {
           })
         }
       }
+      else{
+        dispatch({
+          type: SELECTED_ROLE,
+          payload: getState().form.UsersForm
+        })
+        dispatch({
+          type: 'redux-form/DESTROY',
+          meta: {
+            form: "UsersForm"
+          },
+          payload: ""
+        })
+      }
     })
   }
 };
@@ -439,6 +458,19 @@ export function selectContact() {
           })
         }
       }
+      else{
+        dispatch({
+          type: SELECTED_CONTACT,
+          payload: getState().form.UsersForm
+        })
+        dispatch({
+          type: 'redux-form/DESTROY',
+          meta: {
+            form: "UsersForm"
+          },
+          payload: ""
+        })
+      }
     })
   }
 };
@@ -452,7 +484,7 @@ export function validateContact() {
         let messages = {}
         let regularExpression = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!_@#$%^&*])[a-zA-Z0-9!_@#$%^&*]{6,20}$/;
         let PasswordFormat = 'Password must be 6-20 characters in length,contain special characters,'+
-          '+and must contain atleast one lower case letter,one upper case letter,and one digit'
+          'and must contain atleast one lower case letter,one upper case letter,and one digit'
         getState().form.UsersForm.hasOwnProperty('values') ?
           values = getState().form.UsersForm.values : null
         if (values != null) {
@@ -511,12 +543,13 @@ export const ACTION_HANDLERS = {
   },
   [SAVE_NEW_CONTACT]: (state, action) => {
     let userInformation = state.userInformation
+    let validationMessages = {}
+    validationMessages.success = "New Contact added successfully"
     userInformation.Contacts = getContacts()
     return Object.assign({}, state, {
       error: null,
-      validationMessages: {},
-      userInformation: userInformation,
-      showAddContactModal: !state.showAddContactModal,
+      validationMessages: validationMessages,
+      userInformation: userInformation
     })
   },
   [BIND_CONTACT_TO_ROLE]: (state, action) => {

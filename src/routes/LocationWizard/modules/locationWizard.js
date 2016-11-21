@@ -542,7 +542,17 @@ function dataHistorianObjectPreparation(stateTree, dispatch) {
   var dataHistorianObj = [];
   stateTree.dataHistorian && stateTree.dataHistorian.saveScada ?
     stateTree.dataHistorian.saveScada.map(scada => {
-      dataHistorianObj.push(scada)
+      let scadainfo = {}
+        scadainfo.id = scada.id
+        scadainfo.metricId = scada.metricId
+        scadainfo.metricName = scada.metricName
+        scadainfo.metricDescription = scada.metricDescription
+        scadainfo.isDigitalState = scada.isDigitalState
+        scadainfo.scadaTag = scada.scadaTag
+        scadainfo.scadaServerAliasName = scada.scadaServerAliasName
+        scadainfo.scadaServerId = scada.scadaServerId
+        scadainfo.locationId = scada.locationId
+      dataHistorianObj.push(scadainfo)
     }) : dispatch({
       type: 'ERROR',
       payload: 1
@@ -692,7 +702,10 @@ function saveObjectPreparationAndCall(getState, dispatch) {
           //ADD Location ID to Object
           var newLocationID = response.data.SaveOMSLocationWizardDataResult.Location.Id;
           getState().form.BasicInfoForm.values.locationId = newLocationID;
-
+        dispatch(bindGatewayLocationData(response.data.SaveOMSLocationWizardDataResult.Gateways));
+        dispatch(bindLocationData(response.data.SaveOMSLocationWizardDataResult.AssignedScadaPoints, newLocationID));
+        dispatch(bindWorkLocationData(response.data.SaveOMSLocationWizardDataResult.AssignedWorkflowGroups));
+        dispatch(bindUserLocationData(response.data.SaveOMSLocationWizardDataResult.AssignedContacts, newLocationID));
           //Save equipment
           if (locationId == 'undefined' || locationId == 0) {
             basicInfoObj.Id = newLocationID

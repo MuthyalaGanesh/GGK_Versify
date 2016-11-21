@@ -131,18 +131,18 @@ export const Users = (props) => {
                                     <div className="col-xs-12 col form-group">
                                         <div className="col-xs-4">
                                             <label>Name</label>
-                                            <Field component={InputField} className="form-control" name="Name" type="text"  placeholder="Name"
+                                            <Field component={InputField} className="form-control" name="Name" type="text"  placeholder="Name" touched={1}
                                              onblur = {props.validateContact}/>
                                              {error && validations.Name && <span className="errorMessage">{validations.Name}</span>}
                                         </div>
                                         <div className="col-xs-4">
                                             <label>Primary Phone</label>
-                                            <Field component={InputField} type="text" className="form-control" name="Primary" placeholder="Primary Phone">
+                                            <Field component={InputField} type="text" className="form-control" name="Primary" placeholder="Primary Phone" touched={1}>
                                             </Field>
                                         </div>
                                         <div className="col-xs-4">
                                             <label>Custom 1</label>
-                                            <Field component={InputField} type="text" className="form-control" name="Custom1">
+                                            <Field component={InputField} type="text" className="form-control" name="Custom1" touched={1}>
                                             </Field>
                                         </div>
                                     </div>
@@ -152,16 +152,16 @@ export const Users = (props) => {
                                 <div className="col-xs-4">
                                     <label>Cell / Mobile</label>
                                     <Field component={InputField} className="form-control" name="Cell" type="text"  placeholder="Cell / Mobile"
-                                             />
+                                             touched={1}/>
                                 </div>
                                 <div className="col-xs-4">
                                     <label>Other Phone</label>
-                                    <Field component={InputField} type="text" className="form-control" name="OtherPhone" placeholder="Other Phone">
+                                    <Field component={InputField} type="text" className="form-control" name="OtherPhone" placeholder="Other Phone" touched={1}>
                                     </Field>
                                 </div>
                                 <div className="col-xs-4">
                                     <label>Custom 2</label>
-                                    <Field component={InputField} type="text" className="form-control" name="Custom2">
+                                    <Field component={InputField} type="text" className="form-control" name="Custom2" touched={1}>
                                     </Field>
                                 </div>
                                     </div>
@@ -182,7 +182,7 @@ export const Users = (props) => {
                                 </div>
                                 <div className="col-xs-4">
                                     <label>Custom 3</label>
-                                    <Field component={InputField} type="text" className="form-control" name="Custom3">
+                                    <Field component={InputField} type="text" className="form-control" name="Custom3" touched={1}>
                                     </Field>
                                 </div>
                             </div>
@@ -192,17 +192,17 @@ export const Users = (props) => {
                                 <div className="col-xs-4">
                                     <label>Primary Email</label>
                                     <Field component={InputField} className="form-control" name="PrimaryEmail" type="text"  placeholder="Primary Email"
-                                       onblur = {props.validateContact} />
+                                       onblur = {props.validateContact} touched={1}/>
                                     {error && validations.PrimaryEmail && <span className="errorMessage">{validations.PrimaryEmail}</span>}
                                 </div>
                                 <div className="col-xs-4">
                                     <label>Secondary Email</label>
-                                    <Field component={InputField} type="text" className="form-control" name="SecondaryEmail" placeholder="Secondary Email">
+                                    <Field component={InputField} type="text" className="form-control" name="SecondaryEmail" placeholder="Secondary Email" touched={1}>
                                     </Field>
                                 </div>
                                 <div className="col-xs-4">
                                     <label>Custom 4</label>
-                                    <Field component={InputField} type="text" className="form-control" name="Custom4">
+                                    <Field component={InputField} type="text" className="form-control" name="Custom4" touched={1}>
                                     </Field>
                                 </div>
                             </div>
@@ -212,7 +212,7 @@ export const Users = (props) => {
                                 <div className="col-xs-4">
                                     <label>Title</label>
                                     <Field component={InputField} className="form-control" name="Title" type="text"  placeholder="Title"
-                                             />
+                                             touched={1}/>
                                 </div>
                                 <div className="col-xs-4">
                                     <label>TimeZone</label>
@@ -222,7 +222,7 @@ export const Users = (props) => {
                                 </div>
                                 <div className="col-xs-4">
                                     <label>Custom 5</label>
-                                    <Field component={InputField} type="text" className="form-control" name="Custom5">
+                                    <Field component={InputField} type="text" className="form-control" name="Custom5" touched={1}>
                                     </Field>
                                 </div>                                
                             </div>
@@ -238,19 +238,19 @@ export const Users = (props) => {
                                     <div className="col-xs-12 form-group">
                                         <div className="col-xs-4">
                                             <label>status</label>
-                                            <Field component={DropdownListField} name="status"  placeholder="Select type"
+                                            <Field component={DropdownListField} name="status"  placeholder="Select status"
                                                  data = {ContactPopUpInfo.status} labelKey ='value' valueKey='id' onChangeEvent = {props.validateContact}/>
                                             {error && validations.status && <span className="errorMessage">{validations.status}</span>}
                                         </div>
                                         <div className="col-xs-4">
                                             <label>User ID</label>
-                                            <Field component={InputField} className="form-control" name="userId" type="text"  placeholder="Primary Email"
-                                             onblur = {props.validateContact} />
+                                            <Field component={InputField} className="form-control" name="userId" type="text"  placeholder="User Id"
+                                             onblur = {props.validateContact} touched={1}/>
                                              {error && validations.userId && <span className="errorMessage">{validations.userId}</span>}
                                         </div>                                
                                         <div className="col-xs-4">
                                             <label>Password</label>
-                                            <Field component={InputField} type="password" className="form-control" name="Password" onblur = {props.validateContact}>
+                                            <Field component={InputField} type="password" className="form-control" name="Password" placeholder="Password" onblur = {props.validateContact} touched={1} >
                                             </Field>
                                             {error && validations.Password && <span className="errorMessage">{validations.Password}</span>}
                                         </div>
@@ -266,9 +266,10 @@ export const Users = (props) => {
                                 </div>
                                 <div>
                                     {error && validations.PasswordFormat && <span className="errorMessage">{validations.PasswordFormat}</span>}
-                                </div>
-                            </div>  
-                        </div>          
+                                </div>                                   
+                            </div>                             
+                        </div> 
+                        {validations.success && <div className="alert alert-success success-message"><strong>{validations.success}.</strong></div>}         
                     </Modal.Body>
                     <Modal.Footer>                                
                                 <button className="btn btn-success" type="button" onClick={props.saveNewContact}>Add</button> 

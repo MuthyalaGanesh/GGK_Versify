@@ -43,11 +43,11 @@ export function getDataHistorians() {
   };
 };
 
-export function bindLocationData(assignedScada,locationId) {
+export function bindLocationData(assignedScada, locationId) {
   let defaultHistorians = getDataHistorian();
-  let locationData ={}
+  let locationData = {}
   locationData.finalData = [],
-  locationData.locationId = locationId
+    locationData.locationId = locationId
   defaultHistorians.map((data) => {
     if (assignedScada) {
       let index = assignedScada.findIndex((scada) => scada.metricId === data.metricId);
@@ -188,14 +188,13 @@ export function UpdateAddDataHistorian() {
           invalid = true
           messages.Metric = 'Please select Metric'
         }
-        if (!values.Tag) {          
+        if (!values.Tag) {
           messages.Tag = 'Please specify Tag',
-          getState().form.DataHistorianForm.hasOwnProperty('fields') && 
-          getState().form.DataHistorianForm.fields.hasOwnProperty('Tag')&&
-          getState().form.DataHistorianForm.fields.Tag.hasOwnProperty('touched') && 
-          getState().form.DataHistorianForm.fields.Tag.touched ?
-          invalid = true
-          : editData.scadaTag ? messages.Tag = null : invalid = true
+            getState().form.DataHistorianForm.hasOwnProperty('fields') &&
+            getState().form.DataHistorianForm.fields.hasOwnProperty('Tag') &&
+            getState().form.DataHistorianForm.fields.Tag.hasOwnProperty('touched') &&
+            getState().form.DataHistorianForm.fields.Tag.touched ?
+            invalid = true : editData.scadaTag ? messages.Tag = null : invalid = true
         }
         if (!values.Gateway && !editData.scadaServerId) {
           invalid = true
@@ -286,12 +285,11 @@ export function validateData() {
         } else {
           if (values != null) {
             values.metric || editData.metricId ? messages.Metric = null : messages.Metric = 'Please select Metric'
-            getState().form.DataHistorianForm.hasOwnProperty('fields') && 
-            getState().form.DataHistorianForm.fields.hasOwnProperty('Tag')&&
-            getState().form.DataHistorianForm.fields.Tag.hasOwnProperty('touched') && 
-            getState().form.DataHistorianForm.fields.Tag.touched ?
-                  values.Tag ? messages.Tag = null : messages.Tag = 'Please specify Tag'
-                  : editData.scadaTag ? messages.tag = null : messages.Tag = 'Please specify Tag'
+            getState().form.DataHistorianForm.hasOwnProperty('fields') &&
+              getState().form.DataHistorianForm.fields.hasOwnProperty('Tag') &&
+              getState().form.DataHistorianForm.fields.Tag.hasOwnProperty('touched') &&
+              getState().form.DataHistorianForm.fields.Tag.touched ?
+              values.Tag ? messages.Tag = null : messages.Tag = 'Please specify Tag' : editData.scadaTag ? messages.tag = null : messages.Tag = 'Please specify Tag'
             values.Gateway || editData.scadaServerId ? messages.Gateway = null : messages.Gateway = 'Please select Gateway'
           }
         }
@@ -454,12 +452,12 @@ export const ACTION_HANDLERS = {
             }
           }
         }
-      });      
-        updatedDataHistorian.map((scada) => {
-          if (scada.isEdited == true) {
-            saveDataHistorian.push(scada);
-          }
-        })
+      });
+      updatedDataHistorian.map((scada) => {
+        if (scada.isEdited == true) {
+          saveDataHistorian.push(scada);
+        }
+      })
     }
     return Object.assign({}, state, {
       dataHistorian: updatedDataHistorian,
@@ -491,7 +489,8 @@ export const ACTION_HANDLERS = {
   [BIND_DATA_HISTORIAN_LOCATIONID]: (state, action) => {
     return Object.assign({}, state, {
       dataHistorian: action.payload.finalData,
-      locationId : action.payload.locationId
+      locationId: action.payload.locationId,
+      saveScada : []
     })
   },
   [SHOW_DATAHISTORIAN_ERRORS]: (state, action) => {

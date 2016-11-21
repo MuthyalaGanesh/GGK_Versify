@@ -493,6 +493,15 @@ div.box-tools.pull-right i.fa.fa-address-book {
 .Select--multi.is-disabled .Select-value-icon:active {
   background-color: #fcfcfc;
 }
+
+.success-message
+{
+  color: #3c763d !important;
+  text-align: center;
+  border-color: #d6e9c6;
+  border-radius: 8px;
+}
+
 @keyframes Select-animation-spin {
   to {
     transform: rotate(1turn);
