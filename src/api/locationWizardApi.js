@@ -230,8 +230,11 @@ export function getNewContactPopUpInfo() {
     });
     ContactPopup.type = XMLHttpRequestSyncGet(Constants.CONTACT_TYPE);
     ContactPopup.org = XMLHttpRequestSyncGet(Constants.ORGANIZATION);
-    ContactPopup.Timezones = getTimezones();
-    return ContactPopup;
+    /* getTimezones().then(function(response){
+          ContactPopup.Timezones =response.data;*/
+        return ContactPopup;
+   /*   });*/
+    
 }
 
 export function finalLocationSaveObject(saveObject) {

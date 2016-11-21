@@ -126,7 +126,8 @@ export function AddContactModalToggle() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       dispatch({
-        type: ADD_CONTACT_MODAL
+        type: ADD_CONTACT_MODAL,
+        payload:getState().basic.timezones
       })
       dispatch({
         type: 'redux-form/DESTROY',
@@ -390,8 +391,10 @@ export const ACTION_HANDLERS = {
         showAddContactModal: !state.showAddContactModal
       })
     } else {
+      let contactInfo = getNewContactPopUpInfo();
+        contactInfo.Timezones=action.payload
       return Object.assign({}, state, {
-        newContactPopUp: getNewContactPopUpInfo(),
+        newContactPopUp: contactInfo,
         showAddContactModal: !state.showAddContactModal
       })
     }
