@@ -113,10 +113,10 @@ export function leftMenuDropdownClickEvent(id, event) {
         }
       })
     } else {
-         dispatch(showSpinner())
-         setTimeout(function(){
-          dispatch(LoadAndRefreshForms(id, event))
-         },1)
+      dispatch(showSpinner())
+      setTimeout(function() {
+        dispatch(LoadAndRefreshForms(id, event))
+      }, 1)
     }
 
   }
@@ -157,7 +157,7 @@ function CheckLocationNameIsExists(allLocations, locationName) {
 export function LoadAndRefreshForms(id, event) {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-     
+
       dispatch({
         type: HIDE_ALERT,
         payload: {
@@ -169,50 +169,26 @@ export function LoadAndRefreshForms(id, event) {
         type: DEFAULT_NODE_EXPANDED,
         payload: id
       })
-   
+
       dispatch({
         type: SHOW_SPINNER,
         payload: true
       })
-
-
-      //If Location Id > 0, only bind data. otherwise load new forms
-      if (id > 0) {
-        try {
-
-          var allLocationdata = getState().location.allLocations;
-          findLocation(allLocationdata, id);
-          var locationObj = currentLocation;
-          currentLocation = null;
-
-          dispatch(BindInitialValues(locationObj));
-          let editObject = getOMSLocationwizardData(id);
-          let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
-          let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
-          var marketDrivenMappings = getMarketDrivenMappings(locationObj.PrimaryMarketId);
-          var editSysIntegration = new Object({
-            locationsInfo: locationsInfo,
-            marketDrivenMappings: marketDrivenMappings
-          })
-          dispatch(editSystemIntegration(editSysIntegration));
-
-          dispatch(BindInitialEquipments(editObject.GetOMSLocationWizardDataResult.Equipment));
-          dispatch(bindLocationData(dataHistorianParticularLocationObject, id));
-          dispatch(bindGatewayLocationData(editObject.GetOMSLocationWizardDataResult.Gateways));
-          dispatch(bindWorkLocationData(editObject.GetOMSLocationWizardDataResult.AssignedWorkflowGroups));
-          dispatch(bindUserLocationData(editObject.GetOMSLocationWizardDataResult.AssignedContacts, id));
-          dispatch(BindUnitCharacteristicsInitialValues(editObject.GetOMSLocationWizardDataResult.AllLocationAttributeWithValues))
-          dispatch({
-                type:'redux-form/INITIALIZE',
-                meta:{form:'BasicInfoForm',keepDirty:false},
-                payload:getState().basic.BasicInfo
-          })
-           dispatch({
-                type:'redux-form/INITIALIZE',
-                meta:{form:'CredentialsManagementForm',keepDirty:false},
-                payload:getState().basic.CredentialInitialValues
-          })
- dispatch({
+      dispatch({
+        type: 'redux-form/INITIALIZE',
+        meta: {
+          form: 'BasicInfoForm'
+        },
+        payload: ''
+      })
+      dispatch({
+        type: 'redux-form/INITIALIZE',
+        meta: {
+          form: 'CredentialsManagementForm'
+        },
+        payload: ''
+      })
+      dispatch({
         type: 'redux-form/INITIALIZE',
         meta: {
           form: "DataHistorianForm"
@@ -261,6 +237,50 @@ export function LoadAndRefreshForms(id, event) {
         },
         payload: ''
       })
+
+      //If Location Id > 0, only bind data. otherwise load new forms
+      if (id > 0) {
+        try {
+
+          var allLocationdata = getState().location.allLocations;
+          findLocation(allLocationdata, id);
+          var locationObj = currentLocation;
+          currentLocation = null;
+
+          dispatch(BindInitialValues(locationObj));
+          let editObject = getOMSLocationwizardData(id);
+          let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
+          let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
+          var marketDrivenMappings = getMarketDrivenMappings(locationObj.PrimaryMarketId);
+          var editSysIntegration = new Object({
+            locationsInfo: locationsInfo,
+            marketDrivenMappings: marketDrivenMappings
+          })
+          dispatch(editSystemIntegration(editSysIntegration));
+
+          dispatch(BindInitialEquipments(editObject.GetOMSLocationWizardDataResult.Equipment));
+          dispatch(bindLocationData(dataHistorianParticularLocationObject, id));
+          dispatch(bindGatewayLocationData(editObject.GetOMSLocationWizardDataResult.Gateways));
+          dispatch(bindWorkLocationData(editObject.GetOMSLocationWizardDataResult.AssignedWorkflowGroups));
+          dispatch(bindUserLocationData(editObject.GetOMSLocationWizardDataResult.AssignedContacts, id));
+          dispatch(BindUnitCharacteristicsInitialValues(editObject.GetOMSLocationWizardDataResult.AllLocationAttributeWithValues))
+          dispatch({
+            type: 'redux-form/INITIALIZE',
+            meta: {
+              form: 'BasicInfoForm',
+              keepDirty: false
+            },
+            payload: getState().basic.BasicInfo
+          })
+          dispatch({
+            type: 'redux-form/INITIALIZE',
+            meta: {
+              form: 'CredentialsManagementForm',
+              keepDirty: false
+            },
+            payload: getState().basic.CredentialInitialValues
+          })
+
 
           dispatch({
             type: HIDE_SPINNER,
@@ -543,15 +563,15 @@ function dataHistorianObjectPreparation(stateTree, dispatch) {
   stateTree.dataHistorian && stateTree.dataHistorian.saveScada ?
     stateTree.dataHistorian.saveScada.map(scada => {
       let scadainfo = {}
-        scadainfo.id = scada.id
-        scadainfo.metricId = scada.metricId
-        scadainfo.metricName = scada.metricName
-        scadainfo.metricDescription = scada.metricDescription
-        scadainfo.isDigitalState = scada.isDigitalState
-        scadainfo.scadaTag = scada.scadaTag
-        scadainfo.scadaServerAliasName = scada.scadaServerAliasName
-        scadainfo.scadaServerId = scada.scadaServerId
-        scadainfo.locationId = scada.locationId
+      scadainfo.id = scada.id
+      scadainfo.metricId = scada.metricId
+      scadainfo.metricName = scada.metricName
+      scadainfo.metricDescription = scada.metricDescription
+      scadainfo.isDigitalState = scada.isDigitalState
+      scadainfo.scadaTag = scada.scadaTag
+      scadainfo.scadaServerAliasName = scada.scadaServerAliasName
+      scadainfo.scadaServerId = scada.scadaServerId
+      scadainfo.locationId = scada.locationId
       dataHistorianObj.push(scadainfo)
     }) : dispatch({
       type: 'ERROR',
@@ -702,10 +722,10 @@ function saveObjectPreparationAndCall(getState, dispatch) {
           //ADD Location ID to Object
           var newLocationID = response.data.SaveOMSLocationWizardDataResult.Location.Id;
           getState().form.BasicInfoForm.values.locationId = newLocationID;
-        dispatch(bindGatewayLocationData(response.data.SaveOMSLocationWizardDataResult.Gateways));
-        dispatch(bindLocationData(response.data.SaveOMSLocationWizardDataResult.AssignedScadaPoints, newLocationID));
-        dispatch(bindWorkLocationData(response.data.SaveOMSLocationWizardDataResult.AssignedWorkflowGroups));
-        dispatch(bindUserLocationData(response.data.SaveOMSLocationWizardDataResult.AssignedContacts, newLocationID));
+          dispatch(bindGatewayLocationData(response.data.SaveOMSLocationWizardDataResult.Gateways));
+          dispatch(bindLocationData(response.data.SaveOMSLocationWizardDataResult.AssignedScadaPoints, newLocationID));
+          dispatch(bindWorkLocationData(response.data.SaveOMSLocationWizardDataResult.AssignedWorkflowGroups));
+          dispatch(bindUserLocationData(response.data.SaveOMSLocationWizardDataResult.AssignedContacts, newLocationID));
           //Save equipment
           if (locationId == 'undefined' || locationId == 0) {
             basicInfoObj.Id = newLocationID
@@ -783,7 +803,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
             message: "Error occured while saving the Location",
             openSavePopup: true
           }
-        });        
+        });
       });
     } catch (e) {
       dispatch({
