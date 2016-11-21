@@ -454,12 +454,12 @@ export const ACTION_HANDLERS = {
             }
           }
         }
+      });      
         updatedDataHistorian.map((scada) => {
-          if (scada.isEdited) {
+          if (scada.isEdited == true) {
             saveDataHistorian.push(scada);
           }
         })
-      });
     }
     return Object.assign({}, state, {
       dataHistorian: updatedDataHistorian,
