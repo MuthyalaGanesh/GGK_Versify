@@ -241,6 +241,9 @@ export function LoadAndRefreshForms(id, event) {
           currentLocation = null;
 
           dispatch(BindInitialValues(locationObj));
+          let editObject = getOMSLocationwizardData(id);
+          let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
+          let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
           var marketDrivenMappings = getMarketDrivenMappings(locationObj.PrimaryMarketId);
           var editSysIntegration = new Object({
             locationsInfo: locationsInfo,
@@ -248,9 +251,6 @@ export function LoadAndRefreshForms(id, event) {
           })
           dispatch(editSystemIntegration(editSysIntegration));
 
-          let editObject = getOMSLocationwizardData(id);
-          let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
-          let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
           dispatch(BindInitialEquipments(editObject.GetOMSLocationWizardDataResult.Equipment));
           dispatch(bindLocationData(dataHistorianParticularLocationObject, id));
           dispatch(bindGatewayLocationData(editObject.GetOMSLocationWizardDataResult.Gateways));
