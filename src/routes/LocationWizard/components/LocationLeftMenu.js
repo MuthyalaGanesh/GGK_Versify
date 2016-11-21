@@ -23,11 +23,10 @@ var leftMenuHeight = w.innerHeight||e.clientHeight||g.clientHeight;
                                 <Tooltip id="tooltip">
                                     <strong>Add Location</strong>
                                 </Tooltip>}>
-                                <a onClick={(e)=>{props.leftMenuDropdownClickEvent(0, e)}}>
-                <i className="fa fa-plus-circle fa-2x"></i>
-            </a>
-                               
-                            </OverlayTrigger>
+                <a onClick={(e)=>{props.leftMenuDropdownClickEvent(0, e)}}>
+                    <i className="fa fa-plus-circle fa-2x"></i>
+                </a>                               
+                </OverlayTrigger>
             
         </div>
     <Scrollbars style={{ height: leftMenuHeight }}>
@@ -39,32 +38,6 @@ var leftMenuHeight = w.innerHeight||e.clientHeight||g.clientHeight;
     </Scrollbars>
 </aside>
     );
-}
-
-export const LocationLeftMenuChild =(props)=> {
-     
-         return(
-          <ul className="treeview-menu">
-							<li>
-                    {props.childnode 
-                        ?  <a onClick={(e)=>{props.leftMenuDropdownClickEvent(props.key, e)}}>
-                        <span>{ props.name} </span> 
-                        {props.currentLocation.Children.length > 0
-                      ? <i className="fa fa-angle-left pull-right" onClick={(e)=>{props.leftMenuDropdownClickEvent(props.key, e)}}></i>
-                      : ''
-                    }                           
-                </a>
-                    :''
-                }
-                      
-                 {props.currentLocation.Children.length > 0 
-                  ? props.currentLocation.Children.map(child => <LocationLeftMenuChild key={child.Id} childnode={true} name={child.Name} leftMenuDropdownClickEvent={props.leftMenuDropdownClickEvent} currentLocation={child}/>)
-                  : ''
-                  }
-            </li>
-         </ul> );
-        
- 
 }
 
 export default LocationLeftMenu
