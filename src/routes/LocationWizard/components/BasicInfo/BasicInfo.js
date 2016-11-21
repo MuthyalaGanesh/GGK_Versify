@@ -153,13 +153,13 @@ return (
                 <div className='clear'></div>                
                 <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
                   <label className="control-label"> OwnerShip % { error && formdata.BasicInfoForm.hasOwnProperty('values') && 
-                  formdata.BasicInfoForm.values.hasOwnProperty('ownerShipPercentage')&& (parseInt(formdata.BasicInfoForm.values.ownerShipPercentage )> 100  || parseInt(formdata.BasicInfoForm.values.ownerShipPercentage) < 0 )?   <span className='errorMessage' style={{float:'right'}}> Please give valid input </span>
+                  formdata.BasicInfoForm.values.hasOwnProperty('ownerShipPercentage')&& (parseFloat(formdata.BasicInfoForm.values.ownerShipPercentage )> 100  || parseFloat(formdata.BasicInfoForm.values.ownerShipPercentage) < 0 )?   <span className='errorMessage' style={{float:'right'}}> Please give valid input </span>
                   : null
                   } </label>
 
                   <Field name="ownerShipPercentage"
                   component="input"
-                  className={error && (formdata.BasicInfoForm.hasOwnProperty('values') ? formdata.BasicInfoForm.values.hasOwnProperty('ownerShipPercentage') ? (parseInt(formdata.BasicInfoForm.values.ownerShipPercentage ) > 100):true : true)
+                  className={error && (formdata.BasicInfoForm.hasOwnProperty('values') ? formdata.BasicInfoForm.values.hasOwnProperty('ownerShipPercentage') ? (parseFloat(formdata.BasicInfoForm.values.ownerShipPercentage ) > 100):true : true)
                   ? "form-control error"
                   :"form-control"}
                   type="number"
