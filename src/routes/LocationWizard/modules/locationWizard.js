@@ -450,19 +450,22 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, primaryMarketTypeId
 var equipmentsObj = [];
 
 function equipmentObjectPreparation(stateTree, dispatch, locationId) {
-  stateTree.equipments && stateTree.equipments.insertedEquipment ? stateTree.equipments.insertedEquipment.map(ie => {
-    equipmentsObj.push(ie)
-  }) : dispatch({
-    type: 'ERROR',
-    payload: 1
-  })
-  _.each(equipmentsObj, (equipment) => {
-    equipment.ParentLocationId = locationId;
-  });
-  console.log(equipmentsObj, "Equipments")
-  return equipmentsObj;
-
-}
+  if (stateTree.equipments && stateTree.equipments.insertedEquipment) {
+    stateTree.equipments.insertedEquipment.map(ie => {
+      equipmentsObj.push(ie)
+    })
+    if (stateTree.equipments.deletedEquipments) {
+      stateTree.equipments.deletedEquipments.map(de => {
+        equipmentsObj.push(de)
+      })
+    }
+  }
+  else {
+    dispatch({
+      type: 'ERROR',
+      payload: 1
+    })
+  }
 
 
 function SystemIntegrationObjectPreparation(stateTree, dispatch) {
@@ -506,14 +509,13 @@ function unitCharacterSticObjectPreparation(stateTree, dispatch) {
           }))
         }
       })
+     
     }) : dispatch({
       type: 'ERROR',
       payload: 1
     })
   console.log(unitCharacteristicsObj, "UnitCharacteristics")
   return unitCharacteristicsObj;
-
-
 }
 
 function rolesObjectPreparation(stateTree, dispatch) {

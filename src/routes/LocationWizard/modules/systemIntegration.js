@@ -51,7 +51,7 @@ export function editSystemIntegration(locationSystemIntegrations) {
 
     return (dispatch, getState) => {
         return new Promise((resolve) => {
-            getSystemIntegrationTypes().then(function(response) {
+            getSystemIntegrationTypes().then(function (response) {
                 dispatch({
                     type: STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION,
                     payload: {
@@ -104,7 +104,7 @@ export function AddSystemIntegration() {
 export function getSystemIntegrationTypesService() {
     return (dispatch, getState) => {
         return new Promise((resolve) => {
-            getSystemIntegrationTypes().then(function(response) {
+            getSystemIntegrationTypes().then(function (response) {
                 dispatch({
                     type: GET_SYSTEM_INTEGRATION_TYPE_SERVICE,
                     payload: response.data.GetOMSLocationWizardDataResult.AssignedLocationMappings
@@ -196,10 +196,22 @@ export const ACTION_HANDLERS = {
                     newSystemIntegrations.push(ssit)
                 }
                 else {
-                    ssit.LocationMappingId = ssit.LocationMappingId > -1 ? ssit.LocationMappingId : -1;
+                    ssit.LocationMappingId = ssit.LocationMappingId > 0 ? ssit.LocationMappingId : -1;
                     ssit.FlaggedForDeletion = true;
-                    newUnSelectedSysIntegrations.push(ssit)
-                    state.deletedSystemIntegrations.push(ssit)
+                    var valuePresence = 1;
+                    newUnSelectedSysIntegrations.map(newUn => {
+                        if (newUn.ExternalSystemName == ssit.ExternalSystemName) {
+                            valuePresence++;
+                        }
+                    })
+                    valuePresence == 1 ? newUnSelectedSysIntegrations.push(ssit) : null
+                    var valuePresence = 1
+                    state.deletedSystemIntegrations ? state.deletedSystemIntegrations.map(dsi => {
+                        if (dsi.ExternalSystemName == ssit.ExternalSystemName) {
+                            valuePresence++
+                        }
+                    }) : null
+                    valuePresence == 1 ? state.deletedSystemIntegrations.push(ssit) : null
                 }
             })
         }

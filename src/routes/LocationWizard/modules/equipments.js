@@ -45,7 +45,7 @@ export function ApplyEditEquipment() {
     return new Promise((resolve) => {
       dispatch({
         type: APPLY_EQUIPMENT,
-        payload: getState().form.EquipmentsForm.values.editedEquipment
+        payload: getState().form.EquipmentsForm && getState().form.EquipmentsForm.values ? getState().form.EquipmentsForm.values.editedEquipment : null
       })
     })
   }
@@ -59,14 +59,24 @@ export function DeleteEquipment(index) {
 export const ACTION_HANDLERS = {
   [STATE_CHANGE_EDIT_FOR_EQUIPMENT]: (state, action) => {
     var parentLocationId = action.payload ? action.payload[0] ? action.payload[0].ParentLocationId : 0 : 0
-    return Object.assign({}, state, {
-      insertedEquipment: action.payload,
-      ParentLocationId: parentLocationId
-    })
+    if (action.payload) {
+      var equipments = []
+      debugger
+      action.payload.map(ap => {
+        if (ap.Name) {
+          equipments.push(ap)
+        }
+      })
+      return Object.assign({}, state, {
+        insertedEquipment: equipments,
+        ParentLocationId: parentLocationId
+      })
+    }
+    return Object.assign({}, state)
   },
   [ADD_EQUIPMENT]: (state, action) => {
 
-    if (action.payload != null && action.payload != undefined && typeof action.payload == "string") {
+    if (action.payload && action.payload.replace(/\s/g, '').length && typeof action.payload == "string") {
       var valuePresence = 1;
       var newEquipmentData = [];
       if (!state.insertedEquipment) {
@@ -114,17 +124,22 @@ export const ACTION_HANDLERS = {
       })
       return Object.assign({}, state, { insertedEquipment: updatedEquipments, showEditModal: !state.showEditModal })
     }
-    return Object.assign({}, state)
+    return Object.assign({}, state, { showEditModal: !state.showEditModal })
   },
   [DELETE_EQUIPMENT]: (state, action) => {
     if (action.payload != null && action.payload != undefined && !isNaN(action.payload)) {
       var updatedEquipments = []
+      var deletedEquipments = []
       state.insertedEquipment.map((eq, i) => {
         if (i != action.payload) {
           updatedEquipments.push(eq)
         }
+        else {
+          eq.Name = ""
+          deletedEquipments.push(eq)
+        }
       })
-      return Object.assign({}, state, { insertedEquipment: updatedEquipments })
+      return Object.assign({}, state, { insertedEquipment: updatedEquipments, deletedEquipments: deletedEquipments })
     }
     return Object.assign({}, state)
   }
@@ -135,7 +150,8 @@ const initialState = {
   insertedEquipment: [],
   editableEquipment: [],
   showEditModal: false,
-  ParentLocationId: 0
+  ParentLocationId: 0,
+  deletedEquipments: []
 };
 
 export default function equipmentsReducer(state = initialState, action) {

@@ -276,15 +276,25 @@ export const ACTION_HANDLERS = {
   [DELETE_UNIT_CHARACTERISTIC]: (state, action) => {
     if (action.payload) {
       var newSelectedUC = [];
+      var deletedUnitCharacteristics = [];
       state.selectedunitCharacteristics.map((suc, i) => {
         if (i != state.deletingUnitIndex) {
           newSelectedUC.push(suc)
+        }
+        else {
+          suc.editableAttributes ? suc.editableAttributes.map(ea => {
+            ea.Value = "",
+              ea.EffectiveEndDate = null,
+              ea.EffectiveStartDate = null
+          }) : null
+          deletedUnitCharacteristics.push(suc)
         }
       })
     }
     return Object.assign({}, state, {
       showDeleteModal: !state.showDeleteModal,
-      selectedunitCharacteristics: newSelectedUC
+      selectedunitCharacteristics: newSelectedUC,
+      deletedUnitCharacteristics: deletedUnitCharacteristics
     })
   },
   //update edited row
@@ -308,7 +318,8 @@ export const ACTION_HANDLERS = {
             var initialAttribute = {
               Value: (action.payload.values && action.payload.values.ucvalue && action.payload.values.ucvalue[index]) ? action.payload.values.ucvalue[index] : state.editableUnitCharacter.editableAttributes[index].Value,
               EffectiveStartDate: (action.payload.values && action.payload.values.effectiveStartDate && action.payload.values.effectiveStartDate[index]) ? action.payload.values.effectiveStartDate[index] : state.editableUnitCharacter.editableAttributes[index].EffectiveStartDate,
-              EffectiveEndDate: (action.payload.values && action.payload.values.effectiveEndDate && action.payload.values.effectiveEndDate[index]) ? action.payload.values.effectiveEndDate[index] : state.editableUnitCharacter.editableAttributes[index].EffectiveEndDate
+              EffectiveEndDate: (action.payload.values && action.payload.values.effectiveEndDate && action.payload.values.effectiveEndDate[index]) ? action.payload.values.effectiveEndDate[index] : state.editableUnitCharacter.editableAttributes[index].EffectiveEndDate,
+              isVisible: true
             }
             finalAttributes.push(initialAttribute)
           }
@@ -318,7 +329,8 @@ export const ACTION_HANDLERS = {
               var newEditableAttributes = {
                 EffectiveEndDate: ed.effectiveEndDate,
                 EffectiveStartDate: ed.effectiveStartDate ? ed.effectiveStartDate : (action.payload.values.editableData[i - 1] && action.payload.values.editableData[i - 1].effectiveEndDate ? action.payload.values.editableData[i - 1].effectiveEndDate : (uc.editableAttributes[0].EffectiveEndDate)),
-                Value: ed.ucvalue
+                Value: ed.ucvalue,
+                isVisible: true
               }
               finalAttributes.push(newEditableAttributes);
             })
@@ -337,7 +349,7 @@ export const ACTION_HANDLERS = {
               }
               if ((new Date(ea.EffectiveEndDate) - new Date(ea.EffectiveStartDate)) < 0) {
                 errorStatus = 1;
-                dateValidations.push("Effective start date must lessthan effective End date");
+                dateValidations.push("Effective start date must less than effective End date");
               }
             }
           })
@@ -402,13 +414,20 @@ export const ACTION_HANDLERS = {
     if (action.payload && action.payload.values && action.payload.values.charateristicName) {
       var errorStatus = null;
       var dateValidations = []
+      var deletedUC = []
       newState.unitCharacteristics.map((uc) => {
         if (uc.id == parseInt(action.payload.values.charateristicName.id)) {
+          newState.deletedUnitCharacteristics ? newState.deletedUnitCharacteristics.map(duc => {
+            if (duc.id != uc.id) {
+              deletedUC.push(duc)
+            }
+          }) : null
           uc.editableAttributes = [];
           uc.editableAttributes.push({
             EffectiveEndDate: action.payload.values && action.payload.values.effectiveEndDate ? action.payload.values.effectiveEndDate[0] : null,
             EffectiveStartDate: action.payload.values && action.payload.values.effectiveStartDate ? action.payload.values.effectiveStartDate[0] : null,
-            Value: action.payload.values && action.payload.values.ucvalue ? action.payload.values.ucvalue[0] : null
+            Value: action.payload.values && action.payload.values.ucvalue ? action.payload.values.ucvalue[0] : null,
+            isVisible: true
           });
 
           if (action.payload.values && action.payload.values.editableData) {
@@ -416,7 +435,8 @@ export const ACTION_HANDLERS = {
               var newEditableAttributes = {
                 EffectiveEndDate: ed.effectiveEndDate,
                 EffectiveStartDate: ed.effectiveStartDate ? ed.effectiveStartDate : (action.payload.values.editableData[i - 1] && action.payload.values.editableData[i - 1].effectiveEndDate ? action.payload.values.editableData[i - 1].effectiveEndDate : (uc.editableAttributes[0].EffectiveEndDate)),
-                Value: ed.ucvalue
+                Value: ed.ucvalue,
+                isVisible: true
               }
               uc.editableAttributes.push(newEditableAttributes);
             })
@@ -434,7 +454,7 @@ export const ACTION_HANDLERS = {
               }
               if ((new Date(ea.EffectiveEndDate) - new Date(ea.EffectiveStartDate)) < 0) {
                 errorStatus = 1;
-                dateValidations.push("Effective start date must lessthan effective End date");
+                dateValidations.push("Effective start date must less than effective End date");
               }
             }
           })
@@ -449,7 +469,8 @@ export const ACTION_HANDLERS = {
       return Object.assign({}, newState, {
         error: errorStatus,
         showModal: (!errorStatus && dateValidations.length == 0) ? (!state.showModal) : (state.showModal),
-        dateRangeValidation: dateValidations
+        dateRangeValidation: dateValidations,
+        deletedUnitCharacteristics: (!errorStatus && dateValidations.length == 0) ? deletedUC : state.deletedUnitCharacteristics
       })
     } else {
       return Object.assign({}, newState, {
@@ -468,7 +489,14 @@ export const ACTION_HANDLERS = {
           newEditableUnitCharacter.push(suc);
           suc.editableAttributes.map((ea, index) => {
             if (index != action.payload) {
+              ea.isVisible = true;
               newEditableAttributes.push(ea)
+            }
+            else {
+              ea.Value = "";
+              ea.EffectiveEndDate = null;
+              ea.EffectiveStartDate = null;
+              ea.isVisible = false;
             }
           })
           newEditableUnitCharacter[0].editableAttributes = [];
@@ -563,6 +591,7 @@ const initialState = {
   unSelectedUnitCharacteristics: [],
   defaultUnitCharacteristics: [],
   finalUnitCharacteristics: [],
+  deletedUnitCharacteristics: [],
   showModal: false,
   showDeleteModal: false,
   deletingUnitIndex: 0,
