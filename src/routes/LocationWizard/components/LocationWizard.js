@@ -34,7 +34,7 @@ return (
    <div>
    {props.location.isLoading ?
    <div className="black_overlay" id="loader">
-        <div className="loading" style={{'backgroundImage':'url('+LoaderImage+')'}}>
+        <div className="loading" >
         </div>
     </div> 
     : null}
@@ -128,7 +128,7 @@ return (
                 </Modal.Body>
                 <Modal.Footer>
                     <div className="pull-right">
-                        <button className="btn btn-danger" type="button" onClick={(e)=>props.toggleSaveResponsePopup(e)}>OK</button>
+                        <button className="btn btn-primary" type="button" onClick={(e)=>props.toggleSaveResponsePopup(e)}>OK</button>
                     </div>
                 </Modal.Footer>
             </Modal>
