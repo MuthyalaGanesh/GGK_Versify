@@ -25,6 +25,9 @@ export default (store) => ({
   path: 'location',  
   getComponent(nextState, cb) {
     require.ensure([], (require) => {
+      //FIXED IE 8 issue
+      require('es6-promise/auto');
+      
       const LocationWizard = require('./containers/LocationWizardContainer').default
       const reducer = require('./modules/locationWizard').default
       const basicInfoReducer = require('./modules/basicInfo').default
