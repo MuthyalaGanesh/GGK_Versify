@@ -679,69 +679,88 @@ function saveObjectPreparationAndCall(getState, dispatch) {
         payload: true
       })
       //SAVE LOCATION
-    axios({
-      method: 'post',
-      url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
-      data: finalSaveObject
-    }).then(function(response) {
-      console.log("success", response);
-      if (response.status === 200) {
-        //ADD Location ID to Object
-        var newLocationID = response.data.SaveOMSLocationWizardDataResult.Location.Id;
-        getState().form.BasicInfoForm.values.locationId = newLocationID;
+    try {
+      axios({
+        method: 'post',
+        url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
+        data: finalSaveObject
+      }).then(function(response) {
+        console.log("success", response);
+        if (response.status === 200) {
+          //ADD Location ID to Object
+          var newLocationID = response.data.SaveOMSLocationWizardDataResult.Location.Id;
+          getState().form.BasicInfoForm.values.locationId = newLocationID;
 
-        //Save equipment
-        if (locationId == 'undefined' || locationId == 0) {
-          basicInfoObj.Id = newLocationID
-          basicInfoObj.LocationId = newLocationID;
-          _.each(equipmentsObj, (equipment) => {
-            equipment.ParentLocationId = newLocationID;
-          });
-          var saveObjectwithEquipment = {
-            "saveData": {
-              Location: basicInfoObj,
-              Equipments: newLocationID > 0 ? equipmentsObj : []
+          //Save equipment
+          if (locationId == 'undefined' || locationId == 0) {
+            basicInfoObj.Id = newLocationID
+            basicInfoObj.LocationId = newLocationID;
+            _.each(equipmentsObj, (equipment) => {
+              equipment.ParentLocationId = newLocationID;
+            });
+            var saveObjectwithEquipment = {
+              "saveData": {
+                Location: basicInfoObj,
+                Equipments: newLocationID > 0 ? equipmentsObj : []
+              }
             }
+            console.log("saveObjectwithEquipment", JSON.stringify(saveObjectwithEquipment));
+            axios({
+              method: 'post',
+              url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
+              data: saveObjectwithEquipment
+            }).then(function(response) {
+              if (response.status === 200) {
+                console.log("equipment saved", response);
+              }
+            })
           }
-          console.log("saveObjectwithEquipment", JSON.stringify(saveObjectwithEquipment));
-          axios({
-            method: 'post',
-            url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
-            data: saveObjectwithEquipment
-          }).then(function(response) {
-            if (response.status === 200) {
-              console.log("equipment saved", response);
+
+          //Refresh left menu        
+          dispatch({
+            type: SAVE_RESPONSE_HANDLER,
+            payload: {
+              response: response,
+              message: "Location saved successfully",
+              openSavePopup: true
             }
+          });
+          basicInfoDropdowns.getParentLocations().then(function(response) {
+            dispatch({
+              type: GET_ALL_LOCATIONS_INFORMATION,
+              payload: response.data.GetAllLocationsResult
+            });
+          }).then(function() {
+            //Expnd ADD Node in left menu
+            console.log('new locationID', newLocationID)
+            dispatch({
+              type: DEFAULT_NODE_EXPANDED,
+              payload: newLocationID
+            })
+          })
+          dispatch({
+            type: HIDE_SPINNER,
+            payload: false
+          })
+        } else {
+          dispatch({
+            type: SAVE_RESPONSE_HANDLER,
+            payload: {
+              response: null,
+              message: "Error occured while saving the Location",
+              openSavePopup: true
+            }
+          });
+          dispatch({
+            type: HIDE_SPINNER,
+            payload: false
           })
         }
-
-        //Refresh left menu        
-        dispatch({
-          type: SAVE_RESPONSE_HANDLER,
-          payload: {
-            response: response,
-            message: "Location saved successfully",
-            openSavePopup: true
-          }
-        });
-        basicInfoDropdowns.getParentLocations().then(function(response) {
-          dispatch({
-            type: GET_ALL_LOCATIONS_INFORMATION,
-            payload: response.data.GetAllLocationsResult
-          });
-        }).then(function() {
-          //Expnd ADD Node in left menu
-          console.log('new locationID', newLocationID)
-          dispatch({
-            type: DEFAULT_NODE_EXPANDED,
-            payload: newLocationID
-          })
-        })
+      }).catch(function(error) {
         dispatch({
           type: HIDE_SPINNER,
           payload: false
         })
-      } else {
         dispatch({
           type: SAVE_RESPONSE_HANDLER,
           payload: {
@@ -749,18 +768,14 @@ function saveObjectPreparationAndCall(getState, dispatch) {
             message: "Error occured while saving the Location",
             openSavePopup: true
           }
-        });
-        dispatch({
-          type: HIDE_SPINNER,
-          payload: false
-        })
-      }
-    }).catch(function(error) {
+        });        
+      });
+    } catch (e) {
       dispatch({
         type: SAVE_RESPONSE_HANDLER,
         payload: {
           response: null,
-          message: error,
+          message: "Error occurred while saving Location",
           openSavePopup: true
         }
       });
@@ -768,7 +783,8 @@ function saveObjectPreparationAndCall(getState, dispatch) {
         type: HIDE_SPINNER,
         payload: false
       })
-    });
+    }
+
 
   }
 }

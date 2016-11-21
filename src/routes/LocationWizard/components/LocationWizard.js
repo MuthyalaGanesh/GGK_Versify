@@ -25,7 +25,9 @@ var Element    = Scroll.Element;
 var Events     = Scroll.Events;
 var scroll     = Scroll.animateScroll;
 var scrollSpy  = Scroll.scrollSpy;
-
+var scrollToTop = function() {
+    scroll.scrollToTop();
+  };
 export const LocationWizard =(props)=> {
 return (
    <div>
@@ -38,7 +40,7 @@ return (
           </span>
         </Link>
         <h1 style={{'marginLeft': '16px','marginTop':'-20px'}}>Location Wizard<small>OMS Location wizard</small></h1>
-			<Button bsStyle="primary" style={{'float': 'right','marginTop':'-20px'}} onClick={props.saveCompleteLocationWizard}>Save</Button>
+			<Button bsStyle="primary" style={{'float': 'right','marginTop':'-20px'}} onClick={(e)=> {scrollToTop(); props.saveCompleteLocationWizard()}}>Save</Button>
     </section>
     <section id='Location-wizard-tabs' className="content">
         <div className="row">
