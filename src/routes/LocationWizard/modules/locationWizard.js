@@ -40,7 +40,8 @@ export const TOGGLE_LEFTMENU_CLICK = 'TOGGLE_LEFTMENU_CLICK';
 export const LOCATIONS_MENUITEM_DROPDOWN_CLICK = 'LOCATIONS_MENUITEM_DROPDOWN_CLICK';
 export const GET_ALL_LOCATIONS_INFORMATION = "GET_ALL_LOCATIONS_INFORMATION";
 export const DEFAULT_NODE_EXPANDED = "DEFAULT_NODE_EXPANDED";
-export const SHOW_HIDE_ALERT = 'SHOW_HIDE_ALERT';
+export const SHOW_ALERT = 'SHOW_ALERT';
+export const HIDE_ALERT = 'HIDE_ALERT';
 export const SAVE_RESPONSE_HANDLER = 'SAVE_RESPONSE_HANDLER';
 export const SHOW_SPINNER = 'SHOW_SPINNER';
 export const HIDE_SPINNER = 'HIDE_SPINNER';
@@ -73,9 +74,10 @@ export function toggleMenuClick(event) {
 }
 
 export function toggleAlertPopup(event) {
+
   return (dispatch, getState) => {
     dispatch({
-      type: SHOW_HIDE_ALERT,
+      type: HIDE_ALERT,
       payload: {
         locationState: getState().location,
         currentLocationId: 0
@@ -98,15 +100,20 @@ export function toggleSaveResponsePopup(event) {
 }
 
 export function leftMenuDropdownClickEvent(id, event) {
-  console.log("LOCATIONS_MENUITEM_DROPDOWN_CLICK:", id);
   return (dispatch, getState) => {
-    dispatch({
-      type: SHOW_HIDE_ALERT,
+    if(getState().form.BasicInfoForm.hasOwnProperty('anyTouched') ||
+      getState().form.CredentialsManagementForm.hasOwnProperty('anyTouched') ){
+      dispatch({
+      type: SHOW_ALERT,
       payload: {
         locationState: getState().location,
         currentLocationId: id
       }
     })
+    }else{
+      dispatch(LoadAndRefreshForms(id,event))
+    }
+    
   }
 }
 
@@ -143,11 +150,10 @@ function CheckLocationNameIsExists(allLocations, locationName) {
 }
 
 export function LoadAndRefreshForms(id, event) {
-
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       dispatch({
-        type: SHOW_HIDE_ALERT,
+        type: HIDE_ALERT,
         payload: {
           locationState: getState().location,
           currentLocationId: id
@@ -764,7 +770,6 @@ function saveObjectPreparationAndCall(getState, dispatch) {
 }
 
 function test(Id, allLocations) {
-  console.log('check2')
   let array = []
   let i = 0
   for (i in allLocations) {
@@ -895,19 +900,20 @@ export const ACTION_HANDLERS = {
       defaultNodeExpanded: action.payload || 0
     })
   },
-  [SHOW_HIDE_ALERT]: (state, action) => {
-    if (action.payload.locationState.showClickChangePopUp) {
+  [HIDE_ALERT]: (state, action) => {
+
       return Object.assign({}, state, {
         showClickChangePopUp: false,
         currentLocationId: action.payload.currentLocationId || 0
       })
-    } else {
+    } ,
+    [SHOW_ALERT] :(state, action) => {
+
       return Object.assign({}, state, {
         showClickChangePopUp: true,
         currentLocationId: action.payload.currentLocationId || 0
       })
-    }
-  },
+    } ,
   [SAVE_RESPONSE_HANDLER]: (state, action) => {
     //action.response:.message:.isSaved: 
     if (action.payload.openSavePopup) {
@@ -936,7 +942,8 @@ const initialState = {
   showLocationSaveResponsePopup: false,
   responseMessage: '',
   currentLocationId: 0,
-  isLoading: true
+  isLoading: true,
+  isEditable:0
 };
 
 export default function locationWizardReducer(state = initialState, action) {
