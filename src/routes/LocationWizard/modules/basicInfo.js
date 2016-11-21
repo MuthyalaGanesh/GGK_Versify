@@ -22,10 +22,23 @@ export const GET_FUEL_CLASSES = "GET_FUEL_CLASSES"
 export const GET_TIME_ZONE = "GET_TIME_ZONE"
 
 export function BindInitialValues(currentlcoation) {
-  return {
-    type: BIND_BASIC_INITIAL_VALUES,
-    payload: currentlcoation
-  };
+  console.log(currentlcoation,'currentLocation')
+
+
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+
+      dispatch({
+        type: BIND_BASIC_INITIAL_VALUES,
+        payload: currentlcoation
+      })
+         dispatch({
+                type:'redux-form/INITIALIZE',
+                meta:{form:'BasicInfoForm',keepDirty:false},
+                payload:getState().basic.BasicInfo
+                })
+    })
+  }
 };
 
 export function onCredentialDropdownChangeEvent(event) {
@@ -53,7 +66,7 @@ export function onPrimaryMarketChangeEvent(event) {
 
 export const ACTION_HANDLERS = {
   [BIND_BASIC_INITIAL_VALUES]: (state, action) => {   
-    if (!!action.payload) {
+    
       var locationId=action.payload.Id;
       let locationObj =action.payload;
       var basicInfo = {
@@ -75,14 +88,12 @@ export const ACTION_HANDLERS = {
         ownerShipPercentage: locationObj.OwnershipPct,
       }
       var credentialData = PrepareCredentialBasicData(locationObj.PrimaryMarketId, locationId);
-      var newState = Object.assign({}, state, {
+      return  Object.assign({}, state, {
         BasicInfo: basicInfo,
         CredentialBasicData: credentialData.MarketDrivendata,
         CredentialInitialValues: credentialData.CredentialInitialValues
       });
-      return newState;
-    }
-    return Object.assign({}, state, {})
+   
 
   },
   [CREDENTIAL_DROPDOWN_CHANGE_EVENT]: (state, action) => {

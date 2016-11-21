@@ -17,7 +17,7 @@ class TreeView extends React.Component {
     /*this.state = {data: props.data};
      this.someData = _.clone(props.data);
      this.setNodeId({Children: this.state.data});*/
-    console.log('constructor-nodeid-',props.defaultNodeExpanded);
+
 
     this.state = {data: this.setNodeId(_.clone({Children: props.data}),0)};    
 
@@ -33,7 +33,7 @@ class TreeView extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('componentWillReceiveProps-nodeid--',nextProps.defaultNodeExpanded);
+
 
     this.setState({data: this.setNodeId(_.clone({Children: nextProps.data}),_.clone(nextProps.defaultNodeExpanded))});
      
@@ -60,7 +60,6 @@ class TreeView extends React.Component {
   recusrsiveexpansion(node,defaultNodeExpanded) {
   let flag=0
     if(node.Id == defaultNodeExpanded){
-      console.log(defaultNodeExpanded)
       return 1
     }
     else{
