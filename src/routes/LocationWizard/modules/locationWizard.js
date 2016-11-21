@@ -466,7 +466,7 @@ function equipmentObjectPreparation(stateTree, dispatch, locationId) {
       payload: 1
     })
   }
-
+}
 
 function SystemIntegrationObjectPreparation(stateTree, dispatch) {
   var systemIntegrationObj = []
