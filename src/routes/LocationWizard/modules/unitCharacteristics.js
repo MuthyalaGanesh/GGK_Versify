@@ -173,11 +173,11 @@ export const ACTION_HANDLERS = {
               })
               uc.defaultUnitOfMeasureId = att.UnitOfMeasureId
               uc.UOM = att.UnitOfMeasureName
-              uc.LocationAttributeId = att.LocationAttributeId
               var editableAttributes = {
                 EffectiveEndDate: (new Date(parseInt(att.EffectiveEndDate.substring(att.EffectiveEndDate.indexOf("(") + 1, (att.EffectiveEndDate.indexOf(")")))))).toLocaleDateString(),
                 EffectiveStartDate: (new Date(parseInt(att.EffectiveStartDate.substring(att.EffectiveStartDate.indexOf("(") + 1, (att.EffectiveStartDate.indexOf(")")))))).toLocaleDateString(),
-                Value: att.Value
+                Value: att.Value,
+                LocationAttributeId: att.LocationAttributeId
               }
               var valuePresence = 1;
               newState.selectedunitCharacteristics.map(suc => {
@@ -283,7 +283,7 @@ export const ACTION_HANDLERS = {
         }
         else {
           suc.editableAttributes ? suc.editableAttributes.map(ea => {
-            ea.Value = "",
+            ea.Value = null,
               ea.EffectiveEndDate = null,
               ea.EffectiveStartDate = null
           }) : null
@@ -319,7 +319,7 @@ export const ACTION_HANDLERS = {
               Value: (action.payload.values && action.payload.values.ucvalue && action.payload.values.ucvalue[index]) ? action.payload.values.ucvalue[index] : state.editableUnitCharacter.editableAttributes[index].Value,
               EffectiveStartDate: (action.payload.values && action.payload.values.effectiveStartDate && action.payload.values.effectiveStartDate[index]) ? action.payload.values.effectiveStartDate[index] : state.editableUnitCharacter.editableAttributes[index].EffectiveStartDate,
               EffectiveEndDate: (action.payload.values && action.payload.values.effectiveEndDate && action.payload.values.effectiveEndDate[index]) ? action.payload.values.effectiveEndDate[index] : state.editableUnitCharacter.editableAttributes[index].EffectiveEndDate,
-              isVisible: true
+              LocationAttributeId: state.editableUnitCharacter.editableAttributes[index] && state.editableUnitCharacter.editableAttributes[index].LocationAttributeId ? state.editableUnitCharacter.editableAttributes[index].LocationAttributeId : 0
             }
             finalAttributes.push(initialAttribute)
           }
@@ -330,7 +330,7 @@ export const ACTION_HANDLERS = {
                 EffectiveEndDate: ed.effectiveEndDate,
                 EffectiveStartDate: ed.effectiveStartDate ? ed.effectiveStartDate : (action.payload.values.editableData[i - 1] && action.payload.values.editableData[i - 1].effectiveEndDate ? action.payload.values.editableData[i - 1].effectiveEndDate : (uc.editableAttributes[0].EffectiveEndDate)),
                 Value: ed.ucvalue,
-                isVisible: true
+                LocationAttributeId: ed.LocationAttributeId ? ed.LocationAttributeId : 0
               }
               finalAttributes.push(newEditableAttributes);
             })
@@ -427,7 +427,7 @@ export const ACTION_HANDLERS = {
             EffectiveEndDate: action.payload.values && action.payload.values.effectiveEndDate ? action.payload.values.effectiveEndDate[0] : null,
             EffectiveStartDate: action.payload.values && action.payload.values.effectiveStartDate ? action.payload.values.effectiveStartDate[0] : null,
             Value: action.payload.values && action.payload.values.ucvalue ? action.payload.values.ucvalue[0] : null,
-            isVisible: true
+            LocationAttributeId: 0
           });
 
           if (action.payload.values && action.payload.values.editableData) {
@@ -436,7 +436,7 @@ export const ACTION_HANDLERS = {
                 EffectiveEndDate: ed.effectiveEndDate,
                 EffectiveStartDate: ed.effectiveStartDate ? ed.effectiveStartDate : (action.payload.values.editableData[i - 1] && action.payload.values.editableData[i - 1].effectiveEndDate ? action.payload.values.editableData[i - 1].effectiveEndDate : (uc.editableAttributes[0].EffectiveEndDate)),
                 Value: ed.ucvalue,
-                isVisible: true
+                LocationAttributeId: 0
               }
               uc.editableAttributes.push(newEditableAttributes);
             })
@@ -483,23 +483,27 @@ export const ACTION_HANDLERS = {
     if (action.payload != null && action.payload != undefined && !isNaN(action.payload)) {
       var newEditableAttributes = []
       var newEditableUnitCharacter = []
+      var deletableAtributes=[]
       var newState = Object.assign({}, state)
       newState.selectedunitCharacteristics.map((suc) => {
         if (suc.id == state.editableUnitCharacter.id && newEditableUnitCharacter.length == 0) {
           newEditableUnitCharacter.push(suc);
           suc.editableAttributes.map((ea, index) => {
             if (index != action.payload) {
-              ea.isVisible = true;
               newEditableAttributes.push(ea)
             }
             else {
               ea.Value = "";
               ea.EffectiveEndDate = null;
               ea.EffectiveStartDate = null;
-              ea.isVisible = false;
+              if(ea.LocationAttributeId>0){
+                deletableAtributes.push(ea)
+              }
             }
           })
           newEditableUnitCharacter[0].editableAttributes = [];
+          newEditableUnitCharacter[0].deletableAttributes = [];
+          newEditableUnitCharacter[0].deletableAttributes = deletableAtributes;
           newEditableUnitCharacter[0].editableAttributes = newEditableAttributes;
         }
       })

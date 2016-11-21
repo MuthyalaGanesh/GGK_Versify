@@ -114,7 +114,7 @@ export function leftMenuDropdownClickEvent(id, event) {
       })
     } else {
       dispatch(showSpinner())
-      setTimeout(function() {
+      setTimeout(function () {
         dispatch(LoadAndRefreshForms(id, event))
       }, 1)
     }
@@ -241,7 +241,6 @@ export function LoadAndRefreshForms(id, event) {
       //If Location Id > 0, only bind data. otherwise load new forms
       if (id > 0) {
         try {
-
           var allLocationdata = getState().location.allLocations;
           findLocation(allLocationdata, id);
           var locationObj = currentLocation;
@@ -380,7 +379,7 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, primaryMarketTypeId
     }
     itemDatawithMarketDrivenMappings.push(itemData);
   });
-  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function(b) {
+  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function (b) {
     return b.ExternalSystemName
   })
   var staticPjmemktToAdd = {
@@ -490,7 +489,7 @@ function SystemIntegrationObjectPreparation(stateTree, dispatch) {
 
 function unitCharacterSticObjectPreparation(stateTree, dispatch) {
   var unitCharacteristicsObj = [];
-  stateTree.unitCharacteristics && stateTree.unitCharacteristics.selectedunitCharacteristics ?
+  if (stateTree.unitCharacteristics && stateTree.unitCharacteristics.selectedunitCharacteristics) {
     stateTree.unitCharacteristics.selectedunitCharacteristics.map(suc => {
       suc.editableAttributes.map(ea => {
         if (suc.isSavable) {
@@ -499,21 +498,86 @@ function unitCharacterSticObjectPreparation(stateTree, dispatch) {
             AttributeId: suc.id != 0 ? suc.id : 0,
             AttributeName: suc.name,
             AttributeDescription: suc.description,
-            LocationAttributeId: suc.LocationAttributeId != 0 ? suc.LocationAttributeId : 0,
+            LocationAttributeId: ea.LocationAttributeId != 0 ? ea.LocationAttributeId : 0,
             UnitOfMeasureId: suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
             UnitOfMeasureName: suc.UOM,
-            Value: ea.Value,
+            Value: ea.Value ? ea.Value : "",
             EffectiveStartDate: !!ea.EffectiveStartDate ? '/Date(' + (new Date(ea.EffectiveStartDate)).getTime() + ')/' : null,
             EffectiveEndDate: !!ea.EffectiveEndDate ? '/Date(' + (new Date(ea.EffectiveEndDate)).getTime() + ')/' : null,
             DisplayName: suc.display
           }))
         }
       })
-     
-    }) : dispatch({
+      if (suc.deletableAttributes) {
+
+        suc.deletableAttributes.map(ea => {
+          if (suc.isSavable) {
+            unitCharacteristicsObj.push(new Object({
+              LocationId: suc.LocationId != 0 ? suc.LocationId : 0,
+              AttributeId: suc.id != 0 ? suc.id : 0,
+              AttributeName: suc.name,
+              AttributeDescription: suc.description,
+              LocationAttributeId: ea.LocationAttributeId != 0 ? ea.LocationAttributeId : 0,
+              UnitOfMeasureId: suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
+              UnitOfMeasureName: suc.UOM,
+              Value: ea.Value ? ea.Value : "",
+              EffectiveStartDate: !!ea.EffectiveStartDate ? '/Date(' + (new Date(ea.EffectiveStartDate)).getTime() + ')/' : null,
+              EffectiveEndDate: !!ea.EffectiveEndDate ? '/Date(' + (new Date(ea.EffectiveEndDate)).getTime() + ')/' : null,
+              DisplayName: suc.display
+            }))
+          }
+        })
+      }
+    })
+  } else {
+
+    dispatch({
       type: 'ERROR',
       payload: 1
     })
+  }
+  if (stateTree.unitCharacteristics.deletedUnitCharacteristics) {
+
+    stateTree.unitCharacteristics.deletedUnitCharacteristics.map(suc => {
+      suc.editableAttributes.map(ea => {
+        if (suc.isSavable) {
+          unitCharacteristicsObj.push(new Object({
+            LocationId: suc.LocationId != 0 ? suc.LocationId : 0,
+            AttributeId: suc.id != 0 ? suc.id : 0,
+            AttributeName: suc.name,
+            AttributeDescription: suc.description,
+            LocationAttributeId: ea.LocationAttributeId != 0 ? ea.LocationAttributeId : 0,
+            UnitOfMeasureId: suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
+            UnitOfMeasureName: suc.UOM,
+            Value: ea.Value ? ea.Value : "",
+            EffectiveStartDate: !!ea.EffectiveStartDate ? '/Date(' + (new Date(ea.EffectiveStartDate)).getTime() + ')/' : null,
+            EffectiveEndDate: !!ea.EffectiveEndDate ? '/Date(' + (new Date(ea.EffectiveEndDate)).getTime() + ')/' : null,
+            DisplayName: suc.display
+          }))
+        }
+      })
+      if (suc.deletableAttributes) {
+
+        suc.deletableAttributes.map(ea => {
+          if (suc.isSavable) {
+            unitCharacteristicsObj.push(new Object({
+              LocationId: suc.LocationId != 0 ? suc.LocationId : 0,
+              AttributeId: suc.id != 0 ? suc.id : 0,
+              AttributeName: suc.name,
+              AttributeDescription: suc.description,
+              LocationAttributeId: ea.LocationAttributeId != 0 ? ea.LocationAttributeId : 0,
+              UnitOfMeasureId: suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
+              UnitOfMeasureName: suc.UOM,
+              Value: ea.Value ? ea.Value : "",
+              EffectiveStartDate: !!ea.EffectiveStartDate ? '/Date(' + (new Date(ea.EffectiveStartDate)).getTime() + ')/' : null,
+              EffectiveEndDate: !!ea.EffectiveEndDate ? '/Date(' + (new Date(ea.EffectiveEndDate)).getTime() + ')/' : null,
+              DisplayName: suc.display
+            }))
+          }
+        })
+      }
+    })
+  }
   console.log(unitCharacteristicsObj, "UnitCharacteristics")
   return unitCharacteristicsObj;
 }
@@ -633,18 +697,18 @@ export function saveCompleteLocationWizard() {
           type: 'ERROR',
           payload: 1
         }) && console.log('check here') : (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null && getState().form.BasicInfoForm.values.technologyType != null && getState().form.BasicInfoForm.values.fuelClass != null && getState().form.BasicInfoForm.values.physicalTimezone != null && getState().form.BasicInfoForm.values.owner != null) ? (credentialdatavalidation(getState())) ? //Save
-        saveObjectPreparationAndCall(getState, dispatch) : dispatch({
-          type: 'ERROR',
-          payload: 1
-        }) && console.log('error') : dispatch({
+          saveObjectPreparationAndCall(getState, dispatch) : dispatch({
+            type: 'ERROR',
+            payload: 1
+          }) && console.log('error') : dispatch({
+            type: 'ERROR',
+            payload: 1
+          })
+
+        : dispatch({
           type: 'ERROR',
           payload: 1
         })
-
-      : dispatch({
-        type: 'ERROR',
-        payload: 1
-      })
       console.log(Object.keys(getState().form.BasicInfoForm.values).length, 'stateobjectmo')
 
     })
@@ -709,16 +773,16 @@ function saveObjectPreparationAndCall(getState, dispatch) {
     var finalData = JSON.stringify(finalSaveObject)
     console.log("finalSaveObject", finalData)
     dispatch({
-        type: SHOW_SPINNER,
-        payload: true
-      })
-      //SAVE LOCATION
+      type: SHOW_SPINNER,
+      payload: true
+    })
+    //SAVE LOCATION
     try {
       axios({
         method: 'post',
         url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
         data: finalSaveObject
-      }).then(function(response) {
+      }).then(function (response) {
         console.log("success", response);
         if (response.status === 200) {
           //ADD Location ID to Object
@@ -746,7 +810,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
               method: 'post',
               url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
               data: saveObjectwithEquipment
-            }).then(function(response) {
+            }).then(function (response) {
               if (response.status === 200) {
                 console.log("equipment saved", response);
               }
@@ -762,12 +826,12 @@ function saveObjectPreparationAndCall(getState, dispatch) {
               openSavePopup: true
             }
           });
-          basicInfoDropdowns.getParentLocations().then(function(response) {
+          basicInfoDropdowns.getParentLocations().then(function (response) {
             dispatch({
               type: GET_ALL_LOCATIONS_INFORMATION,
               payload: response.data.GetAllLocationsResult
             });
-          }).then(function() {
+          }).then(function () {
             //Expnd ADD Node in left menu
             console.log('new locationID', newLocationID)
             dispatch({
@@ -793,7 +857,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
             payload: false
           })
         }
-      }).catch(function(error) {
+      }).catch(function (error) {
         dispatch({
           type: HIDE_SPINNER,
           payload: false
@@ -839,7 +903,7 @@ function toArray(obj) {
 
 function changeObjectTypeOfLocations(allLocations) {
   var changedLocationsObject = [];
-  allLocations.forEach(function(item) {
+  allLocations.forEach(function (item) {
     changedLocationsObject.push({
       key: item.Id,
       value: item.Id,
@@ -868,13 +932,13 @@ function AddDefaultParent(objectfuncntion) {
 export function getLocationsInformation() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      basicInfoDropdowns.getParentLocations().then(function(response) {
+      basicInfoDropdowns.getParentLocations().then(function (response) {
         dispatch({
           type: GET_ALL_LOCATIONS_INFORMATION,
           payload: response.data.GetAllLocationsResult
         });
       })
-    }).then(function() {
+    }).then(function () {
       dispatch({
         type: HIDE_SPINNER,
         payload: false

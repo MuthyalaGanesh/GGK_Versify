@@ -61,7 +61,6 @@ export const ACTION_HANDLERS = {
     var parentLocationId = action.payload ? action.payload[0] ? action.payload[0].ParentLocationId : 0 : 0
     if (action.payload) {
       var equipments = []
-      debugger
       action.payload.map(ap => {
         if (ap.Name) {
           equipments.push(ap)

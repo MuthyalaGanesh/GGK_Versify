@@ -25,7 +25,7 @@ const EffectiveDateValues = (props) => (
             </thead>
             <tbody>
                 {props.defaultValues ? props.defaultValues.map((dv, i) =>
-                    (props.defaultValues[i].isVisible || i == 0 ? <tr>
+                    <tr>
                         <td><Field
                             name={`ucvalue[${i}]`}
                             component={InputField}
@@ -70,7 +70,7 @@ const EffectiveDateValues = (props) => (
                             className="fa fa-trash-o fa-2x"
                             onClick={() => props.removeEditableAttribute(i) }></i>}
                         </td>
-                    </tr> : null)
+                    </tr>
                 ) : <tr>
                         <td><Field
                             name="ucvalue[0]"
