@@ -839,6 +839,8 @@ export const ACTION_HANDLERS = {
       disableRoles: true,
       disableContacts: true,
       saveRoles: [],
+      fetchedRoles: [],
+      fetchedContacts: [],
     })
   },
   [ROLE_BY_ROLE]: (state, action) => {
