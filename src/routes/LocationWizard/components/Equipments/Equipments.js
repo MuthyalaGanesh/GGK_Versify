@@ -53,7 +53,7 @@ export const Equipments = (props) => {
                                                             <td className="col-md-1 col-sm-3">
                                                                 <div className="text-center">
                                                                     <i className="fa fa-edit fa-2x" onClick={() => { props.EditEquipment(index) } }></i>
-                                                                    <i className="fa fa-trash-o fa-2x" onClick={() => { props.DeleteEquipment(index) } }></i>
+                                                                    {/*<i className="fa fa-trash-o fa-2x" onClick={() => { props.DeleteEquipment(index) } }></i>*/}
                                                                 </div>
                                                             </td>
                                                         </tr>)

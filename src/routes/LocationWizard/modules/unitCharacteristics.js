@@ -166,7 +166,9 @@ export const ACTION_HANDLERS = {
               newState.defaultUnitCharacteristics.map(duc => {
                 if (duc.id == att.AttributeId) {
                   uc.isDeletable = false;
-                  selectedDefault.push(duc.id)
+                  if (!selectedDefault.includes(duc.id)) {
+                    selectedDefault.push(duc.id)
+                  }
                 }
               })
               uc.defaultUnitOfMeasureId = att.UnitOfMeasureId
@@ -196,13 +198,7 @@ export const ACTION_HANDLERS = {
         })
         if (selectedDefault.length > 0) {
           newState.defaultUnitCharacteristics.map(duc => {
-            var valuePresence = 1
-            selectedDefault.map(def => {
-              if (def.id == duc.id) {
-                valuePresence++;
-              }
-            })
-            if (valuePresence == 1) {
+            if (!selectedDefault.includes(duc.id)) {
               newState.selectedunitCharacteristics.push(duc);
             }
           })
@@ -468,7 +464,7 @@ export const ACTION_HANDLERS = {
       var newEditableUnitCharacter = []
       var newState = Object.assign({}, state)
       newState.selectedunitCharacteristics.map((suc) => {
-        if (suc.id == state.editableUnitCharacter.id) {
+        if (suc.id == state.editableUnitCharacter.id && newEditableUnitCharacter.length == 0) {
           newEditableUnitCharacter.push(suc);
           suc.editableAttributes.map((ea, index) => {
             if (index != action.payload) {
