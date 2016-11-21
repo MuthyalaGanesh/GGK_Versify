@@ -677,20 +677,20 @@ function saveObjectPreparationAndCall(getState, dispatch) {
       console.log("success", response);
       if (response.status === 200) {
         //ADD Location ID to Object
-        var locationID = response.data.SaveOMSLocationWizardDataResult.Location.Id;
-        getState().form.BasicInfoForm.values.locationId = locationID;
+        var newLocationID = response.data.SaveOMSLocationWizardDataResult.Location.Id;
+        getState().form.BasicInfoForm.values.locationId = newLocationID;
 
         //Save equipment
         if (locationId == 'undefined' || locationId == 0) {
-          basicInfoObj.Id = locationID
-          basicInfoObj.LocationId = locationID;
+          basicInfoObj.Id = newLocationID
+          basicInfoObj.LocationId = newLocationID;
           _.each(equipmentsObj, (equipment) => {
-            equipment.ParentLocationId = locationID;
+            equipment.ParentLocationId = newLocationID;
           });
           var saveObjectwithEquipment = {
             "saveData": {
               Location: basicInfoObj,
-              Equipments: locationID > 0 ? equipmentsObj : []
+              Equipments: newLocationID > 0 ? equipmentsObj : []
             }
           }
           console.log("saveObjectwithEquipment", JSON.stringify(saveObjectwithEquipment));
@@ -721,9 +721,10 @@ function saveObjectPreparationAndCall(getState, dispatch) {
           });
         }).then(function() {
           //Expnd ADD Node in left menu
+          console.log('new locationID',newLocationID)
           dispatch({
             type: DEFAULT_NODE_EXPANDED,
-            payload: locationID
+            payload: newLocationID
           })
         })
         dispatch({

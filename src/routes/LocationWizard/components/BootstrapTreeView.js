@@ -35,7 +35,9 @@ class TreeView extends React.Component {
   componentWillReceiveProps(nextProps) {
     console.log('componentWillReceiveProps-nodeid--',nextProps.defaultNodeExpanded);
 
-    this.setState({data: this.setNodeId(_.clone({Children: nextProps.data})),defaultNodeExpanded:nextProps.defaultNodeExpanded });
+    this.setState({data: this.setNodeId(_.clone({Children: nextProps.data}))});
+     this.setState({defaultNodeExpanded:nextProps.defaultNodeExpanded });
+    console.log('componentWillReceiveProps-after setstate',this.state.defaultNodeExpanded)
   }
 
   setNodeId(node) {
@@ -58,6 +60,7 @@ class TreeView extends React.Component {
 
   recusrsiveexpansion(node) {
   let flag=0
+  console.log("recusrsiveexpansion-",this.state.defaultNodeExpanded)
     if(node.Id == this.state.defaultNodeExpanded){
       return 1
     }
@@ -152,7 +155,7 @@ class TreeView extends React.Component {
      this.checkParentEmpty(node);*/
 
     this.setChildrenState(node.Children, selected);
-    this.setState({data: this.state.data, defaultNodeExpanded:nodeId });
+    this.setState({data: this.state.data });
 
     if (this.props.onClick)
       this.props.onClick(this.state.data, node);
@@ -205,7 +208,7 @@ class TreeView extends React.Component {
     let newData = this.deleteById(_.clone(this.state.data), nodeId);
     if(newData.length === 0)
       return false;
-    this.setState({data: newData, defaultNodeExpanded:nodeId });
+    this.setState({data: newData });
     if (this.props.onNodeRemoved)
       this.props.onNodeRemoved(newData);
   }
