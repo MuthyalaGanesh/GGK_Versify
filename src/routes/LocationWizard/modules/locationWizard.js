@@ -251,7 +251,6 @@ export function LoadAndRefreshForms(id, event) {
           var locationObj = currentLocation;
           currentLocation = null;
 
-          dispatch(BindInitialValues(locationObj));
           let editObject = getOMSLocationwizardData(id);
           let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
           let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
@@ -260,6 +259,8 @@ export function LoadAndRefreshForms(id, event) {
             locationsInfo: locationsInfo,
             marketDrivenMappings: marketDrivenMappings
           })
+          dispatch(BindInitialValues(locationObj,editObject,marketDrivenMappings));
+
           dispatch(editSystemIntegration(editSysIntegration));
 
           dispatch(BindInitialEquipments(editObject.GetOMSLocationWizardDataResult.Equipment));
@@ -359,12 +360,9 @@ function basicInforObjectPreparation(values) {
 }
 
 
-function prepareCredentialsAndIdentifiersObj(credentialsObj, primaryMarketTypeId, locationId) {
+function prepareCredentialsAndIdentifiersObj(credentialsObj, marketDrivenMappings, omsLocationwizardData,locationId) {
 
-  var credentialsAndIdentifiersObj = [];
-  //get MarketDrivenMappings from API based on marketType ID
-  var marketDrivenMappings = getMarketDrivenMappings(primaryMarketTypeId);
-  var omsLocationwizardData = getOMSLocationwizardData(locationId > 0 ? locationId : null);
+  var credentialsAndIdentifiersObj = []; 
   var locationMappingData = [];
   var itemDatawithMarketDrivenMappings = [];
   _.each(marketDrivenMappings, (item) => {
@@ -384,7 +382,7 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, primaryMarketTypeId
     }
     itemDatawithMarketDrivenMappings.push(itemData);
   });
-  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function (b) {
+  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function(b) {
     return b.ExternalSystemName
   })
   var staticPjmemktToAdd = {
@@ -748,10 +746,17 @@ function saveObjectPreparationAndCall(getState, dispatch) {
     var locationId = values.locationId || 0;
     var primaryMarketTypeId = values.primaryMarket.id || values.primaryMarket;
     var basicInfoObj = basicInforObjectPreparation(values)
+
+    var marketDrivenMappings = getMarketDrivenMappings(primaryMarketTypeId);
+    var omsLocationwizardData = getOMSLocationwizardData(locationId > 0 ? locationId : null);
+
+    //get MarketDrivenMappings from API based on marketType ID
     var credentialsAndIdentifier = prepareCredentialsAndIdentifiersObj(
       getState().form.CredentialsManagementForm ? getState().form.CredentialsManagementForm.values : {},
-      primaryMarketTypeId,
+      marketDrivenMappings,
+      omsLocationwizardData,
       locationId)
+
     var equipmentsObj = equipmentObjectPreparation(getState(), dispatch, locationId)
     var systemIntegrationObj = SystemIntegrationObjectPreparation(getState(), dispatch)
     var unitCharacteristicsObj = unitCharacterSticObjectPreparation(getState(), dispatch)

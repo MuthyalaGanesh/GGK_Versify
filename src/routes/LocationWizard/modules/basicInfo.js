@@ -21,8 +21,7 @@ export const GET_TECHNOLOGY_TYPES = "GET_TECHNOLOGY_TYPES"
 export const GET_FUEL_CLASSES = "GET_FUEL_CLASSES"
 export const GET_TIME_ZONE = "GET_TIME_ZONE"
 
-export function BindInitialValues(currentlcoation) {
-  console.log(currentlcoation,'currentLocation')
+export function BindInitialValues(currentLocation,omsLocationwizardData,marketDrivendata) {
 
 
   return (dispatch, getState) => {
@@ -30,7 +29,10 @@ export function BindInitialValues(currentlcoation) {
 
       dispatch({
         type: BIND_BASIC_INITIAL_VALUES,
-        payload: currentlcoation
+        payload: {
+          currentLocation:currentLocation,
+          omsLocationwizardData:omsLocationwizardData,
+          marketDrivendata:marketDrivendata}
       })
          dispatch({
                 type:'redux-form/INITIALIZE',
@@ -67,8 +69,10 @@ export function onPrimaryMarketChangeEvent(event) {
 export const ACTION_HANDLERS = {
   [BIND_BASIC_INITIAL_VALUES]: (state, action) => {   
     
-      var locationId=action.payload.Id;
-      let locationObj =action.payload;
+      var locationId=action.payload.currentLocation.Id;
+      let locationObj =action.payload.currentLocation;
+      let omsLocationwizardData = action.payload.omsLocationwizardData;
+      let marketDrivendata = action.payload.marketDrivendata;
       var basicInfo = {
         locationId: locationId,
         locationName: locationObj.Name,
@@ -87,7 +91,7 @@ export const ACTION_HANDLERS = {
         physicalTimezone: locationObj.PhysicalTz,
         ownerShipPercentage: locationObj.OwnershipPct,
       }
-      var credentialData = PrepareCredentialBasicData(locationObj.PrimaryMarketId, locationId);
+      var credentialData = PrepareCredentialBasicData(marketDrivendata, omsLocationwizardData);
       return  Object.assign({}, state, {
         BasicInfo: basicInfo,
         CredentialBasicData: credentialData.MarketDrivendata,
@@ -111,7 +115,9 @@ export const ACTION_HANDLERS = {
     })
   },
   [PRIMARY_MARKET_CHANGE_EVENT]: (state, action) => {
-    var data = PrepareCredentialBasicData(!!action.payload ? action.payload.id : null)
+    var data = getMarketDrivenMappings(!!action.payload ? action.payload.id : null);
+    var omsLocationwizardData = getOMSLocationwizardData();
+    var data = PrepareCredentialBasicData(data,omsLocationwizardData)
     return Object.assign({}, state, {
       CredentialBasicData: data.MarketDrivendata
     })
@@ -153,10 +159,8 @@ export const ACTION_HANDLERS = {
   }
 }
 
-function PrepareCredentialBasicData(marketId, locationId = null) {
-
-  var data = getMarketDrivenMappings(marketId);
-  var omsLocationwizardData = getOMSLocationwizardData(locationId);
+function PrepareCredentialBasicData(data, omsLocationwizardData) {
+  
   var marketDrivendata = [];
   var credentialInitialValues = {};
   _.each(data, (item) => {
