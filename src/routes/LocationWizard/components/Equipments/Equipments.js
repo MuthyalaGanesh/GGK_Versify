@@ -74,8 +74,7 @@ export const Equipments = (props) => {
                                     type="text"
                                     className="form-control"
                                     name="editedEquipment"
-                                    defaultvalue={props.equipments.editableEquipment.Name}
-                                    touched = {touched.hasOwnProperty('EquipmentsForm') ? touched.EquipmentsForm.hasOwnProperty('values') ? touched.EquipmentsForm.values.hasOwnProperty('editedEquipment') : false : false }></Field>
+                                    touched = {1}></Field>
                             </Modal.Body>
                             <Modal.Footer>
                                 <button className="btn btn-warning" type="button" onClick={props.EditEquipment}>Cancel</button>

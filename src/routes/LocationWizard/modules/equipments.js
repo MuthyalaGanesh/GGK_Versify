@@ -33,9 +33,11 @@ export function EditEquipment(index) {
         payload: index
       })
       dispatch({
-        type: 'redux-form/DESTROY',
-        meta: { form: "EquipmentsForm" },
-        payload: ""
+        type: 'redux-form/INITIALIZE',
+        meta: { form: "EquipmentsForm", },
+        payload: {
+          editedEquipment:getState().equipments&&getState().equipments.editableEquipment?getState().equipments.editableEquipment.Name:null
+        }
       })
     })
   }
