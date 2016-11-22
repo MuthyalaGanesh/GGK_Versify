@@ -797,7 +797,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
         Roles: rolesObj,
         Gateways: gatewayObj,
         ScadaPoints: dataHistorianObj,
-        Equipments: equipmentsObj
+        Equipments: locationId > 0 ? equipmentsObj:[]
       }
     }
 
