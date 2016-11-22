@@ -129,7 +129,7 @@ export const ACTION_HANDLERS = {
     },
 
     [ADD_SYSTEM_INTEGRATION]: (state, action) => {
-        if (action.payload) {
+        if (action.payload && action.payload.replace(/\s/g, '').length) {
             var stateObject = {};
             var newSelectedSysIntegrations = [];
             var newUnSelectedSysIntegrations = [];

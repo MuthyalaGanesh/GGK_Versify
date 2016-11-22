@@ -36,7 +36,7 @@ export function EditEquipment(index) {
         type: 'redux-form/INITIALIZE',
         meta: { form: "EquipmentsForm", },
         payload: {
-          editedEquipment:getState().equipments&&getState().equipments.editableEquipment?getState().equipments.editableEquipment.Name:null
+          editedEquipment: getState().equipments && getState().equipments.editableEquipment ? getState().equipments.editableEquipment.Name:null
         }
       })
     })
