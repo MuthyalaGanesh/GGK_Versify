@@ -20,7 +20,7 @@ return (
                     ?  <div className="row">
                         {props.basic.CredentialBasicData.map((fieldElement, i) =>
                         <div className="col-sm-12 col-md-6 form-group">
-                            <label className="control-label" id={fieldElement.DisplayName}> {fieldElement.DisplayName} </label>
+                            <label className="control-label" id={fieldElement.DisplayName}> {fieldElement.DisplayName}* </label>
                             {!fieldElement.IsDropDown
                             ?
                             <Field name={fieldElement.DisplayName}

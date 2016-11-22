@@ -40,7 +40,7 @@ return (
                 </Field>
                 <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
                   <label className="control-label">
-                    Name
+                    Name*
                   </label>
                   <Field name="locationName"
                   component="input"
@@ -60,7 +60,7 @@ return (
                   </label>
                 </FormGroup>
                 <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
-                  <label className="control-label"> Parent Location </label>
+                  <label className="control-label"> Parent Location* </label>
                   <Field name="parentLocation"
                   component={ParentLocationField}
                   parentLocations={props.location.parentLocations}>
@@ -68,7 +68,7 @@ return (
                 </div>
                 <div className='clear'></div>
                 <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
-                  <label className="control-label"> Type </label>
+                  <label className="control-label"> Type* </label>
                   <Field component={DropdownListField}
                   name="locationType"
                   data={locationTypes}
@@ -81,7 +81,7 @@ return (
                   </Field>
                 </div>
                 <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
-                  <label className="control-label"> Technology Type </label>
+                  <label className="control-label"> Technology Type* </label>
                   <Field component={DropdownListField}
                   name="technologyType"
                   className={error && (formdata.BasicInfoForm.hasOwnProperty('values') ? formdata.BasicInfoForm.values.hasOwnProperty('technologyType')?  (formdata.BasicInfoForm.values.technologyType == null ): true : true)
@@ -112,7 +112,7 @@ return (
                 </div>
                 <div className='clear'></div>                
                 <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
-                  <label className="control-label"> Primary Market </label>
+                  <label className="control-label"> Primary Market* </label>
                   <Field component={DropdownListField} onChangeEvent={props.onPrimaryMarketChangeEvent}
                   name="primaryMarket"
                   className={error && (formdata.BasicInfoForm.hasOwnProperty('values') ? formdata.BasicInfoForm.values.hasOwnProperty('primaryMarket')?  (formdata.BasicInfoForm.values.primaryMarket == null ): true : true)
@@ -124,7 +124,7 @@ return (
                   placeholder="Select primaryMarket type" />
                 </div>
                 <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
-                  <label className="control-label"> Fuel ClassName </label>
+                  <label className="control-label"> Fuel ClassName* </label>
                   <Field component={DropdownListField}
                   name="fuelClass"
                   className={error &&(formdata.BasicInfoForm.hasOwnProperty('values') ?  formdata.BasicInfoForm.values.hasOwnProperty('fuelClass')?  (formdata.BasicInfoForm.values.fuelClass == null ): true : true)
@@ -137,7 +137,7 @@ return (
                   </Field>
                 </div>
                 <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
-                  <label className="control-label"> Owner </label>
+                  <label className="control-label"> Owner* </label>
                   <Field component={DropdownListField}
                   name="owner"
                   className={error && (formdata.BasicInfoForm.hasOwnProperty('values') ? formdata.BasicInfoForm.values.hasOwnProperty('owner')?  (formdata.BasicInfoForm.values.owner == null ): true : true)
@@ -151,7 +151,7 @@ return (
                 </div>
                 <div className='clear'></div>                
                 <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
-                  <label className="control-label"> OwnerShip % { error && formdata.BasicInfoForm.hasOwnProperty('values') && 
+                  <label className="control-label"> OwnerShip %* { error && formdata.BasicInfoForm.hasOwnProperty('values') && 
                   formdata.BasicInfoForm.values.hasOwnProperty('ownerShipPercentage')&& (parseFloat(formdata.BasicInfoForm.values.ownerShipPercentage )> 100  || parseFloat(formdata.BasicInfoForm.values.ownerShipPercentage) < 0 )?   <span className='errorMessage' style={{float:'right'}}> Please give valid input </span>
                   : null
                   } </label>
@@ -166,7 +166,7 @@ return (
                 </div>
                  
                 <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
-                  <label className="control-label"> Timezone</label>
+                  <label className="control-label"> Timezone*</label>
                   <Field component={DropdownListField}
                   name="timezone"
                   className={error && (formdata.BasicInfoForm.hasOwnProperty('values') ? formdata.BasicInfoForm.values.hasOwnProperty('timezone')?  (formdata.BasicInfoForm.values.timezone == null ): true : true)
@@ -179,7 +179,7 @@ return (
                   </Field>
                 </div>
                 <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
-                  <label className="control-label"> Physical Timezone </label>
+                  <label className="control-label"> Physical Timezone* </label>
                   <Field component={DropdownListField}
                   name="physicalTimezone"
                   className={error && (formdata.BasicInfoForm.hasOwnProperty('values') ? formdata.BasicInfoForm.values.hasOwnProperty('physicalTimezone')?  (formdata.BasicInfoForm.values.physicalTimezone == null ): true : true)
