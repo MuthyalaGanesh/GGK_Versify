@@ -35,6 +35,9 @@ import {
 } from "./equipments"
 
 import axios from 'axios'
+var Scroll  = require('react-scroll');
+var scroll     = Scroll.animateScroll;
+var scrollSpy  = Scroll.scrollSpy;
 
 export const TOGGLE_LEFTMENU_CLICK = 'TOGGLE_LEFTMENU_CLICK';
 export const LOCATIONS_MENUITEM_DROPDOWN_CLICK = 'LOCATIONS_MENUITEM_DROPDOWN_CLICK';
@@ -103,6 +106,7 @@ export function toggleSaveResponsePopup(event) {
 
 export function leftMenuDropdownClickEvent(id, event) {
   return (dispatch, getState) => {
+    scroll.scrollToTop();
     if (getState().form.BasicInfoForm.hasOwnProperty('anyTouched') ||
       getState().form.CredentialsManagementForm.hasOwnProperty('anyTouched')) {
       dispatch({
