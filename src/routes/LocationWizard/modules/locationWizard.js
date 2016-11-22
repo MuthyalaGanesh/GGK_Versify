@@ -822,7 +822,43 @@ function saveObjectPreparationAndCall(getState, dispatch) {
         if (response.status === 200) {
           //ADD Location ID to Object
           var newLocationID = response.data.SaveOMSLocationWizardDataResult.Location.Id;
+          var locationObj =response.data.SaveOMSLocationWizardDataResult.Location
           getState().form.BasicInfoForm.values.locationId = newLocationID;
+          getOMSLocationwizardData(newLocationID).then(function (response) {
+            let editObject = response.data;
+            let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
+            let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
+            getMarketDrivenMappings(locationObj.PrimaryMarketId).then(function (response) {
+              var marketDrivenMappings = response.data
+              var editSysIntegration = new Object({
+                locationsInfo: locationsInfo,
+                marketDrivenMappings: marketDrivenMappings
+              })
+              dispatch(BindInitialValues(locationObj, editObject, marketDrivenMappings));
+              dispatch(editSystemIntegration(editSysIntegration));
+              dispatch({
+                type: 'redux-form/INITIALIZE',
+                meta: {
+                  form: 'BasicInfoForm',
+                  keepDirty: false
+                },
+                payload: getState().basic.BasicInfo
+              })
+              dispatch({
+                type: 'redux-form/INITIALIZE',
+                meta: {
+                  form: 'CredentialsManagementForm',
+                  keepDirty: false
+                },
+                payload: getState().basic.CredentialInitialValues
+              })
+              dispatch({
+                type: HIDE_SPINNER,
+                payload: false
+              })
+            });
+            dispatch(BindInitialEquipments(editObject.GetOMSLocationWizardDataResult.Equipment));           
+          });
           dispatch(bindGatewayLocationData(response.data.SaveOMSLocationWizardDataResult.Gateways));
           dispatch(bindLocationData(response.data.SaveOMSLocationWizardDataResult.AssignedScadaPoints, newLocationID));
           dispatch(bindWorkLocationData(response.data.SaveOMSLocationWizardDataResult.AssignedWorkflowGroups));
@@ -848,6 +884,8 @@ function saveObjectPreparationAndCall(getState, dispatch) {
             }).then(function (response) {
               if (response.status === 200) {
                 console.log("equipment saved", response);
+                 var equipments =response.data.SaveOMSLocationWizardDataResult.Equipment;
+                dispatch(BindInitialEquipments(equipments)); 
               }
             })
           }
