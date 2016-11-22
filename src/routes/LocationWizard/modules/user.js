@@ -28,6 +28,7 @@ export const ROLE_BY_ROLE = 'ROLE_BY_ROLE'
 export const ROLE_BY_CONTACT = 'ROLE_BY_CONTACT'
 export const GET_USER_INFO_SERVICE = 'GET_USER_INFO_SERVICE'
 export const SHOW_NEWCONTACT_ERRORS = 'SHOW_NEWCONTACT_ERRORS'
+export const USERS_NEW_LOCATION = "USERS_NEW_LOCATION"
 
 export function bindUserLocationData(assignedcontacts, locationId) {
   return (dispatch, getState) => {

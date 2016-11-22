@@ -43,7 +43,6 @@ export function bindLocationData(assignedScada, locationId) {
 
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-
       let defaultHistorians = getState().dataHistorian.defaultMetrics;
       let locationData = {}
       locationData.finalData = [],
@@ -300,12 +299,16 @@ export function getDataHistorianService() {
               data.push(scada);
             }
           })
+          let defaultMetric = []
+          data.map((metric)=>{
+            defaultMetric.push(metric)
+          })
           dispatch({
             type: GET_DATA_HISTORIAN_SERVICE,
             payload: {
               'dataHistorian': data,
               'allmetrics': allMetrics,
-              'defaultMetrics': data
+              'defaultMetrics': defaultMetric,
             }
           })
         });
@@ -555,14 +558,15 @@ export const ACTION_HANDLERS = {
     return Object.assign({}, state, {
       dataHistorian: action.payload.dataHistorian,
       allmetrics: action.payload.allmetrics,
-      defaultMetrics: action.payload.defaultMetrics
+      defaultMetrics: action.payload.defaultMetrics,
+      saveScada : []
     })
   },
   [GET_GATEWAY_SERVICE_FOR_DATA_HISTORIAN]: (state, action) => {
      return Object.assign({}, state, {
         gateways:action.payload
     })
-  }
+  },
 }
 
 const initialState = {

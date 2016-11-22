@@ -450,7 +450,8 @@ export const ACTION_HANDLERS = {
   },
   [GET_GATEWAY_SERVICE]: (state, action) => {
     return Object.assign({}, state, {
-      gateway:action.payload
+      gateway:action.payload,
+      saveGateway: []
     })
   }
 }

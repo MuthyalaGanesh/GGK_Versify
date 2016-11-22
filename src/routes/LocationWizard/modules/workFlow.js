@@ -14,6 +14,7 @@ export const REMOVE_ALL = 'REMOVE_ALL'
 export const WORKFLOW_CHANGE = 'WORKFLOW_CHANGE'
 export const BIND_LOCATION_WORKFOW = 'BIND_LOCATION_WORKFOW'
 export const GET_WORKFLOW_SERVICE = "GET_WORKFLOW_SERVICE"
+export const WORK_FLOW_NEW_LOCATION ="WORK_FLOW_NEW_LOCATION"
 
 export function bindWorkLocationData(assignedWorkflows) {
 
@@ -169,6 +170,12 @@ export const ACTION_HANDLERS = {
     return Object.assign({}, state, {
       workFlowItems: action.payload,
       staticServiceWorkflows: action.payload
+    })
+  },
+  [WORK_FLOW_NEW_LOCATION]: (state, action) => {
+     return Object.assign({}, state, {
+      workFlowItems: state.staticServiceWorkflows,
+      defaultWorkFlow: []
     })
   }
 }

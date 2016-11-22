@@ -16,10 +16,12 @@ import {
   BindValuesForNewLocation
 } from './unitCharacteristics';
 import {
-  bindLocationData
+  bindLocationData,
+  getDataHistorianService
 } from './dataHistorian'
 import {
-  bindGatewayLocationData
+  bindGatewayLocationData,
+  getGatewaysService
 } from './gateways'
 import {
   bindWorkLocationData
@@ -308,13 +310,25 @@ export function LoadAndRefreshForms(id, event) {
       } else {
         dispatch(getDefaultCredentialBasicData())
         dispatch({
+          type: "WORK_FLOW_NEW_LOCATION"
+        })
+        dispatch({
+          type: "BIND_LOCATION_USER_DATA",
+          payload: {
+            "locationId": 0
+          }
+        })
+        dispatch(getGatewaysService());
+        dispatch(getDataHistorianService());
+        dispatch(BindValuesForNewLocation())
+        dispatch(BindSysIntegrationsForNewLocation())
+        dispatch(InitialEquipmentsForNewLocation())
+        dispatch({
           type: HIDE_SPINNER,
           payload: false
         })
       }
-      dispatch(BindValuesForNewLocation())
-      dispatch(BindSysIntegrationsForNewLocation())
-      dispatch(InitialEquipmentsForNewLocation())
+
     })
   }
 }
@@ -758,9 +772,9 @@ function saveObjectPreparationAndCall(getState, dispatch) {
     var basicInfoObj = basicInforObjectPreparation(values);
     //get MarketDrivenMappings from API based on marketType ID
     var credentialsAndIdentifier = prepareCredentialsAndIdentifiersObj(getState().form.CredentialsManagementForm ? getState().form.CredentialsManagementForm.values : {},
-          getState().basic.MarketDrivenMappings,
-          getState().basic.InitialOmsLocationwizardData,
-          locationId);
+      getState().basic.MarketDrivenMappings,
+      getState().basic.InitialOmsLocationwizardData,
+      locationId);
 
     var equipmentsObj = equipmentObjectPreparation(getState(), dispatch, locationId)
     var systemIntegrationObj = SystemIntegrationObjectPreparation(getState(), dispatch)
