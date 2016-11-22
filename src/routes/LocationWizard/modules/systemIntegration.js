@@ -121,7 +121,7 @@ export function getSystemIntegrationTypesService() {
 
 export const ACTION_HANDLERS = {
     [BIND_SYS_INTEGRATIONS_NEW_LOCATION]: (state, action) => {
-        return Object.assign({}, state, { selectedSystemIntegrations: [{}] })
+        return Object.assign({}, state, { selectedSystemIntegrationTypes: [{}] })
     },
     [ALIAS_SAVE]: (state, action) => {
         var newState = Object.assign({}, state)

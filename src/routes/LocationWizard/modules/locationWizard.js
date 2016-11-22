@@ -307,6 +307,9 @@ export function LoadAndRefreshForms(id, event) {
           payload: false
         })
       }
+      dispatch(BindValuesForNewLocation())
+      dispatch(BindSysIntegrationsForNewLocation())
+      dispatch(InitialEquipmentsForNewLocation())
     })
   }
 }
@@ -900,9 +903,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
         payload: false
       })
     }
-    dispatch(BindValuesForNewLocation())
-    dispatch(BindSysIntegrationsForNewLocation())
-    dispatch(InitialEquipmentsForNewLocation())
+
   }
 }
 
