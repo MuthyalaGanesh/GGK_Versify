@@ -104,7 +104,9 @@ export const ACTION_HANDLERS = {
       return  Object.assign({}, state, {
         BasicInfo: basicInfo,
         CredentialBasicData: credentialData.MarketDrivendata,
-        CredentialInitialValues: credentialData.CredentialInitialValues
+        CredentialInitialValues: credentialData.CredentialInitialValues,
+        InitialOmsLocationwizardData:omsLocationwizardData,
+        MarketDrivenMappings:marketDrivendata
       });
    
 
