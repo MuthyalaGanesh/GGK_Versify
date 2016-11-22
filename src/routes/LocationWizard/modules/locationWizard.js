@@ -119,7 +119,8 @@ export function leftMenuDropdownClickEvent(id, event) {
     } else {
       dispatch(showSpinner())
       setTimeout(function () {
-        dispatch(LoadAndRefreshForms(id, event))
+        dispatch(LoadAndRefreshForms(id, event));
+       scrollSpy.update();        
       }, 1)
     }
 
