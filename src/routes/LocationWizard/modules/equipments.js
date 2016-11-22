@@ -3,7 +3,7 @@ export const EDIT_EQUIPMENT = 'EDIT_EQUIPMENT'
 export const APPLY_EQUIPMENT = 'APPLY_EQUIPMENT'
 export const DELETE_EQUIPMENT = 'DELETE_EQUIPMENT'
 export const STATE_CHANGE_EDIT_FOR_EQUIPMENT = 'STATE_CHANGE_EDIT_FOR_EQUIPMENT'
-
+export const INITIAL_EQUIPMENT_NEW_LOCATION = 'INITIAL_EQUIPMENT_NEW_LOCATION'
 export function AddEquipment() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
@@ -17,6 +17,11 @@ export function AddEquipment() {
         payload: ""
       })
     })
+  }
+}
+export function InitialEquipmentsForNewLocation() {
+  return {
+    type: INITIAL_EQUIPMENT_NEW_LOCATION
   }
 }
 export function BindInitialEquipments(equipments) {
@@ -59,6 +64,11 @@ export function DeleteEquipment(index) {
   }
 }
 export const ACTION_HANDLERS = {
+  [INITIAL_EQUIPMENT_NEW_LOCATION]: (state, action) => {
+    return Object.assign({}, state, {
+      insertedEquipment: [{}]
+    })
+  },
   [STATE_CHANGE_EDIT_FOR_EQUIPMENT]: (state, action) => {
     var parentLocationId = action.payload && action.payload[0] ? action.payload[0].ParentLocationId : 0
     if (action.payload) {

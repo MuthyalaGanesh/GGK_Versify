@@ -11,7 +11,7 @@ import {
   BindInitialValues
 } from './basicInfo';
 import {
-  BindUnitCharacteristicsInitialValues
+  BindUnitCharacteristicsInitialValues, BindValuesForNewLocation
 } from './unitCharacteristics';
 import {
   bindLocationData
@@ -24,14 +24,14 @@ import {
 } from './workFlow'
 
 import {
-  editSystemIntegration
+  editSystemIntegration, BindSysIntegrationsForNewLocation
 } from "./systemIntegration"
 
 import {
   bindUserLocationData
 } from "./user"
 import {
-  BindInitialEquipments
+  BindInitialEquipments, InitialEquipmentsForNewLocation
 } from "./equipments"
 
 import axios from 'axios'
@@ -385,7 +385,7 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, marketDrivenMapping
     }
     itemDatawithMarketDrivenMappings.push(itemData);
   });
-  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function(b) {
+  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function (b) {
     return b.ExternalSystemName
   })
   var staticPjmemktToAdd = {
@@ -900,8 +900,9 @@ function saveObjectPreparationAndCall(getState, dispatch) {
         payload: false
       })
     }
-
-
+    dispatch(BindValuesForNewLocation())
+    dispatch(BindSysIntegrationsForNewLocation())
+    dispatch(InitialEquipmentsForNewLocation())
   }
 }
 

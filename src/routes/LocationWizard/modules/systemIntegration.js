@@ -7,7 +7,7 @@ export const DELETE_SYS_INTEGRATION = "DELETE_SYS_INTEGRATION"
 export const ALIAS_SAVE = "ALIAS_SAVE"
 export const STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION = "STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION"
 export const GET_SYSTEM_INTEGRATION_TYPE_SERVICE = "GET_SYSTEM_INTEGRATION_TYPE_SERVICE"
-
+export const BIND_SYS_INTEGRATIONS_NEW_LOCATION = "BIND_SYS_INTEGRATIONS_NEW_LOCATION"
 export function AliasGiven() {
     return (dispatch, getState) => {
         return new Promise((resolve) => {
@@ -19,6 +19,11 @@ export function AliasGiven() {
     }
 }
 
+export function BindSysIntegrationsForNewLocation() {
+    return {
+        type: BIND_SYS_INTEGRATIONS_NEW_LOCATION
+    }
+}
 export function getUnselectedSystemIntegrations(allSystemIntegrations) {
     var UnSelected = []
     allSystemIntegrations.map(si => {
@@ -115,6 +120,9 @@ export function getSystemIntegrationTypesService() {
 }
 
 export const ACTION_HANDLERS = {
+    [BIND_SYS_INTEGRATIONS_NEW_LOCATION]: (state, action) => {
+        return Object.assign({}, state, { selectedSystemIntegrations: [{}] })
+    },
     [ALIAS_SAVE]: (state, action) => {
         var newState = Object.assign({}, state)
         if (action.payload && action.payload.values) {
