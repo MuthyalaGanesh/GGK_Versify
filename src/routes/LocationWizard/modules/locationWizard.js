@@ -287,18 +287,17 @@ export function LoadAndRefreshForms(id, event) {
                 },
                 payload: getState().basic.CredentialInitialValues
               })
+              dispatch({
+              type: HIDE_SPINNER,
+              payload: false
+            })
             });
             dispatch(BindInitialEquipments(editObject.GetOMSLocationWizardDataResult.Equipment));
             dispatch(bindLocationData(dataHistorianParticularLocationObject, id));
             dispatch(bindGatewayLocationData(editObject.GetOMSLocationWizardDataResult.Gateways));
             dispatch(bindWorkLocationData(editObject.GetOMSLocationWizardDataResult.AssignedWorkflowGroups));
             dispatch(bindUserLocationData(editObject.GetOMSLocationWizardDataResult.AssignedContacts, id));
-            dispatch(BindUnitCharacteristicsInitialValues(editObject.GetOMSLocationWizardDataResult.AllLocationAttributeWithValues))
-
-            dispatch({
-              type: HIDE_SPINNER,
-              payload: false
-            })
+            dispatch(BindUnitCharacteristicsInitialValues(editObject.GetOMSLocationWizardDataResult.AllLocationAttributeWithValues));
           });
         } catch (e) {
           console.log(e)
