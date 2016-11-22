@@ -8,10 +8,12 @@ import {
 } from 'api/locationWizardApi'
 
 import {
-  BindInitialValues
+  BindInitialValues,
+  getDefaultCredentialBasicData
 } from './basicInfo';
 import {
-  BindUnitCharacteristicsInitialValues, BindValuesForNewLocation
+  BindUnitCharacteristicsInitialValues,
+  BindValuesForNewLocation
 } from './unitCharacteristics';
 import {
   bindLocationData
@@ -24,14 +26,16 @@ import {
 } from './workFlow'
 
 import {
-  editSystemIntegration, BindSysIntegrationsForNewLocation
+  editSystemIntegration,
+  BindSysIntegrationsForNewLocation
 } from "./systemIntegration"
 
 import {
   bindUserLocationData
 } from "./user"
 import {
-  BindInitialEquipments, InitialEquipmentsForNewLocation
+  BindInitialEquipments,
+  InitialEquipmentsForNewLocation
 } from "./equipments"
 
 import axios from 'axios'
@@ -302,6 +306,7 @@ export function LoadAndRefreshForms(id, event) {
           })
         }
       } else {
+        dispatch(getDefaultCredentialBasicData())
         dispatch({
           type: HIDE_SPINNER,
           payload: false
@@ -388,7 +393,7 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, marketDrivenMapping
     }
     itemDatawithMarketDrivenMappings.push(itemData);
   });
-  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function (b) {
+  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function(b) {
     return b.ExternalSystemName
   })
   var staticPjmemktToAdd = {
@@ -750,17 +755,12 @@ function saveObjectPreparationAndCall(getState, dispatch) {
 
     var locationId = values.locationId || 0;
     var primaryMarketTypeId = values.primaryMarket.id || values.primaryMarket;
-    var basicInfoObj = basicInforObjectPreparation(values)
-
-    var marketDrivenMappings = getMarketDrivenMappings(primaryMarketTypeId);
-    var omsLocationwizardData = getOMSLocationwizardData(locationId > 0 ? locationId : null);
-
+    var basicInfoObj = basicInforObjectPreparation(values);
     //get MarketDrivenMappings from API based on marketType ID
-    var credentialsAndIdentifier = prepareCredentialsAndIdentifiersObj(
-      getState().form.CredentialsManagementForm ? getState().form.CredentialsManagementForm.values : {},
-      marketDrivenMappings,
-      omsLocationwizardData,
-      locationId)
+    var credentialsAndIdentifier = prepareCredentialsAndIdentifiersObj(getState().form.CredentialsManagementForm ? getState().form.CredentialsManagementForm.values : {},
+          getState().basic.MarketDrivenMappings,
+          getState().basic.InitialOmsLocationwizardData,
+          locationId);
 
     var equipmentsObj = equipmentObjectPreparation(getState(), dispatch, locationId)
     var systemIntegrationObj = SystemIntegrationObjectPreparation(getState(), dispatch)

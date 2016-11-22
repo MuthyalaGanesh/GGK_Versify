@@ -24,8 +24,6 @@ export const GET_DEFAULT_CREDENTIALDATA = "GET_DEFAULT_CREDENTIALDATA"
 
 
 export function BindInitialValues(currentLocation,omsLocationwizardData,marketDrivendata) {
-
-
   return (dispatch, getState) => {
     return new Promise((resolve) => {     
       dispatch({
@@ -60,12 +58,16 @@ export function onPrimaryMarketChangeEvent(event) {
         return new Promise((resolve) => {
               getMarketDrivenMappings(!!event ? event.id : null).then(function(response){
                   var data =response.data;
-                   getOMSLocationwizardData().then(function(oms){
+                 var lcoationId = getState().form.BasicInfoForm.values.locationId || null;
+                   getOMSLocationwizardData(lcoationId).then(function(oms){
                        var omsLocationwizardData =oms.data;
                        var credentialBasicData = PrepareCredentialBasicData(data,omsLocationwizardData)
                          dispatch({
                             type: PRIMARY_MARKET_CHANGE_EVENT,
-                            payload: credentialBasicData
+                            payload: {
+                              marketDrivenMappings:data,
+                              initialOmsLocationwizardData:omsLocationwizardData,
+                              credentialBasicData:credentialBasicData}
                           });
                    });
              });
@@ -98,7 +100,6 @@ export const ACTION_HANDLERS = {
         physicalTimezone: locationObj.PhysicalTz,
         ownerShipPercentage: locationObj.OwnershipPct,
       }
-      debugger;
       var credentialData = PrepareCredentialBasicData(marketDrivendata, omsLocationwizardData);
       return  Object.assign({}, state, {
         BasicInfo: basicInfo,
@@ -124,7 +125,10 @@ export const ACTION_HANDLERS = {
   },
   [PRIMARY_MARKET_CHANGE_EVENT]: (state, action) => {
     return Object.assign({}, state, {
-      CredentialBasicData: action.payload.MarketDrivendata
+      CredentialBasicData: action.payload.credentialBasicData.MarketDrivendata,
+      InitialOmsLocationwizardData: action.payload.initialOmsLocationwizardData,
+      MarketDrivenMappings:action.payload.marketDrivenMappings
+
     })
   },
   [GET_LOCATION_TYPES]: (state,action) => {
@@ -322,7 +326,9 @@ const initialState = {
   initial: true,
   BasicInfo: {},
   CredentialInitialValues: {},
-  CredentialBasicData: []
+  CredentialBasicData: [],
+  InitialOmsLocationwizardData:[],
+  MarketDrivenMappings:[]
 };
 
 export default function basiInfoReducer(state = initialState, action) {
