@@ -16,7 +16,7 @@ export const BIND_INITIAL_ATTRIBUTES = "BIND_INITIAL_ATTRIBUTES"
 export const GET_ALL_UOM_VALUES = "GET_ALL_UOM_VALUES"
 export const GET_UNIT_CHARACTERSTICS = "GET_UNIT_CHARACTERSTICS"
 export const GET_SELECTED_AND_DEFAULT_UNIT_CHARACTERSTICS = "GET_SELECTED_AND_DEFAULT_UNIT_CHARACTERSTICS"
-
+export const BIND_INITIAL_ATTRIBUTES_NEW_LOCATION = "BIND_INITIAL_ATTRIBUTES_NEW_LOCATION"
 //helps in binding initial values
 export function BindUnitCharacteristicsInitialValues(locationObj) {
   return {
@@ -24,6 +24,12 @@ export function BindUnitCharacteristicsInitialValues(locationObj) {
     payload: locationObj
   };
 };
+
+export function BindValuesForNewLocation() {
+  return {
+    type: BIND_INITIAL_ATTRIBUTES_NEW_LOCATION
+  }
+}
 
 //toggling Add/edit modal popup
 export function ToggleAddEditModal(index) {
@@ -146,7 +152,16 @@ export function DateSwap(editableAttributes) {
   return editableAttributes;
 }
 export const ACTION_HANDLERS = {
-
+  [BIND_INITIAL_ATTRIBUTES_NEW_LOCATION]: (state, action) => {
+    var newState = Object.assign({}, state)
+    newState.selectedunitCharacteristics = [];
+    var selectedUC = [];
+    newState.defaultUnitCharacteristics.map(duc => {
+      duc.editableAttributes = [{}];
+      selectedUC.push(duc)
+    })
+    return Object.assign({}, state, { selectedunitCharacteristics: selectedUC });
+  },
   [BIND_INITIAL_ATTRIBUTES]: (state, action) => {
     if (action.payload) {
       var newState = Object.assign({}, state)
@@ -154,7 +169,12 @@ export const ACTION_HANDLERS = {
       var selectedDefault = []
       if (!attributes || (attributes && attributes.length == 0)) {
         newState.selectedunitCharacteristics = [];
-        newState.selectedunitCharacteristics = newState.defaultUnitCharacteristics;
+        var selectedUC = [];
+        newState.defaultUnitCharacteristics.map(duc => {
+          duc.editableAttributes = [{}];
+          selectedUC.push(duc)
+        })
+        newState.selectedunitCharacteristics = selectedUC;
       } else {
         newState.selectedunitCharacteristics = [];
         attributes.map(att => {
@@ -199,6 +219,7 @@ export const ACTION_HANDLERS = {
         if (selectedDefault.length > 0) {
           newState.defaultUnitCharacteristics.map(duc => {
             if (!selectedDefault.includes(duc.id)) {
+              duc.editableAttributes = [{}];
               newState.selectedunitCharacteristics.push(duc);
             }
           })

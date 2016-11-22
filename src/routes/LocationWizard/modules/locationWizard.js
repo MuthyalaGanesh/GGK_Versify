@@ -11,7 +11,7 @@ import {
   BindInitialValues
 } from './basicInfo';
 import {
-  BindUnitCharacteristicsInitialValues
+  BindUnitCharacteristicsInitialValues, BindValuesForNewLocation
 } from './unitCharacteristics';
 import {
   bindLocationData
@@ -24,14 +24,14 @@ import {
 } from './workFlow'
 
 import {
-  editSystemIntegration
+  editSystemIntegration, BindSysIntegrationsForNewLocation
 } from "./systemIntegration"
 
 import {
   bindUserLocationData
 } from "./user"
 import {
-  BindInitialEquipments
+  BindInitialEquipments, InitialEquipmentsForNewLocation
 } from "./equipments"
 
 import axios from 'axios'
@@ -120,7 +120,7 @@ export function leftMenuDropdownClickEvent(id, event) {
       dispatch(showSpinner())
       setTimeout(function () {
         dispatch(LoadAndRefreshForms(id, event));
-       scrollSpy.update();        
+        scrollSpy.update();
       }, 1)
     }
 
@@ -149,10 +149,10 @@ function CheckLocationNameIsExists(allLocations, locationName, locationId) {
       return false;
     }
     if (item.Name == locationName) {
-      if(!(locationId > 0 && item.LocationId == locationId) && !isLocationNameExists){
+      if (!(locationId > 0 && item.LocationId == locationId) && !isLocationNameExists) {
         isLocationNameExists = true;
         return false;
-      }else if (!isLocationNameExists && locationId==0) {
+      } else if (!isLocationNameExists && locationId == 0) {
         isLocationNameExists = true;
         return false;
       }
@@ -247,65 +247,65 @@ export function LoadAndRefreshForms(id, event) {
       })
 
       //If Location Id > 0, only bind data. otherwise load new forms
-          if (id > 0) {
-                    try {
-                          var allLocationdata = getState().location.allLocations;
-                          findLocation(allLocationdata, id);
-                          var locationObj = currentLocation;
-                          currentLocation = null;
-                          getOMSLocationwizardData(id).then(function(response){
-                              let editObject = response.data;
-                              let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
-                              let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
-                              getMarketDrivenMappings(locationObj.PrimaryMarketId).then(function(response){
-                                var marketDrivenMappings = response.data
-                                var editSysIntegration = new Object({
-                                    locationsInfo: locationsInfo,
-                                    marketDrivenMappings: marketDrivenMappings
-                                })
-                                dispatch(BindInitialValues(locationObj,editObject,marketDrivenMappings));
-                                dispatch(editSystemIntegration(editSysIntegration));
-                              });
-                              dispatch(BindInitialEquipments(editObject.GetOMSLocationWizardDataResult.Equipment));
-                              dispatch(bindLocationData(dataHistorianParticularLocationObject, id));
-                              dispatch(bindGatewayLocationData(editObject.GetOMSLocationWizardDataResult.Gateways));
-                              dispatch(bindWorkLocationData(editObject.GetOMSLocationWizardDataResult.AssignedWorkflowGroups));
-                              dispatch(bindUserLocationData(editObject.GetOMSLocationWizardDataResult.AssignedContacts, id));
-                              dispatch(BindUnitCharacteristicsInitialValues(editObject.GetOMSLocationWizardDataResult.AllLocationAttributeWithValues))
-                              dispatch({
-                                type: 'redux-form/INITIALIZE',
-                                meta: {
-                                  form: 'BasicInfoForm',
-                                  keepDirty: false
-                                },
-                                payload: getState().basic.BasicInfo
-                              })
-                              dispatch({
-                                type: 'redux-form/INITIALIZE',
-                                meta: {
-                                  form: 'CredentialsManagementForm',
-                                  keepDirty: false
-                                },
-                                payload: getState().basic.CredentialInitialValues
-                              })
-                              dispatch({
-                                type: HIDE_SPINNER,
-                                payload: false
-                              })
-                          });
-                    } catch (e) {
-                      console.log(e)
-                      dispatch({
-                        type: HIDE_SPINNER,
-                        payload: false
-                      })
-                    }
-          } else {
+      if (id > 0) {
+        try {
+          var allLocationdata = getState().location.allLocations;
+          findLocation(allLocationdata, id);
+          var locationObj = currentLocation;
+          currentLocation = null;
+          getOMSLocationwizardData(id).then(function (response) {
+            let editObject = response.data;
+            let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
+            let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
+            getMarketDrivenMappings(locationObj.PrimaryMarketId).then(function (response) {
+              var marketDrivenMappings = response.data
+              var editSysIntegration = new Object({
+                locationsInfo: locationsInfo,
+                marketDrivenMappings: marketDrivenMappings
+              })
+              dispatch(BindInitialValues(locationObj, editObject, marketDrivenMappings));
+              dispatch(editSystemIntegration(editSysIntegration));
+            });
+            dispatch(BindInitialEquipments(editObject.GetOMSLocationWizardDataResult.Equipment));
+            dispatch(bindLocationData(dataHistorianParticularLocationObject, id));
+            dispatch(bindGatewayLocationData(editObject.GetOMSLocationWizardDataResult.Gateways));
+            dispatch(bindWorkLocationData(editObject.GetOMSLocationWizardDataResult.AssignedWorkflowGroups));
+            dispatch(bindUserLocationData(editObject.GetOMSLocationWizardDataResult.AssignedContacts, id));
+            dispatch(BindUnitCharacteristicsInitialValues(editObject.GetOMSLocationWizardDataResult.AllLocationAttributeWithValues))
+            dispatch({
+              type: 'redux-form/INITIALIZE',
+              meta: {
+                form: 'BasicInfoForm',
+                keepDirty: false
+              },
+              payload: getState().basic.BasicInfo
+            })
+            dispatch({
+              type: 'redux-form/INITIALIZE',
+              meta: {
+                form: 'CredentialsManagementForm',
+                keepDirty: false
+              },
+              payload: getState().basic.CredentialInitialValues
+            })
             dispatch({
               type: HIDE_SPINNER,
               payload: false
             })
-          }
+          });
+        } catch (e) {
+          console.log(e)
+          dispatch({
+            type: HIDE_SPINNER,
+            payload: false
+          })
+        }
+      } else {
+        dispatch({
+          type: HIDE_SPINNER,
+          payload: false
+        })
+      }
     })
   }
 }
@@ -362,9 +362,9 @@ function basicInforObjectPreparation(values) {
 }
 
 
-function prepareCredentialsAndIdentifiersObj(credentialsObj, marketDrivenMappings, omsLocationwizardData,locationId) {
+function prepareCredentialsAndIdentifiersObj(credentialsObj, marketDrivenMappings, omsLocationwizardData, locationId) {
 
-  var credentialsAndIdentifiersObj = []; 
+  var credentialsAndIdentifiersObj = [];
   var locationMappingData = [];
   var itemDatawithMarketDrivenMappings = [];
   _.each(marketDrivenMappings, (item) => {
@@ -384,7 +384,7 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, marketDrivenMapping
     }
     itemDatawithMarketDrivenMappings.push(itemData);
   });
-  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function(b) {
+  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function (b) {
     return b.ExternalSystemName
   })
   var staticPjmemktToAdd = {
@@ -900,8 +900,9 @@ function saveObjectPreparationAndCall(getState, dispatch) {
         payload: false
       })
     }
-
-
+    dispatch(BindValuesForNewLocation())
+    dispatch(BindSysIntegrationsForNewLocation())
+    dispatch(InitialEquipmentsForNewLocation())
   }
 }
 
