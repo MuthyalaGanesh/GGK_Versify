@@ -179,6 +179,10 @@ export function LoadAndRefreshForms(id, event) {
           currentLocationId: id
         }
       })
+       dispatch({
+      type: 'ERROR',
+      payload: 0
+    });
       dispatch({
         type: DEFAULT_NODE_EXPANDED,
         payload: id
