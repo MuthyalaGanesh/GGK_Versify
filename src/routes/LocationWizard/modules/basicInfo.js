@@ -60,10 +60,21 @@ export function onCredentialDropdownChangeEvent(event) {
 };
 
 export function onPrimaryMarketChangeEvent(event) {
-  return {
-    type: PRIMARY_MARKET_CHANGE_EVENT,
-    payload: event
-  };
+     return (dispatch, getState) => {
+        return new Promise((resolve) => {
+              getMarketDrivenMappings(!!event ? event.id : null).then(function(response){
+                  var data =response.data;
+                   getOMSLocationwizardData().then(function(oms){
+                       var omsLocationwizardData =oms.data;
+                       var credentialBasicData = PrepareCredentialBasicData(data,omsLocationwizardData)
+                         dispatch({
+                            type: PRIMARY_MARKET_CHANGE_EVENT,
+                            payload: credentialBasicData
+                          });
+                   });
+             });
+        })
+      }
 };
 
 export const ACTION_HANDLERS = {
@@ -115,11 +126,8 @@ export const ACTION_HANDLERS = {
     })
   },
   [PRIMARY_MARKET_CHANGE_EVENT]: (state, action) => {
-    var data = getMarketDrivenMappings(!!action.payload ? action.payload.id : null);
-    var omsLocationwizardData = getOMSLocationwizardData();
-    var data = PrepareCredentialBasicData(data,omsLocationwizardData)
     return Object.assign({}, state, {
-      CredentialBasicData: data.MarketDrivendata
+      CredentialBasicData: action.payload.MarketDrivendata
     })
   },
   [GET_LOCATION_TYPES]: (state,action) => {
