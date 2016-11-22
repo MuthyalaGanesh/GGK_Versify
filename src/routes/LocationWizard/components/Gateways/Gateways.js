@@ -84,7 +84,7 @@ export const Gateways = (props) => {
                     <div className="row">
                             <div className="col-xs-12 form-group">
                                 <div className="col-xs-6">
-                                    <label>Name</label>
+                                    <label>Name *</label>
                                 </div>
                                 <div className="col-xs-6">
                                     <Field component={InputField} type="text" className="form-control" name="GatewayName" onblur ={props.validateGateway} placeholder="Gateway Name"
@@ -95,7 +95,7 @@ export const Gateways = (props) => {
                             </div>
                             <div className="col-xs-12 form-group">
                                 <div className="col-xs-6">
-                                    <label>URL</label>
+                                    <label>URL *</label>
                                 </div>
                                 <div className="col-xs-6">
                                     <Field component={InputField} type="text" touched = {1} className="form-control" name="GatewayURL"

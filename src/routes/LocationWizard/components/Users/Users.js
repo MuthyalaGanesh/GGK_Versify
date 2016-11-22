@@ -31,7 +31,7 @@ export const Users = (props) => {
                             <div className="col-md-12 col-lg-6">
                             <div className="box">
                                 <div className="box-header">
-                                    <h3 className="box-title">USERS BY ROLE</h3>
+                                    <h3 className="box-title">Users By Role</h3>
                                     <div className="box-tools pull-right">
                                     </div>
                                 </div>
@@ -73,7 +73,7 @@ export const Users = (props) => {
                             <div className="col-md-12 col-lg-6">
                             <div className="box">
                                 <div className="box-header">                                    
-                                    <h3 className="box-title">USERS BY CONTACT</h3>
+                                    <h3 className="box-title">Users By Contact</h3>
                                     <div className="box-tools pull-right">
                                     </div>
                                 </div>
@@ -130,7 +130,7 @@ export const Users = (props) => {
                                 <div className="row">
                                     <div className="col-xs-12 col form-group">
                                         <div className="col-xs-4">
-                                            <label>Name</label>
+                                            <label>Name *</label>
                                             <Field component={InputField} className="form-control" name="Name" type="text"  placeholder="Name" touched={1}
                                              onblur = {props.validateContact}/>
                                              {error && validations.Name && <span className="errorMessage">{validations.Name}</span>}
@@ -169,13 +169,13 @@ export const Users = (props) => {
                                 <div className="row">   
                             <div className="col-xs-12 form-group">
                                 <div className="col-xs-4">
-                                    <label>Org</label>
+                                    <label>Org *</label>
                                     <Field component={DropdownListField} name="Org"  placeholder="Select Org"
                                             data = {ContactPopUpInfo.org} labelKey ='name' valueKey='id' onChangeEvent = {props.validateContact}/>
                                     {error && validations.Org && <span className="errorMessage">{validations.Org}</span>}
                                 </div>
                                 <div className="col-xs-4">
-                                    <label>type</label>
+                                    <label>type *</label>
                                     <Field component={DropdownListField} name="Type"  placeholder="Select type"
                                              data = {ContactPopUpInfo.type} labelKey ='name' valueKey='id' onChangeEvent = {props.validateContact}/>
                                     {error && validations.Type && <span className="errorMessage">{validations.Type}</span>}
@@ -190,7 +190,7 @@ export const Users = (props) => {
                                 <div className="row">    
                             <div className="col-xs-12 form-group">
                                 <div className="col-xs-4">
-                                    <label>Primary Email</label>
+                                    <label>Primary Email *</label>
                                     <Field component={InputField} className="form-control" name="PrimaryEmail" type="text"  placeholder="Primary Email"
                                        onblur = {props.validateContact} touched={1}/>
                                     {error && validations.PrimaryEmail && <span className="errorMessage">{validations.PrimaryEmail}</span>}
@@ -215,7 +215,7 @@ export const Users = (props) => {
                                              touched={1}/>
                                 </div>
                                 <div className="col-xs-4">
-                                    <label>TimeZone</label>
+                                    <label>TimeZone *</label>
                                     <Field component={DropdownListField} name="TimeZone"  placeholder="Select TimeZone"
                                             data = {ContactPopUpInfo.Timezones} labelKey ='value' valueKey='id' onChangeEvent = {props.validateContact}/>
                                     {error && validations.TimeZone && <span className="errorMessage">{validations.TimeZone}</span>}
@@ -237,19 +237,19 @@ export const Users = (props) => {
                                 <div className="row">    
                                     <div className="col-xs-12 form-group">
                                         <div className="col-xs-4">
-                                            <label>status</label>
+                                            <label>status *</label>
                                             <Field component={DropdownListField} name="status"  placeholder="Select status"
                                                  data = {ContactPopUpInfo.status} labelKey ='value' valueKey='id' onChangeEvent = {props.validateContact}/>
                                             {error && validations.status && <span className="errorMessage">{validations.status}</span>}
                                         </div>
                                         <div className="col-xs-4">
-                                            <label>User ID</label>
+                                            <label>User ID *</label>
                                             <Field component={InputField} className="form-control" name="userId" type="text"  placeholder="User Id"
                                              onblur = {props.validateContact} touched={1}/>
                                              {error && validations.userId && <span className="errorMessage">{validations.userId}</span>}
                                         </div>                                
                                         <div className="col-xs-4">
-                                            <label>Password</label>
+                                            <label>Password *</label>
                                             <Field component={InputField} type="password" className="form-control" name="Password" placeholder="Password" onblur = {props.validateContact} touched={1} >
                                             </Field>
                                             {error && validations.Password && <span className="errorMessage">{validations.Password}</span>}

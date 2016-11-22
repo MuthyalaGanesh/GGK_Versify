@@ -98,7 +98,7 @@ export const DataHistorian = (props) => {
                     <div className="row">
                             <div className={props.dataHistorian.AddNewDataHistorian || !props.dataHistorian.EditableDataHistorian.isDefault ? "col-xs-12 form-group show":"hide"}>
                                 <div className="col-xs-6">
-                                    <label>Metric</label>
+                                    <label>Metric *</label>
                                 </div>                                
                                 <div className="col-xs-6">
                                     <Field component={DropdownListField} name = 'metric'
@@ -114,7 +114,7 @@ export const DataHistorian = (props) => {
                             </div>
                             <div className="col-xs-12 form-group">
                                 <div className="col-xs-6">
-                                    <label>Tag</label>
+                                    <label>Tag *</label>
                                 </div>
                                 <div className="col-xs-6">
                                     <Field component={InputField} type="text" className="form-control" name="Tag" onblur ={props.validateData}
@@ -125,7 +125,7 @@ export const DataHistorian = (props) => {
                             </div>
                             <div className="col-xs-12 form-group">
                                 <div className="col-xs-6">
-                                    <label>Gateway</label>
+                                    <label>Gateway *</label>
                                 </div>
                                 <div className="col-xs-6">
                                     <Field component={DropdownListField} name = 'Gateway'

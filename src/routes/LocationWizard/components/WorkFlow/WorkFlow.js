@@ -23,7 +23,7 @@ export const WorkFlow = (props) => {
                                         <div className="row">                                                
                                             <div className="form-group">
                                                 <div className="col-sm-5 col-md-3 col-lg-3">
-                                                    <label className="control-label"> Assign WorkFlow </label>
+                                                    <label className="control-label"> Assign WorkFlows </label>
                                                 </div>
                                                 <div className="col-sm-5 col-md-7 col-lg-7 MultipleSelect">
                                                     <Field
