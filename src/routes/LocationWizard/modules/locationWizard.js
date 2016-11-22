@@ -124,7 +124,7 @@ export function leftMenuDropdownClickEvent(id, event) {
       })
     } else {
       dispatch(showSpinner())
-      setTimeout(function() {
+      setTimeout(function () {
         dispatch(LoadAndRefreshForms(id, event));
         scrollSpy.update();
       }, 1)
@@ -179,10 +179,10 @@ export function LoadAndRefreshForms(id, event) {
           currentLocationId: id
         }
       })
-       dispatch({
-      type: 'ERROR',
-      payload: 0
-    });
+      dispatch({
+        type: 'ERROR',
+        payload: 0
+      });
       dispatch({
         type: DEFAULT_NODE_EXPANDED,
         payload: id
@@ -263,11 +263,11 @@ export function LoadAndRefreshForms(id, event) {
           findLocation(allLocationdata, id);
           var locationObj = currentLocation;
           currentLocation = null;
-          getOMSLocationwizardData(id).then(function(response) {
+          getOMSLocationwizardData(id).then(function (response) {
             let editObject = response.data;
             let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
             let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
-            getMarketDrivenMappings(locationObj.PrimaryMarketId).then(function(response) {
+            getMarketDrivenMappings(locationObj.PrimaryMarketId).then(function (response) {
               var marketDrivenMappings = response.data
               var editSysIntegration = new Object({
                 locationsInfo: locationsInfo,
@@ -292,9 +292,9 @@ export function LoadAndRefreshForms(id, event) {
                 payload: getState().basic.CredentialInitialValues
               })
               dispatch({
-              type: HIDE_SPINNER,
-              payload: false
-            })
+                type: HIDE_SPINNER,
+                payload: false
+              })
             });
             dispatch(BindInitialEquipments(editObject.GetOMSLocationWizardDataResult.Equipment));
             dispatch(bindLocationData(dataHistorianParticularLocationObject, id));
@@ -410,7 +410,7 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, marketDrivenMapping
     }
     itemDatawithMarketDrivenMappings.push(itemData);
   });
-  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function(b) {
+  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function (b) {
     return b.ExternalSystemName
   })
   var staticPjmemktToAdd = {
@@ -553,7 +553,7 @@ function unitCharacterSticObjectPreparation(stateTree, dispatch) {
               LocationAttributeId: ea.LocationAttributeId != 0 ? ea.LocationAttributeId : 0,
               UnitOfMeasureId: suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
               UnitOfMeasureName: suc.UOM,
-              Value: ea.Value ? ea.Value : "",
+              Value: "",
               EffectiveStartDate: !!ea.EffectiveStartDate ? '/Date(' + (new Date(ea.EffectiveStartDate)).getTime() + ')/' : null,
               EffectiveEndDate: !!ea.EffectiveEndDate ? '/Date(' + (new Date(ea.EffectiveEndDate)).getTime() + ')/' : null,
               DisplayName: suc.display
@@ -582,7 +582,7 @@ function unitCharacterSticObjectPreparation(stateTree, dispatch) {
             LocationAttributeId: ea.LocationAttributeId != 0 ? ea.LocationAttributeId : 0,
             UnitOfMeasureId: suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
             UnitOfMeasureName: suc.UOM,
-            Value: ea.Value ? ea.Value : "",
+            Value: "",
             EffectiveStartDate: !!ea.EffectiveStartDate ? '/Date(' + (new Date(ea.EffectiveStartDate)).getTime() + ')/' : null,
             EffectiveEndDate: !!ea.EffectiveEndDate ? '/Date(' + (new Date(ea.EffectiveEndDate)).getTime() + ')/' : null,
             DisplayName: suc.display
@@ -601,7 +601,7 @@ function unitCharacterSticObjectPreparation(stateTree, dispatch) {
               LocationAttributeId: ea.LocationAttributeId != 0 ? ea.LocationAttributeId : 0,
               UnitOfMeasureId: suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
               UnitOfMeasureName: suc.UOM,
-              Value: ea.Value ? ea.Value : "",
+              Value: "",
               EffectiveStartDate: !!ea.EffectiveStartDate ? '/Date(' + (new Date(ea.EffectiveStartDate)).getTime() + ')/' : null,
               EffectiveEndDate: !!ea.EffectiveEndDate ? '/Date(' + (new Date(ea.EffectiveEndDate)).getTime() + ')/' : null,
               DisplayName: suc.display
@@ -730,18 +730,18 @@ export function saveCompleteLocationWizard() {
           type: 'ERROR',
           payload: 1
         }) && console.log('check here') : (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null && getState().form.BasicInfoForm.values.technologyType != null && getState().form.BasicInfoForm.values.fuelClass != null && getState().form.BasicInfoForm.values.physicalTimezone != null && getState().form.BasicInfoForm.values.owner != null) ? (credentialdatavalidation(getState())) ? //Save
-        saveObjectPreparationAndCall(getState, dispatch) : dispatch({
-          type: 'ERROR',
-          payload: 1
-        }) && console.log('error') : dispatch({
+          saveObjectPreparationAndCall(getState, dispatch) : dispatch({
+            type: 'ERROR',
+            payload: 1
+          }) && console.log('error') : dispatch({
+            type: 'ERROR',
+            payload: 1
+          })
+
+        : dispatch({
           type: 'ERROR',
           payload: 1
         })
-
-      : dispatch({
-        type: 'ERROR',
-        payload: 1
-      })
       console.log(Object.keys(getState().form.BasicInfoForm.values).length, 'stateobjectmo')
 
     })
@@ -751,7 +751,7 @@ export function saveCompleteLocationWizard() {
 function saveObjectPreparationAndCall(getState, dispatch) {
   var values = getState().form.BasicInfoForm ? getState().form.BasicInfoForm.values : {};
 
-  CheckLocationNameIsExists(getState().location.allLocations, values.locationName, values.locationId ||0);
+  CheckLocationNameIsExists(getState().location.allLocations, values.locationName, values.locationId || 0);
   var isLocationNamePresent = isLocationNameExists;
   if (isLocationNamePresent) {
     isLocationNameExists = false;
@@ -808,16 +808,16 @@ function saveObjectPreparationAndCall(getState, dispatch) {
     var finalData = JSON.stringify(finalSaveObject)
     console.log("finalSaveObject", finalData)
     dispatch({
-        type: SHOW_SPINNER,
-        payload: true
-      })
-      //SAVE LOCATION
+      type: SHOW_SPINNER,
+      payload: true
+    })
+    //SAVE LOCATION
     try {
       axios({
         method: 'post',
         url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
         data: finalSaveObject
-      }).then(function(response) {
+      }).then(function (response) {
         console.log("success", response);
         if (response.status === 200) {
           //ADD Location ID to Object
@@ -845,7 +845,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
               method: 'post',
               url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
               data: saveObjectwithEquipment
-            }).then(function(response) {
+            }).then(function (response) {
               if (response.status === 200) {
                 console.log("equipment saved", response);
               }
@@ -861,12 +861,12 @@ function saveObjectPreparationAndCall(getState, dispatch) {
               openSavePopup: true
             }
           });
-          basicInfoDropdowns.getParentLocations().then(function(response) {
+          basicInfoDropdowns.getParentLocations().then(function (response) {
             dispatch({
               type: GET_ALL_LOCATIONS_INFORMATION,
               payload: response.data.GetAllLocationsResult
             });
-          }).then(function() {
+          }).then(function () {
             //Expnd ADD Node in left menu
             console.log('new locationID', newLocationID)
             dispatch({
@@ -892,7 +892,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
             payload: false
           })
         }
-      }).catch(function(error) {
+      }).catch(function (error) {
         dispatch({
           type: HIDE_SPINNER,
           payload: false
@@ -937,7 +937,7 @@ function toArray(obj) {
 
 function changeObjectTypeOfLocations(allLocations) {
   var changedLocationsObject = [];
-  allLocations.forEach(function(item) {
+  allLocations.forEach(function (item) {
     changedLocationsObject.push({
       key: item.Id,
       value: item.Id,
@@ -966,13 +966,13 @@ function AddDefaultParent(objectfuncntion) {
 export function getLocationsInformation() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      basicInfoDropdowns.getParentLocations().then(function(response) {
+      basicInfoDropdowns.getParentLocations().then(function (response) {
         dispatch({
           type: GET_ALL_LOCATIONS_INFORMATION,
           payload: response.data.GetAllLocationsResult
         });
       })
-    }).then(function() {
+    }).then(function () {
       dispatch({
         type: HIDE_SPINNER,
         payload: false
