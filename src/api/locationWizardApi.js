@@ -67,7 +67,12 @@ export function getParentLocations() {
 }
 
 export function getMarketDrivenMappings(marketId = null) {
-    return XMLHttpRequestSyncGet(Constants.LWMARKETDRIVEN_MAPPINGS, marketId != null ? "isoMarketId=" + marketId : null);
+  var url = marketId != null ? Constants.LWMARKETDRIVEN_MAPPINGS+'?isoMarketId=' + `${marketId}` : Constants.LWMARKETDRIVEN_MAPPINGS;
+    return axios({
+              method: 'get',
+              url: url
+    })
+   // return XMLHttpRequestSyncGet(Constants.LWMARKETDRIVEN_MAPPINGS, marketId != null ? "isoMarketId=" + marketId : null);
 }
 
 export function getOwners() {
@@ -101,7 +106,13 @@ export function getTimezones() {
 
 
 export function getOMSLocationwizardData(locationId = null) {
-    return XMLHttpRequestSyncGet(Constants.OMSLOCATIONWIZARD_DATA, locationId != null ? "locationId=" + locationId : null);
+  var url = locationId != null ? Constants.OMSLOCATIONWIZARD_DATA+'?locationId=' + `${locationId}` : Constants.OMSLOCATIONWIZARD_DATA;
+
+     return axios({
+              method: 'get',
+              url: url
+    })
+  //  return XMLHttpRequestSyncGet(Constants.OMSLOCATIONWIZARD_DATA, locationId != null ? "locationId=" + locationId : null);
 }
 
 export function getUnitCharacteristics() {
@@ -185,38 +196,29 @@ export function getContacts(){
 }
 
 export function getGatewayInfo() {
-    var data = XMLHttpRequestSyncGet(Constants.OMS_LOCATION_WIZARD_INDEPENDENT_DATA);
-    return data.GetOMSLocationWizardIndependentDataResult;
+      return axios({
+              method: 'get',
+              url:Constants.OMS_LOCATION_WIZARD_INDEPENDENT_DATA,
+      })
+   // var data = XMLHttpRequestSyncGet(Constants.OMS_LOCATION_WIZARD_INDEPENDENT_DATA);
+  //  return data.GetOMSLocationWizardIndependentDataResult;
 }
 
 export function getMetricInfo() {
-    return XMLHttpRequestSyncGet(Constants.METRICS);
+    return axios({
+              method: 'get',
+              url:Constants.METRICS,
+    })
+    //return XMLHttpRequestSyncGet(Constants.METRICS);
 }
 
 export function getDataHistorian() {
-    var metricData = XMLHttpRequestSyncGet(Constants.DEFAULTMETRICS);
-    var allMetrics = XMLHttpRequestSyncGet(Constants.METRICS);
-    var data = []
-    metricData.map((metric) => {
-        let index = allMetrics.findIndex((m) => m.id === metric.id)
-        if (index >= 0) {
-            let defaultMetric = allMetrics[index]
-            let scada = {}
-            scada.id = 0
-            scada.isDigitalState = false
-            scada.locationId = 0
-            scada.metricDescription = defaultMetric.description
-            scada.metricId = defaultMetric.id
-            scada.metricName = defaultMetric.displayName
-            scada.scadaServerAliasName = ""
-            scada.scadaServerId = ''
-            scada.scadaTag = ""
-            scada.isDefault = "true"
-            scada.isEdited = "fasle"
-            data.push(scada);
-        }
+    return axios({
+              method: 'get',
+              url:Constants.DEFAULTMETRICS,
     })
-    return data;
+   // var metricData = XMLHttpRequestSyncGet(Constants.DEFAULTMETRICS);
+    
 }
 
 export function getNewContactPopUpInfo() {

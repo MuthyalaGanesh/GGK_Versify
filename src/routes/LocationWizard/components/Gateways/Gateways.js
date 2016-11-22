@@ -29,7 +29,8 @@ export const Gateways = (props) => {
                             <div className="margin-bottom-sm padding-top">
                                 <div className="row">
                                     <div className="col-sm-12">
-                                        <div className={ Gateways.length > 0 ? "show" : "hide"}>                                                
+                                        {Gateways && Gateways.length > 0 ? 
+                                            <div className={ Gateways && Gateways.length > 0 ? "show" : "hide"}>                                                
                                             <div className=' table-responsive'>
                                                 <Table id="results" striped bordered condensed hover responsive>
                                                     <thead>
@@ -68,6 +69,7 @@ export const Gateways = (props) => {
                                                 </Table>
                                             </div>
                                         </div>
+                                        : null}
                                     </div>
                                 </div>
                             </div>                  

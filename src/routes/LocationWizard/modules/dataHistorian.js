@@ -21,6 +21,8 @@ export const CONFIRM_DELETE_HISTORIAN = 'CONFIRM_DELETE_HISTORIAN'
 export const CLOSE_CONFIRMATION = "CLOSE_CONFIRMATION"
 export const BIND_DATA_HISTORIAN_LOCATIONID = "BIND_DATA_HISTORIAN_LOCATIONID"
 export const SHOW_DATAHISTORIAN_ERRORS = "SHOW_DATAHISTORIAN_ERRORS"
+export const GET_DATA_HISTORIAN_SERVICE = "GET_DATA_HISTORIAN_SERVICE"
+export const GET_GATEWAY_SERVICE_FOR_DATA_HISTORIAN ="GET_GATEWAY_SERVICE_FOR_DATA_HISTORIAN"
 
 export function getGateways() {
   return {
@@ -36,37 +38,37 @@ export function getMetrics() {
   };
 };
 
-export function getDataHistorians() {
-  return {
-    type: GET_DATAEHISTORIAN_INFO,
-    payload: getDataHistorian()
-  };
-};
 
 export function bindLocationData(assignedScada, locationId) {
-  let defaultHistorians = getDataHistorian();
-  let locationData = {}
-  locationData.finalData = [],
-    locationData.locationId = locationId
-  defaultHistorians.map((data) => {
-    if (assignedScada) {
-      let index = assignedScada.findIndex((scada) => scada.metricId === data.metricId);
-      if (index < 0) {
-        locationData.finalData.push(data);
-      }
-    } else {
-      locationData.finalData.push(data);
-    }
-  })
-  assignedScada.map((data) => {
-    let scada = data
-    data.isEdited = false
-    data.isDefault = true
-    locationData.finalData.push(scada)
-  })
-  return {
-    type: BIND_DATA_HISTORIAN_LOCATIONID,
-    payload: locationData
+
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+
+      let defaultHistorians = getState().dataHistorian.defaultMetrics;
+      let locationData = {}
+      locationData.finalData = [],
+        locationData.locationId = locationId
+      defaultHistorians.map((data) => {
+        if (assignedScada) {
+          let index = assignedScada.findIndex((scada) => scada.metricId === data.metricId);
+          if (index < 0) {
+            locationData.finalData.push(data);
+          }
+        } else {
+          locationData.finalData.push(data);
+        }
+      })
+      assignedScada.map((data) => {
+        let scada = data
+        data.isEdited = false
+        data.isDefault = true
+        locationData.finalData.push(scada)
+      })
+      dispatch( {
+        type: BIND_DATA_HISTORIAN_LOCATIONID,
+        payload: locationData
+      })
+    })
   }
 }
 
@@ -138,9 +140,7 @@ export function AddDataHistorian() {
         if (!values.Tag) {
           invalid = true
           messages.Tag = 'Please specify Tag'
-        }
-        else if(!values.Tag.trim())
-        {
+        } else if (!values.Tag.trim()) {
           invalid = true
           messages.Tag = 'Please specify Tag'
         }
@@ -200,9 +200,7 @@ export function UpdateAddDataHistorian() {
             getState().form.DataHistorianForm.fields.Tag.hasOwnProperty('touched') &&
             getState().form.DataHistorianForm.fields.Tag.touched ?
             invalid = true : editData.scadaTag ? messages.Tag = null : invalid = true
-        }
-        else if(!values.Tag.trim())
-        {
+        } else if (!values.Tag.trim()) {
           invalid = true
           messages.Tag = 'Please specify Tag'
         }
@@ -247,7 +245,7 @@ export function EditDataHistorian(index) {
           form: "DataHistorianForm"
         },
         payload: {
-          Tag : editedData.scadaTag
+          Tag: editedData.scadaTag
         }
       })
     })
@@ -274,6 +272,47 @@ export function ClickedIsDigitalTag() {
     })
   }
 };
+
+export function getDataHistorianService() {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      getDataHistorian().then(function(response) {
+        var metricData = response.data
+        getMetricInfo().then(function(response) {
+          var allMetrics = response.data;
+          var data = []
+          metricData.map((metric) => {
+            let index = allMetrics.findIndex((m) => m.id === metric.id)
+            if (index >= 0) {
+              let defaultMetric = allMetrics[index]
+              let scada = {}
+              scada.id = 0
+              scada.isDigitalState = false
+              scada.locationId = 0
+              scada.metricDescription = defaultMetric.description
+              scada.metricId = defaultMetric.id
+              scada.metricName = defaultMetric.displayName
+              scada.scadaServerAliasName = ""
+              scada.scadaServerId = ''
+              scada.scadaTag = ""
+              scada.isDefault = "true"
+              scada.isEdited = "fasle"
+              data.push(scada);
+            }
+          })
+          dispatch({
+            type: GET_DATA_HISTORIAN_SERVICE,
+            payload: {
+              'dataHistorian': data,
+              'allmetrics': allMetrics,
+              'defaultMetrics': data
+            }
+          })
+        });
+      })
+    })
+  }
+}
 
 export function validateData() {
   return (dispatch, getState) => {
@@ -503,7 +542,7 @@ export const ACTION_HANDLERS = {
     return Object.assign({}, state, {
       dataHistorian: action.payload.finalData,
       locationId: action.payload.locationId,
-      saveScada : []
+      saveScada: []
     })
   },
   [SHOW_DATAHISTORIAN_ERRORS]: (state, action) => {
@@ -511,16 +550,29 @@ export const ACTION_HANDLERS = {
       error: 1,
       validationMessages: action.payload
     })
+  },
+  [GET_DATA_HISTORIAN_SERVICE]: (state, action) => {
+    return Object.assign({}, state, {
+      dataHistorian: action.payload.dataHistorian,
+      allmetrics: action.payload.allmetrics,
+      defaultMetrics: action.payload.defaultMetrics
+    })
+  },
+  [GET_GATEWAY_SERVICE_FOR_DATA_HISTORIAN]: (state, action) => {
+     return Object.assign({}, state, {
+        gateways:action.payload
+    })
   }
 }
 
 const initialState = {
   error: null,
-  dataHistorian: getDataHistorian(),
+  dataHistorian: [],
   EditableDataHistorian: {},
-  allmetrics: getMetricInfo(),
+  allmetrics: [],
+  defaultMetrics: [],
   metrics: [],
-  gateways: getGatewayInfo(),
+  gateways: {},
   showAddDataHistorianModal: false,
   clickedIsDigitalTag: false,
   saveScada: [],

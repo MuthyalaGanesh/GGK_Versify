@@ -152,8 +152,7 @@ export function saveNewContact() {
         if (!values.Name) {
           invalid = true
           messages.Name = 'Please specify Name'
-        }
-        else if (!values.Name.trim()) {
+        } else if (!values.Name.trim()) {
           invalid = true
           messages.Name = 'Please specify Name'
         }
@@ -172,8 +171,7 @@ export function saveNewContact() {
         if (!values.PrimaryEmail) {
           invalid = true
           messages.PrimaryEmail = 'Please specify Primary Email'
-        }
-        else if (!values.PrimaryEmail.trim()) {
+        } else if (!values.PrimaryEmail.trim()) {
           invalid = true
           messages.PrimaryEmail = 'Please specify Primary Email'
         }
@@ -184,19 +182,16 @@ export function saveNewContact() {
         if (!values.userId) {
           invalid = true
           messages.userId = 'Please specify User Id'
-        }
-        else if (!values.userId.trim()) {
+        } else if (!values.userId.trim()) {
           invalid = true
           messages.userId = 'Please specify User Id'
         }
         if (!values.Password) {
           invalid = true
           messages.Password = 'Please specify Password'
-        }
-        else
-        {
-          messages.PasswordFormat = 'Password must be 6-20 characters in length,cannot contain special characters,'+
-          'and must contain atleast one lower case letter,one upper case letter,and one digit'
+        } else {
+          messages.PasswordFormat = 'Password must be 6-20 characters in length,cannot contain special characters,' +
+            'and must contain atleast one lower case letter,one upper case letter,and one digit'
           regularExpression.test(values.Password) ? messages.PasswordFormat = null : invalid = true
         }
         if (invalid == true) {
@@ -238,15 +233,15 @@ export function saveNewContact() {
             data: SaveObject
           }).then(function(response) {
             dispatch({
-              type: SAVE_NEW_CONTACT,              
+              type: SAVE_NEW_CONTACT,
             })
             dispatch({
-            type: 'redux-form/DESTROY',
-            meta: {
-              form: "UsersForm"
-            },
-            payload: ""
-          })
+              type: 'redux-form/DESTROY',
+              meta: {
+                form: "UsersForm"
+              },
+              payload: ""
+            })
           }).catch(function(error) {
             alert("error" + JSON.stringify(error));
           });
@@ -395,8 +390,7 @@ export function selectRole() {
             payload: ""
           })
         }
-      }
-      else{
+      } else {
         dispatch({
           type: SELECTED_ROLE,
           payload: getState().form.UsersForm
@@ -469,8 +463,7 @@ export function selectContact() {
             payload: ""
           })
         }
-      }
-      else{
+      } else {
         dispatch({
           type: SELECTED_CONTACT,
           payload: getState().form.UsersForm
@@ -495,7 +488,7 @@ export function validateContact() {
         let values = {}
         let messages = {}
         let regularExpression = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9]{6,20}$/;
-        let PasswordFormat = 'Password must be 6-20 characters in length,cannot contain special characters,'+
+        let PasswordFormat = 'Password must be 6-20 characters in length,cannot contain special characters,' +
           'and must contain atleast one lower case letter,one upper case letter,and one digit'
         getState().form.UsersForm.hasOwnProperty('values') ?
           values = getState().form.UsersForm.values : null
@@ -542,8 +535,11 @@ export const ACTION_HANDLERS = {
         validationMessages: {}
       })
     } else {
-      let contactInfo = getNewContactPopUpInfo();
-      contactInfo.Timezones = action.payload
+      if (!state.newContactPopUp.hasOwnProperty('Timezones')) {
+        var contactInfo = getNewContactPopUpInfo();
+        contactInfo.Timezones = action.payload
+      }
+
       return Object.assign({}, state, {
         error: null,
         validationMessages: {},

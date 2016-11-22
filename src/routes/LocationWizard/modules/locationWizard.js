@@ -247,66 +247,65 @@ export function LoadAndRefreshForms(id, event) {
       })
 
       //If Location Id > 0, only bind data. otherwise load new forms
-      if (id > 0) {
-        try {
-          var allLocationdata = getState().location.allLocations;
-          findLocation(allLocationdata, id);
-          var locationObj = currentLocation;
-          currentLocation = null;
-
-          let editObject = getOMSLocationwizardData(id);
-          let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
-          let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
-          var marketDrivenMappings = getMarketDrivenMappings(locationObj.PrimaryMarketId);
-          var editSysIntegration = new Object({
-            locationsInfo: locationsInfo,
-            marketDrivenMappings: marketDrivenMappings
-          })
-          dispatch(BindInitialValues(locationObj,editObject,marketDrivenMappings));
-
-          dispatch(editSystemIntegration(editSysIntegration));
-
-          dispatch(BindInitialEquipments(editObject.GetOMSLocationWizardDataResult.Equipment));
-          dispatch(bindLocationData(dataHistorianParticularLocationObject, id));
-          dispatch(bindGatewayLocationData(editObject.GetOMSLocationWizardDataResult.Gateways));
-          dispatch(bindWorkLocationData(editObject.GetOMSLocationWizardDataResult.AssignedWorkflowGroups));
-          dispatch(bindUserLocationData(editObject.GetOMSLocationWizardDataResult.AssignedContacts, id));
-          dispatch(BindUnitCharacteristicsInitialValues(editObject.GetOMSLocationWizardDataResult.AllLocationAttributeWithValues))
-          dispatch({
-            type: 'redux-form/INITIALIZE',
-            meta: {
-              form: 'BasicInfoForm',
-              keepDirty: false
-            },
-            payload: getState().basic.BasicInfo
-          })
-          dispatch({
-            type: 'redux-form/INITIALIZE',
-            meta: {
-              form: 'CredentialsManagementForm',
-              keepDirty: false
-            },
-            payload: getState().basic.CredentialInitialValues
-          })
-
-
-          dispatch({
-            type: HIDE_SPINNER,
-            payload: false
-          })
-        } catch (e) {
-          console.log(e)
-          dispatch({
-            type: HIDE_SPINNER,
-            payload: false
-          })
-        }
-      } else {
-        dispatch({
-          type: HIDE_SPINNER,
-          payload: false
-        })
-      }
+          if (id > 0) {
+                    try {
+                          var allLocationdata = getState().location.allLocations;
+                          findLocation(allLocationdata, id);
+                          var locationObj = currentLocation;
+                          currentLocation = null;
+                          getOMSLocationwizardData(id).then(function(response){
+                              let editObject = response.data;
+                              let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
+                              let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
+                              getMarketDrivenMappings(locationObj.PrimaryMarketId).then(function(response){
+                                var marketDrivenMappings = response.data
+                                var editSysIntegration = new Object({
+                                    locationsInfo: locationsInfo,
+                                    marketDrivenMappings: marketDrivenMappings
+                                })
+                                dispatch(BindInitialValues(locationObj,editObject,marketDrivenMappings));
+                                dispatch(editSystemIntegration(editSysIntegration));
+                              });
+                              dispatch(BindInitialEquipments(editObject.GetOMSLocationWizardDataResult.Equipment));
+                              dispatch(bindLocationData(dataHistorianParticularLocationObject, id));
+                              dispatch(bindGatewayLocationData(editObject.GetOMSLocationWizardDataResult.Gateways));
+                              dispatch(bindWorkLocationData(editObject.GetOMSLocationWizardDataResult.AssignedWorkflowGroups));
+                              dispatch(bindUserLocationData(editObject.GetOMSLocationWizardDataResult.AssignedContacts, id));
+                              dispatch(BindUnitCharacteristicsInitialValues(editObject.GetOMSLocationWizardDataResult.AllLocationAttributeWithValues))
+                              dispatch({
+                                type: 'redux-form/INITIALIZE',
+                                meta: {
+                                  form: 'BasicInfoForm',
+                                  keepDirty: false
+                                },
+                                payload: getState().basic.BasicInfo
+                              })
+                              dispatch({
+                                type: 'redux-form/INITIALIZE',
+                                meta: {
+                                  form: 'CredentialsManagementForm',
+                                  keepDirty: false
+                                },
+                                payload: getState().basic.CredentialInitialValues
+                              })
+                              dispatch({
+                                type: HIDE_SPINNER,
+                                payload: false
+                              })
+                          });
+                    } catch (e) {
+                      console.log(e)
+                      dispatch({
+                        type: HIDE_SPINNER,
+                        payload: false
+                      })
+                    }
+          } else {
+            dispatch({
+              type: HIDE_SPINNER,
+              payload: false
+            })
+          }
     })
   }
 }
@@ -727,9 +726,9 @@ export function saveCompleteLocationWizard() {
 function saveObjectPreparationAndCall(getState, dispatch) {
   var values = getState().form.BasicInfoForm ? getState().form.BasicInfoForm.values : {};
 
-  CheckLocationNameIsExists(getState().location.allLocations, values.locationName, values.locationId ||0);
+  CheckLocationNameIsExists(getState().location.allLocations, values.locationName);
   var isLocationNamePresent = isLocationNameExists;
-  if (isLocationNamePresent) {
+  if (isLocationNamePresent && !(values.locationId > 0)) {
     isLocationNameExists = false;
     dispatch({
       type: SAVE_RESPONSE_HANDLER,

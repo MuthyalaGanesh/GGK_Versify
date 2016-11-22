@@ -19,6 +19,8 @@ import { getDefaultUnitCharacteristicsService } from './modules/unitCharacterist
 import { getSystemIntegrationTypesService } from './modules/systemIntegration'
 import { getWorkFlowsService } from './modules/workFlow'
 import { getUserInfoService } from './modules/user'
+import { getDataHistorianService } from './modules/dataHistorian'
+import { getGatewaysService } from './modules/gateways'
 
 
 export default (store) => ({
@@ -62,6 +64,8 @@ export default (store) => ({
       store.dispatch(getSystemIntegrationTypesService())
       store.dispatch(getWorkFlowsService())
       store.dispatch(getUserInfoService())
+      store.dispatch(getDataHistorianService())
+      store.dispatch(getGatewaysService())
         /*  Return getComponent   */
       cb(null, LocationWizard)
 

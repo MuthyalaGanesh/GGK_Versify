@@ -11,6 +11,7 @@ export const DELETE_GATEWAY = 'DELETE_GATEWAY'
 export const CONFIRM_DELETE_GATEWAY = 'CONFIRM_DELETE_GATEWAY'
 export const CLOSE_GATEWAY_CONFIRMATION = "CLOSE_GATEWAY_CONFIRMATION"
 export const SHOW_GATEWAY_ERRORS = "SHOW_GATEWAY_ERRORS"
+export const GET_GATEWAY_SERVICE = "GET_GATEWAY_SERVICE"
 
 export function getGateways() {
   return {
@@ -60,6 +61,23 @@ export function CloseGatewayConfirmation() {
         payload: ""
       })
     })
+  }
+}
+
+export function getGatewaysService(){
+    return (dispatch, getState) => {
+      return new Promise((resolve) => {
+          getGatewayInfo().then(function(response){
+                 dispatch({
+                    type: GET_GATEWAY_SERVICE,
+                    payload:response.data.GetOMSLocationWizardIndependentDataResult
+                 })
+                  dispatch({
+                    type: "GET_GATEWAY_SERVICE_FOR_DATA_HISTORIAN",
+                    payload:response.data.GetOMSLocationWizardIndependentDataResult
+                 })
+          })
+      })
   }
 }
 
@@ -429,12 +447,17 @@ export const ACTION_HANDLERS = {
       error: 1,
       validationMessages: action.payload
     })
+  },
+  [GET_GATEWAY_SERVICE]: (state, action) => {
+    return Object.assign({}, state, {
+      gateway:action.payload
+    })
   }
 }
 
 const initialState = {
   error: null,
-  gateway: getGatewayInfo(),
+  gateway: {},
   EditableGateway: {},
   showAddModal: false,
   saveGateway: [],
