@@ -14,7 +14,8 @@ import { getLocationTypesService,
          getPrimaryMarketsService,
          getTechnologyTypesService,
          getFuelClassesService,
-         getTimezonesService } from './modules/basicInfo'
+         getTimezonesService,
+         getDefaultCredentialBasicData } from './modules/basicInfo'
 import { getDefaultUnitCharacteristicsService } from './modules/unitCharacteristics'
 import { getSystemIntegrationTypesService } from './modules/systemIntegration'
 import { getWorkFlowsService } from './modules/workFlow'
@@ -54,6 +55,7 @@ export default (store) => ({
       injectReducer(store, { key: 'users', reducer: userReducer })
       injectReducer(store, { key: 'workFlows', reducer: workflowReducer })
       store.dispatch(getLocationsInformation())
+      store.dispatch(getDefaultCredentialBasicData())      
       store.dispatch(getLocationTypesService())
       store.dispatch(getOwnersService())
       store.dispatch(getPrimaryMarketsService())

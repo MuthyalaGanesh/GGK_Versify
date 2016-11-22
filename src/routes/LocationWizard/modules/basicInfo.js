@@ -20,25 +20,21 @@ export const GET_PRIMARY_MARKETS = "GET_PRIMARY_MARKETS"
 export const GET_TECHNOLOGY_TYPES = "GET_TECHNOLOGY_TYPES"
 export const GET_FUEL_CLASSES = "GET_FUEL_CLASSES"
 export const GET_TIME_ZONE = "GET_TIME_ZONE"
+export const GET_DEFAULT_CREDENTIALDATA = "GET_DEFAULT_CREDENTIALDATA"
+
 
 export function BindInitialValues(currentLocation,omsLocationwizardData,marketDrivendata) {
 
 
   return (dispatch, getState) => {
-    return new Promise((resolve) => {
-
+    return new Promise((resolve) => {     
       dispatch({
         type: BIND_BASIC_INITIAL_VALUES,
         payload: {
           currentLocation:currentLocation,
           omsLocationwizardData:omsLocationwizardData,
           marketDrivendata:marketDrivendata}
-      })
-         dispatch({
-                type:'redux-form/INITIALIZE',
-                meta:{form:'BasicInfoForm',keepDirty:false},
-                payload:getState().basic.BasicInfo
-                })
+      })         
     })
   }
 };
@@ -102,6 +98,7 @@ export const ACTION_HANDLERS = {
         physicalTimezone: locationObj.PhysicalTz,
         ownerShipPercentage: locationObj.OwnershipPct,
       }
+      debugger;
       var credentialData = PrepareCredentialBasicData(marketDrivendata, omsLocationwizardData);
       return  Object.assign({}, state, {
         BasicInfo: basicInfo,
@@ -143,6 +140,11 @@ export const ACTION_HANDLERS = {
   [GET_PRIMARY_MARKETS]: (state,action) =>{
      return Object.assign({}, state, {
       primaryMarkets: action.payload
+    })
+  },
+  [GET_DEFAULT_CREDENTIALDATA]:(state,action) =>{
+     return Object.assign({}, state, {
+      CredentialBasicData:action.payload
     })
   },
   [GET_TECHNOLOGY_TYPES]: (state,action) => {
@@ -251,6 +253,19 @@ export function getPrimaryMarketsService() {
       })
   }
 }
+export function getDefaultCredentialBasicData() {
+   return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      getMarketDrivenMappings().then(function(response){
+                dispatch({
+                    type: GET_DEFAULT_CREDENTIALDATA,
+                    payload: response.data
+                });
+            })   
+      })
+  }
+}
+
 export function getTechnologyTypesService() {
    return (dispatch, getState) => {
     return new Promise((resolve) => {
@@ -307,7 +322,7 @@ const initialState = {
   initial: true,
   BasicInfo: {},
   CredentialInitialValues: {},
-  CredentialBasicData: getMarketDrivenMappings()
+  CredentialBasicData: []
 };
 
 export default function basiInfoReducer(state = initialState, action) {
