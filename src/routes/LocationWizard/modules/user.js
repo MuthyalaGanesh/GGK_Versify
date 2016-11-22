@@ -185,7 +185,7 @@ export function saveNewContact() {
           invalid = true
           messages.userId = 'Please specify User Id'
         }
-        if (!values.userId.trim()) {
+        else if (!values.userId.trim()) {
           invalid = true
           messages.userId = 'Please specify User Id'
         }
