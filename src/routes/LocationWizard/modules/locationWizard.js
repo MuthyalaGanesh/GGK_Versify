@@ -1045,6 +1045,5 @@ const initialState = {
 
 export default function locationWizardReducer(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type];
-  console.log(action.payload)
   return handler ? handler(state, action) : state;
 }
