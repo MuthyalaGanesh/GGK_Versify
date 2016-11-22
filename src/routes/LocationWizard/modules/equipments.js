@@ -65,8 +65,9 @@ export function DeleteEquipment(index) {
 }
 export const ACTION_HANDLERS = {
   [INITIAL_EQUIPMENT_NEW_LOCATION]: (state, action) => {
+    var equipments = []
     return Object.assign({}, state, {
-      insertedEquipment: [{}]
+      insertedEquipment: equipments
     })
   },
   [STATE_CHANGE_EDIT_FOR_EQUIPMENT]: (state, action) => {

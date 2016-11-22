@@ -121,7 +121,8 @@ export function getSystemIntegrationTypesService() {
 
 export const ACTION_HANDLERS = {
     [BIND_SYS_INTEGRATIONS_NEW_LOCATION]: (state, action) => {
-        return Object.assign({}, state, { selectedSystemIntegrationTypes: [{}] })
+        var selectedSysInt = [];
+        return Object.assign({}, state, { selectedSystemIntegrationTypes: selectedSysInt })
     },
     [ALIAS_SAVE]: (state, action) => {
         var newState = Object.assign({}, state)
@@ -142,12 +143,12 @@ export const ACTION_HANDLERS = {
             var newSelectedSysIntegrations = [];
             var newUnSelectedSysIntegrations = [];
             var valuePresent = 0;
-            state.selectedSystemIntegrationTypes.map(sel => {
+            state.selectedSystemIntegrationTypes ? state.selectedSystemIntegrationTypes.map(sel => {
                 newSelectedSysIntegrations.push(sel)
                 if (sel.ExternalSystemName.toLowerCase() == action.payload.toLowerCase()) {
                     valuePresent++;
                 }
-            })
+            }) : null
             state.systemIntegrationTypes.map(ssit => {
                 if (ssit.ExternalSystemName == action.payload) {
                     if (state.deletedSystemIntegrations && state.deletedSystemIntegrations.length > 0) {
