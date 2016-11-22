@@ -58,7 +58,7 @@ export function DeleteEquipment(index) {
 }
 export const ACTION_HANDLERS = {
   [STATE_CHANGE_EDIT_FOR_EQUIPMENT]: (state, action) => {
-    var parentLocationId = action.payload ? action.payload[0] ? action.payload[0].ParentLocationId : 0 : 0
+    var parentLocationId = action.payload && action.payload[0] ? action.payload[0].ParentLocationId : 0
     if (action.payload) {
       var equipments = []
       action.payload.map(ap => {

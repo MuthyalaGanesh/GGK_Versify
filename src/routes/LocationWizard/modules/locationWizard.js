@@ -35,9 +35,9 @@ import {
 } from "./equipments"
 
 import axios from 'axios'
-var Scroll  = require('react-scroll');
-var scroll     = Scroll.animateScroll;
-var scrollSpy  = Scroll.scrollSpy;
+var Scroll = require('react-scroll');
+var scroll = Scroll.animateScroll;
+var scrollSpy = Scroll.scrollSpy;
 
 export const TOGGLE_LEFTMENU_CLICK = 'TOGGLE_LEFTMENU_CLICK';
 export const LOCATIONS_MENUITEM_DROPDOWN_CLICK = 'LOCATIONS_MENUITEM_DROPDOWN_CLICK';
@@ -455,13 +455,16 @@ var equipmentsObj = [];
 function equipmentObjectPreparation(stateTree, dispatch, locationId) {
   if (stateTree.equipments && stateTree.equipments.insertedEquipment) {
     stateTree.equipments.insertedEquipment.map(ie => {
+      locationId > 0 ? ie.ParentLocationId = locationId : null
       equipmentsObj.push(ie)
     })
     if (stateTree.equipments.deletedEquipments) {
       stateTree.equipments.deletedEquipments.map(de => {
+        locationId > 0 ? de.ParentLocationId = locationId : null
         equipmentsObj.push(de)
       })
     }
+    return equipmentsObj;
   }
   else {
     dispatch({
@@ -766,7 +769,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
         Roles: rolesObj,
         Gateways: gatewayObj,
         ScadaPoints: dataHistorianObj,
-        Equipments: locationId > 0 ? equipmentsObj : []
+        Equipments: equipmentsObj
       }
     }
 

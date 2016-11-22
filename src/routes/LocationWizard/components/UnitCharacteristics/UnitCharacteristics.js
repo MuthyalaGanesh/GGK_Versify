@@ -121,16 +121,17 @@ const EffectiveDateValues = (props) => (
                                 props.touched.hasOwnProperty('UnitCharacteristicsForm') &&
                                     props.touched.UnitCharacteristicsForm.hasOwnProperty('values') && props.touched.UnitCharacteristicsForm.values.hasOwnProperty("editableData") &&
                                     props.touched.UnitCharacteristicsForm.values.editableData[index - 1] && props.touched.UnitCharacteristicsForm.values.editableData[index - 1].effectiveEndDate
-                                    ? props.touched.UnitCharacteristicsForm.values.editableData[index - 1].effectiveEndDate : props.defaultValues ?
-                                        (props.defaultValues[props.defaultValues.length - 1].EffectiveEndDate) : (props.touched.UnitCharacteristicsForm.values &&
+                                    ? props.touched.UnitCharacteristicsForm.values.editableData[index - 1].effectiveEndDate : props.defaultValues && props.defaultValues.length > 0 &&
+                                        props.defaultValues[props.defaultValues.length - 1] && props.defaultValues[props.defaultValues.length - 1].EffectiveEndDate ?
+                                        props.defaultValues[props.defaultValues.length - 1].EffectiveEndDate : (props.touched.UnitCharacteristicsForm.values &&
                                             props.touched.UnitCharacteristicsForm.values.hasOwnProperty('effectiveEndDate') && props.touched.UnitCharacteristicsForm.values.effectiveEndDate[0] ?
                                             props.touched.UnitCharacteristicsForm.values.effectiveEndDate[0] : new Date()) }
                             />
-
                             {(props.unitCharacteristics.error && !(props.touched.hasOwnProperty('UnitCharacteristicsForm') &&
                                 props.touched.UnitCharacteristicsForm.hasOwnProperty('values') && props.touched.UnitCharacteristicsForm.values.hasOwnProperty("editableData") &&
                                 props.touched.UnitCharacteristicsForm.values.editableData[index - 1] && props.touched.UnitCharacteristicsForm.values.editableData[index - 1].effectiveEndDate
-                                ? props.touched.UnitCharacteristicsForm.values.editableData[index - 1].effectiveEndDate : props.defaultValues ?
+                                ? props.touched.UnitCharacteristicsForm.values.editableData[index - 1].effectiveEndDate : props.defaultValues && props.defaultValues.length > 0 &&
+                                    props.defaultValues[props.defaultValues.length - 1] && props.defaultValues[props.defaultValues.length - 1].EffectiveEndDate ?
                                     (props.defaultValues[props.defaultValues.length - 1].EffectiveEndDate) : (props.touched.UnitCharacteristicsForm.values &&
                                         props.touched.UnitCharacteristicsForm.values.effectiveEndDate[0] ? props.touched.UnitCharacteristicsForm.values.effectiveEndDate[0] : null))) ?
                                 <span className="errorMessage">Effective Start Date is required</span> : null }
@@ -202,14 +203,17 @@ export const UnitCharacteristics = (props) => {
                                                         <td>{uc.description}</td>
                                                         <td>{uc.editableAttributes && uc.editableAttributes.length &&
                                                             uc.editableAttributes[0].Value && uc.editableAttributes[0].EffectiveStartDate &&
-                                                            uc.editableAttributes[0].EffectiveEndDate ? uc.editableAttributes[0].Value : null}</td>
+                                                            uc.editableAttributes[0].EffectiveEndDate && !props.unitCharacteristics.error ?
+                                                            uc.editableAttributes[0].Value : null}</td>
                                                         <td className="text-align-col">{uc.UOM}</td>
                                                         <td>{uc.editableAttributes && uc.editableAttributes.length &&
                                                             uc.editableAttributes[0].Value && uc.editableAttributes[0].EffectiveStartDate &&
-                                                            uc.editableAttributes[0].EffectiveEndDate ? uc.editableAttributes[0].EffectiveStartDate : null}</td>
+                                                            uc.editableAttributes[0].EffectiveEndDate && !props.unitCharacteristics.error ?
+                                                            uc.editableAttributes[0].EffectiveStartDate : null}</td>
                                                         <td>{uc.editableAttributes && uc.editableAttributes.length &&
                                                             uc.editableAttributes[0].Value && uc.editableAttributes[0].EffectiveStartDate &&
-                                                            uc.editableAttributes[0].EffectiveEndDate ? uc.editableAttributes[0].EffectiveEndDate : null}</td>
+                                                            uc.editableAttributes[0].EffectiveEndDate && !props.unitCharacteristics.error ?
+                                                            uc.editableAttributes[0].EffectiveEndDate : null}</td>
                                                         <td className="text-align-col">
                                                             <OverlayTrigger placement="left" overlay={
                                                                 <Tooltip id="tooltip">

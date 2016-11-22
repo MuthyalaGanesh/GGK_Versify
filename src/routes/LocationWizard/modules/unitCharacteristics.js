@@ -325,10 +325,10 @@ export const ACTION_HANDLERS = {
           }
           if (action.payload.values && action.payload.values.editableData) {
             action.payload.values.editableData.map((ed, i) => {
-
               var newEditableAttributes = {
                 EffectiveEndDate: ed.effectiveEndDate,
-                EffectiveStartDate: ed.effectiveStartDate ? ed.effectiveStartDate : (action.payload.values.editableData[i - 1] && action.payload.values.editableData[i - 1].effectiveEndDate ? action.payload.values.editableData[i - 1].effectiveEndDate : (uc.editableAttributes[0].EffectiveEndDate)),
+                EffectiveStartDate: ed.effectiveStartDate ? ed.effectiveStartDate : (action.payload.values.editableData[i - 1] && action.payload.values.editableData[i - 1].effectiveEndDate ?
+                  action.payload.values.editableData[i - 1].effectiveEndDate : (finalAttributes ? finalAttributes[0].EffectiveEndDate : null)),
                 Value: ed.ucvalue,
                 LocationAttributeId: ed.LocationAttributeId ? ed.LocationAttributeId : 0
               }
@@ -483,7 +483,7 @@ export const ACTION_HANDLERS = {
     if (action.payload != null && action.payload != undefined && !isNaN(action.payload)) {
       var newEditableAttributes = []
       var newEditableUnitCharacter = []
-      var deletableAtributes=[]
+      var deletableAtributes = []
       var newState = Object.assign({}, state)
       newState.selectedunitCharacteristics.map((suc) => {
         if (suc.id == state.editableUnitCharacter.id && newEditableUnitCharacter.length == 0) {
@@ -496,7 +496,7 @@ export const ACTION_HANDLERS = {
               ea.Value = "";
               ea.EffectiveEndDate = null;
               ea.EffectiveStartDate = null;
-              if(ea.LocationAttributeId>0){
+              if (ea.LocationAttributeId > 0) {
                 deletableAtributes.push(ea)
               }
             }
