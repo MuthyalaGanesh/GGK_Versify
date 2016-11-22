@@ -117,8 +117,8 @@ export const DataHistorian = (props) => {
                                     <label>Tag</label>
                                 </div>
                                 <div className="col-xs-6">
-                                    <Field component={InputField} type="text" className="form-control" name="Tag" defaultvalue={props.dataHistorian.EditableDataHistorian.scadaTag} onblur ={props.validateData}
-                                         placeholder="Tag" touched = {touched.hasOwnProperty('DataHistorianForm')?touched.DataHistorianForm.hasOwnProperty('fields') ? touched.DataHistorianForm.fields.hasOwnProperty('Tag') : false :false }>
+                                    <Field component={InputField} type="text" className="form-control" name="Tag" onblur ={props.validateData}
+                                         placeholder="Tag" touched = {1}>
                                     </Field>
                                     {error && validations.Tag && <span className="errorMessage">{validations.Tag}</span>}
                                 </div>

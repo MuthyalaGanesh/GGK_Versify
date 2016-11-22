@@ -139,6 +139,11 @@ export function AddDataHistorian() {
           invalid = true
           messages.Tag = 'Please specify Tag'
         }
+        else if(!values.Tag.trim())
+        {
+          invalid = true
+          messages.Tag = 'Please specify Tag'
+        }
         if (!values.Gateway) {
           invalid = true
           messages.Gateway = 'Please select Gateway'
@@ -196,6 +201,11 @@ export function UpdateAddDataHistorian() {
             getState().form.DataHistorianForm.fields.Tag.touched ?
             invalid = true : editData.scadaTag ? messages.Tag = null : invalid = true
         }
+        else if(!values.Tag.trim())
+        {
+          invalid = true
+          messages.Tag = 'Please specify Tag'
+        }
         if (!values.Gateway && !editData.scadaServerId) {
           invalid = true
           messages.Gateway = 'Please select Gateway'
@@ -227,15 +237,18 @@ export function EditDataHistorian(index) {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       dispatch({
-        type: 'redux-form/DESTROY',
+        type: EDIT_DATAHISTORIAN,
+        payload: index
+      })
+      let editedData = getState().dataHistorian.EditableDataHistorian
+      dispatch({
+        type: 'redux-form/INITIALIZE',
         meta: {
           form: "DataHistorianForm"
         },
-        payload: ""
-      })
-      dispatch({
-        type: EDIT_DATAHISTORIAN,
-        payload: index
+        payload: {
+          Tag : editedData.scadaTag
+        }
       })
     })
   }
@@ -275,7 +288,7 @@ export function validateData() {
         if (!editData.hasOwnProperty('id')) {
           if (values != null) {
             values.metric ? messages.Metric = null : messages.Metric = 'Please select Metric'
-            values.Tag ? messages.Tag = null : messages.Tag = 'Please specify Tag'
+            values.Tag && values.Tag.trim() ? messages.Tag = null : messages.Tag = 'Please specify Tag'
             values.Gateway ? messages.Gateway = null : messages.Gateway = 'Please select Gateway'
           } else {
             messages.Metric = 'Please select Metric'
@@ -289,7 +302,7 @@ export function validateData() {
               getState().form.DataHistorianForm.fields.hasOwnProperty('Tag') &&
               getState().form.DataHistorianForm.fields.Tag.hasOwnProperty('touched') &&
               getState().form.DataHistorianForm.fields.Tag.touched ?
-              values.Tag ? messages.Tag = null : messages.Tag = 'Please specify Tag' : editData.scadaTag ? messages.tag = null : messages.Tag = 'Please specify Tag'
+              values.Tag && values.Tag.trim() ? messages.Tag = null : messages.Tag = 'Please specify Tag' : editData.scadaTag ? messages.tag = null : messages.Tag = 'Please specify Tag'
             values.Gateway || editData.scadaServerId ? messages.Gateway = null : messages.Gateway = 'Please select Gateway'
           }
         }

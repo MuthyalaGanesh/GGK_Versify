@@ -94,13 +94,23 @@ export function AddGateway() {
           invalid = true
           messages.GatewayName = 'Please specify Name'
         }
+        else {
+          if (!values.GatewayName.trim()) {
+            invalid = true
+            messages.GatewayName = 'Please specify Name'
+          }
+          else if (gateways.findIndex((gateway) => gateway.aliasName === values.GatewayName) >= 0) {
+            invalid = true
+            messages.GatewayName = 'Name must be unique'
+          }
+        }
         if (!values.GatewayURL) {
           invalid = true
           messages.GatewayURL = 'Please specify url'
         }
-        if (values.GatewayName && gateways.findIndex((gateway) => gateway.aliasName === values.GatewayName) >=0) {
-            invalid = true
-            messages.GatewayName = 'Name must be unique'
+        else if (!values.GatewayURL.trim()) {
+          invalid = true
+          messages.GatewayURL = 'Please specify url'
         }
         if (invalid == true) {
           dispatch({
@@ -152,10 +162,15 @@ export function UpdateGateway() {
           invalid = true : editedGateway.GatewayName ? messages.GatewayName = null : invalid = true
       }
       if (values.GatewayName) {
-        let index = gateways.Gateways.findIndex((gateway) => gateway.aliasName === values.GatewayName)
-        if (index >= 0 && index != editedGateway.index) {
+        if (values.GatewayName.trim()) {
+          let index = gateways.Gateways.findIndex((gateway) => gateway.aliasName === values.GatewayName)
+          if (index >= 0 && index != editedGateway.index) {
+            invalid = true
+            messages.GatewayName = 'Name must be unique'
+          }
+        } else {
           invalid = true
-          messages.GatewayName = 'Name must be unique'
+          messages.GatewayName = 'Please specify Name'
         }
       }
       if (!values.GatewayURL) {
@@ -163,6 +178,10 @@ export function UpdateGateway() {
         fields && fields.hasOwnProperty('GatewayURL') && fields.GatewayURL.hasOwnProperty('touched') &&
           fields.GatewayURL.touched ?
           invalid = true : editedGateway.GatewayURL ? messages.GatewayURL = null : invalid = true
+      }
+      else if (!values.GatewayURL.trim()) {
+          messages.GatewayURL = 'Please specify url'
+          invalid = true
       }
       if (invalid == true) {
         dispatch({
@@ -194,6 +213,19 @@ export function EditGateway(index) {
         type: EDIT_GATEWAY,
         payload: index
       })
+      let editedGateway = getState().gateways.EditableGateway
+      dispatch({
+        type: 'redux-form/INITIALIZE',
+        meta: {
+          form: "GatewayForm"
+        },
+        payload: {
+          GatewayName: editedGateway.GatewayName,
+          GatewayURL: editedGateway.GatewayURL,
+          GatewayLogin: editedGateway.GatewayLogin,
+          GatewayPassword: editedGateway.GatewayPassword
+        }
+      })
     })
   }
 }
@@ -221,9 +253,9 @@ export function validateGateway() {
           values = getState().form.GatewayForm.values : null
         if (!editedGateway.hasOwnProperty('Id')) {
           if (values != null) {
-            values.GatewayName ? messages.GatewayName = null : messages.GatewayName = 'Please specify Name'
-            values.GatewayURL ? messages.GatewayURL = null : messages.GatewayURL = 'Please specify url'
-            if (values.GatewayName) {
+            values.GatewayName && values.GatewayName.trim() ? messages.GatewayName = null : messages.GatewayName = 'Please specify Name'
+            values.GatewayURL && values.GatewayURL.trim() ? messages.GatewayURL = null : messages.GatewayURL = 'Please specify url'
+            if (values.GatewayName && values.GatewayName.trim()) {
               let index = gateways.Gateways.findIndex((gateway) => gateway.aliasName === values.GatewayName)
               if (index >= 0 && index != editedGateway.index) {
                 messages.GatewayName = 'Name must be unique'
@@ -237,15 +269,15 @@ export function validateGateway() {
           if (values != null) {
             let fields
             getState().form.GatewayForm.hasOwnProperty('fields') ?
-              fields = getState().form.GatewayForm.hasOwnProperty('fields') : fields = {}
+              fields = getState().form.GatewayForm.fields : fields = {}
 
             fields.hasOwnProperty('GatewayName') && fields.GatewayName.hasOwnProperty('touched') &&
               fields.GatewayName.touched ?
-              values.GatewayName ? messages.GatewayName = null : messages.GatewayName = 'Please specify Name' : editedGateway.GatewayName ? messages.GatewayName = null : messages.GatewayName = 'Please specify Name'
+              values.GatewayName && values.GatewayName.trim() ? messages.GatewayName = null : messages.GatewayName = 'Please specify Name' : editedGateway.GatewayName ? messages.GatewayName = null : messages.GatewayName = 'Please specify Name'
 
             fields.hasOwnProperty('GatewayURL') && fields.GatewayURL.hasOwnProperty('touched') &&
               fields.GatewayURL.touched ?
-              values.GatewayURL ? messages.GatewayURL = null : messages.GatewayURL = 'Please specify url' : editedGateway.GatewayURL ? messages.GatewayURL = null : messages.GatewayURL = 'Please specify url'
+              values.GatewayURL && values.GatewayURL.trim() ? messages.GatewayURL = null : messages.GatewayURL = 'Please specify url' : editedGateway.GatewayURL ? messages.GatewayURL = null : messages.GatewayURL = 'Please specify url'
 
           }
         }

@@ -147,9 +147,13 @@ export function saveNewContact() {
       let values = getState().form.UsersForm.values;
       let messages = {}
       let invalid = false
-      let regularExpression = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!_@#$%^&*])[a-zA-Z0-9!_@#$%^&*]{6,20}$/;
+      let regularExpression = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9]{6,20}$/;
       if (values != null) {
         if (!values.Name) {
+          invalid = true
+          messages.Name = 'Please specify Name'
+        }
+        else if (!values.Name.trim()) {
           invalid = true
           messages.Name = 'Please specify Name'
         }
@@ -169,11 +173,19 @@ export function saveNewContact() {
           invalid = true
           messages.PrimaryEmail = 'Please specify Primary Email'
         }
+        else if (!values.PrimaryEmail.trim()) {
+          invalid = true
+          messages.PrimaryEmail = 'Please specify Primary Email'
+        }
         if (!values.status) {
           invalid = true
           messages.status = 'Please select status'
         }
         if (!values.userId) {
+          invalid = true
+          messages.userId = 'Please specify User Id'
+        }
+        if (!values.userId.trim()) {
           invalid = true
           messages.userId = 'Please specify User Id'
         }
@@ -183,7 +195,7 @@ export function saveNewContact() {
         }
         else
         {
-          messages.PasswordFormat = 'Password must be 6-20 characters in length,contain special characters,'+
+          messages.PasswordFormat = 'Password must be 6-20 characters in length,cannot contain special characters,'+
           'and must contain atleast one lower case letter,one upper case letter,and one digit'
           regularExpression.test(values.Password) ? messages.PasswordFormat = null : invalid = true
         }
@@ -482,19 +494,19 @@ export function validateContact() {
       if (users.error) {
         let values = {}
         let messages = {}
-        let regularExpression = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!_@#$%^&*])[a-zA-Z0-9!_@#$%^&*]{6,20}$/;
-        let PasswordFormat = 'Password must be 6-20 characters in length,contain special characters,'+
+        let regularExpression = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9]{6,20}$/;
+        let PasswordFormat = 'Password must be 6-20 characters in length,cannot contain special characters,'+
           'and must contain atleast one lower case letter,one upper case letter,and one digit'
         getState().form.UsersForm.hasOwnProperty('values') ?
           values = getState().form.UsersForm.values : null
         if (values != null) {
-          values.Name ? messages.Name = null : messages.Name = 'Please specify Name'
+          values.Name && values.Name.trim() ? messages.Name = null : messages.Name = 'Please specify Name'
           values.Org ? messages.Org = null : messages.Org = 'Please select Organization'
           values.Type ? messages.Type = null : messages.Type = 'Please select Type'
           values.TimeZone ? messages.TimeZone = null : messages.TimeZone = 'Please select Time Zone'
-          values.PrimaryEmail ? messages.PrimaryEmail = null : messages.PrimaryEmail = 'Please specify Primary Email'
+          values.PrimaryEmail && values.PrimaryEmail.trim() ? messages.PrimaryEmail = null : messages.PrimaryEmail = 'Please specify Primary Email'
           values.status ? messages.status = null : messages.status = 'Please select status'
-          values.userId ? messages.userId = null : messages.userId = 'Please specify User Id'
+          values.userId && values.userId.trim() ? messages.userId = null : messages.userId = 'Please specify User Id'
           values.Password ? messages.Password = null : messages.Password = 'Please specify Password'
           values.Password ? regularExpression.test(values.Password) ? messages.PasswordFormat = null : messages.PasswordFormat = PasswordFormat : messages.PasswordFormat = null
         } else {

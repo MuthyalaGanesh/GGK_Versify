@@ -78,16 +78,15 @@ export const Gateways = (props) => {
                 <Modal.Header>
                     <Modal.Title>New Gateway</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
-                
+                <Modal.Body>                
                     <div className="row">
                             <div className="col-xs-12 form-group">
                                 <div className="col-xs-6">
                                     <label>Name</label>
                                 </div>
                                 <div className="col-xs-6">
-                                    <Field component={InputField} type="text" className="form-control" name="GatewayName" onblur ={props.validateGateway}
-                                    defaultvalue={editableGateway.GatewayName} touched = {touched.hasOwnProperty('GatewayForm')?touched.GatewayForm.hasOwnProperty('fields') ? touched.GatewayForm.fields.hasOwnProperty('GatewayName') : false :false }>
+                                    <Field component={InputField} type="text" className="form-control" name="GatewayName" onblur ={props.validateGateway} placeholder="Gateway Name"
+                                    touched = {1}>
                                     </Field>
                                     {error && validations.GatewayName && <span className="errorMessage">{validations.GatewayName}</span>}
                                 </div>
@@ -97,8 +96,8 @@ export const Gateways = (props) => {
                                     <label>URL</label>
                                 </div>
                                 <div className="col-xs-6">
-                                    <Field component={InputField} type="text" touched = {touched.hasOwnProperty('GatewayForm')?touched.GatewayForm.hasOwnProperty('fields') ? touched.GatewayForm.fields.hasOwnProperty('GatewayURL') : false :false } className="form-control" name="GatewayURL"
-                                    defaultvalue={editableGateway.GatewayURL} onblur ={props.validateGateway}/>
+                                    <Field component={InputField} type="text" touched = {1} className="form-control" name="GatewayURL"
+                                    placeholder="Gateway URL" onblur ={props.validateGateway}/>
                                     {error && validations.GatewayURL && <span className="errorMessage">{validations.GatewayURL}</span>}
                                 </div>
                             </div>
@@ -107,8 +106,8 @@ export const Gateways = (props) => {
                                     <label>Login</label>
                                 </div>
                                 <div className="col-xs-6">
-                                    <Field component={InputField} type="text" className="form-control" name="GatewayLogin"
-                                    defaultvalue={editableGateway.GatewayLogin} touched = {touched.hasOwnProperty('GatewayForm')?touched.GatewayForm.hasOwnProperty('fields') ? touched.GatewayForm.fields.hasOwnProperty('GatewayLogin') : false :false }>
+                                    <Field component={InputField} type="text" className="form-control" name="GatewayLogin" placeholder="Login"
+                                    touched = {1}>
                                     </Field>
                                 </div>
                             </div>
@@ -117,7 +116,7 @@ export const Gateways = (props) => {
                                     <label>Password</label>
                                 </div>
                                 <div className="col-xs-6">
-                                    <Field component={InputField} type="text" className="form-control" name="GatewayPassword"
+                                    <Field component={InputField} type="text" className="form-control" name="GatewayPassword" placeholder="Password"
                                     defaultvalue={editableGateway.GatewayPassword} touched = {touched.hasOwnProperty('GatewayForm')?touched.GatewayForm.hasOwnProperty('fields') ? touched.GatewayForm.fields.hasOwnProperty('GatewayPassword') : false :false }>
                                     </Field>
                                 </div>
