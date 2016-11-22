@@ -9,12 +9,12 @@ import LocationWizardRoute from '../routes/LocationWizard'
     PlainRoute objects to build route definitions.   */
 
 export const createRoutes = (store) => ([{
-	path: '/',
+	path: '/home',
 	component: CoreLayout,
 	indexRoute: Home(store),
 	childRoutes: []
 }, {
-	path: '/location',
+	path: '/',
 	component: LocationLayout,
 	indexRoute: LocationWizardRoute(store),
 	childRoutes: []
