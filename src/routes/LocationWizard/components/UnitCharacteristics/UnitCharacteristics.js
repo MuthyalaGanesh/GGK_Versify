@@ -13,9 +13,9 @@ const EffectiveDateValues = (props) => (
         <Table striped bordered condensed hover>
             <thead>
                 <tr>
-                    <th>Value</th>
-                    <th>Effective Start Date</th>
-                    <th>Effective End Date</th>
+                    <th>Value<sup>*</sup></th>
+                    <th>Effective Start Date<sup>*</sup></th>
+                    <th>Effective End Date<sup>*</sup></th>
                     <th>
                         <span>
                             Actions
@@ -250,7 +250,7 @@ export const UnitCharacteristics = (props) => {
                         <div className="row">
                             <div className="col-xs-12 form-group">
                                 <div className="col-xs-6">
-                                    <label>Unit Characteristic Name</label>
+                                    <label>Unit Characteristic Name<sup>*</sup></label>
                                 </div>
                                 <div className="col-xs-6">
                                     <Field component={DropdownListField}
