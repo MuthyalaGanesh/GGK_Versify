@@ -136,7 +136,7 @@ export const ACTION_HANDLERS = {
             var valuePresent = 0;
             state.selectedSystemIntegrationTypes.map(sel => {
                 newSelectedSysIntegrations.push(sel)
-                if (sel.ExternalSystemName == action.payload) {
+                if (sel.ExternalSystemName.toLowerCase() == action.payload.toLowerCase()) {
                     valuePresent++;
                 }
             })
@@ -198,6 +198,7 @@ export const ACTION_HANDLERS = {
                 else {
                     ssit.LocationMappingId = ssit.LocationMappingId > 0 ? ssit.LocationMappingId : -1;
                     ssit.FlaggedForDeletion = true;
+                    ssit.AliasName = ""
                     var valuePresence = 1;
                     newUnSelectedSysIntegrations.map(newUn => {
                         if (newUn.ExternalSystemName == ssit.ExternalSystemName) {

@@ -36,7 +36,7 @@ export function EditEquipment(index) {
         type: 'redux-form/INITIALIZE',
         meta: { form: "EquipmentsForm", },
         payload: {
-          editedEquipment: getState().equipments && getState().equipments.editableEquipment ? getState().equipments.editableEquipment.Name:null
+          editedEquipment: getState().equipments && getState().equipments.editableEquipment ? getState().equipments.editableEquipment.Name : null
         }
       })
     })
@@ -85,7 +85,7 @@ export const ACTION_HANDLERS = {
       }
       state.insertedEquipment.map((eq) => {
         newEquipmentData.push(eq);
-        if (eq.Name == action.payload) {
+        if (eq.Name.toLowerCase() == action.payload.toLowerCase()) {
           valuePresence++;
         }
       })
@@ -108,16 +108,22 @@ export const ACTION_HANDLERS = {
     return Object.assign({}, state, { showEditModal: !state.showEditModal })
   },
   [APPLY_EQUIPMENT]: (state, action) => {
-    if (action.payload) {
+    if (action.payload && action.payload.replace(/\s/g, '').length) {
       var updatedEquipments = []
+      var valuePresence = 1
+      state.insertedEquipment.map((eq) => {
+        if (eq.Name.toLowerCase() == action.payload.toLowerCase()) {
+          valuePresence++;
+        }
+      })
       state.insertedEquipment.map((eq) => {
         if (eq.Name == state.editableEquipment.Name) {
-          updatedEquipments.push(new Object({
+          updatedEquipments.push(valuePresence == 1 ? new Object({
             Id: eq.Id,
             Name: action.payload,
             ParentLocationId: eq.ParentLocationId,
             IsDirty: false
-          }));
+          }) : eq);
         }
         else {
           updatedEquipments.push(eq)
