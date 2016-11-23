@@ -47,7 +47,7 @@ class TreeView extends React.Component {
         Children: this.setNodeId(childNode,defaultNodeExpanded),
         parentNode: node,
         state: {
-          selected: childNode.state ? !!childNode.state.selected : false ,
+          selected: childNode.Id == defaultNodeExpanded ? true : false ,
           expanded: this.recusrsiveexpansion(childNode,defaultNodeExpanded)? true : childNode.state ? !!childNode.state.expanded : false 
         },
         Name: childNode.Name,
@@ -283,7 +283,7 @@ TreeView.defaultProps = {
   borderColor: undefined,
   onhoverColor: '#F5F5F5',
   selectedColor: '#000000',
-  selectedBackColor: undefined,
+  selectedBackColor: 'black',
 
   enableLinks: false,
   highlightSelected: true,
