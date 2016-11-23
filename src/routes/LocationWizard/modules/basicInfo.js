@@ -12,7 +12,7 @@ import _ from 'lodash';
 
 export const ON_PARENT_LOCATION_SELECT = 'ON_PARENT_LOCATION_SELECT'
 export const BIND_BASIC_INITIAL_VALUES = 'BIND_BASIC_INITIAL_VALUES'
-export const BIND_BASIC_INITIALCREDENTIAL_VALUES ='BIND_BASIC_INITIALCREDENTIAL_VALUES'
+export const BIND_BASIC_INITIALCREDENTIAL_VALUES = 'BIND_BASIC_INITIALCREDENTIAL_VALUES'
 export const PRIMARY_MARKET_CHANGE_EVENT = 'PRIMARY_MARKET_CHANGE_EVENT'
 export const CREDENTIAL_DROPDOWN_CHANGE_EVENT = 'CREDENTIAL_DROPDOWN_CHANGE_EVENT'
 export const GET_LOCATION_TYPES = "GET_LOCATION_TYPES"
@@ -23,14 +23,16 @@ export const GET_FUEL_CLASSES = "GET_FUEL_CLASSES"
 export const GET_TIME_ZONE = "GET_TIME_ZONE"
 export const GET_DEFAULT_CREDENTIALDATA = "GET_DEFAULT_CREDENTIALDATA"
 
+function bindTechnologyTypesOnEdit(technologyTypeId, technologyTypes) {
+  return technologyTypes.filter(function(technologyType) {return technologyType.id == technologyTypeId;})[0] || technologyTypeId;
+}
 
 export function BindInitialValues(currentLocation, assignedLocationMappings, marketDrivendata) {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-
       var locationId = currentLocation.Id;
       let locationObj = currentLocation;
-
+      let technologyTypes = getState().basic.technologyTypes;
       var basicInfo = {
         locationId: locationId,
         locationName: locationObj.Name,
@@ -41,8 +43,8 @@ export function BindInitialValues(currentLocation, assignedLocationMappings, mar
         createUser: locationObj.CreateUser,
         updateUser: locationObj.UpdateUser,
         isOutageLevel: locationObj.IsOutageLevel,
-        technologyType: locationObj.TechnologyTypeId,
-        secondarytechnologyType: locationObj.SecondaryTechnologyTypeId,
+        technologyType: bindTechnologyTypesOnEdit(locationObj.TechnologyTypeId, technologyTypes),
+        secondarytechnologyType: bindTechnologyTypesOnEdit(locationObj.SecondaryTechnologyTypeId, technologyTypes),
         primaryMarket: locationObj.PrimaryMarketId,
         fuelClass: locationObj.FuelClassId,
         owner: locationObj.OwnerOrgId,
@@ -205,9 +207,10 @@ export const ACTION_HANDLERS = {
       timezones: action.payload
     })
   },
-  ['EMPTY_BASIC_CREDENTIAL_INTIAL_VALUES']:(state,action) => {
+  ['EMPTY_BASIC_CREDENTIAL_INTIAL_VALUES']: (state, action) => {
     return Object.assign({}, state, {
-      BasicInfo:{} ,CredentialInitialValues: {}
+      BasicInfo: {},
+      CredentialInitialValues: {}
     })
   },
   ['ERROR']: (state, action) => {
@@ -268,25 +271,25 @@ export function getLocationTypesService() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       getState().basic.locationTypes.length == 0 ?
-      basicInfoDropdowns.getLocationTypes().then(function(response) {
-        dispatch({
-          type: GET_LOCATION_TYPES,
-          payload: response.data
-        });
-      }):null
+        basicInfoDropdowns.getLocationTypes().then(function(response) {
+          dispatch({
+            type: GET_LOCATION_TYPES,
+            payload: response.data
+          });
+        }) : null
     })
   }
 }
 export function getOwnersService() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-       getState().basic.owners.length == 0 ?
-      basicInfoDropdowns.getOwners().then(function(response) {
-        dispatch({
-          type: GET_OWNERS,
-          payload: response.data
-        });
-      }):null
+      getState().basic.owners.length == 0 ?
+        basicInfoDropdowns.getOwners().then(function(response) {
+          dispatch({
+            type: GET_OWNERS,
+            payload: response.data
+          });
+        }) : null
     })
   }
 }
@@ -294,26 +297,26 @@ export function getOwnersService() {
 export function getPrimaryMarketsService() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-       getState().basic.primaryMarkets.length == 0 ?
-      basicInfoDropdowns.getPrimaryMarkets().then(function(response) {
-        dispatch({
-          type: GET_PRIMARY_MARKETS,
-          payload: response.data
-        });
-      }):null
+      getState().basic.primaryMarkets.length == 0 ?
+        basicInfoDropdowns.getPrimaryMarkets().then(function(response) {
+          dispatch({
+            type: GET_PRIMARY_MARKETS,
+            payload: response.data
+          });
+        }) : null
     })
   }
 }
 export function getDefaultCredentialBasicData() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      getState().basic.CredentialBasicData.length == 0 ? 
-      getMarketDrivenMappings().then(function(response) {
-        dispatch({
-          type: GET_DEFAULT_CREDENTIALDATA,
-          payload: response.data
-        });
-      }) : null
+      getState().basic.CredentialBasicData.length == 0 ?
+        getMarketDrivenMappings().then(function(response) {
+          dispatch({
+            type: GET_DEFAULT_CREDENTIALDATA,
+            payload: response.data
+          });
+        }) : null
     })
   }
 }
@@ -322,46 +325,46 @@ export function getTechnologyTypesService() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       getState().basic.technologyTypes.length == 0 ?
-      basicInfoDropdowns.getTechnologyTypes().then(function(response) {
-        dispatch({
-          type: GET_TECHNOLOGY_TYPES,
-          payload: response.data
-        });
-      }):null
+        basicInfoDropdowns.getTechnologyTypes().then(function(response) {
+          dispatch({
+            type: GET_TECHNOLOGY_TYPES,
+            payload: response.data
+          });
+        }) : null
     })
   }
 }
 export function getFuelClassesService() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-       getState().basic.fuelClasses.length == 0 ?
-      basicInfoDropdowns.getFuelClasses().then(function(response) {
-        dispatch({
-          type: GET_FUEL_CLASSES,
-          payload: response.data
-        });
-      }):null
+      getState().basic.fuelClasses.length == 0 ?
+        basicInfoDropdowns.getFuelClasses().then(function(response) {
+          dispatch({
+            type: GET_FUEL_CLASSES,
+            payload: response.data
+          });
+        }) : null
     })
   }
 }
 export function getTimezonesService() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-       getState().basic.timezones.length == 0 ?
-      basicInfoDropdowns.getTimezones().then(function(response) {
-        var arrTimezones = [];
-        response.data.GetTimeZonesResult.forEach(function(item, index) {
-          arrTimezones.push({
-            id: item,
-            value: item
-          });
+      getState().basic.timezones.length == 0 ?
+        basicInfoDropdowns.getTimezones().then(function(response) {
+          var arrTimezones = [];
+          response.data.GetTimeZonesResult.forEach(function(item, index) {
+            arrTimezones.push({
+              id: item,
+              value: item
+            });
 
-        });
-        dispatch({
-          type: GET_TIME_ZONE,
-          payload: arrTimezones
-        });
-      }):null
+          });
+          dispatch({
+            type: GET_TIME_ZONE,
+            payload: arrTimezones
+          });
+        }) : null
     })
   }
 }
