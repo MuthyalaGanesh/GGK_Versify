@@ -277,6 +277,7 @@ export function saveNewContact() {
 export function getUserInfoService() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
+        getState().users.userInformation.length == 0 ? 
       getUserInfo().then(function(contactsResponse) {
         getRoleInfo().then(function(rolesResponse) {
           let userInfo = {
@@ -288,6 +289,10 @@ export function getUserInfoService() {
             payload: userInfo
           })
         })
+      }):null
+      dispatch({
+        type:BIND_LOCATION_USER_DATA,
+        payload:{locationId:0}
       })
     })
   }

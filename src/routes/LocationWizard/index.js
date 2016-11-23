@@ -54,6 +54,7 @@ export default (store) => ({
       injectReducer(store, { key: 'unitCharacteristics', reducer: unitCharacteristicsReducer })
       injectReducer(store, { key: 'users', reducer: userReducer })
       injectReducer(store, { key: 'workFlows', reducer: workflowReducer })
+      store.dispatch({type:'SHOW_SPINNER',payload:true})
       store.dispatch(getLocationsInformation())
       store.dispatch(getDefaultCredentialBasicData())      
       store.dispatch(getLocationTypesService())

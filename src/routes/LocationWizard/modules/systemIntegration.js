@@ -109,12 +109,14 @@ export function AddSystemIntegration() {
 export function getSystemIntegrationTypesService() {
     return (dispatch, getState) => {
         return new Promise((resolve) => {
+            getState().systemIntegration.systemIntegrationTypes.length==0?
             getSystemIntegrationTypes().then(function (response) {
                 dispatch({
                     type: GET_SYSTEM_INTEGRATION_TYPE_SERVICE,
                     payload: response.data.GetOMSLocationWizardDataResult.AssignedLocationMappings
                 })
-            })
+            }):null
+            dispatch(BindSysIntegrationsForNewLocation())
         })
     }
 }

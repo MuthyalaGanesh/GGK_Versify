@@ -202,20 +202,7 @@ export function LoadAndRefreshForms(id, event) {
         type: SHOW_SPINNER,
         payload: true
       })
-      dispatch({
-        type: 'redux-form/INITIALIZE',
-        meta: {
-          form: 'BasicInfoForm'
-        },
-        payload: ''
-      })
-      dispatch({
-        type: 'redux-form/INITIALIZE',
-        meta: {
-          form: 'CredentialsManagementForm'
-        },
-        payload: ''
-      })
+
       dispatch({
         type: 'redux-form/INITIALIZE',
         meta: {
@@ -1006,18 +993,44 @@ function AddDefaultParent(objectfuncntion) {
 export function getLocationsInformation() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
+     getState().location.allLocations.length == 0 ?
       basicInfoDropdowns.getParentLocations().then(function (response) {
         dispatch({
           type: GET_ALL_LOCATIONS_INFORMATION,
           payload: response.data.GetAllLocationsResult
         });
-      })
-    }).then(function () {
+      }).then(function () {
       dispatch({
         type: HIDE_SPINNER,
         payload: false
       });
+    }) :dispatch({
+        type: HIDE_SPINNER,
+        payload: false
+      });
+            
+    console.log("test0000000")
+   dispatch({
+      type:'redux-form/DESTROY',
+      meta:{
+        form:'BasicInfoForm',
+        keepDirty:false
+      },
+      payload:''
     })
+        dispatch({
+      type:'redux-form/DESTROY',
+      meta:{
+        form:'CredentialsManagementForm',
+        keepDirty:false
+      },
+      payload:''
+    })
+    dispatch(InitialEquipmentsForNewLocation())
+    dispatch({
+      type:'EMPTY_BASIC_CREDENTIAL_INTIAL_VALUES'
+    })
+      })
   }
 }
 
