@@ -169,7 +169,8 @@ export const ACTION_HANDLERS = {
   [GET_WORKFLOW_SERVICE]: (state, action) => {
     return Object.assign({}, state, {
       workFlowItems: action.payload,
-      staticServiceWorkflows: action.payload
+      staticServiceWorkflows: action.payload,
+      defaultWorkFlow : []
     })
   },
   [WORK_FLOW_NEW_LOCATION]: (state, action) => {

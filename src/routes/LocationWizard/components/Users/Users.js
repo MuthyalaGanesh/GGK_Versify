@@ -266,10 +266,12 @@ export const Users = (props) => {
                                 </div>
                                 <div>
                                     {error && validations.PasswordFormat && <span className="errorMessage">{validations.PasswordFormat}</span>}
-                                </div>                                   
+                                </div>
+
                             </div>                             
                         </div> 
-                        {validations.success && <div className="alert alert-success success-message"><strong>{validations.success}.</strong></div>}         
+                        {validations.success && validations.success != null && <div className="alert alert-success alert-dismissable success-message"><strong>{validations.success}.</strong><strong href="#" className="close" data-dismiss="alert" aria-label="close" onClick={props.clearSuccess}>×</strong></div>}
+                        {validations.failure && validations.failure != null && <div className="alert alert-danger alert-dismissable failure-message"><strong>{validations.failure}.</strong><strong href="#" className="close" data-dismiss="alert" aria-label="close" onClick={props.clearFailure}>×</strong></div>}                  
                     </Modal.Body>
                     <Modal.Footer>                                
                                 <button className="btn btn-success" type="button" onClick={props.saveNewContact}>Add</button> 

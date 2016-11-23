@@ -29,6 +29,9 @@ export const ROLE_BY_CONTACT = 'ROLE_BY_CONTACT'
 export const GET_USER_INFO_SERVICE = 'GET_USER_INFO_SERVICE'
 export const SHOW_NEWCONTACT_ERRORS = 'SHOW_NEWCONTACT_ERRORS'
 export const USERS_NEW_LOCATION = "USERS_NEW_LOCATION"
+export const CONTACT_SAVE_FAILURE = "CONTACT_SAVE_FAILURE"
+export const HIDE_SUCCESS = "HIDE_SUCCESS"
+export const HIDE_FAILED = "HIDE_FAILED"
 
 export function bindUserLocationData(assignedcontacts, locationId) {
   return (dispatch, getState) => {
@@ -123,7 +126,6 @@ export function unSelectAllRoles() {
   }
 };
 
-
 export function AddContactModalToggle() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
@@ -145,7 +147,9 @@ export function AddContactModalToggle() {
 export function saveNewContact() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      let values = getState().form.UsersForm.values;
+      let values 
+      getState().form.hasOwnProperty('UsersForm') && getState().form.UsersForm.hasOwnProperty('values') ?
+          values = getState().form.UsersForm.values : null
       let messages = {}
       let invalid = false
       let regularExpression = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9]{6,20}$/;
@@ -244,15 +248,13 @@ export function saveNewContact() {
               payload: ""
             })
           }).catch(function(error) {
-            alert("error" + JSON.stringify(error));
+            let messages = {}
+            messages.failure = 'Save new contact failed,Please change given information and try again'
+            dispatch({
+              type: 'CONTACT_SAVE_FAILURE',
+              payload: messages
+            })
           });
-          dispatch({
-            type: 'redux-form/DESTROY',
-            meta: {
-              form: "UsersForm"
-            },
-            payload: ""
-          })
         }
       } else {
         messages.Name = 'Please specify Name'
@@ -491,7 +493,7 @@ export function validateContact() {
         let regularExpression = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9]{6,20}$/;
         let PasswordFormat = 'Password must be 6-20 characters in length,cannot contain special characters,' +
           'and must contain atleast one lower case letter,one upper case letter,and one digit'
-        getState().form.UsersForm.hasOwnProperty('values') ?
+        getState().form.hasOwnProperty('UsersForm') && getState().form.UsersForm.hasOwnProperty('values') ?
           values = getState().form.UsersForm.values : null
         if (values != null) {
           values.Name && values.Name.trim() ? messages.Name = null : messages.Name = 'Please specify Name'
@@ -520,7 +522,27 @@ export function validateContact() {
       }
     })
   }
-}
+};
+
+export function clearSuccess() {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      dispatch({
+        type: HIDE_SUCCESS
+      })
+    })
+  }
+};
+
+export function clearFailure() {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      dispatch({
+        type: HIDE_FAILED
+      })
+    })
+  }
+};
 
 export const ACTION_HANDLERS = {
   [BIND_USER_INFO]: (state, action) => {
@@ -539,15 +561,20 @@ export const ACTION_HANDLERS = {
       if (!state.newContactPopUp.hasOwnProperty('Timezones')) {
         var contactInfo = getNewContactPopUpInfo();
         contactInfo.Timezones = action.payload
-      }
+        return Object.assign({}, state, {
+          error: null,
+          validationMessages: {},
+          newContactPopUp: contactInfo,
+          showAddContactModal: !state.showAddContactModal,
 
+        })
+      }
       return Object.assign({}, state, {
         error: null,
         validationMessages: {},
-        newContactPopUp: contactInfo,
-        showAddContactModal: !state.showAddContactModal,
-
+        showAddContactModal: !state.showAddContactModal
       })
+
     }
   },
   [SAVE_NEW_CONTACT]: (state, action) => {
@@ -849,7 +876,7 @@ export const ACTION_HANDLERS = {
       disableContacts: true,
       saveRoles: [],
       fetchedRoles: [],
-      fetchedContacts: [],
+      fetchedContacts: []
     })
   },
   [ROLE_BY_ROLE]: (state, action) => {
@@ -967,13 +994,48 @@ export const ACTION_HANDLERS = {
   },
   [GET_USER_INFO_SERVICE]: (state, action) => {
     return Object.assign({}, state, {
-      userInformation: action.payload
+      userInformation: action.payload,
+      selectedRole: {},
+      selectedContact: {},
+      defaultContacts: [],
+      defaultRoles: [],
+      showAddContactModal: false,
+      disableRoles: true,
+      disableContacts: true,
+      saveRoles: [],
+      fetchedRoles: [],
+      fetchedContacts: [],
+      locationId: 0
+
     })
   },
   [SHOW_NEWCONTACT_ERRORS]: (state, action) => {
     return Object.assign({}, state, {
       error: 1,
       validationMessages: action.payload
+    })
+  },
+  [CONTACT_SAVE_FAILURE]: (state, action) => {
+    return Object.assign({}, state, {
+      validationMessages: action.payload
+    })
+  },
+  [HIDE_SUCCESS]: (state, action) => {
+    let validations = state.validationMessages
+    let validationMessages = Object.assign({}, validations, {
+      success: null
+    })
+    return Object.assign({}, state, {
+      validationMessages: validationMessages
+    })
+  },
+  [HIDE_FAILED]: (state, action) => {
+    let validations = state.validationMessages
+    let validationMessages = Object.assign({}, validations, {
+      failure: null
+    })
+    return Object.assign({}, state, {
+      validationMessages: validationMessages
     })
   }
 }

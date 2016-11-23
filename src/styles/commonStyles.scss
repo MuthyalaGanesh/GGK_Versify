@@ -598,6 +598,14 @@ div.box-tools.pull-right i.fa.fa-address-book {
   border-radius: 8px;
 }
 
+failure-message
+{
+  color: #a94442 !important;
+  text-align: center;
+  border-color: #f2dede;
+  border-radius: 8px;
+}
+
 @keyframes Select-animation-spin {
   to {
     transform: rotate(1turn);
