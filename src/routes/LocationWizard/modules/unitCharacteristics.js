@@ -49,6 +49,13 @@ export function ToggleAddEditModal(index) {
     })
   }
 }
+function dateConversion(date){
+
+  var data = date.split('T')
+  var preresult = data[0].split('-')
+  var result = preresult[1] +'/'+ preresult[2]+'/' +preresult[0]
+    return result 
+}
 
 //remove editable attribute 
 export function removeEditableAttribute(index) {
@@ -194,8 +201,8 @@ export const ACTION_HANDLERS = {
               uc.defaultUnitOfMeasureId = att.UnitOfMeasureId
               uc.UOM = att.UnitOfMeasureName
               var editableAttributes = {
-                EffectiveEndDate: (new Date(parseInt(att.EffectiveEndDate.substring(att.EffectiveEndDate.indexOf("(") + 1, (att.EffectiveEndDate.indexOf(")")))))).toLocaleDateString(),
-                EffectiveStartDate: (new Date(parseInt(att.EffectiveStartDate.substring(att.EffectiveStartDate.indexOf("(") + 1, (att.EffectiveStartDate.indexOf(")")))))).toLocaleDateString(),
+                EffectiveEndDate: dateConversion((new Date(parseInt(att.EffectiveEndDate.substring(att.EffectiveEndDate.indexOf("(") + 1, (att.EffectiveEndDate.indexOf(")")))))).toISOString()),
+                EffectiveStartDate: dateConversion((new Date(parseInt(att.EffectiveStartDate.substring(att.EffectiveStartDate.indexOf("(") + 1, (att.EffectiveStartDate.indexOf(")")))))).toISOString()),
                 Value: att.Value,
                 LocationAttributeId: att.LocationAttributeId
               }
