@@ -124,7 +124,7 @@ export function leftMenuDropdownClickEvent(id, event) {
       })
     } else {
       dispatch(showSpinner())
-      setTimeout(function () {
+      setTimeout(function() {
         dispatch(LoadAndRefreshForms(id, event));
         scrollSpy.update();
       }, 1)
@@ -263,17 +263,17 @@ export function LoadAndRefreshForms(id, event) {
           findLocation(allLocationdata, id);
           var locationObj = currentLocation;
           currentLocation = null;
-          getOMSLocationwizardData(id).then(function (response) {
+          getOMSLocationwizardData(id).then(function(response) {
             let editObject = response.data;
             let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
             let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
-            getMarketDrivenMappings(locationObj.PrimaryMarketId).then(function (response) {
+            getMarketDrivenMappings(locationObj.PrimaryMarketId).then(function(response) {
               var marketDrivenMappings = response.data
               var editSysIntegration = new Object({
                 locationsInfo: locationsInfo,
                 marketDrivenMappings: marketDrivenMappings
               })
-              dispatch(BindInitialValues(locationObj, editObject, marketDrivenMappings));
+              dispatch(BindInitialValues(locationObj, locationsInfo, marketDrivenMappings));
               dispatch(editSystemIntegration(editSysIntegration));
               dispatch({
                 type: 'redux-form/INITIALIZE',
@@ -388,7 +388,7 @@ function basicInforObjectPreparation(values) {
 }
 
 
-function prepareCredentialsAndIdentifiersObj(credentialsObj, marketDrivenMappings, omsLocationwizardData, locationId) {
+function prepareCredentialsAndIdentifiersObj(credentialsObj, marketDrivenMappings, assignedLocationMappings, locationId) {
 
   var credentialsAndIdentifiersObj = [];
   var locationMappingData = [];
@@ -410,7 +410,7 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, marketDrivenMapping
     }
     itemDatawithMarketDrivenMappings.push(itemData);
   });
-  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function (b) {
+  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function(b) {
     return b.ExternalSystemName
   })
   var staticPjmemktToAdd = {
@@ -431,7 +431,7 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, marketDrivenMapping
     "ParameterList": "",
     "FlaggedForDeletion": false
   }
-  var assignedLocationMappings = omsLocationwizardData.GetOMSLocationWizardDataResult.AssignedLocationMappings;
+ 
   _.each(groupByItems, (item) => {
     var locationMappingDataItem = {};
     locationMappingDataItem.LocationMappingId = 0;
@@ -461,7 +461,7 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, marketDrivenMapping
       mappedItem.AliasName = 'PJMeDartUnitNumber';
 
     }
-    _.each(omsLocationwizardData.GetOMSLocationWizardDataResult.AssignedLocationMappings, (wizardDataItem) => {
+    _.each(assignedLocationMappings, (wizardDataItem) => {
       var id = wizardDataItem.LocationMappingId
       if (wizardDataItem.LocationMappingId > 0) {
         if (wizardDataItem.ExternalSystemName == mappedItem.ExternalSystemName) {
@@ -730,18 +730,18 @@ export function saveCompleteLocationWizard() {
           type: 'ERROR',
           payload: 1
         }) && console.log('check here') : (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null && getState().form.BasicInfoForm.values.technologyType != null && getState().form.BasicInfoForm.values.fuelClass != null && getState().form.BasicInfoForm.values.physicalTimezone != null && getState().form.BasicInfoForm.values.owner != null) ? (credentialdatavalidation(getState())) ? //Save
-          saveObjectPreparationAndCall(getState, dispatch) : dispatch({
-            type: 'ERROR',
-            payload: 1
-          }) && console.log('error') : dispatch({
-            type: 'ERROR',
-            payload: 1
-          })
-
-        : dispatch({
+        saveObjectPreparationAndCall(getState, dispatch) : dispatch({
+          type: 'ERROR',
+          payload: 1
+        }) && console.log('error') : dispatch({
           type: 'ERROR',
           payload: 1
         })
+
+      : dispatch({
+        type: 'ERROR',
+        payload: 1
+      })
       console.log(Object.keys(getState().form.BasicInfoForm.values).length, 'stateobjectmo')
 
     })
@@ -776,7 +776,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
     //get MarketDrivenMappings from API based on marketType ID
     var credentialsAndIdentifier = prepareCredentialsAndIdentifiersObj(getState().form.CredentialsManagementForm ? getState().form.CredentialsManagementForm.values : {},
       getState().basic.MarketDrivenMappings,
-      getState().basic.InitialOmsLocationwizardData,
+      getState().basic.InitialAssignedLocationMappings,
       locationId);
 
     var equipmentsObj = equipmentObjectPreparation(getState(), dispatch, locationId)
@@ -797,7 +797,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
         Roles: rolesObj,
         Gateways: gatewayObj,
         ScadaPoints: dataHistorianObj,
-        Equipments: locationId > 0 ? equipmentsObj:[]
+        Equipments: locationId > 0 ? equipmentsObj : []
       }
     }
 
@@ -808,57 +808,51 @@ function saveObjectPreparationAndCall(getState, dispatch) {
     var finalData = JSON.stringify(finalSaveObject)
     console.log("finalSaveObject", finalData)
     dispatch({
-      type: SHOW_SPINNER,
-      payload: true
-    })
-    //SAVE LOCATION
+        type: SHOW_SPINNER,
+        payload: true
+      })
+      //SAVE LOCATION
     try {
       axios({
         method: 'post',
         url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
         data: finalSaveObject
-      }).then(function (response) {
+      }).then(function(response) {
         console.log("success", response);
         if (response.status === 200) {
           //ADD Location ID to Object
           var newLocationID = response.data.SaveOMSLocationWizardDataResult.Location.Id;
-          var locationObj =response.data.SaveOMSLocationWizardDataResult.Location
+          var locationObj = response.data.SaveOMSLocationWizardDataResult.Location
           getState().form.BasicInfoForm.values.locationId = newLocationID;
-          getOMSLocationwizardData(newLocationID).then(function (response) {
-            let editObject = response.data;
-            let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
-            let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
-            getMarketDrivenMappings(locationObj.PrimaryMarketId).then(function (response) {
-              var marketDrivenMappings = response.data
-              var editSysIntegration = new Object({
-                locationsInfo: locationsInfo,
-                marketDrivenMappings: marketDrivenMappings
-              })
-              dispatch(BindInitialValues(locationObj, editObject, marketDrivenMappings));
-              dispatch(editSystemIntegration(editSysIntegration));
-              dispatch({
-                type: 'redux-form/INITIALIZE',
-                meta: {
-                  form: 'BasicInfoForm',
-                  keepDirty: false
-                },
-                payload: getState().basic.BasicInfo
-              })
-              dispatch({
-                type: 'redux-form/INITIALIZE',
-                meta: {
-                  form: 'CredentialsManagementForm',
-                  keepDirty: false
-                },
-                payload: getState().basic.CredentialInitialValues
-              })
-              dispatch({
-                type: HIDE_SPINNER,
-                payload: false
-              })
-            });
-            dispatch(BindInitialEquipments(editObject.GetOMSLocationWizardDataResult.Equipment));           
+
+          let locationsInfo = response.data.SaveOMSLocationWizardDataResult.AssignedLocationMappings;
+          getMarketDrivenMappings(locationObj.PrimaryMarketId).then(function(response) {
+            var marketDrivenMappings = response.data
+            var editSysIntegration = new Object({
+              locationsInfo: locationsInfo,
+              marketDrivenMappings: marketDrivenMappings
+            })
+            dispatch(BindInitialValues(locationObj, locationsInfo, marketDrivenMappings));
+            dispatch(editSystemIntegration(editSysIntegration));
+            dispatch({
+              type: 'redux-form/INITIALIZE',
+              meta: {
+                form: 'BasicInfoForm',
+                keepDirty: false
+              },
+              payload: getState().basic.BasicInfo
+            })
+            dispatch({
+              type: 'redux-form/INITIALIZE',
+              meta: {
+                form: 'CredentialsManagementForm',
+                keepDirty: false
+              },
+              payload: getState().basic.CredentialInitialValues
+            })
           });
+          dispatch(BindInitialEquipments(response.data.SaveOMSLocationWizardDataResult.Equipment));
+
           dispatch(bindGatewayLocationData(response.data.SaveOMSLocationWizardDataResult.Gateways));
           dispatch(bindLocationData(response.data.SaveOMSLocationWizardDataResult.AssignedScadaPoints, newLocationID));
           dispatch(bindWorkLocationData(response.data.SaveOMSLocationWizardDataResult.AssignedWorkflowGroups));
@@ -881,11 +875,11 @@ function saveObjectPreparationAndCall(getState, dispatch) {
               method: 'post',
               url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
               data: saveObjectwithEquipment
-            }).then(function (response) {
+            }).then(function(response) {
               if (response.status === 200) {
                 console.log("equipment saved", response);
-                 var equipments =response.data.SaveOMSLocationWizardDataResult.Equipment;
-                dispatch(BindInitialEquipments(equipments)); 
+                var equipments = response.data.SaveOMSLocationWizardDataResult.Equipment;
+                dispatch(BindInitialEquipments(equipments));
               }
             })
           }
@@ -899,12 +893,12 @@ function saveObjectPreparationAndCall(getState, dispatch) {
               openSavePopup: true
             }
           });
-          basicInfoDropdowns.getParentLocations().then(function (response) {
+          basicInfoDropdowns.getParentLocations().then(function(response) {
             dispatch({
               type: GET_ALL_LOCATIONS_INFORMATION,
               payload: response.data.GetAllLocationsResult
             });
-          }).then(function () {
+          }).then(function() {
             //Expnd ADD Node in left menu
             console.log('new locationID', newLocationID)
             dispatch({
@@ -930,7 +924,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
             payload: false
           })
         }
-      }).catch(function (error) {
+      }).catch(function(error) {
         dispatch({
           type: HIDE_SPINNER,
           payload: false
@@ -975,7 +969,7 @@ function toArray(obj) {
 
 function changeObjectTypeOfLocations(allLocations) {
   var changedLocationsObject = [];
-  allLocations.forEach(function (item) {
+  allLocations.forEach(function(item) {
     changedLocationsObject.push({
       key: item.Id,
       value: item.Id,
@@ -1004,13 +998,13 @@ function AddDefaultParent(objectfuncntion) {
 export function getLocationsInformation() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      basicInfoDropdowns.getParentLocations().then(function (response) {
+      basicInfoDropdowns.getParentLocations().then(function(response) {
         dispatch({
           type: GET_ALL_LOCATIONS_INFORMATION,
           payload: response.data.GetAllLocationsResult
         });
       })
-    }).then(function () {
+    }).then(function() {
       dispatch({
         type: HIDE_SPINNER,
         payload: false

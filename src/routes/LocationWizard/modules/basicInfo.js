@@ -23,14 +23,14 @@ export const GET_TIME_ZONE = "GET_TIME_ZONE"
 export const GET_DEFAULT_CREDENTIALDATA = "GET_DEFAULT_CREDENTIALDATA"
 
 
-export function BindInitialValues(currentLocation,omsLocationwizardData,marketDrivendata) {
+export function BindInitialValues(currentLocation,assignedLocationMappings,marketDrivendata) {
   return (dispatch, getState) => {
     return new Promise((resolve) => {     
       dispatch({
         type: BIND_BASIC_INITIAL_VALUES,
         payload: {
           currentLocation:currentLocation,
-          omsLocationwizardData:omsLocationwizardData,
+          assignedLocationMappings:assignedLocationMappings,
           marketDrivendata:marketDrivendata}
       })         
     })
@@ -60,13 +60,13 @@ export function onPrimaryMarketChangeEvent(event) {
                   var data =response.data;
                  var lcoationId = getState().form.BasicInfoForm.values.locationId || null;
                    getOMSLocationwizardData(lcoationId).then(function(oms){
-                       var omsLocationwizardData =oms.data;
-                       var credentialBasicData = PrepareCredentialBasicData(data,omsLocationwizardData)
+                       var assignedLocationMappings =oms.data.GetOMSLocationWizardDataResult.AssignedLocationMappings;
+                       var credentialBasicData = PrepareCredentialBasicData(data,assignedLocationMappings)
                          dispatch({
                             type: PRIMARY_MARKET_CHANGE_EVENT,
                             payload: {
                               marketDrivenMappings:data,
-                              initialOmsLocationwizardData:omsLocationwizardData,
+                              assignedLocationMappings:assignedLocationMappings,
                               credentialBasicData:credentialBasicData}
                           });
                    });
@@ -80,7 +80,7 @@ export const ACTION_HANDLERS = {
     
       var locationId=action.payload.currentLocation.Id;
       let locationObj =action.payload.currentLocation;
-      let omsLocationwizardData = action.payload.omsLocationwizardData;
+      let assignedLocationMappings = action.payload.assignedLocationMappings;
       let marketDrivendata = action.payload.marketDrivendata;
       var basicInfo = {
         locationId: locationId,
@@ -100,12 +100,12 @@ export const ACTION_HANDLERS = {
         physicalTimezone: locationObj.PhysicalTz,
         ownerShipPercentage: locationObj.OwnershipPct,
       }
-      var credentialData = PrepareCredentialBasicData(marketDrivendata, omsLocationwizardData);
+      var credentialData = PrepareCredentialBasicData(marketDrivendata, assignedLocationMappings);
       return  Object.assign({}, state, {
         BasicInfo: basicInfo,
         CredentialBasicData: credentialData.MarketDrivendata,
         CredentialInitialValues: credentialData.CredentialInitialValues,
-        InitialOmsLocationwizardData:omsLocationwizardData,
+        InitialAssignedLocationMappings:assignedLocationMappings,
         MarketDrivenMappings:marketDrivendata
       });
    
@@ -128,7 +128,7 @@ export const ACTION_HANDLERS = {
   [PRIMARY_MARKET_CHANGE_EVENT]: (state, action) => {
     return Object.assign({}, state, {
       CredentialBasicData: action.payload.credentialBasicData.MarketDrivendata,
-      InitialOmsLocationwizardData: action.payload.initialOmsLocationwizardData,
+      InitialAssignedLocationMappings: action.payload.assignedLocationMappings,
       MarketDrivenMappings:action.payload.marketDrivenMappings
 
     })
@@ -175,7 +175,7 @@ export const ACTION_HANDLERS = {
   }
 }
 
-function PrepareCredentialBasicData(data, omsLocationwizardData) {
+function PrepareCredentialBasicData(data, assignedLocationMappings) {
   
   var marketDrivendata = [];
   var credentialInitialValues = {};
@@ -185,7 +185,7 @@ function PrepareCredentialBasicData(data, omsLocationwizardData) {
     var aliasNameDropDownItems = [];
     var externalSystemLoginDropDownItems = [];
 
-    _.each(omsLocationwizardData.GetOMSLocationWizardDataResult.AssignedLocationMappings, (wizardDataItem) => {
+    _.each(assignedLocationMappings, (wizardDataItem) => {
       if (item.IsDropDown) {
        
         if (wizardDataItem.ExternalSystemName == item.ExternalSystemName) {
@@ -329,7 +329,7 @@ const initialState = {
   BasicInfo: {},
   CredentialInitialValues: {},
   CredentialBasicData: [],
-  InitialOmsLocationwizardData:[],
+  InitialAssignedLocationMappings:[],
   MarketDrivenMappings:[]
 };
 
