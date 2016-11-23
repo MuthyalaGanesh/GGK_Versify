@@ -57,12 +57,7 @@ export function ApplyEditEquipment() {
     })
   }
 }
-export function DeleteEquipment(index) {
-  return {
-    type: DELETE_EQUIPMENT,
-    payload: index
-  }
-}
+
 export const ACTION_HANDLERS = {
   [INITIAL_EQUIPMENT_NEW_LOCATION]: (state, action) => {
     var equipments = []
@@ -143,24 +138,8 @@ export const ACTION_HANDLERS = {
       return Object.assign({}, state, { insertedEquipment: updatedEquipments, showEditModal: !state.showEditModal })
     }
     return Object.assign({}, state, { showEditModal: !state.showEditModal })
-  },
-  [DELETE_EQUIPMENT]: (state, action) => {
-    if (action.payload != null && action.payload != undefined && !isNaN(action.payload)) {
-      var updatedEquipments = []
-      var deletedEquipments = []
-      state.insertedEquipment.map((eq, i) => {
-        if (i != action.payload) {
-          updatedEquipments.push(eq)
-        }
-        else {
-          eq.Name = ""
-          deletedEquipments.push(eq)
-        }
-      })
-      return Object.assign({}, state, { insertedEquipment: updatedEquipments, deletedEquipments: deletedEquipments })
-    }
-    return Object.assign({}, state)
   }
+
 }
 
 const initialState = {
@@ -168,8 +147,7 @@ const initialState = {
   insertedEquipment: [],
   editableEquipment: [],
   showEditModal: false,
-  ParentLocationId: 0,
-  deletedEquipments: []
+  ParentLocationId: 0
 };
 
 export default function equipmentsReducer(state = initialState, action) {
