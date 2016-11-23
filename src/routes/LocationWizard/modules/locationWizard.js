@@ -164,7 +164,7 @@ function CheckLocationNameIsExists(allLocations, locationName, locationId) {
     if (isLocationNameExists) {
       return false;
     }
-    if (item.Name == locationName) {
+    if (item.Name == locationName.trim()) {
       if (!(locationId > 0 && item.LocationId == locationId) && !isLocationNameExists) {
         isLocationNameExists = true;
         return false;
