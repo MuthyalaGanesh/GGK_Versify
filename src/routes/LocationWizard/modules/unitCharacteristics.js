@@ -49,12 +49,12 @@ export function ToggleAddEditModal(index) {
     })
   }
 }
-function dateConversion(date){
+function dateConversion(date) {
 
   var data = date.split('T')
   var preresult = data[0].split('-')
-  var result = preresult[1] +'/'+ preresult[2]+'/' +preresult[0]
-    return result 
+  var result = preresult[1] + '/' + preresult[2] + '/' + preresult[0]
+  return result
 }
 
 //remove editable attribute 
@@ -124,6 +124,11 @@ export function DeleteUnitCharateristic() {
 };
 //Making Near Date First
 export function DateSwap(editableAttributes) {
+  var displayDateAttributes = new Object({
+    EffectiveEndDate: editableAttributes[0].EffectiveEndDate,
+    EffectiveStartDate: editableAttributes[0].EffectiveStartDate,
+    Value: editableAttributes[0].Value
+  })
   var todayDate = new Date();
   var effDate = new Date(editableAttributes[0].EffectiveStartDate);
   var timeDiff = Math.abs(effDate.getTime() - todayDate.getTime());
@@ -138,25 +143,16 @@ export function DateSwap(editableAttributes) {
 
     if (diffDays < minDiff) {
       minDiff = diffDays;
-      var initialDate = new Object({
-        EffectiveEndDate: editableAttributes[0].EffectiveEndDate,
-        EffectiveStartDate: editableAttributes[0].EffectiveStartDate,
-        Value: editableAttributes[0].Value
-      });
-      var swapDate = new Object({
+
+      displayDateAttributes = new Object({
         EffectiveEndDate: ea.EffectiveEndDate,
         EffectiveStartDate: ea.EffectiveStartDate,
         Value: ea.Value
       })
-      editableAttributes[0].EffectiveEndDate = swapDate.EffectiveEndDate;
-      editableAttributes[0].EffectiveStartDate = swapDate.EffectiveStartDate;
-      editableAttributes[0].Value = swapDate.Value;
-      ea.EffectiveEndDate = initialDate.EffectiveEndDate;
-      ea.EffectiveStartDate = initialDate.EffectiveStartDate;
-      ea.Value = initialDate.Value;
+
     }
   })
-  return editableAttributes;
+  return displayDateAttributes;
 }
 export const ACTION_HANDLERS = {
   [BIND_INITIAL_ATTRIBUTES_NEW_LOCATION]: (state, action) => {
@@ -210,6 +206,7 @@ export const ACTION_HANDLERS = {
               newState.selectedunitCharacteristics.map(suc => {
                 if (suc.id == att.AttributeId) {
                   suc.editableAttributes.push(editableAttributes);
+                  suc.displayAttributes=DateSwap(suc.editableAttributes)
                   valuePresence++;
                 }
               })
@@ -217,7 +214,7 @@ export const ACTION_HANDLERS = {
                 uc.editableAttributes = [];
                 uc.editableAttributes.push(editableAttributes);
                 //making nearby date first
-                uc.editableAttributes = DateSwap(uc.editableAttributes);
+                uc.displayAttributes = DateSwap(uc.editableAttributes)
                 newState.selectedunitCharacteristics.push(uc);
               }
             }
@@ -283,8 +280,30 @@ export const ACTION_HANDLERS = {
           })
         }
       } else {
+        if (state.editableUnitCharacter) {
+          state.selectedunitCharacteristics.map((suc) => {
+            if (suc.id == state.editableUnitCharacter.id) {
+              var editableAttributes = [];
+              if (state.editableUnitCharacter.editableAttributes) {
+                state.editableUnitCharacter.editableAttributes.map((ea, index) => {
+                  if (index == 0) {
+                    if (ea.Value && ea.EffectiveEndDate && ea.EffectiveStartDate) {
+                      editableAttributes.push(ea)
+                    }
+                  }
+                  if (editableAttributes && editableAttributes.length > 0 && index > 0) {
+                    if (ea.Value && ea.EffectiveEndDate && ea.EffectiveStartDate) {
+                      editableAttributes.push(ea)
+                    }
+                  }
+                })
+              }
+              suc.editableAttributes = editableAttributes.length > 0 ? editableAttributes : [{}];
+            }
+          })
+        }
         return Object.assign({}, state, {
-          showModal: !state.showModal,
+          showModal: !state.showModal, editableUnitCharacter: null,
           error: null
         })
       }
@@ -383,7 +402,7 @@ export const ACTION_HANDLERS = {
           })
         }
         if (!errorStatus && dateValidations.length == 0) {
-          uc.editableAttributes = DateSwap(uc.editableAttributes);
+          uc.displayAttributes = DateSwap(uc.editableAttributes);
         }
       })
       return Object.assign({}, newState, {
@@ -488,7 +507,7 @@ export const ACTION_HANDLERS = {
           })
           uc.UOM = newState.UOMLabel
           if (!errorStatus && dateValidations.length == 0) {
-            uc.editableAttributes = DateSwap(uc.editableAttributes);
+            uc.displayAttributes = DateSwap(uc.editableAttributes);
             newState.selectedunitCharacteristics.push(uc)
           }
         }
@@ -602,14 +621,14 @@ export function getDefaultUnitCharacteristicsService() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       getState().unitCharacteristics.allUOMvalues.length == 0 ?
-      getAllUOMValues().then(function (response) {
-        dispatch({
-          type: GET_ALL_UOM_VALUES,
-          payload: response.data
-        });
-        dispatch(getDefaultUnitCharacteristics(response.data))
+        getAllUOMValues().then(function (response) {
+          dispatch({
+            type: GET_ALL_UOM_VALUES,
+            payload: response.data
+          });
+          dispatch(getDefaultUnitCharacteristics(response.data))
 
-      }): null
+        }) : null
       dispatch(BindValuesForNewLocation())
     })
   }
