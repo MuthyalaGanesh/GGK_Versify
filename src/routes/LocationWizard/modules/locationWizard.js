@@ -847,7 +847,6 @@ function saveObjectPreparationAndCall(getState, dispatch) {
             })
           });
           dispatch(BindInitialEquipments(response.data.SaveOMSLocationWizardDataResult.Equipment));
-
           dispatch(bindGatewayLocationData(response.data.SaveOMSLocationWizardDataResult.Gateways));
           dispatch(bindLocationData(response.data.SaveOMSLocationWizardDataResult.AssignedScadaPoints, newLocationID));
           dispatch(bindWorkLocationData(response.data.SaveOMSLocationWizardDataResult.AssignedWorkflowGroups));
@@ -866,17 +865,20 @@ function saveObjectPreparationAndCall(getState, dispatch) {
               }
             }
             console.log("saveObjectwithEquipment", JSON.stringify(saveObjectwithEquipment));
-            axios({
-              method: 'post',
-              url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
-              data: saveObjectwithEquipment
+            if (saveObjectwithEquipment.saveData.Equipments.length > 0) {
+              axios({
+                method: 'post',
+                url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
+                data: saveObjectwithEquipment
             }).then(function (response) {
-              if (response.status === 200) {
-                console.log("equipment saved", response);
-                var equipments = response.data.SaveOMSLocationWizardDataResult.Equipment;
-                dispatch(BindInitialEquipments(equipments));
-              }
-            })
+                if (response.status === 200) {
+                  console.log("equipment saved", response);
+                  var equipments = response.data.SaveOMSLocationWizardDataResult.Equipment;
+                  dispatch(BindInitialEquipments(equipments));
+                }
+              })
+            }
+
           }
 
           //Refresh left menu        
