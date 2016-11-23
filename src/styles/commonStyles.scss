@@ -1,4 +1,4 @@
-.menu-name.active a{
+.treeview.current-active > span.menu-name > a:nth-child(1){
   color: #E5831C;
   font-weight: bold;
   font-style: italic;

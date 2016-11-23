@@ -282,8 +282,8 @@ TreeView.defaultProps = {
   backColor: undefined,
   borderColor: undefined,
   onhoverColor: '#F5F5F5',
-  selectedColor: '#000000',
-  selectedBackColor: 'black',
+  selectedColor: undefined,
+  selectedBackColor: undefined,
 
   enableLinks: false,
   highlightSelected: true,
@@ -377,6 +377,7 @@ export class TreeNode extends React.Component {
     let options = _.clone(this.props.options);
 
     let style;
+    var activeClassName ='';
 
     if(this.props.options.selectable) node.icon = (node.state.selected) ? options.selectedIcon : options.unselectedIcon;
 
@@ -391,10 +392,13 @@ export class TreeNode extends React.Component {
       if (options.highlightSelected && node.state.selected) {
         style = {
           color: options.selectedColor,
-          backgroundColor: options.selectedBackColor
+          backgroundColor: options.selectedBackColor          
         };
+        activeClassName ='current-active';
       }
       else {
+        activeClassName ='';
+        
         style = {
           color: node.color || options.color,
           backgroundColor: node.backColor || options.backColor
@@ -507,9 +511,10 @@ export class TreeNode extends React.Component {
       );
     }
 
-    style["cursor"] = "pointer";    
+    style["cursor"] = "pointer";
+        
     return (        
-          <li className="treeview"
+          <li className= {"treeview "+activeClassName}
             style={style}
             onDoubleClick={this.doubleClicked}
             key={node.nodeId}>
