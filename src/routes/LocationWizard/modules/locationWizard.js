@@ -111,6 +111,16 @@ export function toggleSaveResponsePopup(event) {
 
 
 export function leftMenuDropdownClickEvent(id, event) {
+  try{
+    var activeArray = toArray(document.getElementsByClassName('menu-name active'));
+    if(activeArray.length >0){
+      for(var i= 0; i<activeArray.length; i++){
+        document.getElementsByClassName('menu-name active')[i].className = 'menu-name'
+      }
+    } 
+      event.target.parentElement.className = 'menu-name active';
+  }catch(e){}
+
   return (dispatch, getState) => {
     scroll.scrollToTop();
     if (getState().form.BasicInfoForm.hasOwnProperty('anyTouched') ||
