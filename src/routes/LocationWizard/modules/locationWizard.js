@@ -308,6 +308,23 @@ export function LoadAndRefreshForms(id, event) {
           })
         }
       } else {
+        dispatch({
+                type: 'redux-form/INITIALIZE',
+                meta: {
+                  form: 'BasicInfoForm',
+                  keepDirty: false
+                },
+                payload: ''
+              })
+              dispatch({
+                type: 'redux-form/INITIALIZE',
+                meta: {
+                  form: 'CredentialsManagementForm',
+                  keepDirty: false
+                },
+                payload: ''
+              })
+
         dispatch(getDefaultCredentialBasicData())
         dispatch({
           type: "WORK_FLOW_NEW_LOCATION"
