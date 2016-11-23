@@ -166,76 +166,75 @@ export const ACTION_HANDLERS = {
     return Object.assign({}, state, { selectedunitCharacteristics: selectedUC });
   },
   [BIND_INITIAL_ATTRIBUTES]: (state, action) => {
-    if (action.payload) {
-      var newState = Object.assign({}, state)
-      var attributes = action.payload
-      var selectedDefault = []
-      if (!attributes || (attributes && attributes.length == 0)) {
-        newState.selectedunitCharacteristics = [];
-        var selectedUC = [];
+    var newState = Object.assign({}, state)
+    var attributes = action.payload
+    var selectedDefault = []
+    if (!attributes || (attributes && attributes.length == 0)) {
+      newState.selectedunitCharacteristics = [];
+      var selectedUC = [];
+      newState.defaultUnitCharacteristics.map(duc => {
+        duc.editableAttributes = [{}];
+        duc.displayAttributes = {}
+        selectedUC.push(duc)
+      })
+      newState.selectedunitCharacteristics = selectedUC;
+    } else {
+      newState.selectedunitCharacteristics = [];
+      attributes.map(att => {
+        newState.unitCharacteristics.map(uc => {
+          if (uc.id == att.AttributeId) {
+            uc.isDeletable = true;
+            uc.isSavable = true;
+            uc.LocationId = att.LocationId
+            newState.defaultUnitCharacteristics.map(duc => {
+              if (duc.id == att.AttributeId) {
+                uc.isDeletable = false;
+                if (!selectedDefault.includes(duc.id)) {
+                  selectedDefault.push(duc.id)
+                }
+              }
+            })
+            uc.defaultUnitOfMeasureId = att.UnitOfMeasureId
+            uc.UOM = att.UnitOfMeasureName
+            var editableAttributes = {
+              EffectiveEndDate: dateConversion((new Date(parseInt(att.EffectiveEndDate.substring(att.EffectiveEndDate.indexOf("(") + 1, (att.EffectiveEndDate.indexOf(")")))))).toISOString()),
+              EffectiveStartDate: dateConversion((new Date(parseInt(att.EffectiveStartDate.substring(att.EffectiveStartDate.indexOf("(") + 1, (att.EffectiveStartDate.indexOf(")")))))).toISOString()),
+              Value: att.Value,
+              LocationAttributeId: att.LocationAttributeId
+            }
+            var valuePresence = 1;
+            newState.selectedunitCharacteristics.map(suc => {
+              if (suc.id == att.AttributeId) {
+                suc.editableAttributes.push(editableAttributes);
+                suc.displayAttributes = DateSwap(suc.editableAttributes)
+                valuePresence++;
+              }
+            })
+            if (valuePresence == 1) {
+              uc.editableAttributes = [];
+              uc.editableAttributes.push(editableAttributes);
+              //making nearby date first
+              uc.displayAttributes = DateSwap(uc.editableAttributes)
+              newState.selectedunitCharacteristics.push(uc);
+            }
+          }
+        })
+      })
+      if (selectedDefault.length > 0) {
         newState.defaultUnitCharacteristics.map(duc => {
-          duc.editableAttributes = [{}];
-          selectedUC.push(duc)
+          if (!selectedDefault.includes(duc.id)) {
+            duc.editableAttributes = [{}];
+            newState.selectedunitCharacteristics.push(duc);
+          }
         })
-        newState.selectedunitCharacteristics = selectedUC;
-      } else {
-        newState.selectedunitCharacteristics = [];
-        attributes.map(att => {
-          newState.unitCharacteristics.map(uc => {
-            if (uc.id == att.AttributeId) {
-              uc.isDeletable = true;
-              uc.isSavable = true;
-              uc.LocationId = att.LocationId
-              newState.defaultUnitCharacteristics.map(duc => {
-                if (duc.id == att.AttributeId) {
-                  uc.isDeletable = false;
-                  if (!selectedDefault.includes(duc.id)) {
-                    selectedDefault.push(duc.id)
-                  }
-                }
-              })
-              uc.defaultUnitOfMeasureId = att.UnitOfMeasureId
-              uc.UOM = att.UnitOfMeasureName
-              var editableAttributes = {
-                EffectiveEndDate: dateConversion((new Date(parseInt(att.EffectiveEndDate.substring(att.EffectiveEndDate.indexOf("(") + 1, (att.EffectiveEndDate.indexOf(")")))))).toISOString()),
-                EffectiveStartDate: dateConversion((new Date(parseInt(att.EffectiveStartDate.substring(att.EffectiveStartDate.indexOf("(") + 1, (att.EffectiveStartDate.indexOf(")")))))).toISOString()),
-                Value: att.Value,
-                LocationAttributeId: att.LocationAttributeId
-              }
-              var valuePresence = 1;
-              newState.selectedunitCharacteristics.map(suc => {
-                if (suc.id == att.AttributeId) {
-                  suc.editableAttributes.push(editableAttributes);
-                  suc.displayAttributes=DateSwap(suc.editableAttributes)
-                  valuePresence++;
-                }
-              })
-              if (valuePresence == 1) {
-                uc.editableAttributes = [];
-                uc.editableAttributes.push(editableAttributes);
-                //making nearby date first
-                uc.displayAttributes = DateSwap(uc.editableAttributes)
-                newState.selectedunitCharacteristics.push(uc);
-              }
-            }
-          })
-        })
-        if (selectedDefault.length > 0) {
-          newState.defaultUnitCharacteristics.map(duc => {
-            if (!selectedDefault.includes(duc.id)) {
-              duc.editableAttributes = [{}];
-              newState.selectedunitCharacteristics.push(duc);
-            }
-          })
-        }
-        else {
-          newState.defaultUnitCharacteristics.map(duc => {
-            newState.selectedunitCharacteristics.push(duc)
-          })
-        }
       }
-      return newState;
+      else {
+        newState.defaultUnitCharacteristics.map(duc => {
+          newState.selectedunitCharacteristics.push(duc)
+        })
+      }
     }
+    return newState;
   },
   [TOGGLE_MODAL]: (state, action) => {
     if (action.payload != null) {
@@ -351,7 +350,7 @@ export const ACTION_HANDLERS = {
       error: null,
       dateRangeValidation: []
     })
-
+   
     if (action.payload) {
       var errorStatus = null;
       var dateValidations = [];
