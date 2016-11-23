@@ -205,6 +205,11 @@ export const ACTION_HANDLERS = {
       timezones: action.payload
     })
   },
+  ['EMPTY_BASIC_CREDENTIAL_INTIAL_VALUES']:(state,action) => {
+    return Object.assign({}, state, {
+      BasicInfo:{} ,CredentialInitialValues: {}
+    })
+  },
   ['ERROR']: (state, action) => {
     return Object.assign({}, state, {
       error: action.payload
@@ -262,24 +267,26 @@ function PrepareCredentialBasicData(data, assignedLocationMappings) {
 export function getLocationTypesService() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
+      getState().basic.locationTypes.length == 0 ?
       basicInfoDropdowns.getLocationTypes().then(function(response) {
         dispatch({
           type: GET_LOCATION_TYPES,
           payload: response.data
         });
-      })
+      }):null
     })
   }
 }
 export function getOwnersService() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
+       getState().basic.owners.length == 0 ?
       basicInfoDropdowns.getOwners().then(function(response) {
         dispatch({
           type: GET_OWNERS,
           payload: response.data
         });
-      })
+      }):null
     })
   }
 }
@@ -287,24 +294,26 @@ export function getOwnersService() {
 export function getPrimaryMarketsService() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
+       getState().basic.primaryMarkets.length == 0 ?
       basicInfoDropdowns.getPrimaryMarkets().then(function(response) {
         dispatch({
           type: GET_PRIMARY_MARKETS,
           payload: response.data
         });
-      })
+      }):null
     })
   }
 }
 export function getDefaultCredentialBasicData() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
+      getState().basic.CredentialBasicData.length == 0 ? 
       getMarketDrivenMappings().then(function(response) {
         dispatch({
           type: GET_DEFAULT_CREDENTIALDATA,
           payload: response.data
         });
-      })
+      }) : null
     })
   }
 }
@@ -312,30 +321,33 @@ export function getDefaultCredentialBasicData() {
 export function getTechnologyTypesService() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
+      getState().basic.technologyTypes.length == 0 ?
       basicInfoDropdowns.getTechnologyTypes().then(function(response) {
         dispatch({
           type: GET_TECHNOLOGY_TYPES,
           payload: response.data
         });
-      })
+      }):null
     })
   }
 }
 export function getFuelClassesService() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
+       getState().basic.fuelClasses.length == 0 ?
       basicInfoDropdowns.getFuelClasses().then(function(response) {
         dispatch({
           type: GET_FUEL_CLASSES,
           payload: response.data
         });
-      })
+      }):null
     })
   }
 }
 export function getTimezonesService() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
+       getState().basic.timezones.length == 0 ?
       basicInfoDropdowns.getTimezones().then(function(response) {
         var arrTimezones = [];
         response.data.GetTimeZonesResult.forEach(function(item, index) {
@@ -349,7 +361,7 @@ export function getTimezonesService() {
           type: GET_TIME_ZONE,
           payload: arrTimezones
         });
-      })
+      }):null
     })
   }
 }

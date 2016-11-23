@@ -67,6 +67,7 @@ export function CloseGatewayConfirmation() {
 export function getGatewaysService(){
     return (dispatch, getState) => {
       return new Promise((resolve) => {
+       
           getGatewayInfo().then(function(response){
                  dispatch({
                     type: GET_GATEWAY_SERVICE,
@@ -297,7 +298,7 @@ export function validateGateway() {
               fields.GatewayURL.touched ?
               values.GatewayURL && values.GatewayURL.trim() ? messages.GatewayURL = null : messages.GatewayURL = 'Please specify url' : editedGateway.GatewayURL ? messages.GatewayURL = null : messages.GatewayURL = 'Please specify url'
 
-          }
+          }gateway
         }
         dispatch({
           type: SHOW_GATEWAY_ERRORS,

@@ -79,6 +79,7 @@ export function workFlowChange() {
 export function getWorkFlowsService() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
+      getState().workFlows.staticServiceWorkflows.length == 0 ?
       getWorkFlows().then(function(workFlowDataResponse) {
         getWorkFlowGroups().then(function(response) {
           getWorkFlowTypes().then(function(workflowTypeResponse) {
@@ -114,8 +115,10 @@ export function getWorkFlowsService() {
             })
           })
         })
+      }):null
+      dispatch({
+        type:WORK_FLOW_NEW_LOCATION
       })
-
     })
   }
 }

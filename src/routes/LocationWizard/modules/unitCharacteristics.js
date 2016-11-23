@@ -594,6 +594,7 @@ export function getDefaultUnitCharacteristicsService() {
 
   return (dispatch, getState) => {
     return new Promise((resolve) => {
+      getState().unitCharacteristics.allUOMvalues.length == 0 ?
       getAllUOMValues().then(function (response) {
         dispatch({
           type: GET_ALL_UOM_VALUES,
@@ -601,7 +602,8 @@ export function getDefaultUnitCharacteristicsService() {
         });
         dispatch(getDefaultUnitCharacteristics(response.data))
 
-      })
+      }): null
+      dispatch(BindValuesForNewLocation())
     })
   }
 }

@@ -313,6 +313,8 @@ export function getDataHistorianService() {
           })
         });
       })
+
+
     })
   }
 }
