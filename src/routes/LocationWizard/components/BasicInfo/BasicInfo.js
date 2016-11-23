@@ -5,6 +5,14 @@ import validate from '../../validations/basicInfoValidation'
 import {Panel, ControlLabel, Checkbox, Button,FormGroup, Tooltip,OverlayTrigger } from 'react-bootstrap/lib'
 import 'styles/basicInfoStyles.scss'
 import ParentLocationField from 'components/ParentLocationField/ParentLocationField'
+const numberValueCheck = (value, previousValue) => {
+  if (parseFloat(value) > 100 || parseFloat(value) < 0) {
+    return previousValue
+  }else{
+    return value
+  }
+}
+
 export const BasicInfo = (props) => {
 const {
 locationTypes,
@@ -162,6 +170,7 @@ return (
                   ? "form-control error"
                   :"form-control"}
                   type="number"
+                  normalize={numberValueCheck}
                   placeholder="OwnerShip Percentage" />
                 </div>
                  
