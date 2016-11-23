@@ -847,6 +847,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
             })
           });
           dispatch(BindInitialEquipments(response.data.SaveOMSLocationWizardDataResult.Equipment));
+          dispatch(BindUnitCharacteristicsInitialValues(response.data.SaveOMSLocationWizardDataResult.AllLocationAttributeWithValues));
           dispatch(bindGatewayLocationData(response.data.SaveOMSLocationWizardDataResult.Gateways));
           dispatch(bindLocationData(response.data.SaveOMSLocationWizardDataResult.AssignedScadaPoints, newLocationID));
           dispatch(bindWorkLocationData(response.data.SaveOMSLocationWizardDataResult.AssignedWorkflowGroups));
