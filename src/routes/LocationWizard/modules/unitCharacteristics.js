@@ -187,6 +187,7 @@ export const ACTION_HANDLERS = {
             uc.isDeletable = true;
             uc.isSavable = true;
             uc.LocationId = att.LocationId
+            uc.displayAttributes = {}
             newState.defaultUnitCharacteristics.map(duc => {
               if (duc.id == att.AttributeId) {
                 uc.isDeletable = false;
@@ -224,6 +225,7 @@ export const ACTION_HANDLERS = {
       if (selectedDefault.length > 0) {
         newState.defaultUnitCharacteristics.map(duc => {
           if (!selectedDefault.includes(duc.id)) {
+            duc.displayAttributes = {}
             duc.editableAttributes = [{}];
             newState.selectedunitCharacteristics.push(duc);
           }
@@ -231,6 +233,7 @@ export const ACTION_HANDLERS = {
       }
       else {
         newState.defaultUnitCharacteristics.map(duc => {
+          duc.displayAttributes = {}
           newState.selectedunitCharacteristics.push(duc)
         })
       }
@@ -360,16 +363,16 @@ export const ACTION_HANDLERS = {
           state.editableUnitCharacter.isSavable = true;
           newState.selectedunitCharacteristics[index] = state.editableUnitCharacter;
           var finalAttributes = []
-
-          for (var index = 0; index < state.editableUnitCharacter.editableAttributes.length; index++) {
+          state.editableUnitCharacter.editableAttributes.map((eda, index) => {
             var initialAttribute = {
-              Value: (action.payload.values && action.payload.values.ucvalue && action.payload.values.ucvalue[index]) ? action.payload.values.ucvalue[index] : state.editableUnitCharacter.editableAttributes[index].Value,
-              EffectiveStartDate: (action.payload.values && action.payload.values.effectiveStartDate && action.payload.values.effectiveStartDate[index]) ? action.payload.values.effectiveStartDate[index] : state.editableUnitCharacter.editableAttributes[index].EffectiveStartDate,
-              EffectiveEndDate: (action.payload.values && action.payload.values.effectiveEndDate && action.payload.values.effectiveEndDate[index]) ? action.payload.values.effectiveEndDate[index] : state.editableUnitCharacter.editableAttributes[index].EffectiveEndDate,
-              LocationAttributeId: state.editableUnitCharacter.editableAttributes[index] && state.editableUnitCharacter.editableAttributes[index].LocationAttributeId ? state.editableUnitCharacter.editableAttributes[index].LocationAttributeId : 0
+              Value: (action.payload.values && action.payload.values.ucvalue && action.payload.values.ucvalue[index]) ? action.payload.values.ucvalue[index] : eda.Value,
+              EffectiveStartDate: (action.payload.values && action.payload.values.effectiveStartDate && action.payload.values.effectiveStartDate[index]) ? action.payload.values.effectiveStartDate[index] : eda.EffectiveStartDate,
+              EffectiveEndDate: (action.payload.values && action.payload.values.effectiveEndDate && action.payload.values.effectiveEndDate[index]) ? action.payload.values.effectiveEndDate[index] : eda.EffectiveEndDate,
+              LocationAttributeId: eda.LocationAttributeId ? eda.LocationAttributeId : 0
             }
             finalAttributes.push(initialAttribute)
-          }
+          })
+
           if (action.payload.values && action.payload.values.editableData) {
             action.payload.values.editableData.map((ed, i) => {
               var newEditableAttributes = {
