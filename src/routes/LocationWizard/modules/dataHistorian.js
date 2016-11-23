@@ -525,17 +525,29 @@ export const ACTION_HANDLERS = {
   },
   [DELETE_DATAHISTORIAN]: (state, action) => {
     let updatedDataHistorian = [];
+    let deleteScadaMetricId;
+    let saveScada = []
     if (state.deleteDataIndex) {
+      deleteScadaMetricId = state.dataHistorian[state.deleteDataIndex].metricId
       state.dataHistorian.map((dh, i) => {
         if (i != state.deleteDataIndex) {
           updatedDataHistorian.push(dh)
         }
       });
+      if (deleteScadaMetricId) {
+        let index = state.saveScada.findIndex((scada) => scada.metricId === deleteScadaMetricId)
+        state.saveScada.map((savedScada, i) => {
+          if (i != index) {
+            saveScada.push(savedScada)
+          }
+        })
+      }
     }
     return Object.assign({}, state, {
       dataHistorian: updatedDataHistorian,
       showDataDeleteModal: !state.showDataDeleteModal,
-      deleteDataIndex: null
+      deleteDataIndex: null,
+      saveScada : saveScada
     })
   },
   [CLICKED_IS_DIGITAL_TAG]: (state, action) => {

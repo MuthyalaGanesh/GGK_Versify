@@ -12,8 +12,8 @@ export function AddEquipment() {
         payload: getState().form.EquipmentsForm && getState().form.EquipmentsForm.values ? getState().form.EquipmentsForm.values.newEquipment : null
       })
       dispatch({
-        type: 'redux-form/DESTROY',
-        meta: { form: "EquipmentsForm" },
+        type: 'redux-form/INITIALIZE',
+        meta: { form: "EquipmentsForm", },
         payload: ""
       })
     })

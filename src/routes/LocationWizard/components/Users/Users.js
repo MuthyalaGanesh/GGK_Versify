@@ -54,7 +54,7 @@ export const Users = (props) => {
                                                     component={DropdownListField}
                                                     defaultvalue={props.userInfo.defaultContacts}
                                                     data ={Contacts}                                                        
-                                                    labelKey='Name'                                             
+                                                    labelKey='displayText'                                             
                                                     valueKey='Id'
                                                     placeholder="Select contacts"                                                    
                                                     disabled = {props.userInfo.disableContacts}
@@ -85,7 +85,7 @@ export const Users = (props) => {
                                             <Field component={DropdownListField}  name = 'ContactsByContact'
                                                         data ={Contacts} 
                                                         defaultvalue = {props.userInfo.selectedContact.Id}                                                          
-                                                        labelKey='Name'                                             
+                                                        labelKey='displayText'                                             
                                                         valueKey='Id'
                                                         placeholder="Select a contact"
                                                         onChangeEvent = {(e)=>props.selectContact()}/>                                    

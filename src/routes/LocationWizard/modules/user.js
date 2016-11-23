@@ -147,9 +147,9 @@ export function AddContactModalToggle() {
 export function saveNewContact() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      let values 
+      let values
       getState().form.hasOwnProperty('UsersForm') && getState().form.UsersForm.hasOwnProperty('values') ?
-          values = getState().form.UsersForm.values : null
+        values = getState().form.UsersForm.values : null
       let messages = {}
       let invalid = false
       let regularExpression = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9]{6,20}$/;
@@ -277,22 +277,28 @@ export function saveNewContact() {
 export function getUserInfoService() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-        getState().users.userInformation.length == 0 ? 
-      getUserInfo().then(function(contactsResponse) {
-        getRoleInfo().then(function(rolesResponse) {
-          let userInfo = {
-            Roles: rolesResponse.data.GetRolesResult.Roles,
-            Contacts: contactsResponse.data.GetAutoCompleteContactsResult.Contacts
-          }
-          dispatch({
-            type: GET_USER_INFO_SERVICE,
-            payload: userInfo
+      getState().users.userInformation.length == 0 ?
+        getUserInfo().then(function(contactsResponse) {
+          getRoleInfo().then(function(rolesResponse) {
+            let allcontacts = contactsResponse.data.GetAutoCompleteContactsResult.Contacts
+            allcontacts.map((contactInfo)=>{
+              contactInfo.displayText = contactInfo.Name+' ('+contactInfo.Login+')'
+            })
+            let userInfo = {
+              Roles: rolesResponse.data.GetRolesResult.Roles,
+              Contacts: contactsResponse.data.GetAutoCompleteContactsResult.Contacts
+            }
+            dispatch({
+              type: GET_USER_INFO_SERVICE,
+              payload: userInfo
+            })
           })
-        })
-      }):null
+        }) : null
       dispatch({
-        type:BIND_LOCATION_USER_DATA,
-        payload:{locationId:0}
+        type: BIND_LOCATION_USER_DATA,
+        payload: {
+          locationId: 0
+        }
       })
     })
   }
@@ -865,9 +871,12 @@ export const ACTION_HANDLERS = {
   },
   [BIND_LOCATION_USER_DATA]: (state, action) => {
     let userInfo = state.userInformation
-    userInfo.Roles.map((role) => {
-      role.ContactIds = []
-    })
+    if (userInfo.roles) {
+      userInfo.Roles.map((role) => {
+        role.ContactIds = []
+      })
+    }
+
     return Object.assign({}, state, {
       userInfo: userInfo,
       locationId: action.payload.locationId,

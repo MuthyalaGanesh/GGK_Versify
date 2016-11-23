@@ -9,9 +9,9 @@ export const EDIT_GATEWAY = 'EDIT_GATEWAY'
 export const UPDATE_GATEWAY = 'UPDATE_GATEWAY'
 export const DELETE_GATEWAY = 'DELETE_GATEWAY'
 export const CONFIRM_DELETE_GATEWAY = 'CONFIRM_DELETE_GATEWAY'
-export const CLOSE_GATEWAY_CONFIRMATION = "CLOSE_GATEWAY_CONFIRMATION"
-export const SHOW_GATEWAY_ERRORS = "SHOW_GATEWAY_ERRORS"
-export const GET_GATEWAY_SERVICE = "GET_GATEWAY_SERVICE"
+export const CLOSE_GATEWAY_CONFIRMATION = 'CLOSE_GATEWAY_CONFIRMATION'
+export const SHOW_GATEWAY_ERRORS = 'SHOW_GATEWAY_ERRORS'
+export const GET_GATEWAY_SERVICE = 'GET_GATEWAY_SERVICE'
 
 export function getGateways() {
   return {
@@ -21,12 +21,20 @@ export function getGateways() {
 };
 
 export function bindGatewayLocationData(gateway) {
-  let gateways = {}
-  gateways.Gateways = gateway
-  return {
-    type: GET_GATEWAY_INFO,
-    payload: gateways
-  };
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      let gateways = {}
+      gateways.Gateways = gateway
+      dispatch({
+        type: GET_GATEWAY_INFO,
+        payload: gateways
+      })
+      dispatch({
+        type: "GET_GATEWAY_SERVICE_FOR_DATA_HISTORIAN",
+        payload: gateways
+      })
+    })
+  }
 }
 
 export function ConfirmGatewayDelete(index) {
@@ -64,21 +72,20 @@ export function CloseGatewayConfirmation() {
   }
 }
 
-export function getGatewaysService(){
-    return (dispatch, getState) => {
-      return new Promise((resolve) => {
-       
-          getGatewayInfo().then(function(response){
-                 dispatch({
-                    type: GET_GATEWAY_SERVICE,
-                    payload:response.data.GetOMSLocationWizardIndependentDataResult
-                 })
-                  dispatch({
-                    type: "GET_GATEWAY_SERVICE_FOR_DATA_HISTORIAN",
-                    payload:response.data.GetOMSLocationWizardIndependentDataResult
-                 })
-          })
+export function getGatewaysService() {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      getGatewayInfo().then(function(response) {
+        dispatch({
+          type: GET_GATEWAY_SERVICE,
+          payload: response.data.GetOMSLocationWizardIndependentDataResult
+        })
+        dispatch({
+          type: "GET_GATEWAY_SERVICE_FOR_DATA_HISTORIAN",
+          payload: response.data.GetOMSLocationWizardIndependentDataResult
+        })
       })
+    })
   }
 }
 
@@ -112,13 +119,11 @@ export function AddGateway() {
         if (!values.GatewayName) {
           invalid = true
           messages.GatewayName = 'Please specify Name'
-        }
-        else {
+        } else {
           if (!values.GatewayName.trim()) {
             invalid = true
             messages.GatewayName = 'Please specify Name'
-          }
-          else if (gateways.findIndex((gateway) => gateway.aliasName === values.GatewayName) >= 0) {
+          } else if (gateways.findIndex((gateway) => gateway.aliasName.trim().toUpperCase() === values.GatewayName.trim().toUpperCase()) >= 0) {
             invalid = true
             messages.GatewayName = 'Name must be unique'
           }
@@ -126,8 +131,7 @@ export function AddGateway() {
         if (!values.GatewayURL) {
           invalid = true
           messages.GatewayURL = 'Please specify url'
-        }
-        else if (!values.GatewayURL.trim()) {
+        } else if (!values.GatewayURL.trim()) {
           invalid = true
           messages.GatewayURL = 'Please specify url'
         }
@@ -182,7 +186,7 @@ export function UpdateGateway() {
       }
       if (values.GatewayName) {
         if (values.GatewayName.trim()) {
-          let index = gateways.Gateways.findIndex((gateway) => gateway.aliasName === values.GatewayName)
+          let index = gateways.Gateways.findIndex((gateway) => gateway.aliasName.trim().toUpperCase() === values.GatewayName.trim().toUpperCase())
           if (index >= 0 && index != editedGateway.index) {
             invalid = true
             messages.GatewayName = 'Name must be unique'
@@ -197,10 +201,9 @@ export function UpdateGateway() {
         fields && fields.hasOwnProperty('GatewayURL') && fields.GatewayURL.hasOwnProperty('touched') &&
           fields.GatewayURL.touched ?
           invalid = true : editedGateway.GatewayURL ? messages.GatewayURL = null : invalid = true
-      }
-      else if (!values.GatewayURL.trim()) {
-          messages.GatewayURL = 'Please specify url'
-          invalid = true
+      } else if (!values.GatewayURL.trim()) {
+        messages.GatewayURL = 'Please specify url'
+        invalid = true
       }
       if (invalid == true) {
         dispatch({
@@ -275,7 +278,7 @@ export function validateGateway() {
             values.GatewayName && values.GatewayName.trim() ? messages.GatewayName = null : messages.GatewayName = 'Please specify Name'
             values.GatewayURL && values.GatewayURL.trim() ? messages.GatewayURL = null : messages.GatewayURL = 'Please specify url'
             if (values.GatewayName && values.GatewayName.trim()) {
-              let index = gateways.Gateways.findIndex((gateway) => gateway.aliasName === values.GatewayName)
+              let index = gateways.Gateways.findIndex((gateway) => gateway.aliasName.trim().toUpperCase() === values.GatewayName.trim().toUpperCase())
               if (index >= 0 && index != editedGateway.index) {
                 messages.GatewayName = 'Name must be unique'
               }
@@ -298,7 +301,13 @@ export function validateGateway() {
               fields.GatewayURL.touched ?
               values.GatewayURL && values.GatewayURL.trim() ? messages.GatewayURL = null : messages.GatewayURL = 'Please specify url' : editedGateway.GatewayURL ? messages.GatewayURL = null : messages.GatewayURL = 'Please specify url'
 
-          }gateway
+            if (values.GatewayName && values.GatewayName.trim()) {
+              let index = gateways.Gateways.findIndex((gateway) => gateway.aliasName.trim().toUpperCase() === values.GatewayName.trim().toUpperCase())
+              if (index >= 0 && index != editedGateway.index) {
+                messages.GatewayName = 'Name must be unique'
+              }
+            }
+          }
         }
         dispatch({
           type: SHOW_GATEWAY_ERRORS,
@@ -405,19 +414,31 @@ export const ACTION_HANDLERS = {
   },
   [DELETE_GATEWAY]: (state, action) => {
     let updatedGateways = [];
+    let saveGateway = [];
+    let deleteGatewayName
     if (state.GatewayDeleteIndex) {
+      deleteGatewayName = state.gateway.Gateways[state.GatewayDeleteIndex].GatewayName
       state.gateway.Gateways.map((gw, i) => {
         if (i != state.GatewayDeleteIndex) {
           updatedGateways.push(gw)
         }
       });
+      if (deleteGatewayName) {
+        let index = state.saveGateway.findIndex((gateway) => gateway.GatewayName.toUpperCase() === deleteGatewayName.toUpperCase())
+        state.saveGateway.map((savedGateway, i) => {
+          if (i != index) {
+            saveGateway.push(savedGateway)
+          }
+        })
+      }
     }
     return Object.assign({}, state, {
       gateway: {
         Gateways: updatedGateways,
       },
       GatewayDeleteIndex: null,
-      showGatewayDeleteModal: !state.showGatewayDeleteModal
+      showGatewayDeleteModal: !state.showGatewayDeleteModal,
+      saveGateway: saveGateway
     })
   },
   [ADD_GATEWAY]: (state, action) => {
@@ -451,7 +472,7 @@ export const ACTION_HANDLERS = {
   },
   [GET_GATEWAY_SERVICE]: (state, action) => {
     return Object.assign({}, state, {
-      gateway:action.payload,
+      gateway: action.payload,
       saveGateway: []
     })
   }

@@ -23,8 +23,9 @@ export const Equipments = (props) => {
                                 <div className="col-md-12 col-sm-12">
                                     <div className="col-md-2 col-sm-2 col-xs-12"><label>Equipment</label></div>
                                     <div className="col-md-6 col-md-6 col-sm-6 col-xs-8">
-                                        <Field component={InputField} type="text" className="form-control" name="newEquipment"
-                                            touched = {touched.hasOwnProperty('EquipmentsForm') ? touched.EquipmentsForm.hasOwnProperty('fields') ? touched.EquipmentsForm.fields.hasOwnProperty('newEquipment') : false : false }>
+                                        <Field component={InputField} type="text" className="form-control" name="newEquipment" placeholder="Equipment"
+                                            touched = {1}>
+                                        }
                                         </Field>
 
                                     </div>
