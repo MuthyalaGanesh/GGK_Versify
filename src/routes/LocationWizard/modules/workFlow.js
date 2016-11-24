@@ -142,7 +142,8 @@ export const ACTION_HANDLERS = {
   [WORKFLOW_CHANGE]: (state, action) => {
     let defaultvalues = action.payload.values.workFlowItem;
     return Object.assign({}, state, {
-      defaultWorkFlow: defaultvalues
+      defaultWorkFlow: defaultvalues,
+      isChanged:true
     })
   },
   [BIND_LOCATION_WORKFOW]: (state, action) => {
@@ -188,6 +189,7 @@ const initialState = {
   workFlowItems: [],
   defaultWorkFlow: [],
   staticServiceWorkflows: [],
+  isChanged:false
 };
 
 export default function workFlowReducer(state = initialState, action) {

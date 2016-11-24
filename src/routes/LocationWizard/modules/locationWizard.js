@@ -111,20 +111,26 @@ export function toggleSaveResponsePopup(event) {
 
 
 export function leftMenuDropdownClickEvent(id, event) {
-   return (dispatch, getState) => {
+  return (dispatch, getState) => {
     scroll.scrollToTop();
     if (getState().form.BasicInfoForm.hasOwnProperty('anyTouched') ||
-      getState().form.CredentialsManagementForm.hasOwnProperty('anyTouched')) {
-      dispatch({
-        type: SHOW_ALERT,
-        payload: {
-          locationState: getState().location,
-          currentLocationId: id
-        }
+         getState().form.CredentialsManagementForm.hasOwnProperty('anyTouched') || 
+         getState().form.EquipmentsForm.hasOwnProperty('anyTouched') || 
+         getState().workFlows.isChanged || 
+         getState().users.saveRoles.length > 0 || 
+         getState().gateways.saveGateway.length > 0 ||
+         getState().dataHistorian.saveScada.length > 0 ||
+         getState().equipments.isChanged) {
+              dispatch({
+                type: SHOW_ALERT,
+                payload: {
+                  locationState: getState().location,
+                  currentLocationId: id
+                }
       })
     } else {
       dispatch(showSpinner())
-      setTimeout(function () {
+      setTimeout(function() {
         dispatch(LoadAndRefreshForms(id, event));
         scrollSpy.update();
       }, 1)

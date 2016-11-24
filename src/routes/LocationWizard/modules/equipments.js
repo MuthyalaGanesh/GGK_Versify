@@ -76,7 +76,8 @@ export const ACTION_HANDLERS = {
       })
       return Object.assign({}, state, {
         insertedEquipment: equipments,
-        ParentLocationId: parentLocationId
+        ParentLocationId: parentLocationId,
+        isChanged:false
       })
     }
     return Object.assign({}, state)
@@ -103,7 +104,7 @@ export const ACTION_HANDLERS = {
           IsDirty: false
         }));
       }
-      return Object.assign({}, state, { insertedEquipment: newEquipmentData })
+      return Object.assign({}, state, { insertedEquipment: newEquipmentData,isChanged:true })
     }
     return Object.assign({}, state)
   },
@@ -135,7 +136,7 @@ export const ACTION_HANDLERS = {
           updatedEquipments.push(eq)
         }
       })
-      return Object.assign({}, state, { insertedEquipment: updatedEquipments, showEditModal: !state.showEditModal })
+      return Object.assign({}, state, { insertedEquipment: updatedEquipments, showEditModal: !state.showEditModal,isChanged:true})
     }
     return Object.assign({}, state, { showEditModal: !state.showEditModal })
   }
@@ -147,7 +148,8 @@ const initialState = {
   insertedEquipment: [],
   editableEquipment: [],
   showEditModal: false,
-  ParentLocationId: 0
+  ParentLocationId: 0,
+  isChanged:false
 };
 
 export default function equipmentsReducer(state = initialState, action) {
