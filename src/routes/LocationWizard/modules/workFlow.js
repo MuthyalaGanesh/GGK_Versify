@@ -5,7 +5,7 @@ import {
 } from 'api/locationWizardApi'
 
 import {
-  ConstatntValues
+  ConstantValues
 } from "constants/constantValues"
 
 export const BIND_WORKFLOW_ITEMS = 'BIND_WORKFLOW_ITEMS'
@@ -85,7 +85,7 @@ export function getWorkFlowsService() {
           getWorkFlowTypes().then(function(workflowTypeResponse) {
             let workflowTypeId
             workflowTypeResponse.data.map((type) => {
-              if (type.name === ConstatntValues.DEFAULT_WORKFLOW_TYPE) {
+              if (type.name === ConstantValues.DEFAULT_WORKFLOW_TYPE) {
                 workflowTypeId = type.id
               }
             })

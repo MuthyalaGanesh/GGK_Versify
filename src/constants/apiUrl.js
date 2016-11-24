@@ -26,7 +26,10 @@ export const ApiUrl = {
 	AUTO_COMPLETE_CONTACTS: baseAddress + "/AutoCompleteContacts?searchText=",
 	ROLE: baseAddress + "/Roles",
 	SAVE_OMSLOCATION_DATA: baseAddress + "/SaveOMSLocationWizardData",
-	DEFAULTMETRICS : baseAddress+"/LWDefaultMetricIds"
-}
+	DEFAULTMETRICS : baseAddress+"/LWDefaultMetricIds",
+	SAVE_NEW_CONTACT : baseAddress+"/SaveContactBasic",
+	ROLES_BY_CONTACT : baseAddress +"/LWRolesByContact?locationId={0}&contactId={1}",
+	CONTACTS_BY_ROLE : baseAddress +"/LWContactsByRole?locationId={0}&roleId={1}",
+};
 
 export default ApiUrl

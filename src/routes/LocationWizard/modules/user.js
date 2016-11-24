@@ -1,17 +1,19 @@
 import {
   getUserInfo,
-  getRoleInfo
+  getRoleInfo,
+  getNewContactPopUpInfo,
+  getContacts,
+  addNewContact,
+  getRolesByContact,
+  getContactsByRole
 } from 'api/locationWizardApi'
+
 import {
-  getNewContactPopUpInfo
-} from 'api/locationWizardApi'
-import {
-  getContacts
-} from 'api/locationWizardApi'
+  ConstantValues
+} from "constants/constantValues"
 
 import axios from 'axios'
 
-const baseAddress = "https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc";
 export const BIND_USER_INFO = 'BIND_USER_INFO'
 export const BIND_CONTACT_TO_ROLE = 'BIND_CONTACT_TO_ROLE'
 export const BIND_ROLE_TO_CONTACT = 'BIND_ROLE_TO_CONTACT'
@@ -28,10 +30,10 @@ export const ROLE_BY_ROLE = 'ROLE_BY_ROLE'
 export const ROLE_BY_CONTACT = 'ROLE_BY_CONTACT'
 export const GET_USER_INFO_SERVICE = 'GET_USER_INFO_SERVICE'
 export const SHOW_NEWCONTACT_ERRORS = 'SHOW_NEWCONTACT_ERRORS'
-export const USERS_NEW_LOCATION = "USERS_NEW_LOCATION"
-export const CONTACT_SAVE_FAILURE = "CONTACT_SAVE_FAILURE"
-export const HIDE_SUCCESS = "HIDE_SUCCESS"
-export const HIDE_FAILED = "HIDE_FAILED"
+export const USERS_NEW_LOCATION = 'USERS_NEW_LOCATION'
+export const CONTACT_SAVE_FAILURE = 'CONTACT_SAVE_FAILURE'
+export const HIDE_SUCCESS = 'HIDE_SUCCESS'
+export const HIDE_FAILED = 'HIDE_FAILED'
 
 export function bindUserLocationData(assignedcontacts, locationId) {
   return (dispatch, getState) => {
@@ -144,6 +146,44 @@ export function AddContactModalToggle() {
   }
 }
 
+export function setErrors() {
+  let messages = {}
+  messages.Name = ConstantValues.ERROR_NAME
+  messages.Org = ConstantValues.ERROR_ORG
+  messages.Type = ConstantValues.ERROR_TYPE
+  messages.TimeZone = ConstantValues.ERROR_TIMEZONE
+  messages.status = ConstantValues.ERROR_STATUS
+  messages.userId = ConstantValues.ERROR_USERID
+  messages.Password = ConstantValues.ERROR_PASSWORD
+  messages.PrimaryEmail = ConstantValues.ERROR_PRIMARY_EMAIL
+  return messages
+}
+
+export function mapContact() {
+  let Contact = {}
+  Contact.Id = 0
+  Contact.Name = values.Name
+  Contact.OrgId = values.Org != null && values.Org != undefined ? values.Org.id : null
+  Contact.Title = values.Title
+  Contact.ContactTypeId = values.Type != null && values.Type != undefined ? values.Type.id : null
+  Contact.DefaultTimezone = values.TimeZone != null && values.TimeZone != undefined ? values.TimeZone.id : ""
+  Contact.Phone1 = values.Primary != null && values.Primary != undefined ? values.Primary : ''
+  Contact.Phone2 = values.Cell != null && values.Cell != undefined ? values.Cell : ''
+  Contact.Phone3 = values.OtherPhone != null && values.OtherPhone != undefined ? values.OtherPhone : ''
+  Contact.Email1 = values.PrimaryEmail != null && values.PrimaryEmail != undefined ? values.PrimaryEmail : ''
+  Contact.Email2 = values.SecondaryEmail != null && values.SecondaryEmail != undefined ? values.SecondaryEmail : ''
+  Contact.UDV1 = values.Custom1 != null && values.Custom1 != undefined ? values.Custom1 : ''
+  Contact.UDV2 = values.Custom2 != null && values.Custom2 != undefined ? values.Custom2 : ''
+  Contact.UDV3 = values.Custom3 != null && values.Custom3 != undefined ? values.Custom3 : ''
+  Contact.UDV4 = values.Custom4 != null && values.Custom4 != undefined ? values.Custom4 : ''
+  Contact.UDV5 = values.Custom5 != null && values.Custom5 != undefined ? values.Custom5 : ''
+  Contact.Status = values.status != null && values.status != undefined ? values.status.id : null
+  Contact.Login = values.userId != null && values.userId != undefined ? values.userId : ''
+  Contact.Password = values.Password != null && values.Password != undefined ? values.Password : ''
+  Contact.IsAdmin = values.SystemAdmin != null && values.SystemAdmin != undefined ? 'Y' : 'N'
+  return Contact
+}
+
 export function saveNewContact() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
@@ -152,52 +192,50 @@ export function saveNewContact() {
         values = getState().form.UsersForm.values : null
       let messages = {}
       let invalid = false
-      let regularExpression = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9]{6,20}$/;
       if (values != null) {
         if (!values.Name) {
           invalid = true
-          messages.Name = 'Please specify Name'
+          messages.Name = ConstantValues.ERROR_NAME
         } else if (!values.Name.trim()) {
           invalid = true
-          messages.Name = 'Please specify Name'
+          messages.Name = ConstantValues.ERROR_NAME
         }
         if (!values.Org) {
           invalid = true
-          messages.Org = 'Please select Organization'
+          messages.Org = ConstantValues.ERROR_ORG
         }
         if (!values.Type) {
           invalid = true
-          messages.Type = 'Please select Type'
+          messages.Type = ConstantValues.ERROR_TYPE
         }
         if (!values.TimeZone) {
           invalid = true
-          messages.TimeZone = 'Please select Time Zone'
+          messages.TimeZone = ConstantValues.ERROR_TIMEZONE
         }
         if (!values.PrimaryEmail) {
           invalid = true
-          messages.PrimaryEmail = 'Please specify Primary Email'
+          messages.PrimaryEmail = ConstantValues.ERROR_PRIMARY_EMAIL
         } else if (!values.PrimaryEmail.trim()) {
           invalid = true
-          messages.PrimaryEmail = 'Please specify Primary Email'
+          messages.PrimaryEmail = ConstantValues.ERROR_PRIMARY_EMAIL
         }
         if (!values.status) {
           invalid = true
-          messages.status = 'Please select status'
+          messages.status = ConstantValues.ERROR_STATUS
         }
         if (!values.userId) {
           invalid = true
-          messages.userId = 'Please specify User Id'
+          messages.userId = ConstantValues.ERROR_USERID
         } else if (!values.userId.trim()) {
           invalid = true
-          messages.userId = 'Please specify User Id'
+          messages.userId = ConstantValues.ERROR_USERID
         }
         if (!values.Password) {
           invalid = true
-          messages.Password = 'Please specify Password'
+          messages.Password = ConstantValues.ERROR_PASSWORD
         } else {
-          messages.PasswordFormat = 'Password must be 6-20 characters in length,cannot contain special characters,' +
-            'and must contain atleast one lower case letter,one upper case letter,and one digit'
-          regularExpression.test(values.Password) ? messages.PasswordFormat = null : invalid = true
+          messages.PasswordFormat = ConstantValues.ERROR_PASSWORD_FORMAT
+          ConstantValues.PASSWORD_REGEX.test(values.Password) ? messages.PasswordFormat = null : invalid = true
         }
         if (invalid == true) {
           dispatch({
@@ -205,38 +243,13 @@ export function saveNewContact() {
             payload: messages
           })
         } else {
-          let Contact = {}
-          Contact.Id = 0
-          let userForm = getState().form.UsersForm;
-          Contact.Name = userForm.values.Name
-          Contact.OrgId = userForm.values.Org != null && userForm.values.Org != undefined ? userForm.values.Org.id : null
-          Contact.Title = userForm.values.Title
-          Contact.ContactTypeId = userForm.values.Type != null && userForm.values.Type != undefined ? userForm.values.Type.id : null
-          Contact.DefaultTimezone = userForm.values.TimeZone != null && userForm.values.TimeZone != undefined ? userForm.values.TimeZone.id : ""
-          Contact.Phone1 = userForm.values.Primary != null && userForm.values.Primary != undefined ? userForm.values.Primary : ''
-          Contact.Phone2 = userForm.values.Cell != null && userForm.values.Cell != undefined ? userForm.values.Cell : ''
-          Contact.Phone3 = userForm.values.OtherPhone != null && userForm.values.OtherPhone != undefined ? userForm.values.OtherPhone : ''
-          Contact.Email1 = userForm.values.PrimaryEmail != null && userForm.values.PrimaryEmail != undefined ? userForm.values.PrimaryEmail : ''
-          Contact.Email2 = userForm.values.SecondaryEmail != null && userForm.values.SecondaryEmail != undefined ? userForm.values.SecondaryEmail : ''
-          Contact.UDV1 = userForm.values.Custom1 != null && userForm.values.Custom1 != undefined ? userForm.values.Custom1 : ''
-          Contact.UDV2 = userForm.values.Custom2 != null && userForm.values.Custom2 != undefined ? userForm.values.Custom2 : ''
-          Contact.UDV3 = userForm.values.Custom3 != null && userForm.values.Custom3 != undefined ? userForm.values.Custom3 : ''
-          Contact.UDV4 = userForm.values.Custom4 != null && userForm.values.Custom4 != undefined ? userForm.values.Custom4 : ''
-          Contact.UDV5 = userForm.values.Custom5 != null && userForm.values.Custom5 != undefined ? userForm.values.Custom5 : ''
-          Contact.Status = userForm.values.status != null && userForm.values.status != undefined ? userForm.values.status.id : null
-          Contact.Login = userForm.values.userId != null && userForm.values.userId != undefined ? userForm.values.userId : ''
-          Contact.Password = userForm.values.Password != null && userForm.values.Password != undefined ? userForm.values.Password : ''
-          Contact.IsAdmin = userForm.values.SystemAdmin != null && userForm.values.SystemAdmin != undefined ? 'Y' : 'N'
+          let Contact = mapContact(getState().form.UsersForm.values)
           var SaveObject = {
             "saveData": {
               Contact: Contact
             }
           }
-          axios({
-            method: 'post',
-            url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveContactBasic',
-            data: SaveObject
-          }).then(function(response) {
+          addNewContact().then(function(response) {
             dispatch({
               type: SAVE_NEW_CONTACT,
             })
@@ -249,22 +262,15 @@ export function saveNewContact() {
             })
           }).catch(function(error) {
             let messages = {}
-            messages.failure = 'Save new contact failed,Please change given information and try again'
+            messages.failure = ConstantValues.NEWCONTACT_FAILURE
             dispatch({
-              type: 'CONTACT_SAVE_FAILURE',
+              type: CONTACT_SAVE_FAILURE,
               payload: messages
             })
           });
         }
       } else {
-        messages.Name = 'Please specify Name'
-        messages.Org = 'Please select Organization'
-        messages.Type = 'Please select Type'
-        messages.TimeZone = 'Please select Time Zone'
-        messages.status = 'Please select status'
-        messages.userId = 'Please specify User Id'
-        messages.Password = 'Please specify Password'
-        messages.PrimaryEmail = 'Please specify Primary Email'
+        messages = setErrors()
         dispatch({
           type: SHOW_NEWCONTACT_ERRORS,
           payload: messages
@@ -353,11 +359,8 @@ export function selectRole() {
       } else if (getState().form.UsersForm.values.RoleByRoles) {
         let roleinfo = {};
         roleinfo.roleByRole = getState().form.UsersForm.values.RoleByRoles
-        if (fetchedRoles.findIndex((fetchedId) => fetchedId === roleinfo.roleByRole.Id) < 0) {
-          axios({
-            method: 'get',
-            url: baseAddress + '/LWContactsByRole?locationId=' + locationId + '&roleId=' + roleinfo.roleByRole.Id,
-          }).then(function(response) {
+        if (fetchedRoles.findIndex((fetchedId) => fetchedId === roleinfo.roleByRole.Id) < 0) {           
+          getContactsByRole(locationId,roleinfo.roleByRole.Id).then(function(response) {
             if (response.data && response.data.GetLWContactsByRoleResult && response.data.GetLWContactsByRoleResult.Contacts) {
               let result = response.data.GetLWContactsByRoleResult.Contacts
               result.map((contact) => {
@@ -413,10 +416,7 @@ export function selectContact() {
         let roleinfo = {};
         roleinfo.contactsByContacts = getState().form.UsersForm.values.ContactsByContact
         if (fetchedContacts.findIndex((fetchedId) => fetchedId === roleinfo.contactsByContacts.Id) < 0) {
-          axios({
-            method: 'get',
-            url: baseAddress + '/LWRolesByContact?locationId=' + locationId + '&contactId=' + roleinfo.contactsByContacts.Id,
-          }).then(function(response) {
+          getRolesByContact(locationId,roleinfo.contactsByContacts.Id).then(function(response) {
             if (response.data && response.data.GetLWRolesByContactResult) {
               roleinfo.roles = response.data.GetLWRolesByContactResult.Roles
               roleinfo.sharedRoles = response.data.GetLWRolesByContactResult.ContactsWhoShareRoles
@@ -458,30 +458,20 @@ export function validateContact() {
       if (users.error) {
         let values = {}
         let messages = {}
-        let regularExpression = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9]{6,20}$/;
-        let PasswordFormat = 'Password must be 6-20 characters in length,cannot contain special characters,' +
-          'and must contain atleast one lower case letter,one upper case letter,and one digit'
         getState().form.hasOwnProperty('UsersForm') && getState().form.UsersForm.hasOwnProperty('values') ?
           values = getState().form.UsersForm.values : null
         if (values != null) {
-          values.Name && values.Name.trim() ? messages.Name = null : messages.Name = 'Please specify Name'
-          values.Org ? messages.Org = null : messages.Org = 'Please select Organization'
-          values.Type ? messages.Type = null : messages.Type = 'Please select Type'
-          values.TimeZone ? messages.TimeZone = null : messages.TimeZone = 'Please select Time Zone'
-          values.PrimaryEmail && values.PrimaryEmail.trim() ? messages.PrimaryEmail = null : messages.PrimaryEmail = 'Please specify Primary Email'
-          values.status ? messages.status = null : messages.status = 'Please select status'
-          values.userId && values.userId.trim() ? messages.userId = null : messages.userId = 'Please specify User Id'
-          values.Password ? messages.Password = null : messages.Password = 'Please specify Password'
-          values.Password ? regularExpression.test(values.Password) ? messages.PasswordFormat = null : messages.PasswordFormat = PasswordFormat : messages.PasswordFormat = null
+          values.Name && values.Name.trim() ? messages.Name = null : messages.Name = ConstantValues.ERROR_NAME
+          values.Org ? messages.Org = null : messages.Org = ConstantValues.ERROR_ORG
+          values.Type ? messages.Type = null : messages.Type = ConstantValues.ERROR_TYPE
+          values.TimeZone ? messages.TimeZone = null : messages.TimeZone = ConstantValues.ERROR_TIMEZONE
+          values.PrimaryEmail && values.PrimaryEmail.trim() ? messages.PrimaryEmail = null : messages.PrimaryEmail = ConstantValues.ERROR_PRIMARY_EMAIL
+          values.status ? messages.status = null : messages.status = ConstantValues.ERROR_STATUS
+          values.userId && values.userId.trim() ? messages.userId = null : messages.userId = ConstantValues.ERROR_USERID
+          values.Password ? messages.Password = null : messages.Password = ConstantValues.ERROR_PASSWORD
+          values.Password ? ConstantValues.PASSWORD_REGEX.test(values.Password) ? messages.PasswordFormat = null : messages.PasswordFormat = ConstantValues.ERROR_PASSWORD_FORMAT : messages.PasswordFormat = null
         } else {
-          messages.Name = 'Please specify Name'
-          messages.Org = 'Please select Organization'
-          messages.Type = 'Please select Type'
-          messages.TimeZone = 'Please select Time Zone'
-          messages.status = 'Please select status'
-          messages.userId = 'Please specify User Id'
-          messages.Password = 'Please specify Password'
-          messages.PrimaryEmail = 'Please specify Primary Email'
+          messages = setErrors()
         }
         dispatch({
           type: SHOW_NEWCONTACT_ERRORS,
@@ -548,7 +538,7 @@ export const ACTION_HANDLERS = {
   [SAVE_NEW_CONTACT]: (state, action) => {
     let userInformation = state.userInformation
     let validationMessages = {}
-    validationMessages.success = "New Contact added successfully"
+    validationMessages.success = ConstantValues.NEWCONTACT_SUCCESS
     userInformation.Contacts = getContacts()
     return Object.assign({}, state, {
       error: null,
