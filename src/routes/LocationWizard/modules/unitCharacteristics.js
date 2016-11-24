@@ -248,7 +248,8 @@ export const ACTION_HANDLERS = {
             showModal: !state.showModal,
             isEditable: true,
             editableUnitCharacter: null,
-            error: null
+            error: null,
+            isChanged:true
           })
           newState.UOMLabel = "",
             newState.descriptionLabel = "",
@@ -279,7 +280,8 @@ export const ACTION_HANDLERS = {
           return Object.assign({}, state, {
             showModal: !state.showModal,
             isEditable: false,
-            error: null
+            error: null,
+            isChanged:true
           })
         }
       } else {
@@ -314,7 +316,8 @@ export const ACTION_HANDLERS = {
         }
         return Object.assign({}, state, {
           showModal: !state.showModal, editableUnitCharacter: null,
-          error: null
+          error: null,
+          isChanged:true
         })
       }
     }
@@ -351,7 +354,8 @@ export const ACTION_HANDLERS = {
     return Object.assign({}, state, {
       showDeleteModal: !state.showDeleteModal,
       selectedunitCharacteristics: newSelectedUC,
-      deletedUnitCharacteristics: deletedUnitCharacteristics
+      deletedUnitCharacteristics: deletedUnitCharacteristics,
+      isChanged:true
     })
   },
   //update edited row
@@ -420,7 +424,8 @@ export const ACTION_HANDLERS = {
         error: errorStatus,
         showModal: (!errorStatus && dateValidations.length == 0) ?
           (!state.showModal) : (state.showModal),
-        dateRangeValidation: dateValidations
+        dateRangeValidation: dateValidations,
+        isChanged:true
       });
     }
   },
@@ -527,7 +532,8 @@ export const ACTION_HANDLERS = {
         error: errorStatus,
         showModal: (!errorStatus && dateValidations.length == 0) ? (!state.showModal) : (state.showModal),
         dateRangeValidation: dateValidations,
-        deletedUnitCharacteristics: (!errorStatus && dateValidations.length == 0) ? deletedUC : state.deletedUnitCharacteristics
+        deletedUnitCharacteristics: (!errorStatus && dateValidations.length == 0) ? deletedUC : state.deletedUnitCharacteristics,
+        isChanged:true
       })
     } else {
       return Object.assign({}, newState, {
@@ -568,7 +574,8 @@ export const ACTION_HANDLERS = {
       state.editableUnitCharacter = [];
     }
     return Object.assign({}, state, {
-      editableUnitCharacter: newEditableUnitCharacter[0]
+      editableUnitCharacter: newEditableUnitCharacter[0],
+      isChanged:true
     });
   },
 
@@ -666,7 +673,8 @@ const initialState = {
   displayNameLabel: "",
   isEditable: false,
   editableIndex: 0,
-  dateRangeValidation: []
+  dateRangeValidation: [],
+  isChanged:false
 };
 
 export default function unitCharacteristicsReducer(state = initialState, action) {

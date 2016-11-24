@@ -218,7 +218,8 @@ export const ACTION_HANDLERS = {
     [ALIAS_SAVE]: (state, action) => {
         return Object.assign({},state,{
             systemdata:action.payload.systemdata,
-            selectedSystemIntegrationTypes:action.payload.selectedSystemIntegrationTypes
+            selectedSystemIntegrationTypes:action.payload.selectedSystemIntegrationTypes,
+            isChanged:true
         })
         
     },
@@ -226,14 +227,16 @@ export const ACTION_HANDLERS = {
     [ADD_SYSTEM_INTEGRATION]: (state, action) => {
         return Object.assign({}, state, {
             selectedSystemIntegrationTypes: action.payload.selectedSystemIntegrationTypes,
-            unSelectedSystemIntegrationTypes:  action.payload.unSelectedSystemIntegrationTypes
+            unSelectedSystemIntegrationTypes:  action.payload.unSelectedSystemIntegrationTypes,
+            isChanged:true
         })
     },
 
     [DELETE_SYS_INTEGRATION]: (state, action) => {
         return Object.assign({}, state, {
             selectedSystemIntegrationTypes: action.payload.selectedSystemIntegrationTypes,
-            unSelectedSystemIntegrationTypes:  action.payload.unSelectedSystemIntegrationTypes
+            unSelectedSystemIntegrationTypes:  action.payload.unSelectedSystemIntegrationTypes,
+            isChanged:true
         })
     },
     [STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION]: (state, action) => {
@@ -258,7 +261,8 @@ const initialState = {
     systemIntegrationTypes: [],
     selectedSystemIntegrationTypes: [],
     unSelectedSystemIntegrationTypes: [],
-    systemdata:{}
+    systemdata:{},
+    isChanged:false
 };
 
 export default function systemIntegrationReducer(state = initialState, action) {

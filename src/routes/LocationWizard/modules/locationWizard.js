@@ -120,7 +120,10 @@ export function leftMenuDropdownClickEvent(id, event) {
          getState().users.saveRoles.length > 0 || 
          getState().gateways.saveGateway.length > 0 ||
          getState().dataHistorian.saveScada.length > 0 ||
-         getState().equipments.isChanged) {
+         getState().equipments.isChanged ||
+         getState().systemIntegration.isChanged ||
+         getState().unitCharacteristics.isChanged
+         ) {
               dispatch({
                 type: SHOW_ALERT,
                 payload: {
