@@ -111,7 +111,7 @@ export function toggleSaveResponsePopup(event) {
 
 
 export function leftMenuDropdownClickEvent(id, event) {
-  return (dispatch, getState) => {
+   return (dispatch, getState) => {
     scroll.scrollToTop();
     if (getState().form.BasicInfoForm.hasOwnProperty('anyTouched') ||
       getState().form.CredentialsManagementForm.hasOwnProperty('anyTouched')) {
@@ -124,7 +124,7 @@ export function leftMenuDropdownClickEvent(id, event) {
       })
     } else {
       dispatch(showSpinner())
-      setTimeout(function() {
+      setTimeout(function () {
         dispatch(LoadAndRefreshForms(id, event));
         scrollSpy.update();
       }, 1)
@@ -250,11 +250,11 @@ export function LoadAndRefreshForms(id, event) {
           findLocation(allLocationdata, id);
           var locationObj = currentLocation;
           currentLocation = null;
-          getOMSLocationwizardData(id).then(function(response) {
+          getOMSLocationwizardData(id).then(function (response) {
             let editObject = response.data;
             let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
             let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
-            getMarketDrivenMappings(locationObj.PrimaryMarketId).then(function(response) {
+            getMarketDrivenMappings(locationObj.PrimaryMarketId).then(function (response) {
               var marketDrivenMappings = response.data
               var editSysIntegration = new Object({
                 locationsInfo: locationsInfo,
@@ -343,7 +343,6 @@ export function LoadAndRefreshForms(id, event) {
 function basicInforObjectPreparation(values) {
   var todayDate = new Date();
   return new Object({
-
     Id: values.locationId || 0,
     LocationId: values.locationId || 0,
     Name: values.locationName,
@@ -490,7 +489,7 @@ function equipmentObjectPreparation(stateTree, dispatch, locationId) {
       locationId > 0 ? ie.ParentLocationId = locationId : null
       equipmentsObj.push(ie)
     })
-
+   
     return equipmentsObj;
   } else {
     dispatch({
@@ -506,9 +505,7 @@ function SystemIntegrationObjectPreparation(stateTree, dispatch) {
     stateTree.systemIntegration.selectedSystemIntegrationTypes.map(ssit => {
       systemIntegrationObj.push(ssit)
     })
-    stateTree.systemIntegration.deletedSystemIntegrations.map(del => {
-      systemIntegrationObj.push(del)
-    })
+
     console.log(systemIntegrationObj, "SystemIntegrations")
   } else {
     dispatch({
@@ -766,7 +763,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
       payload: 0
     });
 
-
+    var locationId = values.locationId || 0;
     var primaryMarketTypeId = values.primaryMarket.id || values.primaryMarket;
     var basicInfoObj = basicInforObjectPreparation(values);
     //get MarketDrivenMappings from API based on marketType ID
@@ -964,7 +961,7 @@ function toArray(obj) {
 
 function changeObjectTypeOfLocations(allLocations) {
   var changedLocationsObject = [];
-  allLocations.forEach(function(item) {
+  allLocations.forEach(function (item) {
     changedLocationsObject.push({
       key: item.Id,
       value: item.Id,

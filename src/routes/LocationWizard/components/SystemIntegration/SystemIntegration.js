@@ -76,13 +76,10 @@ export const SystemIntegration = (props) => {
                                                 props.systemIntegration.selectedSystemIntegrationTypes.map((ssit, i) =>
                                                     <tr key={i}>
                                                         <td className="align-text-col"><label>{ssit.ExternalSystemName}</label></td>
-                                                        <td><Field component={InputField} name={`AliasName[${i}]`} onblur={() => props.AliasGiven() }
-                                                            touched = {touched.hasOwnProperty('SystemIntegrationForm') ?
-                                                                touched.SystemIntegrationForm.hasOwnProperty('values') ? touched.SystemIntegrationForm.values.hasOwnProperty("AliasName") ? touched.SystemIntegrationForm.values.AliasName[i] : false : false : false }
-
-                                                            className="form-control" defaultvalue={ssit.AliasName}/></td>
+                                                        <td><Field component={InputField} name={ssit.ExternalSystemName} onblur={() => props.AliasGiven(ssit.ExternalSystemName,i) }
+                                                         touched= {1}  className="form-control" /></td>
                                                         <td className="text-align-col text-center">
-                                                            <i className="fa fa-trash-o fa-2x" onClick={() => props.deleteSystemIntegration(i) }></i>
+                                                            <i className="fa fa-trash-o fa-2x" onClick={() => props.deleteSystemIntegration(ssit.ExternalSystemName,i) }></i>
                                                         </td>
                                                     </tr>
                                                 )

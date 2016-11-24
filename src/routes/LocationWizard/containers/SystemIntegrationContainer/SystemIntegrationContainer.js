@@ -24,6 +24,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state) => ({
     systemIntegration: state.systemIntegration,
+    initialValues: state.systemIntegration.systemdata,
     formdata: state.form
 })
 

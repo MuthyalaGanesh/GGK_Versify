@@ -8,12 +8,28 @@ export const ALIAS_SAVE = "ALIAS_SAVE"
 export const STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION = "STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION"
 export const GET_SYSTEM_INTEGRATION_TYPE_SERVICE = "GET_SYSTEM_INTEGRATION_TYPE_SERVICE"
 export const BIND_SYS_INTEGRATIONS_NEW_LOCATION = "BIND_SYS_INTEGRATIONS_NEW_LOCATION"
-export function AliasGiven() {
+export function AliasGiven(name,i) {
     return (dispatch, getState) => {
         return new Promise((resolve) => {
+            var data = !!getState().systemIntegration.systemdata ? getState().systemIntegration.systemdata :{}
+            var secondarydata = getState().systemIntegration.selectedSystemIntegrationTypes
+            var selecteddata = []
+            secondarydata.map((values,j)=>{
+                if(i!=j){
+                    selecteddata.push(values)
+                }
+                else{
+                    selecteddata.push(Object.assign({},secondarydata[i],{AliasName:getState().form.SystemIntegrationForm.values[`${name}`],FlaggedForDeletion: false}))
+                }
+            })    
+            console.log(data)
+                data[`${name}`]=  getState().form.SystemIntegrationForm.values[`${name}`]
             dispatch({
                 type: ALIAS_SAVE,
-                payload: getState().form.SystemIntegrationForm
+                payload: {
+                    systemdata:data,
+                    selectedSystemIntegrationTypes:selecteddata
+                }
             })
         })
     }
@@ -34,29 +50,34 @@ export function getUnselectedSystemIntegrations(allSystemIntegrations) {
     return UnSelected;
 }
 export function editSystemIntegration(locationSystemIntegrations) {
-    var selectedSystemIntegrations = []
-    for (var i = 0; i < locationSystemIntegrations.locationsInfo.length; i++) {
-        if (locationSystemIntegrations.locationsInfo[i].AliasName && locationSystemIntegrations.locationsInfo[i].LocationMappingId > 0) {
-            var valuePresence = 1;
-            if (locationSystemIntegrations.locationsInfo[i]) {
+    console.log(locationSystemIntegrations)
 
-                locationSystemIntegrations.marketDrivenMappings.map(mdm => {
-                    if (mdm.ExternalSystemName == locationSystemIntegrations.locationsInfo[i].ExternalSystemName) {
-                        valuePresence++;
-                    }
-                })
-
-                if (valuePresence == 1) {
-                    selectedSystemIntegrations.push(locationSystemIntegrations.locationsInfo[i]);
-                }
-            }
-
-        }
-    }
 
     return (dispatch, getState) => {
         return new Promise((resolve) => {
-            getSystemIntegrationTypes().then(function (response) {
+            var selectedSystemIntegrations = []
+            var data = {}
+            for (var i = 0; i < locationSystemIntegrations.locationsInfo.length; i++) {
+                if (locationSystemIntegrations.locationsInfo[i].LocationMappingId > 0) {
+                    var valuePresence = 1;
+                    if (locationSystemIntegrations.locationsInfo[i]) {
+
+                        locationSystemIntegrations.marketDrivenMappings.map(mdm => {
+                            if (mdm.ExternalSystemName == locationSystemIntegrations.locationsInfo[i].ExternalSystemName) {
+                                valuePresence++;
+                            }
+                        })
+
+                        if (valuePresence == 1) {
+                            selectedSystemIntegrations.push(locationSystemIntegrations.locationsInfo[i]);
+                            data[`${locationSystemIntegrations.locationsInfo[i].ExternalSystemName}`] = locationSystemIntegrations.locationsInfo[i].AliasName
+
+                        }
+                    }
+
+                }
+            }
+            getSystemIntegrationTypes().then(function(response) {
                 dispatch({
                     type: STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION,
                     payload: {
@@ -64,23 +85,52 @@ export function editSystemIntegration(locationSystemIntegrations) {
                         systemIntegrationTypes: response.data.GetOMSLocationWizardDataResult.AssignedLocationMappings,
                         selectedSystemIntegrationTypes: selectedSystemIntegrations,
                         unSelectedSystemIntegrationTypes: getUnselectedSystemIntegrations(response.data.GetOMSLocationWizardDataResult.AssignedLocationMappings),
-                        deletedSystemIntegrations: []
+                        systemdata: data
+
                     }
                 })
             })
         })
     }
 }
-export function deleteSystemIntegration(index) {
+export function deleteSystemIntegration(name,i) {
     return (dispatch, getState) => {
         return new Promise((resolve) => {
+            let flag= 0
+            let data = getState().systemIntegration.selectedSystemIntegrationTypes
+            let secondarydata = getState().systemIntegration.systemIntegrationTypes
+            let options=getState().systemIntegration.unSelectedSystemIntegrationTypes
+            let selecteddata=[]
+                console.log(i)
+        
+            data.map((value,j)=>{
+
+                    if(i!=j){
+                        selecteddata.push(value)
+                        
+                    }
+                })
+            for(i in secondarydata){
+                if(name==secondarydata[i].ExternalSystemName){
+                    flag=1
+                    break
+                }
+            }
+            if(flag==1){
+                options.push(Object.assign({},secondarydata[i],{LocationMappingId: -1}))
+            }
+            console.log(selecteddata)
             dispatch({
-                type: DELETE_SYS_INTEGRATION, payload: index
+                type: DELETE_SYS_INTEGRATION, payload: {
+                    unSelectedSystemIntegrationTypes:options,
+                    selectedSystemIntegrationTypes:selecteddata
+                }
             })
+            dispatch(AliasGiven(name))
             dispatch({
-                type: 'redux-form/DESTROY',
+                type: 'redux-form/INITIALIZE',
                 meta: { form: "SystemIntegrationForm" },
-                payload: ""
+                payload: getState().systemIntegration.systemdata
             })
         })
     }
@@ -89,18 +139,57 @@ export function deleteSystemIntegration(index) {
 export function AddSystemIntegration() {
     return (dispatch, getState) => {
         return new Promise((resolve) => {
+            let secondarydata = getState().systemIntegration.selectedSystemIntegrationTypes
+            let  data= getState().systemIntegration.unSelectedSystemIntegrationTypes
+            let i,flag = 0;
+            var options = []
+            for(i in data){
+                if(getState().form.SystemIntegrationForm.values.newSystemIntegration.ExternalSystemName == data[i].ExternalSystemName){
+                    flag=1
+                    break
+                }
+            }
+
+            if(flag==1){
+           
+                data.map((value,j)=>{
+
+                    if(i!=j){
+                        options.push(value)
+                        
+                    }
+                })
+                    let ExternalSystemName = getState().form.SystemIntegrationForm.values.newSystemIntegration.ExternalSystemName
+                        secondarydata.push(new Object({
+                        LocationMappingId: 0,
+                        ExternalSystemName:ExternalSystemName ,
+                        AliasName: "",
+                        ExternalSystemLogin: "",
+                        ExternalSystemPwd: "",
+                        ParameterList: "",
+                        FlaggedForDeletion: true
+                    }))
+            }else{
+                options = data
+
+                secondarydata.push(Object.assign({},getState().form.SystemIntegrationForm.values.newSystemIntegration,{LocationMappingId: 0}))
+            }
+            
+            
             dispatch({
                 type: ADD_SYSTEM_INTEGRATION,
-                payload: getState().form.SystemIntegrationForm &&
-                    getState().form.SystemIntegrationForm.values &&
-                    getState().form.SystemIntegrationForm.values.newSystemIntegration ?
-                    getState().form.SystemIntegrationForm.values.newSystemIntegration.ExternalSystemName : null
+                payload: {
+                    unSelectedSystemIntegrationTypes:options,
+                    selectedSystemIntegrationTypes:secondarydata
+                }
+                    
             })
             dispatch({
-                type: 'redux-form/DESTROY',
+                type: 'redux-form/INITIALIZE',
                 meta: { form: "SystemIntegrationForm" },
-                payload: ""
+                payload: getState().systemIntegration.systemdata
             })
+                
         })
     }
 };
@@ -127,110 +216,24 @@ export const ACTION_HANDLERS = {
         return Object.assign({}, state, { selectedSystemIntegrationTypes: selectedSysInt })
     },
     [ALIAS_SAVE]: (state, action) => {
-        var newState = Object.assign({}, state)
-        if (action.payload && action.payload.values) {
-            action.payload.values.AliasName.map((alias, index) => {
-                if (alias) {
-                    newState.selectedSystemIntegrationTypes[index].AliasName = alias;
-                    newState.selectedSystemIntegrationTypes[index].FlaggedForDeletion = false;
-                }
-            })
-        }
-        return newState;
+        return Object.assign({},state,{
+            systemdata:action.payload.systemdata,
+            selectedSystemIntegrationTypes:action.payload.selectedSystemIntegrationTypes
+        })
+        
     },
 
     [ADD_SYSTEM_INTEGRATION]: (state, action) => {
-        if (action.payload && action.payload.replace(/\s/g, '').length) {
-            var stateObject = {};
-            var newSelectedSysIntegrations = [];
-            var newUnSelectedSysIntegrations = [];
-            var valuePresent = 0;
-            state.selectedSystemIntegrationTypes ? state.selectedSystemIntegrationTypes.map(sel => {
-                newSelectedSysIntegrations.push(sel)
-                if (sel.ExternalSystemName.toLowerCase() == action.payload.toLowerCase()) {
-                    valuePresent++;
-                }
-            }) : null
-            state.systemIntegrationTypes.map(ssit => {
-                if (ssit.ExternalSystemName == action.payload) {
-                    if (state.deletedSystemIntegrations && state.deletedSystemIntegrations.length > 0) {
-
-                        var finalDeleted = []
-
-                        state.deletedSystemIntegrations.map(del => {
-                            if (del.ExternalSystemName != ssit.ExternalSystemName) {
-                                finalDeleted.push(del)
-                            }
-                        })
-                        state.deletedSystemIntegrations = finalDeleted;
-                    }
-                    stateObject = ssit;
-                    stateObject.FlaggedForDeletion = true
-                    stateObject.LocationMappingId = ssit.LocationMappingId < 0 ? 0 : ssit.LocationMappingId;
-                }
-                else {
-                    newUnSelectedSysIntegrations.push(ssit);
-                }
-            })
-            if (valuePresent == 0) {
-
-                if (stateObject.LocationMappingId == null || stateObject.LocationMappingId == undefined) {
-                    stateObject = new Object({
-                        LocationMappingId: 0,
-                        ExternalSystemName: action.payload,
-                        AliasName: "",
-                        ExternalSystemLogin: "",
-                        ExternalSystemPwd: "",
-                        ParameterList: "",
-                        FlaggedForDeletion: true
-                    })
-                }
-                newSelectedSysIntegrations.push(stateObject);
-            }
-            return Object.assign({}, state, {
-                selectedSystemIntegrationTypes: newSelectedSysIntegrations,
-                unSelectedSystemIntegrationTypes: newUnSelectedSysIntegrations
-
-            });
-
-        }
-        return Object.assign({}, state)
+        return Object.assign({}, state, {
+            selectedSystemIntegrationTypes: action.payload.selectedSystemIntegrationTypes,
+            unSelectedSystemIntegrationTypes:  action.payload.unSelectedSystemIntegrationTypes
+        })
     },
 
     [DELETE_SYS_INTEGRATION]: (state, action) => {
-        if (action.payload != null && action.payload != undefined && !isNaN(action.payload)) {
-            var newSystemIntegrations = [];
-            var newUnSelectedSysIntegrations = state.unSelectedSystemIntegrationTypes;
-            !state.deletedSystemIntegrations ? state.deletedSystemIntegrations = [] : null
-            state.selectedSystemIntegrationTypes.map((ssit, index) => {
-                if (index != action.payload) {
-                    newSystemIntegrations.push(ssit)
-                }
-                else {
-                    ssit.LocationMappingId = ssit.LocationMappingId > 0 ? ssit.LocationMappingId : -1;
-                    ssit.FlaggedForDeletion = true;
-                    ssit.AliasName = ""
-                    var valuePresence = 1;
-                    newUnSelectedSysIntegrations.map(newUn => {
-                        if (newUn.ExternalSystemName == ssit.ExternalSystemName) {
-                            valuePresence++;
-                        }
-                    })
-                    valuePresence == 1 ? newUnSelectedSysIntegrations.push(ssit) : null
-                    var valuePresence = 1
-                    state.deletedSystemIntegrations ? state.deletedSystemIntegrations.map(dsi => {
-                        if (dsi.ExternalSystemName == ssit.ExternalSystemName) {
-                            valuePresence++
-                        }
-                    }) : null
-                    valuePresence == 1 ? state.deletedSystemIntegrations.push(ssit) : null
-                }
-            })
-        }
-
         return Object.assign({}, state, {
-            selectedSystemIntegrationTypes: newSystemIntegrations,
-            unSelectedSystemIntegrationTypes: newUnSelectedSysIntegrations
+            selectedSystemIntegrationTypes: action.payload.selectedSystemIntegrationTypes,
+            unSelectedSystemIntegrationTypes:  action.payload.unSelectedSystemIntegrationTypes
         })
     },
     [STATE_CHANGE_EDIT_FOR_SYSTEM_INTEGRATION]: (state, action) => {
@@ -255,7 +258,7 @@ const initialState = {
     systemIntegrationTypes: [],
     selectedSystemIntegrationTypes: [],
     unSelectedSystemIntegrationTypes: [],
-    deletedSystemIntegrations: []
+    systemdata:{}
 };
 
 export default function systemIntegrationReducer(state = initialState, action) {

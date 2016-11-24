@@ -41,10 +41,10 @@ return (
             <div className="col-sm-12">
               <div className="row">
                <div style={{'display':'none'}}> 
-                <Field name="locationId" component="input" value={props.locationId ||0}></Field>
-                <Field name="createDate" component="input" value={props.createDate}></Field>
-                <Field name="createUser" component="input" value={props.createUser}></Field>
-                <Field name="updateUser" component="input" value={props.updateUser}></Field>  
+                <Field name="locationId" component="input" ></Field>
+                <Field name="createDate" component="input" ></Field>
+                <Field name="createUser" component="input" ></Field>
+                <Field name="updateUser" component="input" ></Field>  
                 </div>              
                 <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
                   <label className="control-label">
