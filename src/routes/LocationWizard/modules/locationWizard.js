@@ -711,14 +711,17 @@ export function saveCompleteLocationWizard() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       let k 
-      let flag =0
+      let flag=0
+      console.log('test')
       for (k in getState().form.BasicInfoForm.syncErrors){
+        console.log(!!getState().form.BasicInfoForm.values[`${k}`])
        if(!!getState().form.BasicInfoForm.values[`${k}`]==false){
-          flag =1
+          console.log(k)
+          flag = 1
           break 
        } 
       }
-      if(flag){
+      if(flag==0){
           saveObjectPreparationAndCall(getState, dispatch)
       }
       else{
