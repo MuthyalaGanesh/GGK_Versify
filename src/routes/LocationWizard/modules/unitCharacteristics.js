@@ -402,11 +402,11 @@ export const ACTION_HANDLERS = {
               if (dateVariations) {
                 errorStatus = 1;
                 dateValidations.push(dateVariations < 0 ?
-                  "Effective end date and start dates shouldn't have gaps" : "Effective end date and start dates shouldn't overlap")
+                  "Effective end date and start dates should not have gaps" : "Effective end date and start dates should not overlap")
               }
               if ((new Date(ea.EffectiveEndDate) - new Date(ea.EffectiveStartDate)) < 0) {
                 errorStatus = 1;
-                dateValidations.push("Effective start date must less than effective End date");
+                dateValidations.push("Effective start date must be be less than effective End date");
               }
             }
           })
@@ -507,11 +507,11 @@ export const ACTION_HANDLERS = {
               if (dateVariations) {
                 errorStatus = 1;
                 dateValidations.push(dateVariations < 0 ?
-                  "Effective end date and start dates shouldn't have gaps" : "Effective end date and start dates shouldn't overlap")
+                  "Effective end date and start dates should not have gaps" : "Effective end date and start dates should not overlap")
               }
               if ((new Date(ea.EffectiveEndDate) - new Date(ea.EffectiveStartDate)) < 0) {
                 errorStatus = 1;
-                dateValidations.push("Effective start date must less than effective End date");
+                dateValidations.push("Effective start date must be less than effective End date");
               }
             }
           })
