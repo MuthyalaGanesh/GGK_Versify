@@ -301,7 +301,14 @@ export const ACTION_HANDLERS = {
                   }
                 })
               }
-              suc.editableAttributes = editableAttributes.length > 0 ? editableAttributes : [{}];
+              if (editableAttributes.length > 0) {
+                suc.editableAttributes = editableAttributes;
+                suc.displayAttributes = DateSwap(suc.editableAttributes);
+              }
+              else {
+                suc.editableAttributes = [{}];
+                suc.displayAttributes = [];
+              }
             }
           })
         }
