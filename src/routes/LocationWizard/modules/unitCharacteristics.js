@@ -406,7 +406,7 @@ export const ACTION_HANDLERS = {
               }
               if ((new Date(ea.EffectiveEndDate) - new Date(ea.EffectiveStartDate)) < 0) {
                 errorStatus = 1;
-                dateValidations.push("Effective start date must be be less than effective End date");
+                dateValidations.push("Effective start date must be less than effective End date");
               }
             }
           })

@@ -25,19 +25,13 @@ return (
                             ?
                             <Field name={fieldElement.DisplayName}
                             component="input"
-                            className={props.basic.error && (formdata.CredentialsManagementForm.hasOwnProperty('values') ? !formdata.CredentialsManagementForm.values.hasOwnProperty(`${fieldElement.DisplayName}`)  : true)
-                            ? "form-control error"
-                            :"form-control control-border"}
-                            
+                            className="form-control"                            
                             type="text"
                             placeholder={fieldElement.DisplayName}>
                             </Field>
                             : <Field name={fieldElement.DisplayName}
                             component={CreatableDropdownListField}                                                                          
-                             className={props.basic.error && (formdata.CredentialsManagementForm.hasOwnProperty('values') ? formdata.CredentialsManagementForm.values.hasOwnProperty(`${fieldElement.DisplayName}`)?  (formdata.CredentialsManagementForm.values[`${fieldElement.DisplayName}`] == null ): true : true)
-                            ? "error"
-                            :"control-border"}
-                             onChangeEvent={(e)=>props.onCredentialDropdownChangeEvent(e)}   
+                            onChangeEvent={(e)=>props.onCredentialDropdownChangeEvent(e)}   
                             data={fieldElement.Field == "AliasName"
                             ?fieldElement.aliasNameDropDownItems
                             :fieldElement.externalSystemLoginDropDownItems

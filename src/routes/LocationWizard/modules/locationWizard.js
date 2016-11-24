@@ -376,7 +376,7 @@ function basicInforObjectPreparation(values) {
     PhysicalTz: values.physicalTimezone.id || values.physicalTimezone,
     Status: null,
     StatusDate: null,
-    OwnershipPct: values.ownerShipPercentage,
+    OwnershipPct: values.ownerShipPercentage != '' ? values.ownerShipPercentage:0,
     ShortName: null,
     CAISOMarketId: null,
     GADSUnitId: null,
@@ -718,7 +718,7 @@ export function saveCompleteLocationWizard() {
           break 
        } 
       }
-      if(flag && credentialdatavalidation(getState())){
+      if(flag){
           saveObjectPreparationAndCall(getState, dispatch)
       }
       else{
