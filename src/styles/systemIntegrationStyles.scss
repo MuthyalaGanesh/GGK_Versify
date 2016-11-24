@@ -1,0 +1,36 @@
+.fa.fa-plus-circle.fa-2x{
+    color:#64b448;
+    cursor:pointer;
+}
+.modal-content{
+    border-radius: 6px;
+    overflow: visible;
+}
+.fa.fa-trash-o.fa-2x{
+    cursor:pointer;
+    color:red; 
+}
+.no-results-alert{
+    color:red;
+    text-align: center;
+}
+.align-text-col{
+    text-align: center;
+}
+.dropdown-menu{
+    overflow-y: scroll!important;
+}
+.toggle-link{
+    cursor: pointer;
+}
+#resultsDiv{
+    margin-top: 2%; 
+}
+.btn-top .btn.btn-success{
+    float: right;
+}
+@media (max-width: 990px) {
+.btn-top{
+margin-top: 5px;
+}
+}

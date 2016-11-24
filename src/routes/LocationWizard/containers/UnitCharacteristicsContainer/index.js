@@ -1,0 +1,3 @@
+import UnitCharacteristicsContainer from './UnitCharacteristicsContainer'
+
+export default UnitCharacteristicsContainer

@@ -1,0 +1,3 @@
+import CredentialsManagementContainer from './CredentialsManagementContainer'
+
+export default CredentialsManagementContainer
