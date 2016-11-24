@@ -2,9 +2,6 @@ const basicInfoValidation = values => {
   const errors = {}
   if (!values.locationName) {
     errors.locationName = 'Location Name is required'
-  }
-  if (!values.type) {
-    errors.type = 'Type is required'
   }  
   if (!values.parentLocation) {
     errors.type = 'Parent Location is required'
@@ -15,9 +12,6 @@ const basicInfoValidation = values => {
     if (!values.primaryMarket) {
     errors.primaryMarket = 'Primary Market is required'
   }
-  if (!values.secondarytechnologytype) {
-    errors.secondarytechnologytype = 'Secondary technology type is required'
-  }  
   if(!values.owner){
     errors.owner='Owner is required'
   }
