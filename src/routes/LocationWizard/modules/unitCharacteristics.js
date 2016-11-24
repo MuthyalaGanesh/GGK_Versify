@@ -164,10 +164,10 @@ export const ACTION_HANDLERS = {
       duc.displayAttributes = {};
       selectedUC.push(duc)
     })
-    return Object.assign({}, state, { selectedunitCharacteristics: selectedUC });
+    return Object.assign({}, state, { selectedunitCharacteristics: selectedUC,isChanged:false });
   },
   [BIND_INITIAL_ATTRIBUTES]: (state, action) => {
-    var newState = Object.assign({}, state)
+    var newState = Object.assign({}, state,{isChanged:false})
     var attributes = action.payload
     var selectedDefault = []
     if (!attributes || (attributes && attributes.length == 0)) {
@@ -317,7 +317,6 @@ export const ACTION_HANDLERS = {
         return Object.assign({}, state, {
           showModal: !state.showModal, editableUnitCharacter: null,
           error: null,
-          isChanged:true
         })
       }
     }
