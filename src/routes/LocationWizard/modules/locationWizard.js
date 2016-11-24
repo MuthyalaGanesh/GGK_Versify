@@ -111,7 +111,7 @@ export function toggleSaveResponsePopup(event) {
 
 
 export function leftMenuDropdownClickEvent(id, event) {
-   return (dispatch, getState) => {
+  return (dispatch, getState) => {
     scroll.scrollToTop();
     if (getState().form.BasicInfoForm.hasOwnProperty('anyTouched') ||
       getState().form.CredentialsManagementForm.hasOwnProperty('anyTouched')) {
@@ -124,7 +124,7 @@ export function leftMenuDropdownClickEvent(id, event) {
       })
     } else {
       dispatch(showSpinner())
-      setTimeout(function () {
+      setTimeout(function() {
         dispatch(LoadAndRefreshForms(id, event));
         scrollSpy.update();
       }, 1)
@@ -250,11 +250,11 @@ export function LoadAndRefreshForms(id, event) {
           findLocation(allLocationdata, id);
           var locationObj = currentLocation;
           currentLocation = null;
-          getOMSLocationwizardData(id).then(function (response) {
+          getOMSLocationwizardData(id).then(function(response) {
             let editObject = response.data;
             let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
             let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
-            getMarketDrivenMappings(locationObj.PrimaryMarketId).then(function (response) {
+            getMarketDrivenMappings(locationObj.PrimaryMarketId).then(function(response) {
               var marketDrivenMappings = response.data
               var editSysIntegration = new Object({
                 locationsInfo: locationsInfo,
@@ -299,21 +299,21 @@ export function LoadAndRefreshForms(id, event) {
         }
       } else {
         dispatch({
-                type: 'redux-form/INITIALIZE',
-                meta: {
-                  form: 'BasicInfoForm',
-                  keepDirty: false
-                },
-                payload: ''
-              })
-              dispatch({
-                type: 'redux-form/INITIALIZE',
-                meta: {
-                  form: 'CredentialsManagementForm',
-                  keepDirty: false
-                },
-                payload: ''
-              })
+          type: 'redux-form/INITIALIZE',
+          meta: {
+            form: 'BasicInfoForm',
+            keepDirty: false
+          },
+          payload: ''
+        })
+        dispatch({
+          type: 'redux-form/INITIALIZE',
+          meta: {
+            form: 'CredentialsManagementForm',
+            keepDirty: false
+          },
+          payload: ''
+        })
 
         dispatch(getDefaultCredentialBasicData())
         dispatch({
@@ -415,7 +415,7 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, marketDrivenMapping
     }
     itemDatawithMarketDrivenMappings.push(itemData);
   });
-  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function (b) {
+  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function(b) {
     return b.ExternalSystemName
   })
   var staticPjmemktToAdd = {
@@ -490,7 +490,7 @@ function equipmentObjectPreparation(stateTree, dispatch, locationId) {
       locationId > 0 ? ie.ParentLocationId = locationId : null
       equipmentsObj.push(ie)
     })
-   
+
     return equipmentsObj;
   } else {
     dispatch({
@@ -730,18 +730,18 @@ export function saveCompleteLocationWizard() {
           type: 'ERROR',
           payload: 1
         }) && console.log('check here') : (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null && getState().form.BasicInfoForm.values.technologyType != null && getState().form.BasicInfoForm.values.fuelClass != null && getState().form.BasicInfoForm.values.physicalTimezone != null && getState().form.BasicInfoForm.values.owner != null) ? (credentialdatavalidation(getState())) ? //Save
-          saveObjectPreparationAndCall(getState, dispatch) : dispatch({
-            type: 'ERROR',
-            payload: 1
-          }) && console.log('error') : dispatch({
-            type: 'ERROR',
-            payload: 1
-          })
-
-        : dispatch({
+        saveObjectPreparationAndCall(getState, dispatch) : dispatch({
+          type: 'ERROR',
+          payload: 1
+        }) && console.log('error') : dispatch({
           type: 'ERROR',
           payload: 1
         })
+
+      : dispatch({
+        type: 'ERROR',
+        payload: 1
+      })
       console.log(Object.keys(getState().form.BasicInfoForm.values).length, 'stateobjectmo')
 
     })
@@ -750,8 +750,9 @@ export function saveCompleteLocationWizard() {
 
 function saveObjectPreparationAndCall(getState, dispatch) {
   var values = getState().form.BasicInfoForm ? getState().form.BasicInfoForm.values : {};
+  var locationId = values.locationId || 0;
 
-  CheckLocationNameIsExists(getState().location.allLocations, values.locationName, values.locationId || 0);
+  CheckLocationNameIsExists(getState().location.allLocations, values.locationName, locationId);
   var isLocationNamePresent = isLocationNameExists;
   if (isLocationNamePresent) {
     isLocationNameExists = false;
@@ -763,6 +764,15 @@ function saveObjectPreparationAndCall(getState, dispatch) {
         openSavePopup: true
       }
     });
+  } else if (locationId > 0 && locationId == (values.parentLocation || 0)) {
+    dispatch({
+      type: SAVE_RESPONSE_HANDLER,
+      payload: {
+        response: null,
+        message: "Location and it's Parent shouldn't be same. Please select different Parent location",
+        openSavePopup: true
+      }
+    });
   } else {
     isLocationNameExists = false;
     dispatch({
@@ -770,7 +780,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
       payload: 0
     });
 
-    var locationId = values.locationId || 0;
+
     var primaryMarketTypeId = values.primaryMarket.id || values.primaryMarket;
     var basicInfoObj = basicInforObjectPreparation(values);
     //get MarketDrivenMappings from API based on marketType ID
@@ -804,10 +814,10 @@ function saveObjectPreparationAndCall(getState, dispatch) {
     var finalData = JSON.stringify(finalSaveObject)
     console.log("finalSaveObject", finalData)
     dispatch({
-      type: SHOW_SPINNER,
-      payload: true
-    })
-    //SAVE LOCATION
+        type: SHOW_SPINNER,
+        payload: true
+      })
+      //SAVE LOCATION
     try {
       axios({
         method: 'post',
@@ -968,7 +978,7 @@ function toArray(obj) {
 
 function changeObjectTypeOfLocations(allLocations) {
   var changedLocationsObject = [];
-  allLocations.forEach(function (item) {
+  allLocations.forEach(function(item) {
     changedLocationsObject.push({
       key: item.Id,
       value: item.Id,
@@ -997,43 +1007,43 @@ function AddDefaultParent(objectfuncntion) {
 export function getLocationsInformation() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-     getState().location.allLocations.length == 0 ?
-      basicInfoDropdowns.getParentLocations().then(function (response) {
-        dispatch({
-          type: GET_ALL_LOCATIONS_INFORMATION,
-          payload: response.data.GetAllLocationsResult
+      getState().location.allLocations.length == 0 ?
+        basicInfoDropdowns.getParentLocations().then(function(response) {
+          dispatch({
+            type: GET_ALL_LOCATIONS_INFORMATION,
+            payload: response.data.GetAllLocationsResult
+          });
+        }).then(function() {
+          dispatch({
+            type: HIDE_SPINNER,
+            payload: false
+          });
+        }) : dispatch({
+          type: HIDE_SPINNER,
+          payload: false
         });
-      }).then(function () {
+
       dispatch({
-        type: HIDE_SPINNER,
-        payload: false
-      });
-    }) :dispatch({
-        type: HIDE_SPINNER,
-        payload: false
-      });
-            
-   dispatch({
-      type:'redux-form/INITIALIZE',
-      meta:{
-        form:'BasicInfoForm',
-        keepDirty:false
-      },
-      payload:''
-    })
-        dispatch({
-      type:'redux-form/INITIALIZE',
-      meta:{
-        form:'CredentialsManagementForm',
-        keepDirty:false
-      },
-      payload:''
-    })
-    dispatch(InitialEquipmentsForNewLocation())
-    dispatch({
-      type:'EMPTY_BASIC_CREDENTIAL_INTIAL_VALUES'
-    })
+        type: 'redux-form/INITIALIZE',
+        meta: {
+          form: 'BasicInfoForm',
+          keepDirty: false
+        },
+        payload: ''
       })
+      dispatch({
+        type: 'redux-form/INITIALIZE',
+        meta: {
+          form: 'CredentialsManagementForm',
+          keepDirty: false
+        },
+        payload: ''
+      })
+      dispatch(InitialEquipmentsForNewLocation())
+      dispatch({
+        type: 'EMPTY_BASIC_CREDENTIAL_INTIAL_VALUES'
+      })
+    })
   }
 }
 
