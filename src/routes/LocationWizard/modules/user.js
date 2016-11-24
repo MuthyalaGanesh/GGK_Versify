@@ -281,8 +281,8 @@ export function getUserInfoService() {
         getUserInfo().then(function(contactsResponse) {
           getRoleInfo().then(function(rolesResponse) {
             let allcontacts = contactsResponse.data.GetAutoCompleteContactsResult.Contacts
-            allcontacts.map((contactInfo)=>{
-              contactInfo.displayText = contactInfo.Name+' ('+contactInfo.Login+')'
+            allcontacts.map((contactInfo) => {
+              contactInfo.displayText = contactInfo.Name + ' (' + contactInfo.Login + ')'
             })
             let userInfo = {
               Roles: rolesResponse.data.GetRolesResult.Roles,
@@ -350,13 +350,6 @@ export function selectRole() {
           type: SELECTED_ROLE,
           payload: getState().form.UsersForm
         })
-        dispatch({
-          type: 'redux-form/DESTROY',
-          meta: {
-            form: "UsersForm"
-          },
-          payload: ""
-        })
       } else if (getState().form.UsersForm.values.RoleByRoles) {
         let roleinfo = {};
         roleinfo.roleByRole = getState().form.UsersForm.values.RoleByRoles
@@ -365,7 +358,6 @@ export function selectRole() {
             method: 'get',
             url: baseAddress + '/LWContactsByRole?locationId=' + locationId + '&roleId=' + roleinfo.roleByRole.Id,
           }).then(function(response) {
-
             if (response.data && response.data.GetLWContactsByRoleResult && response.data.GetLWContactsByRoleResult.Contacts) {
               let result = response.data.GetLWContactsByRoleResult.Contacts
               result.map((contact) => {
@@ -381,13 +373,6 @@ export function selectRole() {
               type: ROLE_BY_ROLE,
               payload: roleinfo
             })
-            dispatch({
-              type: 'redux-form/DESTROY',
-              meta: {
-                form: "UsersForm"
-              },
-              payload: ""
-            })
           }).catch(function(error) {
             alert("error" + JSON.stringify(error));
           });
@@ -396,27 +381,20 @@ export function selectRole() {
             type: SELECTED_ROLE,
             payload: getState().form.UsersForm
           })
-          dispatch({
-            type: 'redux-form/DESTROY',
-            meta: {
-              form: "UsersForm"
-            },
-            payload: ""
-          })
         }
       } else {
         dispatch({
           type: SELECTED_ROLE,
           payload: getState().form.UsersForm
         })
-        dispatch({
-          type: 'redux-form/DESTROY',
-          meta: {
-            form: "UsersForm"
-          },
-          payload: ""
-        })
       }
+      dispatch({
+        type: 'redux-form/DESTROY',
+        meta: {
+          form: "UsersForm"
+        },
+        payload: ""
+      })
     })
   }
 };
@@ -430,13 +408,6 @@ export function selectContact() {
         dispatch({
           type: SELECTED_CONTACT,
           payload: getState().form.UsersForm
-        })
-        dispatch({
-          type: 'redux-form/DESTROY',
-          meta: {
-            form: "UsersForm"
-          },
-          payload: ""
         })
       } else if (getState().form.UsersForm.values.ContactsByContact) {
         let roleinfo = {};
@@ -454,13 +425,6 @@ export function selectContact() {
               type: ROLE_BY_CONTACT,
               payload: roleinfo
             })
-            dispatch({
-              type: 'redux-form/DESTROY',
-              meta: {
-                form: "UsersForm"
-              },
-              payload: ""
-            })
           }).catch(function(error) {
             alert("error" + JSON.stringify(error));
           });
@@ -469,27 +433,20 @@ export function selectContact() {
             type: ROLE_BY_CONTACT,
             payload: getState().form.UsersForm
           })
-          dispatch({
-            type: 'redux-form/DESTROY',
-            meta: {
-              form: "UsersForm"
-            },
-            payload: ""
-          })
         }
       } else {
         dispatch({
           type: SELECTED_CONTACT,
           payload: getState().form.UsersForm
         })
-        dispatch({
-          type: 'redux-form/DESTROY',
-          meta: {
-            form: "UsersForm"
-          },
-          payload: ""
-        })
       }
+      dispatch({
+        type: 'redux-form/DESTROY',
+        meta: {
+          form: "UsersForm"
+        },
+        payload: ""
+      })
     })
   }
 };
@@ -774,7 +731,7 @@ export const ACTION_HANDLERS = {
     let defaultRoles = []
     defaultRoles = userInformation.Roles.map((role) => role.Id)
     userInformation.Roles.map((role, i) => {
-      let contactindex = role.ContactIds.findIndex((c) => c = state.selectedContact.Id)
+      let contactindex = role.ContactIds.findIndex((c) => c === state.selectedContact.Id)
       if (contactindex != null && contactindex < 0) {
         userInformation.Roles[i].ContactIds.push(state.selectedContact.Id)
         if (saveRoles.length == 0) {
