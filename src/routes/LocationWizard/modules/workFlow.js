@@ -167,7 +167,8 @@ export const ACTION_HANDLERS = {
     }
     return Object.assign({}, state, {
       workFlowItems: work.allWorkflows,
-      defaultWorkFlow: work.defaultWorkFlow
+      defaultWorkFlow: work.defaultWorkFlow,
+      isChanged:false
     })
   },
   [GET_WORKFLOW_SERVICE]: (state, action) => {
@@ -180,7 +181,8 @@ export const ACTION_HANDLERS = {
   [WORK_FLOW_NEW_LOCATION]: (state, action) => {
      return Object.assign({}, state, {
       workFlowItems: state.staticServiceWorkflows,
-      defaultWorkFlow: []
+      defaultWorkFlow: [],
+      isChanged:false
     })
   }
 }
