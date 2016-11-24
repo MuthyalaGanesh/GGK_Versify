@@ -19,7 +19,7 @@ return (
                     { !!props.basic.CredentialBasicData && props.basic.CredentialBasicData.length >0
                     ?  <div className="row">
                         {props.basic.CredentialBasicData.map((fieldElement, i) =>
-                        <div className="col-sm-12 col-md-6 form-group">
+                        <div key={fieldElement.DisplayName} className="col-sm-12 col-md-6 form-group">
                             <label className="control-label" id={fieldElement.DisplayName}> {fieldElement.DisplayName} * </label>
                             {!fieldElement.IsDropDown
                             ?
