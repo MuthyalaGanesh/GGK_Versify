@@ -22,6 +22,7 @@ export const GET_TECHNOLOGY_TYPES = "GET_TECHNOLOGY_TYPES"
 export const GET_FUEL_CLASSES = "GET_FUEL_CLASSES"
 export const GET_TIME_ZONE = "GET_TIME_ZONE"
 export const GET_DEFAULT_CREDENTIALDATA = "GET_DEFAULT_CREDENTIALDATA"
+export const BIND_INITIAL_LOCATION ="BIND_INITIAL_LOCATION"
 
 function bindTechnologyTypesOnEdit(technologyTypeId, technologyTypes) {
   return technologyTypes.filter(function(technologyType) {
@@ -29,6 +30,14 @@ function bindTechnologyTypesOnEdit(technologyTypeId, technologyTypes) {
   })[0] || technologyTypeId;
 }
 
+export function BindInitialLocation(){
+  return (dispatch, getState) => {
+  dispatch({
+        type: BIND_INITIAL_LOCATION,
+        payload: true
+      })
+  }
+}
 export function BindInitialValues(currentLocation, assignedLocationMappings, marketDrivendata) {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
@@ -59,7 +68,8 @@ export function BindInitialValues(currentLocation, assignedLocationMappings, mar
         payload: {
           basicInfo: basicInfo,
           assignedLocationMappings: assignedLocationMappings,
-          marketDrivendata: marketDrivendata
+          marketDrivendata: marketDrivendata,
+          currentLocation:currentLocation
         }
       })
       dispatch({
@@ -112,14 +122,18 @@ export function onPrimaryMarketChangeEvent(event) {
 };
 
 export const ACTION_HANDLERS = {
+  [BIND_INITIAL_LOCATION]:(state, action) => {
+    return Object.assign({}, state, {
+      CurrentLocation:{}
+    });
+  },
   [BIND_BASIC_INITIAL_VALUES]: (state, action) => {
     return Object.assign({}, state, {
       BasicInfo: action.payload.basicInfo,
       InitialAssignedLocationMappings: action.payload.assignedLocationMappings,
-      MarketDrivenMappings: action.payload.marketDrivendata
+      MarketDrivenMappings: action.payload.marketDrivendata,
+      CurrentLocation:action.payload.currentLocation
     });
-
-
   },
   [BIND_BASIC_INITIALCREDENTIAL_VALUES]: (state, action) => {
     var credentialData = PrepareCredentialBasicData(action.payload.marketDrivendata, action.payload.assignedLocationMappings);
@@ -202,7 +216,6 @@ export const ACTION_HANDLERS = {
 }
 
 function PrepareCredentialBasicData(data, assignedLocationMappings) {
-
   var marketDrivendata = [];
   var credentialInitialValues = {};
   _.each(data, (item) => {
@@ -363,7 +376,8 @@ const initialState = {
   CredentialInitialValues: {},
   CredentialBasicData: [],
   InitialAssignedLocationMappings: [],
-  MarketDrivenMappings: []
+  MarketDrivenMappings: [],
+  CurrentLocation:{}
 };
 
 export default function basiInfoReducer(state = initialState, action) {

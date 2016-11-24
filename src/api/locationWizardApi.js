@@ -240,5 +240,9 @@ export function getNewContactPopUpInfo() {
 }
 
 export function finalLocationSaveObject(saveObject) {
-    return XMLHttpRequestSyncSaveLocationPost(Constants.SAVE_OMSLOCATION_DATA, saveObject);
+    return axios({
+                method: 'post',
+                url: Constants.SAVE_OMSLOCATION_DATA,
+                data: saveObject
+            })
 }

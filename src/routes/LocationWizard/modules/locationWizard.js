@@ -9,7 +9,8 @@ import {
 
 import {
   BindInitialValues,
-  getDefaultCredentialBasicData
+  getDefaultCredentialBasicData,
+  BindInitialLocation
 } from './basicInfo';
 import {
   BindUnitCharacteristicsInitialValues,
@@ -331,6 +332,7 @@ export function LoadAndRefreshForms(id, event) {
             "locationId": 0
           }
         })
+        dispatch(BindInitialLocation())
         dispatch(getGatewaysService());
         dispatch(getDataHistorianService());
         dispatch(BindValuesForNewLocation())
@@ -346,8 +348,9 @@ export function LoadAndRefreshForms(id, event) {
   }
 }
 
-function basicInforObjectPreparation(values) {
+function basicInforObjectPreparation(values, currentLocationObj) {
   var todayDate = new Date();
+  let locationObj = currentLocationObj
   return new Object({
     Id: values.locationId || 0,
     LocationId: values.locationId || 0,
@@ -355,38 +358,38 @@ function basicInforObjectPreparation(values) {
     Tz: values.timezone.id || values.timezone,
     ParentId: values.parentLocation || 0,
     LocationType: values.locationType.name || values.locationType,
-    Notes: null,
+    Notes: currentLocationObj.Notes || null,
     CreateDate: values.createDate || '/Date(' + todayDate.getTime() + ')/',
     CreateUser: values.createUser || null,
     UpdateDate: '/Date(' + todayDate.getTime() + ')/',
     UpdateUser: values.updateUser || 'GGK',
-    IsDispatchLevel: false,
-    IsScheduleLevel: false,
+    IsDispatchLevel: currentLocationObj.IsDispatchLevel ||false,
+    IsScheduleLevel: currentLocationObj.IsScheduleLevel || false,
     IsOutageLevel: values.isOutageLevel,
-    IsAFWLevel: false,
-    CanTakeAFWorOutage: true,
-    IsForecastLevel: false,
-    IsLogLevel: false,
+    IsAFWLevel: currentLocationObj.IsAFWLevel || false,
+    CanTakeAFWorOutage: currentLocationObj.CanTakeAFWorOutage || true,
+    IsForecastLevel: currentLocationObj.IsForecastLevel || false,
+    IsLogLevel: currentLocationObj.IsLogLevel || false,
     TechnologyTypeId: values.technologyType.id || values.technologyType,
     SecondaryTechnologyTypeId: !!values.secondarytechnologyType ? values.secondarytechnologyType.id || values.secondarytechnologyType : null,
     PrimaryMarketId: values.primaryMarket.id || values.primaryMarket,
     SecondaryMarketId: null,
     FuelClassId: values.fuelClass.id || values.fuelClass,
-    IsReportingLevel: false,
-    DisplayRealTimeMonitor: false,
+    IsReportingLevel: currentLocationObj.IsReportingLevel || false,
+    DisplayRealTimeMonitor: currentLocationObj.DisplayRealTimeMonitor || false,
     OwnerOrgId: values.owner.id || values.owner,
-    VTraderName: null,
-    Attributes: null,
-    IsSelected: false,
-    MetricIds: null,
+    VTraderName: currentLocationObj.VTraderName || null,
+    Attributes: currentLocationObj.Attributes || null,
+    IsSelected: currentLocationObj.IsSelected || false,
+    MetricIds: currentLocationObj.MetricIds || null,
     PhysicalTz: values.physicalTimezone.id || values.physicalTimezone,
-    Status: null,
-    StatusDate: null,
+    Status: currentLocationObj.Status || null,
+    StatusDate: currentLocationObj.StatusDate || null,
     OwnershipPct: values.ownerShipPercentage != '' ? values.ownerShipPercentage:0,
-    ShortName: null,
-    CAISOMarketId: null,
-    GADSUnitId: null,
-    LocationScadaPoints: null,
+    ShortName: currentLocationObj.ShortName || null,
+    CAISOMarketId: currentLocationObj.CAISOMarketId || null,
+    GADSUnitId: currentLocationObj.GADSUnitId || null,
+    LocationScadaPoints:currentLocationObj.LocationScadaPoints || null,
     CustomValue1: 0,
     CustomValue2: 0,
     CustomValue3: 0,
@@ -774,7 +777,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
 
     var locationId = values.locationId || 0;
     var primaryMarketTypeId = values.primaryMarket.id || values.primaryMarket;
-    var basicInfoObj = basicInforObjectPreparation(values);
+    var basicInfoObj = basicInforObjectPreparation(values, getState().basic.CurrentLocation);
     //get MarketDrivenMappings from API based on marketType ID
     var credentialsAndIdentifier = prepareCredentialsAndIdentifiersObj(getState().form.CredentialsManagementForm ? getState().form.CredentialsManagementForm.values : {},
       getState().basic.MarketDrivenMappings,
@@ -811,11 +814,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
       })
       //SAVE LOCATION
     try {
-      axios({
-        method: 'post',
-        url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
-        data: finalSaveObject
-      }).then(function (response) {
+      finalLocationSaveObject(finalSaveObject).then(function (response) {
         console.log("success", response);
         if (response.status === 200) {
           //ADD Location ID to Object
@@ -870,11 +869,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
             }
             console.log("saveObjectwithEquipment", JSON.stringify(saveObjectwithEquipment));
             if (saveObjectwithEquipment.saveData.Equipments.length > 0) {
-              axios({
-                method: 'post',
-                url: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc/SaveOMSLocationWizardData',
-                data: saveObjectwithEquipment
-            }).then(function (response) {
+              finalLocationSaveObject(saveObjectwithEquipment).then(function (response) {
                 if (response.status === 200) {
                   console.log("equipment saved", response);
                   var equipments = response.data.SaveOMSLocationWizardDataResult.Equipment;

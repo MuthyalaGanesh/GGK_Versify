@@ -3,8 +3,8 @@ const basicInfoValidation = values => {
   if (!values.locationName) {
     errors.locationName = 'Location Name is required'
   }  
-  if (!values.parentLocation) {
-    errors.parentLocation = 'Parent Location is required'
+  if (!values.locationType) {
+    errors.locationType = 'Location Type is required'
   }  
   if(!values.technologytype){
     errors.technologyType='Technology Type is required'
