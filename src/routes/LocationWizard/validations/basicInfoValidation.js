@@ -4,7 +4,7 @@ const basicInfoValidation = values => {
     errors.locationName = 'Location Name is required'
   }  
   if (!values.parentLocation) {
-    errors.type = 'Parent Location is required'
+    errors.parentLocation = 'Parent Location is required'
   }  
   if(!values.technologytype){
     errors.technologyType='Technology Type is required'
@@ -18,9 +18,7 @@ const basicInfoValidation = values => {
   if (!values.fuelclass) {
     errors.fuelClass='Fuel Class is required'
   }
-    if (!values.ownership) {
-    errors.ownership = 'Ownership is required'
-  }
+   
   if (!values.timezone) {
     errors.timezone = 'Timezone is required'
   }  

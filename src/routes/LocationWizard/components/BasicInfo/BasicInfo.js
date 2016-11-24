@@ -52,7 +52,7 @@ return (
                   </label>
                   <Field name="locationName"
                   component="input"
-                  className={error && (formdata.BasicInfoForm.hasOwnProperty('values') ? !formdata.BasicInfoForm.values.hasOwnProperty('locationName')  : true)
+                  className={error && (formdata.BasicInfoForm.hasOwnProperty('values') ? formdata.BasicInfoForm.values.hasOwnProperty('locationName') ?  !(formdata.BasicInfoForm.values.locationName !="") :true  : true)
                   ? "form-control error"
                   :"form-control"}
                   type="text"
@@ -166,7 +166,7 @@ return (
 
                   <Field name="ownerShipPercentage"
                   component="input"
-                  className={error && (formdata.BasicInfoForm.hasOwnProperty('values') ? formdata.BasicInfoForm.values.hasOwnProperty('ownerShipPercentage') ? (parseFloat(formdata.BasicInfoForm.values.ownerShipPercentage ) > 100):true : true)
+                  className={error && (formdata.BasicInfoForm.hasOwnProperty('values') ? formdata.BasicInfoForm.values.hasOwnProperty('ownerShipPercentage') ? formdata.BasicInfoForm.values.ownerShipPercentage !='' ? (parseFloat(formdata.BasicInfoForm.values.ownerShipPercentage ) > 100):true:true : true)
                   ? "form-control error"
                   :"form-control"}
                   type="number"
