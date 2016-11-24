@@ -299,21 +299,21 @@ export function LoadAndRefreshForms(id, event) {
         }
       } else {
         dispatch({
-          type: 'redux-form/INITIALIZE',
-          meta: {
-            form: 'BasicInfoForm',
-            keepDirty: false
-          },
-          payload: ''
-        })
-        dispatch({
-          type: 'redux-form/INITIALIZE',
-          meta: {
-            form: 'CredentialsManagementForm',
-            keepDirty: false
-          },
-          payload: ''
-        })
+                type: 'redux-form/INITIALIZE',
+                meta: {
+                  form: 'BasicInfoForm',
+                  keepDirty: false
+                },
+                payload: ''
+              })
+              dispatch({
+                type: 'redux-form/INITIALIZE',
+                meta: {
+                  form: 'CredentialsManagementForm',
+                  keepDirty: false
+                },
+                payload: ''
+              })
 
         dispatch(getDefaultCredentialBasicData())
         dispatch({
@@ -713,36 +713,23 @@ function credentialdatavalidation(data) {
 export function saveCompleteLocationWizard() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      getState().form.BasicInfoForm.hasOwnProperty('values') ? Object.keys(getState().form.BasicInfoForm.values).length < 10 ? Object.keys(getState().form.BasicInfoForm.values).length == 9 ? !getState().form.BasicInfoForm.hasOwnProperty('parentLocation') ? (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null && getState().form.BasicInfoForm.values.technologyType != null && getState().form.BasicInfoForm.values.fuelClass != null && getState().form.BasicInfoForm.values.physicalTimezone != null && getState().form.BasicInfoForm.values.owner != null) ? (credentialdatavalidation(getState())) ? //Save
-        saveObjectPreparationAndCall(getState, dispatch) : dispatch({
-          type: 'ERROR',
-          payload: 1
-        }) && console.log('error') : dispatch({
-          type: 'ERROR',
-          payload: 1
-        }) : dispatch({
-          type: 'ERROR',
-          payload: 1
-        }) : dispatch({
-          type: 'ERROR',
-          payload: 1
-        }) : (getState().form.BasicInfoForm.values.technologyType == getState().form.BasicInfoForm.values.secondarytechnologyType) ? dispatch({
-          type: 'ERROR',
-          payload: 1
-        }) && console.log('check here') : (getState().form.BasicInfoForm.values.locationType != null && getState().form.BasicInfoForm.values.primaryMarket != null && getState().form.BasicInfoForm.values.timezone != null && getState().form.BasicInfoForm.values.technologyType != null && getState().form.BasicInfoForm.values.fuelClass != null && getState().form.BasicInfoForm.values.physicalTimezone != null && getState().form.BasicInfoForm.values.owner != null) ? (credentialdatavalidation(getState())) ? //Save
-        saveObjectPreparationAndCall(getState, dispatch) : dispatch({
-          type: 'ERROR',
-          payload: 1
-        }) && console.log('error') : dispatch({
-          type: 'ERROR',
-          payload: 1
+      let k 
+      let flag =0
+      for (k in getState().form.BasicInfoForm.syncErrors){
+       if(!!getState().form.BasicInfoForm.values[`${k}`]==false){
+          flag =1
+          break 
+       } 
+      }
+      if(flag && credentialdatavalidation(getState())){
+          saveObjectPreparationAndCall(getState, dispatch)
+      }
+      else{
+        dispatch({
+          type:'ERROR',
+          payload:1
         })
-
-      : dispatch({
-        type: 'ERROR',
-        payload: 1
-      })
-      console.log(Object.keys(getState().form.BasicInfoForm.values).length, 'stateobjectmo')
+      }
 
     })
   }
@@ -750,9 +737,8 @@ export function saveCompleteLocationWizard() {
 
 function saveObjectPreparationAndCall(getState, dispatch) {
   var values = getState().form.BasicInfoForm ? getState().form.BasicInfoForm.values : {};
-  var locationId = values.locationId || 0;
 
-  CheckLocationNameIsExists(getState().location.allLocations, values.locationName, locationId);
+  CheckLocationNameIsExists(getState().location.allLocations, values.locationName, values.locationId || 0);
   var isLocationNamePresent = isLocationNameExists;
   if (isLocationNamePresent) {
     isLocationNameExists = false;
@@ -1007,43 +993,44 @@ function AddDefaultParent(objectfuncntion) {
 export function getLocationsInformation() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      getState().location.allLocations.length == 0 ?
-        basicInfoDropdowns.getParentLocations().then(function(response) {
-          dispatch({
-            type: GET_ALL_LOCATIONS_INFORMATION,
-            payload: response.data.GetAllLocationsResult
-          });
-        }).then(function() {
-          dispatch({
-            type: HIDE_SPINNER,
-            payload: false
-          });
-        }) : dispatch({
-          type: HIDE_SPINNER,
-          payload: false
+     getState().location.allLocations.length == 0 ?
+      basicInfoDropdowns.getParentLocations().then(function (response) {
+        dispatch({
+          type: GET_ALL_LOCATIONS_INFORMATION,
+          payload: response.data.GetAllLocationsResult
         });
-
+      }).then(function () {
       dispatch({
-        type: 'redux-form/INITIALIZE',
-        meta: {
-          form: 'BasicInfoForm',
-          keepDirty: false
-        },
-        payload: ''
-      })
-      dispatch({
-        type: 'redux-form/INITIALIZE',
-        meta: {
-          form: 'CredentialsManagementForm',
-          keepDirty: false
-        },
-        payload: ''
-      })
-      dispatch(InitialEquipmentsForNewLocation())
-      dispatch({
-        type: 'EMPTY_BASIC_CREDENTIAL_INTIAL_VALUES'
-      })
+        type: HIDE_SPINNER,
+        payload: false
+      });
+    }) :dispatch({
+        type: HIDE_SPINNER,
+        payload: false
+      });
+            
+    console.log("test0000000")
+   dispatch({
+      type:'redux-form/INITIALIZE',
+      meta:{
+        form:'BasicInfoForm',
+        keepDirty:false
+      },
+      payload:''
     })
+        dispatch({
+      type:'redux-form/INITIALIZE',
+      meta:{
+        form:'CredentialsManagementForm',
+        keepDirty:false
+      },
+      payload:''
+    })
+    dispatch(InitialEquipmentsForNewLocation())
+    dispatch({
+      type:'EMPTY_BASIC_CREDENTIAL_INTIAL_VALUES'
+    })
+      })
   }
 }
 
