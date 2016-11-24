@@ -1,16 +1,13 @@
 import {
-  getMetricInfo
-} from 'api/locationWizardApi'
-import {
-  getGatewayInfo
-} from 'api/locationWizardApi'
-import {
+  getMetricInfo,
+  getGatewayInfo,
   getDataHistorian
 } from 'api/locationWizardApi'
 
-export const GET_GATEWAY_INFO = 'GET_GATEWAY_INFO'
-export const GET_DATAEHISTORIAN_INFO = 'GET_DATAEHISTORIAN_INFO'
-export const GET_METRIC_INFO = 'GET_METRIC_INFO'
+import {
+  ConstantValues
+} from "constants/constantValues"
+
 export const ADD_DATAHISTORIAN__MODAL = 'ADD_DATAHISTORIAN__MODAL'
 export const ADD_DATAHISTORIAN = 'ADD_DATAHISTORIAN'
 export const EDIT_DATAHISTORIAN = 'EDIT_DATAHISTORIAN'
@@ -22,25 +19,9 @@ export const CLOSE_CONFIRMATION = "CLOSE_CONFIRMATION"
 export const BIND_DATA_HISTORIAN_LOCATIONID = "BIND_DATA_HISTORIAN_LOCATIONID"
 export const SHOW_DATAHISTORIAN_ERRORS = "SHOW_DATAHISTORIAN_ERRORS"
 export const GET_DATA_HISTORIAN_SERVICE = "GET_DATA_HISTORIAN_SERVICE"
-export const GET_GATEWAY_SERVICE_FOR_DATA_HISTORIAN ="GET_GATEWAY_SERVICE_FOR_DATA_HISTORIAN"
-
-export function getGateways() {
-  return {
-    type: GET_GATEWAY_INFO,
-    payload: getGatewayInfo()
-  };
-};
-
-export function getMetrics() {
-  return {
-    type: GET_METRIC_INFO,
-    payload: getMetricInfo()
-  };
-};
-
+export const GET_GATEWAY_SERVICE_FOR_DATA_HISTORIAN = "GET_GATEWAY_SERVICE_FOR_DATA_HISTORIAN"
 
 export function bindLocationData(assignedScada, locationId) {
-
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       let defaultHistorians = getState().dataHistorian.defaultMetrics;
@@ -63,7 +44,7 @@ export function bindLocationData(assignedScada, locationId) {
         data.isDefault = true
         locationData.finalData.push(scada)
       })
-      dispatch( {
+      dispatch({
         type: BIND_DATA_HISTORIAN_LOCATIONID,
         payload: locationData
       })
@@ -134,18 +115,18 @@ export function AddDataHistorian() {
       if (values != null) {
         if (!values.metric) {
           invalid = true
-          messages.Metric = 'Please select Metric'
+          messages.Metric = ConstantValues.ERROR_METRIC
         }
         if (!values.Tag) {
           invalid = true
-          messages.Tag = 'Please specify Tag'
+          messages.Tag = ConstantValues.ERROR_TAG
         } else if (!values.Tag.trim()) {
           invalid = true
-          messages.Tag = 'Please specify Tag'
+          messages.Tag = ConstantValues.ERROR_TAG
         }
         if (!values.Gateway) {
           invalid = true
-          messages.Gateway = 'Please select Gateway'
+          messages.Gateway = ConstantValues.ERROR_GATEWAY
         }
         if (invalid == true) {
           dispatch({
@@ -166,9 +147,9 @@ export function AddDataHistorian() {
           })
         }
       } else {
-        values.Metric = 'Please select Metric'
-        values.Tag = 'Please specify Tag'
-        values.Gateway = 'Please select Gateway'
+        values.Metric = ERROR_METRIC
+        values.Tag = ERROR_TAG
+        values.Gateway = ERROR_GATEWAY
         dispatch({
           type: SHOW_DATAHISTORIAN_ERRORS,
           payload: values
@@ -190,10 +171,10 @@ export function UpdateAddDataHistorian() {
       if (values != null) {
         if (!values.metric && !editData.metricId) {
           invalid = true
-          messages.Metric = 'Please select Metric'
+          messages.Metric = ConstantValues.ERROR_METRIC
         }
         if (!values.Tag) {
-          messages.Tag = 'Please specify Tag',
+          messages.Tag = ConstantValues.ERROR_TAG
             getState().form.DataHistorianForm.hasOwnProperty('fields') &&
             getState().form.DataHistorianForm.fields.hasOwnProperty('Tag') &&
             getState().form.DataHistorianForm.fields.Tag.hasOwnProperty('touched') &&
@@ -201,11 +182,11 @@ export function UpdateAddDataHistorian() {
             invalid = true : editData.scadaTag ? messages.Tag = null : invalid = true
         } else if (!values.Tag.trim()) {
           invalid = true
-          messages.Tag = 'Please specify Tag'
+          messages.Tag = ConstantValues.ERROR_TAG
         }
         if (!values.Gateway && !editData.scadaServerId) {
           invalid = true
-          messages.Gateway = 'Please select Gateway'
+          messages.Gateway = ConstantValues.ERROR_GATEWAY
         }
         if (invalid == true) {
           dispatch({
@@ -300,7 +281,7 @@ export function getDataHistorianService() {
             }
           })
           let defaultMetric = []
-          data.map((metric)=>{
+          data.map((metric) => {
             defaultMetric.push(metric)
           })
           dispatch({
@@ -331,23 +312,23 @@ export function validateData() {
           values = getState().form.DataHistorianForm.values : null
         if (!editData.hasOwnProperty('id')) {
           if (values != null) {
-            values.metric ? messages.Metric = null : messages.Metric = 'Please select Metric'
-            values.Tag && values.Tag.trim() ? messages.Tag = null : messages.Tag = 'Please specify Tag'
-            values.Gateway ? messages.Gateway = null : messages.Gateway = 'Please select Gateway'
+            values.metric ? messages.Metric = null : messages.Metric = ConstantValues.ERROR_METRIC
+            values.Tag && values.Tag.trim() ? messages.Tag = null : messages.Tag = ConstantValues.ERROR_TAG
+            values.Gateway ? messages.Gateway = null : messages.Gateway = ConstantValues.ERROR_GATEWAY
           } else {
-            messages.Metric = 'Please select Metric'
-            messages.Tag = 'Please specify Tag'
-            messages.Gateway = 'Please select Gateway'
+            messages.Metric = ConstantValues.ERROR_METRIC
+            messages.Tag = ConstantValues.ERROR_TAG
+            messages.Gateway = ConstantValues.ERROR_GATEWAY
           }
         } else {
           if (values != null) {
-            values.metric || editData.metricId ? messages.Metric = null : messages.Metric = 'Please select Metric'
+            values.metric || editData.metricId ? messages.Metric = null : messages.Metric = ConstantValues.ERROR_METRIC
             getState().form.DataHistorianForm.hasOwnProperty('fields') &&
               getState().form.DataHistorianForm.fields.hasOwnProperty('Tag') &&
               getState().form.DataHistorianForm.fields.Tag.hasOwnProperty('touched') &&
               getState().form.DataHistorianForm.fields.Tag.touched ?
-              values.Tag && values.Tag.trim() ? messages.Tag = null : messages.Tag = 'Please specify Tag' : editData.scadaTag ? messages.tag = null : messages.Tag = 'Please specify Tag'
-            values.Gateway || editData.scadaServerId ? messages.Gateway = null : messages.Gateway = 'Please select Gateway'
+              values.Tag && values.Tag.trim() ? messages.Tag = null : messages.Tag = ConstantValues.ERROR_TAG : editData.scadaTag ? messages.tag = null : messages.Tag = ConstantValues.ERROR_TAG
+            values.Gateway || editData.scadaServerId ? messages.Gateway = null : messages.Gateway = ConstantValues.ERROR_GATEWAY
           }
         }
         dispatch({
@@ -360,21 +341,6 @@ export function validateData() {
 }
 
 export const ACTION_HANDLERS = {
-  [GET_GATEWAY_INFO]: (state, action) => {
-    return Object.assign({}, state, {
-      gateway: action.payload
-    })
-  },
-  [GET_METRIC_INFO]: (state, action) => {
-    return Object.assign({}, state, {
-      metrics: action.payload
-    })
-  },
-  [GET_DATAEHISTORIAN_INFO]: (state, action) => {
-    return Object.assign({}, state, {
-      dataHistorian: action.payload
-    })
-  },
   [CONFIRM_DELETE_HISTORIAN]: (state, action) => {
     return Object.assign({}, state, {
       deleteDataIndex: action.payload,
@@ -547,7 +513,7 @@ export const ACTION_HANDLERS = {
       dataHistorian: updatedDataHistorian,
       showDataDeleteModal: !state.showDataDeleteModal,
       deleteDataIndex: null,
-      saveScada : saveScada
+      saveScada: saveScada
     })
   },
   [CLICKED_IS_DIGITAL_TAG]: (state, action) => {
@@ -573,12 +539,12 @@ export const ACTION_HANDLERS = {
       dataHistorian: action.payload.dataHistorian,
       allmetrics: action.payload.allmetrics,
       defaultMetrics: action.payload.defaultMetrics,
-      saveScada : []
+      saveScada: []
     })
   },
   [GET_GATEWAY_SERVICE_FOR_DATA_HISTORIAN]: (state, action) => {
-     return Object.assign({}, state, {
-        gateways:action.payload
+    return Object.assign({}, state, {
+      gateways: action.payload
     })
   },
 }
@@ -591,9 +557,9 @@ const initialState = {
   defaultMetrics: [],
   metrics: [],
   gateways: {},
+  saveScada: [],
   showAddDataHistorianModal: false,
   clickedIsDigitalTag: false,
-  saveScada: [],
   showDataDeleteModal: false,
   deleteDataIndex: null,
   validationMessages: {}

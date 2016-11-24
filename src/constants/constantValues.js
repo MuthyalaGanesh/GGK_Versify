@@ -14,5 +14,10 @@ export const ConstantValues = {
 		'and must contain atleast one lower case letter,one upper case letter,and one digit',
 	NEWCONTACT_SUCCESS: 'New Contact added successfully',
 	NEWCONTACT_FAILURE: 'Save new contact failed,Please change given information and try again',
+	ERROR_UNIQUE_NAME: 'Name must be unique',
+	ERROR_URL: 'Please specify url',
+	ERROR_METRIC : 'Please select Metric',
+    ERROR_TAG : 'Please specify Tag',
+    ERROR_GATEWAY : 'Please select Gateway',
 
 }

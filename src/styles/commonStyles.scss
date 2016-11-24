@@ -598,12 +598,13 @@ div.box-tools.pull-right i.fa.fa-address-book {
   border-radius: 8px;
 }
 
-failure-message
+.failure-message
 {
   color: #a94442 !important;
   text-align: center;
   border-color: #f2dede;
-  border-radius: 8px;
+  border-radius: 8px;  
+  background-color: #f2dede !important;
 }
 
 @keyframes Select-animation-spin {

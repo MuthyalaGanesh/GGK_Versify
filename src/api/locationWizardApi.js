@@ -229,7 +229,7 @@ export function finalLocationSaveObject(saveObject) {
   })
 }
 
-export function addNewContact(saveObject) {
+export function addNewContact(SaveObject) {
   return axios({
     method: 'post',
     url: Constants.SAVE_NEW_CONTACT,

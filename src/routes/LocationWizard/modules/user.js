@@ -14,7 +14,6 @@ import {
 
 import axios from 'axios'
 
-export const BIND_USER_INFO = 'BIND_USER_INFO'
 export const BIND_CONTACT_TO_ROLE = 'BIND_CONTACT_TO_ROLE'
 export const BIND_ROLE_TO_CONTACT = 'BIND_ROLE_TO_CONTACT'
 export const SELECTED_CONTACT = 'SELECTED_CONTACT'
@@ -159,7 +158,7 @@ export function setErrors() {
   return messages
 }
 
-export function mapContact() {
+export function mapContact(values) {
   let Contact = {}
   Contact.Id = 0
   Contact.Name = values.Name
@@ -249,7 +248,7 @@ export function saveNewContact() {
               Contact: Contact
             }
           }
-          addNewContact().then(function(response) {
+          addNewContact(SaveObject).then(function(response) {
             dispatch({
               type: SAVE_NEW_CONTACT,
             })
@@ -292,7 +291,7 @@ export function getUserInfoService() {
             })
             let userInfo = {
               Roles: rolesResponse.data.GetRolesResult.Roles,
-              Contacts: contactsResponse.data.GetAutoCompleteContactsResult.Contacts
+              Contacts: allcontacts
             }
             dispatch({
               type: GET_USER_INFO_SERVICE,
@@ -503,11 +502,6 @@ export function clearFailure() {
 };
 
 export const ACTION_HANDLERS = {
-  [BIND_USER_INFO]: (state, action) => {
-    return Object.assign({}, state, {
-      userInfo: action.payload
-    })
-  },
   [ADD_CONTACT_MODAL]: (state, action) => {
     if (state.showAddContactModal) {
       return Object.assign({}, state, {
@@ -540,6 +534,9 @@ export const ACTION_HANDLERS = {
     let validationMessages = {}
     validationMessages.success = ConstantValues.NEWCONTACT_SUCCESS
     userInformation.Contacts = getContacts()
+    userInformation.Contacts.map((contactInfo) => {
+              contactInfo.displayText = contactInfo.Name + ' (' + contactInfo.Login + ')'
+            })
     return Object.assign({}, state, {
       error: null,
       validationMessages: validationMessages,

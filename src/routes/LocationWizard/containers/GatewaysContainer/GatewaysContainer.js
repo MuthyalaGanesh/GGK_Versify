@@ -6,7 +6,6 @@ import {
 } from 'react-redux'
 import Gateways from '../../components/Gateways'
 import {
-	getGateways,
 	AddGatewayModalToggle,
 	AddGateway,
 	EditGateway,
@@ -24,7 +23,6 @@ const mapStateToProps = (state) => ({
 
 
 const mapDispatchToProps = {
-	getGateways,
 	AddGatewayModalToggle,
 	AddGateway,
 	EditGateway,

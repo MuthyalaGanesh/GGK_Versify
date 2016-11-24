@@ -2,6 +2,10 @@ import {
   getGatewayInfo
 } from 'api/locationWizardApi'
 
+import {
+  ConstantValues
+} from "constants/constantValues"
+
 export const GET_GATEWAY_INFO = 'GET_GATEWAY_INFO'
 export const ADD_MODAL = 'ADD_MODAL'
 export const ADD_GATEWAY = 'ADD_GATEWAY'
@@ -12,13 +16,6 @@ export const CONFIRM_DELETE_GATEWAY = 'CONFIRM_DELETE_GATEWAY'
 export const CLOSE_GATEWAY_CONFIRMATION = 'CLOSE_GATEWAY_CONFIRMATION'
 export const SHOW_GATEWAY_ERRORS = 'SHOW_GATEWAY_ERRORS'
 export const GET_GATEWAY_SERVICE = 'GET_GATEWAY_SERVICE'
-
-export function getGateways() {
-  return {
-    type: GET_GATEWAY_INFO,
-    payload: getGatewayInfo()
-  };
-};
 
 export function bindGatewayLocationData(gateway) {
   return (dispatch, getState) => {
@@ -118,22 +115,22 @@ export function AddGateway() {
       if (values != null) {
         if (!values.GatewayName) {
           invalid = true
-          messages.GatewayName = 'Please specify Name'
+          messages.GatewayName = ConstantValues.ERROR_NAME
         } else {
           if (!values.GatewayName.trim()) {
             invalid = true
-            messages.GatewayName = 'Please specify Name'
+            messages.GatewayName = ConstantValues.ERROR_NAME
           } else if (gateways.findIndex((gateway) => gateway.aliasName.trim().toUpperCase() === values.GatewayName.trim().toUpperCase()) >= 0) {
             invalid = true
-            messages.GatewayName = 'Name must be unique'
+            messages.GatewayName = ConstantValues.ERROR_UNIQUE_NAME
           }
         }
         if (!values.GatewayURL) {
           invalid = true
-          messages.GatewayURL = 'Please specify url'
+          messages.GatewayURL = ConstantValues.ERROR_URL
         } else if (!values.GatewayURL.trim()) {
           invalid = true
-          messages.GatewayURL = 'Please specify url'
+          messages.GatewayURL = ConstantValues.ERROR_URL
         }
         if (invalid == true) {
           dispatch({
@@ -154,8 +151,8 @@ export function AddGateway() {
           })
         }
       } else {
-        messages.GatewayName = 'Please specify Name'
-        messages.GatewayURL = 'Please specify url'
+        messages.GatewayName = ConstantValues.ERROR_NAME
+        messages.GatewayURL = ConstantValues.ERROR_URL
         dispatch({
           type: SHOW_GATEWAY_ERRORS,
           payload: values
@@ -179,30 +176,36 @@ export function UpdateGateway() {
       getState().form.GatewayForm.hasOwnProperty('fields') ?
         fields = getState().form.GatewayForm.fields : null
       if (!values.GatewayName) {
-        messages.GatewayName = 'Please specify Name',
-          fields && fields.hasOwnProperty('GatewayName') && fields.GatewayName.hasOwnProperty('touched') &&
+        messages.GatewayName = ConstantValues.ERROR_NAME
+        fields &&
+          fields.hasOwnProperty('GatewayName') &&
+          fields.GatewayName.hasOwnProperty('touched') &&
           fields.GatewayName.touched ?
-          invalid = true : editedGateway.GatewayName ? messages.GatewayName = null : invalid = true
+          invalid = true : editedGateway.GatewayName ?
+          messages.GatewayName = null : invalid = true
       }
       if (values.GatewayName) {
         if (values.GatewayName.trim()) {
           let index = gateways.Gateways.findIndex((gateway) => gateway.aliasName.trim().toUpperCase() === values.GatewayName.trim().toUpperCase())
           if (index >= 0 && index != editedGateway.index) {
             invalid = true
-            messages.GatewayName = 'Name must be unique'
+            messages.GatewayName = ConstantValues.ERROR_UNIQUE_NAME
           }
         } else {
           invalid = true
-          messages.GatewayName = 'Please specify Name'
+          messages.GatewayName = ConstantValues.ERROR_NAME
         }
       }
       if (!values.GatewayURL) {
-        messages.GatewayURL = 'Please specify url'
-        fields && fields.hasOwnProperty('GatewayURL') && fields.GatewayURL.hasOwnProperty('touched') &&
+        messages.GatewayURL = ConstantValues.ERROR_URL
+        fields &&
+          fields.hasOwnProperty('GatewayURL') &&
+          fields.GatewayURL.hasOwnProperty('touched') &&
           fields.GatewayURL.touched ?
-          invalid = true : editedGateway.GatewayURL ? messages.GatewayURL = null : invalid = true
+          invalid = true : editedGateway.GatewayURL ?
+          messages.GatewayURL = null : invalid = true
       } else if (!values.GatewayURL.trim()) {
-        messages.GatewayURL = 'Please specify url'
+        messages.GatewayURL = ConstantValues.ERROR_URL
         invalid = true
       }
       if (invalid == true) {
@@ -275,17 +278,17 @@ export function validateGateway() {
           values = getState().form.GatewayForm.values : null
         if (!editedGateway.hasOwnProperty('Id')) {
           if (values != null) {
-            values.GatewayName && values.GatewayName.trim() ? messages.GatewayName = null : messages.GatewayName = 'Please specify Name'
-            values.GatewayURL && values.GatewayURL.trim() ? messages.GatewayURL = null : messages.GatewayURL = 'Please specify url'
+            values.GatewayName && values.GatewayName.trim() ? messages.GatewayName = null : messages.GatewayName = ConstantValues.ERROR_NAME
+            values.GatewayURL && values.GatewayURL.trim() ? messages.GatewayURL = null : messages.GatewayURL = ConstantValues.ERROR_URL
             if (values.GatewayName && values.GatewayName.trim()) {
               let index = gateways.Gateways.findIndex((gateway) => gateway.aliasName.trim().toUpperCase() === values.GatewayName.trim().toUpperCase())
               if (index >= 0 && index != editedGateway.index) {
-                messages.GatewayName = 'Name must be unique'
+                messages.GatewayName = ConstantValues.ERROR_UNIQUE_NAME
               }
             }
           } else {
-            messages.GatewayName = 'Please specify Name'
-            messages.GatewayURL = 'Please specify url'
+            messages.GatewayName = ConstantValues.ERROR_NAME
+            messages.GatewayURL = ConstantValues.ERROR_URL
           }
         } else {
           if (values != null) {
@@ -293,18 +296,19 @@ export function validateGateway() {
             getState().form.GatewayForm.hasOwnProperty('fields') ?
               fields = getState().form.GatewayForm.fields : fields = {}
 
-            fields.hasOwnProperty('GatewayName') && fields.GatewayName.hasOwnProperty('touched') &&
-              fields.GatewayName.touched ?
-              values.GatewayName && values.GatewayName.trim() ? messages.GatewayName = null : messages.GatewayName = 'Please specify Name' : editedGateway.GatewayName ? messages.GatewayName = null : messages.GatewayName = 'Please specify Name'
+            fields.hasOwnProperty('GatewayName') &&
+              fields.GatewayName.hasOwnProperty('touched') &&
+              fields.GatewayName.touched ? values.GatewayName && values.GatewayName.trim() ? messages.GatewayName = null : messages.GatewayName = ConstantValues.ERROR_NAME : editedGateway.GatewayName ? messages.GatewayName = null : messages.GatewayName = ConstantValues.ERROR_NAME
 
-            fields.hasOwnProperty('GatewayURL') && fields.GatewayURL.hasOwnProperty('touched') &&
+            fields.hasOwnProperty('GatewayURL') &&
+              fields.GatewayURL.hasOwnProperty('touched') &&
               fields.GatewayURL.touched ?
-              values.GatewayURL && values.GatewayURL.trim() ? messages.GatewayURL = null : messages.GatewayURL = 'Please specify url' : editedGateway.GatewayURL ? messages.GatewayURL = null : messages.GatewayURL = 'Please specify url'
+              values.GatewayURL && values.GatewayURL.trim() ? messages.GatewayURL = null : messages.GatewayURL = ConstantValues.ERROR_URL : editedGateway.GatewayURL ? messages.GatewayURL = null : messages.GatewayURL = ConstantValues.ERROR_URL
 
             if (values.GatewayName && values.GatewayName.trim()) {
               let index = gateways.Gateways.findIndex((gateway) => gateway.aliasName.trim().toUpperCase() === values.GatewayName.trim().toUpperCase())
               if (index >= 0 && index != editedGateway.index) {
-                messages.GatewayName = 'Name must be unique'
+                messages.GatewayName = ConstantValues.ERROR_UNIQUE_NAME
               }
             }
           }
