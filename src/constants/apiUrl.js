@@ -1,4 +1,6 @@
-const baseAddress = "https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc";
+import config from "../config.json"
+
+const baseAddress = config.serverConfig.BaseAddress;
 
 export const ApiUrl = {
 	LOCATIONS: baseAddress + "/Locations",
