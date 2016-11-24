@@ -43,7 +43,7 @@ export function BindSysIntegrationsForNewLocation() {
 export function getUnselectedSystemIntegrations(allSystemIntegrations) {
     var UnSelected = []
     allSystemIntegrations.map(si => {
-        if (si.LocationMappingId < 0) {
+        if (si.LocationMappingId < 0 && si.ExternalSystemName != 'VTrader-Temp') {
             UnSelected.push(si)
         }
     })
@@ -69,9 +69,10 @@ export function editSystemIntegration(locationSystemIntegrations) {
                         })
 
                         if (valuePresence == 1) {
+                            if(locationSystemIntegrations.locationsInfo[i].ExternalSystemName != 'VTrader-Temp'){
                             selectedSystemIntegrations.push(locationSystemIntegrations.locationsInfo[i]);
                             data[`${locationSystemIntegrations.locationsInfo[i].ExternalSystemName}`] = locationSystemIntegrations.locationsInfo[i].AliasName
-
+                        }
                         }
                     }
 
@@ -245,7 +246,7 @@ export const ACTION_HANDLERS = {
     [GET_SYSTEM_INTEGRATION_TYPE_SERVICE]: (state, action) => {
         var unselectedSysIntegrations = [];
         action.payload.map(ssit => {
-            if (ssit.LocationMappingId < 0) {
+            if (ssit.LocationMappingId < 0 && ssit.ExternalSystemName != 'VTrader-Temp') {
                 unselectedSysIntegrations.push(ssit)
             }
         })
