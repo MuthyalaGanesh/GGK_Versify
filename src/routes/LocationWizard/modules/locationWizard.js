@@ -734,8 +734,8 @@ export function saveCompleteLocationWizard() {
 
 function saveObjectPreparationAndCall(getState, dispatch) {
   var values = getState().form.BasicInfoForm ? getState().form.BasicInfoForm.values : {};
-
-  CheckLocationNameIsExists(getState().location.allLocations, values.locationName, values.locationId || 0);
+  var locationId = values.locationId || 0;
+  CheckLocationNameIsExists(getState().location.allLocations, values.locationName, locationId);
   var isLocationNamePresent = isLocationNameExists;
   if (isLocationNamePresent) {
     isLocationNameExists = false;
