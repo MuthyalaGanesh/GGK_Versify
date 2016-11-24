@@ -40,12 +40,12 @@ return (
               {error ?  <div className='col-sm-12 errorMessage' style={{textAlign:'center'}}> Please complete the  highlighted fields </div> : null }
             <div className="col-sm-12">
               <div className="row">
-                <Field name="locationId"
-                component="input"
-                type="hidden"
-                value={props.locationId ||0}
-                >
-                </Field>
+               <div style={{'display':'none'}}> 
+                <Field name="locationId" component="input" value={props.locationId ||0}></Field>
+                <Field name="createDate" component="input" value={props.createDate}></Field>
+                <Field name="createUser" component="input" value={props.createUser}></Field>
+                <Field name="updateUser" component="input" value={props.updateUser}></Field>  
+                </div>              
                 <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
                   <label className="control-label">
                     Name *

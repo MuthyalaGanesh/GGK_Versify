@@ -24,7 +24,9 @@ export const GET_TIME_ZONE = "GET_TIME_ZONE"
 export const GET_DEFAULT_CREDENTIALDATA = "GET_DEFAULT_CREDENTIALDATA"
 
 function bindTechnologyTypesOnEdit(technologyTypeId, technologyTypes) {
-  return technologyTypes.filter(function(technologyType) {return technologyType.id == technologyTypeId;})[0] || technologyTypeId;
+  return technologyTypes.filter(function(technologyType) {
+    return technologyType.id == technologyTypeId;
+  })[0] || technologyTypeId;
 }
 
 export function BindInitialValues(currentLocation, assignedLocationMappings, marketDrivendata) {
@@ -41,7 +43,7 @@ export function BindInitialValues(currentLocation, assignedLocationMappings, mar
         locationType: locationObj.LocationType,
         createDate: locationObj.CreateDate,
         createUser: locationObj.CreateUser,
-        updateUser: locationObj.UpdateUser,
+        updateUser: locationObj.UpdateUser || 'GGK',
         isOutageLevel: locationObj.IsOutageLevel,
         technologyType: bindTechnologyTypesOnEdit(locationObj.TechnologyTypeId, technologyTypes),
         secondarytechnologyType: bindTechnologyTypesOnEdit(locationObj.SecondaryTechnologyTypeId, technologyTypes),
@@ -111,30 +113,6 @@ export function onPrimaryMarketChangeEvent(event) {
 
 export const ACTION_HANDLERS = {
   [BIND_BASIC_INITIAL_VALUES]: (state, action) => {
-
-    // var locationId=action.payload.currentLocation.Id;
-    // let locationObj =action.payload.currentLocation;
-    // let assignedLocationMappings = action.payload.assignedLocationMappings;
-    // let marketDrivendata = action.payload.marketDrivendata;
-    // var basicInfo = {
-    //   locationId: locationId,
-    //   locationName: locationObj.Name,
-    //   timezone: locationObj.Tz,
-    //   parentLocation: locationObj.ParentId,
-    //   locationType: locationObj.LocationType,
-    //   createDate: locationObj.CreateDate,
-    //   createUser: locationObj.CreateUser,
-    //   updateUser: locationObj.UpdateUser,
-    //   isOutageLevel: locationObj.IsOutageLevel,
-    //   technologyType: locationObj.TechnologyTypeId,
-    //   secondarytechnologyType: locationObj.SecondaryTechnologyTypeId,
-    //   primaryMarket: locationObj.PrimaryMarketId,
-    //   fuelClass: locationObj.FuelClassId,
-    //   owner: locationObj.OwnerOrgId,
-    //   physicalTimezone: locationObj.PhysicalTz,
-    //   ownerShipPercentage: locationObj.OwnershipPct,
-    // }
-    // var credentialData = PrepareCredentialBasicData(marketDrivendata, assignedLocationMappings);
     return Object.assign({}, state, {
       BasicInfo: action.payload.basicInfo,
       InitialAssignedLocationMappings: action.payload.assignedLocationMappings,
@@ -154,8 +132,11 @@ export const ACTION_HANDLERS = {
     var stateObj = [];
     try {
       var dropdownItem = action.payload.selected;
-      stateObj = action.payload.formData;
-      stateObj.values['Encrypted Password'] = dropdownItem.item.ExternalSystemPwd;
+      if (dropdownItem.item.ExternalSystemLogin == dropdownItem.value) {
+        stateObj = action.payload.formData;
+        stateObj.values['Encrypted Password'] = dropdownItem.item.ExternalSystemPwd;
+      }
+
     } catch (e) {
 
     }
@@ -378,7 +359,7 @@ const initialState = {
   fuelClasses: [], //basicInfoDropdowns.getFuelClasses(),
   timezones: [], //basicInfoDropdowns.getTimezones(),
   initial: true,
-  BasicInfo: {},
+  BasicInfo: {createUser:null,updateUser:'GGK'},
   CredentialInitialValues: {},
   CredentialBasicData: [],
   InitialAssignedLocationMappings: [],

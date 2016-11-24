@@ -343,6 +343,7 @@ export function LoadAndRefreshForms(id, event) {
 function basicInforObjectPreparation(values) {
   var todayDate = new Date();
   return new Object({
+
     Id: values.locationId || 0,
     LocationId: values.locationId || 0,
     Name: values.locationName,
@@ -351,9 +352,9 @@ function basicInforObjectPreparation(values) {
     LocationType: values.locationType.name || values.locationType,
     Notes: null,
     CreateDate: values.createDate || '/Date(' + todayDate.getTime() + ')/',
-    CreateUser: null,
+    CreateUser: values.createUser || null,
     UpdateDate: '/Date(' + todayDate.getTime() + ')/',
-    UpdateUser: "GGK",
+    UpdateUser: values.updateUser || 'GGK',
     IsDispatchLevel: false,
     IsScheduleLevel: false,
     IsOutageLevel: values.isOutageLevel,
@@ -800,10 +801,6 @@ function saveObjectPreparationAndCall(getState, dispatch) {
       }
     }
 
-    // console.log('check')
-    // var k = test(basicInfoObj.Id, getState().location.allLocations)
-    // console.log(k);
-
     var finalData = JSON.stringify(finalSaveObject)
     console.log("finalSaveObject", finalData)
     dispatch({
@@ -1016,7 +1013,6 @@ export function getLocationsInformation() {
         payload: false
       });
             
-    console.log("test0000000")
    dispatch({
       type:'redux-form/INITIALIZE',
       meta:{
