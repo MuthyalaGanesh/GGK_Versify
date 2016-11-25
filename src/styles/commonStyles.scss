@@ -607,6 +607,19 @@ div.box-tools.pull-right i.fa.fa-address-book {
   background-color: #f2dede !important;
 }
 
+span.multiselect-label{
+  font-weight:bold  
+}
+
+span.multiselect-caption{
+  font-weight: 500;
+  opacity: 0.5;
+}
+
+.multiselect-value {
+    display: -webkit-inline-box;
+}
+
 @keyframes Select-animation-spin {
   to {
     transform: rotate(1turn);

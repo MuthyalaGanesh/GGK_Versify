@@ -54,12 +54,27 @@ export const Users = (props) => {
                                                     component={DropdownListField}
                                                     defaultvalue={props.userInfo.defaultContacts}
                                                     data ={Contacts}                                                        
-                                                    labelKey='displayText'                                             
+                                                    labelKey='Name'                                             
                                                     valueKey='Id'
                                                     placeholder="Select contacts"                                                    
                                                     disabled = {props.userInfo.disableContacts}
                                                     multi = {true}
-                                                    onChangeEvent = {(e)=>props.bindContactToRole()}                                                      
+                                                    onChangeEvent = {(e)=>props.bindContactToRole()}         
+                                                    optionRenderer = {function(item) {
+											                            return <div >
+											                                	<span className = 'multiselect-label' > {item.Name} </span><br/>
+											                                	<span className = 'multiselect-caption' > {item.Login} </span>
+											                                   </div>
+											                        		}
+											                    		}  
+											        valueRenderer = {function(item){
+											            	return <div className='multiselect-value'>
+											            			<span className = 'multiselect-label' > {item.Name} </span>
+											                        <span className = 'multiselect-caption'> &lt; {item.Login}&gt;</span>
+											            		   </div>
+
+											            		}
+											            	}                                  
                                                     />
                                                 <div className={props.userInfo.disableContacts ? "hide" :"col-lg-12"}>
                                                     <span className="select-all pull-left" onClick={props.selectAllContacts}>Select All</span>
@@ -85,10 +100,26 @@ export const Users = (props) => {
                                             <Field component={DropdownListField}  name = 'ContactsByContact'
                                                         data ={Contacts} 
                                                         defaultvalue = {props.userInfo.selectedContact.Id}                                                          
-                                                        labelKey='displayText'                                             
+                                                        labelKey='Name'                                             
                                                         valueKey='Id'
                                                         placeholder="Select a contact"
-                                                        onChangeEvent = {(e)=>props.selectContact()}/>                                    
+                                                        onChangeEvent = {(e)=>props.selectContact()}
+                                                        optionRenderer = {function(item) {
+											                    return <div >
+											                             <span className = 'multiselect-label' > {item.Name} </span><br/>
+											                             <span className = 'multiselect-caption' > {item.Login} </span>
+											                           </div>
+											                        }
+											                    } 
+											            valueRenderer = {function(item){
+											            	return <div>
+											            			<span className = 'multiselect-label' > {item.Name} </span>
+											                        <span className = 'multiselect-caption'> &lt; {item.Login}&gt;</span>
+											            		   </div>
+
+											            		}
+											            	} 
+											            />                                  
                                             </div>
                                             <div className="col-sm-12 col-md-6 col-lg-6 MultipleSelect">
                                                 <label className="control-label"> Roles </label>
@@ -275,8 +306,7 @@ export const Users = (props) => {
                     </Modal.Body>
                     <Modal.Footer>                                
                                 <button className="btn btn-success" type="button" onClick={props.saveNewContact}>Add</button> 
-                                <button className="btn btn-warning" type="button"  onClick={props.AddContactModalToggle}>Cancel</button>  
-                        
+                                <button className="btn btn-warning" type="button"  onClick={props.AddContactModalToggle}>Cancel</button>                          
                 </Modal.Footer>
                 </Modal>
             </div>

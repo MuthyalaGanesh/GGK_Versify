@@ -4,18 +4,11 @@ import DropdownList from 'react-widgets/lib/DropdownList'
 import Select from 'react-select/lib/Select';
 
 const DropdownListField = ({ input, ...rest }) =>
-  // <DropdownList {...input}
-  //     treeLine allowClear
-  //   onBlur={() => input.onBlur()}
-  //   value={input.value}
-  //   onChange={(e)=>{  
-  //       input.onChange(e);
-  //       !!rest.onChangeEvent && rest.onChangeEvent(e);
-  //    }}
-  //   {...rest}/>
 <Select 
         searchable={true} 
 				options={rest.data} 
+        optionRenderer = {rest.optionRenderer}
+        valueRenderer = {rest.valueRenderer}
 				clearable={true} 
 				name={rest.name}
         disabled={rest.disabled || false} 
@@ -26,5 +19,4 @@ const DropdownListField = ({ input, ...rest }) =>
          }}
          {...rest}
 				/>
-
 export default DropdownListField;
