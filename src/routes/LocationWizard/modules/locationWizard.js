@@ -111,6 +111,7 @@ export function toggleSaveResponsePopup(event) {
 
 
 
+
 export function leftMenuDropdownClickEvent(id, event) {
   return (dispatch, getState) => {
     scroll.scrollToTop();
@@ -993,7 +994,27 @@ function AddDefaultParent(objectfuncntion) {
   })
   return returnObj
 }
+function arrayPreparation(data,array){
+  var secondarydat = array
+  if(data.hasOwnProperty('Id')){
+  secondarydat.push({
+    id: data.Id,
+    name: data.Name
+  })
+}
 
+  if (data.Children.length == 0) {
+    
+    return secondarydat
+  } else {
+    data.Children.map((data, i) => {
+      
+      secondarydat =  arrayPreparation(data, secondarydat)
+    })
+    return secondarydat
+  }
+
+}
 export function getLocationsInformation() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
@@ -1003,6 +1024,12 @@ export function getLocationsInformation() {
           type: GET_ALL_LOCATIONS_INFORMATION,
           payload: response.data.GetAllLocationsResult
         });
+        var array = []
+
+       
+        let  secondarray = arrayPreparation({Children:response.data.GetAllLocationsResult},array)
+         console.log(secondarray)
+          
       }).then(function () {
       dispatch({
         type: HIDE_SPINNER,
@@ -1013,7 +1040,7 @@ export function getLocationsInformation() {
         payload: false
       });
             
-    console.log("test0000000")
+
    dispatch({
       type:'redux-form/INITIALIZE',
       meta:{
