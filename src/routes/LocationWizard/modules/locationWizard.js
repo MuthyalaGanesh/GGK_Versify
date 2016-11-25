@@ -55,6 +55,7 @@ export const HIDE_ALERT = 'HIDE_ALERT';
 export const SAVE_RESPONSE_HANDLER = 'SAVE_RESPONSE_HANDLER';
 export const SHOW_SPINNER = 'SHOW_SPINNER';
 export const HIDE_SPINNER = 'HIDE_SPINNER';
+export const SEARCH_LOCATIONS_LIST = 'SEARCH_LOCATIONS_LIST';
 var currentLocation = null;
 var isLocationNameExists = false;
 
@@ -1024,12 +1025,12 @@ export function getLocationsInformation() {
           type: GET_ALL_LOCATIONS_INFORMATION,
           payload: response.data.GetAllLocationsResult
         });
-        var array = []
-
-       
-        let  secondarray = arrayPreparation({Children:response.data.GetAllLocationsResult},array)
-         console.log(secondarray)
-          
+        var searchLocationsList = []
+        searchLocationsList = arrayPreparation({Children:response.data.GetAllLocationsResult},searchLocationsList)
+          dispatch({
+              type: SEARCH_LOCATIONS_LIST,
+               payload: searchLocationsList
+          });
       }).then(function () {
       dispatch({
         type: HIDE_SPINNER,
@@ -1142,6 +1143,12 @@ export const ACTION_HANDLERS = {
 
 
   },
+  [SEARCH_LOCATIONS_LIST]: (state, action) => {
+    console.log("searchlocationlist",action.payload)
+    return Object.assign({}, state, {
+      searchLocationList: action.payload
+    })
+  }
 }
 
 const initialState = {
@@ -1154,7 +1161,8 @@ const initialState = {
   responseMessage: '',
   currentLocationId: 0,
   isLoading: true,
-  isEditable: 0
+  isEditable: 0,
+  searchLocationList:[]
 };
 
 export default function locationWizardReducer(state = initialState, action) {

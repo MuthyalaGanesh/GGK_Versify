@@ -154,7 +154,8 @@
 }
 #location-header .fa.fa-plus-circle.fa-2x{
     color: #FFF !important;
-    cursor: pointer;    
+    cursor: pointer;
+    padding-top:5px;    
 }
 #location-header h5{
     float: left;
@@ -631,3 +632,9 @@ span.multiselect-caption{
   }
 }
 
+.dropdown-menu li a {
+  float:none !important;
+}
+input.bootstrap-typeahead-input-main.form-control {
+    background-color: #FFF !important;
+}
