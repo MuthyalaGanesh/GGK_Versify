@@ -1,10 +1,10 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
-import DateTimePicker from 'react-widgets/lib/DateTimePicker'
-
+import { DateField } from 'react-date-picker'
+import 'react-date-picker/index.css'
 export const DatePickerField = (props) => (
     <div>
-        <DateTimePicker {...props.input} value={props.value} defaultValue={props.defaultValue?new Date(props.defaultValue):null} time={false}/>
+         <DateField {...props.input}  value={props.input.value} dateFormat="MM/DD/YYYY" defaultDate={props.defaultValue?new Date(props.defaultValue):null} />
     </div>
 )
 
