@@ -25,7 +25,7 @@ const EffectiveDateValues = (props) => (
       </thead>
       <tbody>
         {props.defaultValues ? props.defaultValues.map((dv, i) =>
-          <tr>
+          <tr key={i}>
               <td><Field
                   name={`ucvalue[${i}]`}
                   component={InputField}
@@ -78,7 +78,7 @@ const EffectiveDateValues = (props) => (
                       }></i>}
               </td>
           </tr>
-      ) : <tr>
+      ) : <tr >
               <td><Field
                   name='ucvalue[0]'
                   component={InputField}

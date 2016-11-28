@@ -149,12 +149,23 @@ export function AddSystemIntegration () {
             if (flag === 1) {
                 data.map((value, j) => {
                     if (i !== j) {
+
                         options.push(value)
                     }
                 })
-                let ExternalSystemName = getState().form.SystemIntegrationForm
-                    .values.newSystemIntegration.ExternalSystemName
-                secondarydata.push({
+   
+                if(Object.keys(getState().form.SystemIntegrationForm.values.newSystemIntegration).length > 2){
+                    console.log('firstflag',Object.keys(getState().form.SystemIntegrationForm.values.newSystemIntegration).length)
+                 secondarydata.push(
+                    Object.assign({}, getState().form.SystemIntegrationForm.values.newSystemIntegration, {
+                        LocationMappingId: 0
+                    }))}
+                
+            } else {
+                options = data
+                let ExternalSystemName = getState().form.SystemIntegrationForm.values.newSystemIntegration.ExternalSystemName
+              
+                     secondarydata.push({
                     LocationMappingId: 0,
                     ExternalSystemName: ExternalSystemName,
                     AliasName: '',
@@ -163,14 +174,11 @@ export function AddSystemIntegration () {
                     ParameterList: '',
                     FlaggedForDeletion: true
                 })
-            } else {
-                options = data
-
-                secondarydata.push(
-                    Object.assign({}, getState().form.SystemIntegrationForm.values.newSystemIntegration, {
-                        LocationMappingId: 0
-                    }))
+              
             }
+               
+               
+            
             dispatch({
                 type: ADD_SYSTEM_INTEGRATION,
                 payload: {
