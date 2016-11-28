@@ -729,7 +729,7 @@ export function saveCompleteLocationWizard() {
       }
       var formBasicInfoValues = getState().form.BasicInfoForm.values;
       if (!!formBasicInfoValues.secondarytechnologyType &&
-       formBasicInfoValues.technologyType.id == formBasicInfoValues.secondarytechnologyType.id) {
+        formBasicInfoValues.technologyType.id == formBasicInfoValues.secondarytechnologyType.id) {
         flag = 1;
       }
       if (flag == 0) {
@@ -881,7 +881,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
 
           }
 
-          /*Refresh left menu*/       
+          /*Refresh left menu*/
           dispatch({
             type: SAVE_RESPONSE_HANDLER,
             payload: {
@@ -894,6 +894,14 @@ function saveObjectPreparationAndCall(getState, dispatch) {
             dispatch({
               type: GET_ALL_LOCATIONS_INFORMATION,
               payload: response.data.GetAllLocationsResult
+            });
+            var searchLocationsList = []
+            searchLocationsList = arrayPreparation({
+              Children: response.data.GetAllLocationsResult
+            }, searchLocationsList)
+            dispatch({
+              type: SEARCH_LOCATIONS_LIST,
+              payload: searchLocationsList
             });
           }).then(function() {
             /*Expnd ADD Node in left menu*/
