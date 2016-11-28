@@ -422,7 +422,7 @@ export function selectContact() {
               payload: roleinfo
             })
           }).catch(function(error) {
-            alert("error" + JSON.stringify(error));
+            console.log("error" + JSON.stringify(error));
           });
         } else {
           dispatch({

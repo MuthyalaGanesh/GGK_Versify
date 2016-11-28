@@ -29,9 +29,9 @@ const mapStateToProps = (state) => ({
   formdata: state.form
 })
 
-// moment localizer for datepicker
+/** moment localizer for datepicker **/
 momentLocalizer(moment)
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-  form: 'UnitCharacteristicsForm',
+    form: 'UnitCharacteristicsForm',  
   touchOnChange: true
 })(UnitCharacteristics))

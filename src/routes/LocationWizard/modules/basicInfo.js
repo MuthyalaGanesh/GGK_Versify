@@ -365,12 +365,12 @@ export function getTimezonesService() {
 
 const initialState = {
   error: null,
-  locationTypes: [], //basicInfoDropdowns.getLocationTypes(),
-  owners: [], // basicInfoDropdowns.getOwners(),
-  primaryMarkets: [], //basicInfoDropdowns.getPrimaryMarkets(),
-  technologyTypes: [], // basicInfoDropdowns.getTechnologyTypes(),
-  fuelClasses: [], //basicInfoDropdowns.getFuelClasses(),
-  timezones: [], //basicInfoDropdowns.getTimezones(),
+  locationTypes: [], 
+  owners: [],
+  primaryMarkets: [], 
+  technologyTypes: [], 
+  fuelClasses: [], 
+  timezones: [], 
   initial: true,
   BasicInfo: {createUser:null,updateUser:'GGK'},
   CredentialInitialValues: {},

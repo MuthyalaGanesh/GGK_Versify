@@ -45,6 +45,6 @@ const mapDispatchToProps = {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-	form: 'UsersForm', //Form name is first form
+	form: 'UsersForm',
 	destroyOnUnmount: false,
 })(Users));

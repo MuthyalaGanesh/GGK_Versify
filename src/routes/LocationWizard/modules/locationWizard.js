@@ -254,7 +254,7 @@ export function LoadAndRefreshForms(id, event) {
         payload: ''
       })
 
-      //If Location Id > 0, only bind data. otherwise load new forms
+      /*If Location Id > 0, only bind data. otherwise load new forms*/
       if (id > 0) {
         try {
           var allLocationdata = getState().location.allLocations;
@@ -466,7 +466,7 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, marketDrivenMapping
     locationMappingData.push(locationMappingDataItem);
   })
 
-  //ADD default location mappings
+  /*ADD default location mappings*/
   if (!(locationId > 0)) {
     locationMappingData.push(staticVTraderToAdd);
   }
@@ -488,7 +488,7 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, marketDrivenMapping
     })
     finalLocationMappingData.push(mappedItem);
   });
-  //Final  Credentials And Identifiers Object
+  /*Final  Credentials And Identifiers Object*/
   credentialsAndIdentifiersObj = [{
     LocationMappingRecords: finalLocationMappingData
   }];
@@ -518,8 +518,6 @@ function SystemIntegrationObjectPreparation(stateTree, dispatch) {
     stateTree.systemIntegration.selectedSystemIntegrationTypes.map(ssit => {
       systemIntegrationObj.push(ssit)
     })
-
-    console.log(systemIntegrationObj, "SystemIntegrations")
   } else {
     dispatch({
       type: 'ERROR',
@@ -621,7 +619,6 @@ function unitCharacterSticObjectPreparation(stateTree, dispatch) {
       }
     })
   }
-  console.log(unitCharacteristicsObj, "UnitCharacteristics")
   return unitCharacteristicsObj;
 }
 
@@ -663,7 +660,6 @@ function gateWayObjectPreparation(stateTree, dispatch) {
       type: 'ERROR',
       payload: 1
     })
-  console.log("gateways..", gatewayObj)
   return gatewayObj
 }
 
@@ -783,7 +779,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
     var locationId = values.locationId || 0;
     var primaryMarketTypeId = values.primaryMarket.id || values.primaryMarket;
     var basicInfoObj = basicInforObjectPreparation(values, getState().basic.CurrentLocation);
-    //get MarketDrivenMappings from API based on marketType ID
+    /*get MarketDrivenMappings from API based on marketType ID*/
     var credentialsAndIdentifier = prepareCredentialsAndIdentifiersObj(getState().form.CredentialsManagementForm ? getState().form.CredentialsManagementForm.values : {},
       getState().basic.MarketDrivenMappings,
       getState().basic.InitialAssignedLocationMappings,
@@ -817,12 +813,12 @@ function saveObjectPreparationAndCall(getState, dispatch) {
         type: SHOW_SPINNER,
         payload: true
       })
-      //SAVE LOCATION
+      /*SAVE LOCATION*/
     try {
       finalLocationSaveObject(finalSaveObject).then(function(response) {
         console.log("success", response);
         if (response.status === 200) {
-          //ADD Location ID to Object
+          /*ADD Location ID to Object*/
           var newLocationID = response.data.SaveOMSLocationWizardDataResult.Location.Id;
           var locationObj = response.data.SaveOMSLocationWizardDataResult.Location
           getState().form.BasicInfoForm.values.locationId = newLocationID;
@@ -859,7 +855,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
           dispatch(bindLocationData(response.data.SaveOMSLocationWizardDataResult.AssignedScadaPoints, newLocationID));
           dispatch(bindWorkLocationData(response.data.SaveOMSLocationWizardDataResult.AssignedWorkflowGroups));
           dispatch(bindUserLocationData(response.data.SaveOMSLocationWizardDataResult.AssignedContacts, newLocationID));
-          //Save equipment
+          /*Save equipment*/
           if (locationId == 'undefined' || locationId == 0) {
             basicInfoObj.Id = newLocationID
             basicInfoObj.LocationId = newLocationID;
@@ -885,7 +881,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
 
           }
 
-          //Refresh left menu        
+          /*Refresh left menu*/       
           dispatch({
             type: SAVE_RESPONSE_HANDLER,
             payload: {
@@ -900,8 +896,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
               payload: response.data.GetAllLocationsResult
             });
           }).then(function() {
-            //Expnd ADD Node in left menu
-            console.log('new locationID', newLocationID)
+            /*Expnd ADD Node in left menu*/
             dispatch({
               type: DEFAULT_NODE_EXPANDED,
               payload: newLocationID
@@ -961,7 +956,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
 
 function toArray(obj) {
   var array = [];
-  // iterate backwards ensuring that length is an UInt32
+  /* iterate backwards ensuring that length is an UInt32*/
   for (var i = obj.length >>> 0; i--;) {
     array[i] = obj[i];
   }
@@ -1044,7 +1039,6 @@ export function getLocationsInformation() {
           payload: false
         });
 
-
       dispatch({
         type: 'redux-form/INITIALIZE',
         meta: {
@@ -1071,7 +1065,7 @@ export function getLocationsInformation() {
 
 export const ACTION_HANDLERS = {
   [TOGGLE_LEFTMENU_CLICK]: (state, action) => {
-    //Handling adding claases  sidebar-open,sidebar-collapse based on screen resolution
+    /*Handling adding claases  sidebar-open,sidebar-collapse based on screen resolution*/
     var bodyClassList = toArray(document.getElementsByTagName('body')[0].classList);
     var w = window,
       d = document,
@@ -1130,7 +1124,6 @@ export const ACTION_HANDLERS = {
     })
   },
   [SAVE_RESPONSE_HANDLER]: (state, action) => {
-    //action.response:.message:.isSaved: 
     if (action.payload.openSavePopup) {
       return Object.assign({}, state, {
         showLocationSaveResponsePopup: true,
@@ -1147,7 +1140,6 @@ export const ACTION_HANDLERS = {
 
   },
   [SEARCH_LOCATIONS_LIST]: (state, action) => {
-    console.log("searchlocationlist", action.payload)
     return Object.assign({}, state, {
       searchLocationList: action.payload
     })

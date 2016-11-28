@@ -18,6 +18,5 @@ export const ConstantValues = {
 	ERROR_URL: 'Please specify url',
 	ERROR_METRIC : 'Please select Metric',
     ERROR_TAG : 'Please specify Tag',
-    ERROR_GATEWAY : 'Please select Gateway',
-
+    ERROR_GATEWAY : 'Please select Gateway'
 }

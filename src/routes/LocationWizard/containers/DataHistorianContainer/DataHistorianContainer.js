@@ -42,6 +42,6 @@ const mapDispatchToProps = {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-	form: 'DataHistorianForm', //Form name is first form
+	form: 'DataHistorianForm', 
 	destroyOnUnmount: false,
 })(DataHistorian));

@@ -17,7 +17,7 @@ export const GET_ALL_UOM_VALUES = 'GET_ALL_UOM_VALUES'
 export const GET_UNIT_CHARACTERSTICS = 'GET_UNIT_CHARACTERSTICS'
 export const GET_SELECTED_AND_DEFAULT_UNIT_CHARACTERSTICS = 'GET_SELECTED_AND_DEFAULT_UNIT_CHARACTERSTICS'
 export const BIND_INITIAL_ATTRIBUTES_NEW_LOCATION = 'BIND_INITIAL_ATTRIBUTES_NEW_LOCATION'
-
+/*helps in binding initial values*/
 export function BindUnitCharacteristicsInitialValues (locationObj) {
   return {
     type: BIND_INITIAL_ATTRIBUTES,
