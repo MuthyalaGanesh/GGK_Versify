@@ -528,17 +528,12 @@ function SystemIntegrationObjectPreparation(stateTree, dispatch) {
 }
 
 
-
-
 function unitCharacterSticObjectPreparation(stateTree, dispatch) {
   var unitCharacteristicsObj = [];
   if (stateTree.unitCharacteristics && stateTree.unitCharacteristics.selectedunitCharacteristics) {
     stateTree.unitCharacteristics.selectedunitCharacteristics.map(suc => {
       suc.editableAttributes.map(ea => {
         if (suc.isSavable) {
-          let startdate = new Date(ea.EffectiveStartDate)
-          let  enddate = new Date(ea.EffectiveEndDate)
-        debugger;
           unitCharacteristicsObj.push(new Object({
             LocationId: suc.LocationId != 0 ? suc.LocationId : 0,
             AttributeId: suc.id != 0 ? suc.id : 0,
@@ -548,8 +543,8 @@ function unitCharacterSticObjectPreparation(stateTree, dispatch) {
             UnitOfMeasureId: suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
             UnitOfMeasureName: suc.UOM,
             Value: ea.Value ? ea.Value : "",
-            EffectiveStartDate: !!ea.EffectiveStartDate ? '/Date(' +(new Date(startdate.valueOf() + startdate.getTimezoneOffset() * 60000)).getTime()+ ')/' : null,
-            EffectiveEndDate: !!ea.EffectiveEndDate ? '/Date(' + (new Date(enddate.valueOf() + enddate.getTimezoneOffset() * 60000)).getTime() + ')/' : null,
+            EffectiveStartDate: !!ea.EffectiveStartDate ? '/Date(' + (new Date(ea.EffectiveStartDate)).getTime() + ')/' : null,
+            EffectiveEndDate: !!ea.EffectiveEndDate ? '/Date(' + (new Date(ea.EffectiveEndDate)).getTime() + ')/' : null,
             DisplayName: suc.display
           }))
         }
