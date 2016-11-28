@@ -1,7 +1,7 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
 import { DateField } from 'react-date-picker'
-import 'react-date-picker/index.css'
+import './datepicker.css'
 export const DatePickerField = (props) =>{
 console.log(props.defaultValue)
  return(
