@@ -102,7 +102,7 @@ return (
                 </div>
                 <div className="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
                   <label className="control-label"> Secondary Technology Type { error && formdata.BasicInfoForm.hasOwnProperty('values') && formdata.BasicInfoForm.values.hasOwnProperty('secondarytechnologyType')&& formdata.BasicInfoForm.values.secondarytechnologyType != null &&(formdata.BasicInfoForm.values.secondarytechnologyType == formdata.BasicInfoForm.values.technologyType)
-                  ?   <span className='errorMessage' style ={{float:'right'}}> Please select different technologyType </span>
+                  ?   <span className='errorMessage' style ={{float:'right'}}> Select different technologyType </span>
                   : null
                   }</label>
                   <div className='clear'></div>

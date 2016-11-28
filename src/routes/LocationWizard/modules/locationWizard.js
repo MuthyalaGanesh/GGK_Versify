@@ -112,27 +112,26 @@ export function toggleSaveResponsePopup(event) {
 
 
 
-
 export function leftMenuDropdownClickEvent(id, event) {
   return (dispatch, getState) => {
     scroll.scrollToTop();
     if (getState().form.BasicInfoForm.hasOwnProperty('anyTouched') ||
-         getState().form.CredentialsManagementForm.hasOwnProperty('anyTouched') || 
-         getState().form.EquipmentsForm.hasOwnProperty('anyTouched') || 
-         getState().workFlows.isChanged || 
-         getState().users.saveRoles.length > 0 || 
-         getState().gateways.saveGateway.length > 0 ||
-         getState().dataHistorian.saveScada.length > 0 ||
-         getState().equipments.isChanged ||
-         getState().systemIntegration.isChanged ||
-         getState().unitCharacteristics.isChanged
-         ) {
-              dispatch({
-                type: SHOW_ALERT,
-                payload: {
-                  locationState: getState().location,
-                  currentLocationId: id
-                }
+      getState().form.CredentialsManagementForm.hasOwnProperty('anyTouched') ||
+      getState().form.EquipmentsForm.hasOwnProperty('anyTouched') ||
+      getState().workFlows.isChanged ||
+      getState().users.saveRoles.length > 0 ||
+      getState().gateways.saveGateway.length > 0 ||
+      getState().dataHistorian.saveScada.length > 0 ||
+      getState().equipments.isChanged ||
+      getState().systemIntegration.isChanged ||
+      getState().unitCharacteristics.isChanged
+    ) {
+      dispatch({
+        type: SHOW_ALERT,
+        payload: {
+          locationState: getState().location,
+          currentLocationId: id
+        }
       })
     } else {
       dispatch(showSpinner())
@@ -166,7 +165,7 @@ function CheckLocationNameIsExists(allLocations, locationName, locationId) {
     if (isLocationNameExists) {
       return false;
     }
-    if (item.Name == locationName.trim()) {
+    if (item.Name == (locationName || '').trim()) {
       if (!(locationId > 0 && item.LocationId == locationId) && !isLocationNameExists) {
         isLocationNameExists = true;
         return false;
@@ -262,11 +261,11 @@ export function LoadAndRefreshForms(id, event) {
           findLocation(allLocationdata, id);
           var locationObj = currentLocation;
           currentLocation = null;
-          getOMSLocationwizardData(id).then(function (response) {
+          getOMSLocationwizardData(id).then(function(response) {
             let editObject = response.data;
             let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
             let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
-            getMarketDrivenMappings(locationObj.PrimaryMarketId).then(function (response) {
+            getMarketDrivenMappings(locationObj.PrimaryMarketId).then(function(response) {
               var marketDrivenMappings = response.data
               var editSysIntegration = new Object({
                 locationsInfo: locationsInfo,
@@ -311,21 +310,21 @@ export function LoadAndRefreshForms(id, event) {
         }
       } else {
         dispatch({
-                type: 'redux-form/INITIALIZE',
-                meta: {
-                  form: 'BasicInfoForm',
-                  keepDirty: false
-                },
-                payload: ''
-              })
-              dispatch({
-                type: 'redux-form/INITIALIZE',
-                meta: {
-                  form: 'CredentialsManagementForm',
-                  keepDirty: false
-                },
-                payload: ''
-              })
+          type: 'redux-form/INITIALIZE',
+          meta: {
+            form: 'BasicInfoForm',
+            keepDirty: false
+          },
+          payload: ''
+        })
+        dispatch({
+          type: 'redux-form/INITIALIZE',
+          meta: {
+            form: 'CredentialsManagementForm',
+            keepDirty: false
+          },
+          payload: ''
+        })
 
         dispatch(getDefaultCredentialBasicData())
         dispatch({
@@ -368,7 +367,7 @@ function basicInforObjectPreparation(values, currentLocationObj) {
     CreateUser: values.createUser || null,
     UpdateDate: '/Date(' + todayDate.getTime() + ')/',
     UpdateUser: values.updateUser || 'GGK',
-    IsDispatchLevel: currentLocationObj.IsDispatchLevel ||false,
+    IsDispatchLevel: currentLocationObj.IsDispatchLevel || false,
     IsScheduleLevel: currentLocationObj.IsScheduleLevel || false,
     IsOutageLevel: values.isOutageLevel,
     IsAFWLevel: currentLocationObj.IsAFWLevel || false,
@@ -390,11 +389,11 @@ function basicInforObjectPreparation(values, currentLocationObj) {
     PhysicalTz: values.physicalTimezone.id || values.physicalTimezone,
     Status: currentLocationObj.Status || null,
     StatusDate: currentLocationObj.StatusDate || null,
-    OwnershipPct: values.ownerShipPercentage != '' ? values.ownerShipPercentage:0,
+    OwnershipPct: values.ownerShipPercentage != '' ? values.ownerShipPercentage : 0,
     ShortName: currentLocationObj.ShortName || null,
     CAISOMarketId: currentLocationObj.CAISOMarketId || null,
     GADSUnitId: currentLocationObj.GADSUnitId || null,
-    LocationScadaPoints:currentLocationObj.LocationScadaPoints || null,
+    LocationScadaPoints: currentLocationObj.LocationScadaPoints || null,
     CustomValue1: 0,
     CustomValue2: 0,
     CustomValue3: 0,
@@ -417,13 +416,13 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, marketDrivenMapping
     if (credentialsObj.hasOwnProperty(item.DisplayName)) {
       if (item.IsDropDown) {
         if (typeof credentialsObj[item.DisplayName] == "string") {
-          itemData.value = credentialsObj[item.DisplayName];
+          itemData.value = credentialsObj[item.DisplayName] || '';
         } else {
-          itemData.value = credentialsObj[item.DisplayName].key;
+          itemData.value = credentialsObj[item.DisplayName] != null ? credentialsObj[item.DisplayName].key : '';
         }
 
       } else {
-        itemData.value = credentialsObj[item.DisplayName];
+        itemData.value = credentialsObj[item.DisplayName] || '';
       }
     }
     itemDatawithMarketDrivenMappings.push(itemData);
@@ -503,7 +502,7 @@ function equipmentObjectPreparation(stateTree, dispatch, locationId) {
       locationId > 0 ? ie.ParentLocationId = locationId : null
       equipmentsObj.push(ie)
     })
-   
+
     return equipmentsObj;
   } else {
     dispatch({
@@ -724,24 +723,28 @@ function credentialdatavalidation(data) {
 export function saveCompleteLocationWizard() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      let k 
-      let flag=0
+      let k
+      let flag = 0
       console.log('test')
-      for (k in getState().form.BasicInfoForm.syncErrors){
-        console.log(!!getState().form.BasicInfoForm.values[`${k}`])
-       if(!!getState().form.BasicInfoForm.values[`${k}`]==false){
-          console.log(k)
+      for (k in getState().form.BasicInfoForm.syncErrors) {
+        if (!!getState().form.BasicInfoForm.values[`${k}`] == false) {
+          console.log(k);
           flag = 1
-          break 
-       } 
+          break
+        }
       }
-      if(flag==0){
-          saveObjectPreparationAndCall(getState, dispatch)
+      debugger;
+      var formBasicInfoValues = getState().form.BasicInfoForm.values;
+      if (!!formBasicInfoValues.secondarytechnologyType &&
+       formBasicInfoValues.technologyType.id == formBasicInfoValues.secondarytechnologyType.id) {
+        flag = 1;
       }
-      else{
+      if (flag == 0) {
+        saveObjectPreparationAndCall(getState, dispatch)
+      } else {
         dispatch({
-          type:'ERROR',
-          payload:1
+          type: 'ERROR',
+          payload: 1
         })
       }
 
@@ -819,7 +822,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
       })
       //SAVE LOCATION
     try {
-      finalLocationSaveObject(finalSaveObject).then(function (response) {
+      finalLocationSaveObject(finalSaveObject).then(function(response) {
         console.log("success", response);
         if (response.status === 200) {
           //ADD Location ID to Object
@@ -828,7 +831,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
           getState().form.BasicInfoForm.values.locationId = newLocationID;
 
           let locationsInfo = response.data.SaveOMSLocationWizardDataResult.AssignedLocationMappings;
-          getMarketDrivenMappings(locationObj.PrimaryMarketId).then(function (response) {
+          getMarketDrivenMappings(locationObj.PrimaryMarketId).then(function(response) {
             var marketDrivenMappings = response.data
             var editSysIntegration = new Object({
               locationsInfo: locationsInfo,
@@ -874,7 +877,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
             }
             console.log("saveObjectwithEquipment", JSON.stringify(saveObjectwithEquipment));
             if (saveObjectwithEquipment.saveData.Equipments.length > 0) {
-              finalLocationSaveObject(saveObjectwithEquipment).then(function (response) {
+              finalLocationSaveObject(saveObjectwithEquipment).then(function(response) {
                 if (response.status === 200) {
                   console.log("equipment saved", response);
                   var equipments = response.data.SaveOMSLocationWizardDataResult.Equipment;
@@ -894,12 +897,12 @@ function saveObjectPreparationAndCall(getState, dispatch) {
               openSavePopup: true
             }
           });
-          basicInfoDropdowns.getParentLocations().then(function (response) {
+          basicInfoDropdowns.getParentLocations().then(function(response) {
             dispatch({
               type: GET_ALL_LOCATIONS_INFORMATION,
               payload: response.data.GetAllLocationsResult
             });
-          }).then(function () {
+          }).then(function() {
             //Expnd ADD Node in left menu
             console.log('new locationID', newLocationID)
             dispatch({
@@ -925,7 +928,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
             payload: false
           })
         }
-      }).catch(function (error) {
+      }).catch(function(error) {
         dispatch({
           type: HIDE_SPINNER,
           payload: false
@@ -970,7 +973,7 @@ function toArray(obj) {
 
 function changeObjectTypeOfLocations(allLocations) {
   var changedLocationsObject = [];
-  allLocations.forEach(function (item) {
+  allLocations.forEach(function(item) {
     changedLocationsObject.push({
       key: item.Id,
       value: item.Id,
@@ -995,22 +998,23 @@ function AddDefaultParent(objectfuncntion) {
   })
   return returnObj
 }
-function arrayPreparation(data,array){
+
+function arrayPreparation(data, array) {
   var secondarydat = array
-  if(data.hasOwnProperty('Id')){
-  secondarydat.push({
-    id: data.Id,
-    name: data.Name
-  })
-}
+  if (data.hasOwnProperty('Id')) {
+    secondarydat.push({
+      id: data.Id,
+      name: data.Name
+    })
+  }
 
   if (data.Children.length == 0) {
-    
+
     return secondarydat
   } else {
     data.Children.map((data, i) => {
-      
-      secondarydat =  arrayPreparation(data, secondarydat)
+
+      secondarydat = arrayPreparation(data, secondarydat)
     })
     return secondarydat
   }
@@ -1019,50 +1023,52 @@ function arrayPreparation(data,array){
 export function getLocationsInformation() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-     getState().location.allLocations.length == 0 ?
-      basicInfoDropdowns.getParentLocations().then(function (response) {
-        dispatch({
-          type: GET_ALL_LOCATIONS_INFORMATION,
-          payload: response.data.GetAllLocationsResult
-        });
-        var searchLocationsList = []
-        searchLocationsList = arrayPreparation({Children:response.data.GetAllLocationsResult},searchLocationsList)
+      getState().location.allLocations.length == 0 ?
+        basicInfoDropdowns.getParentLocations().then(function(response) {
           dispatch({
-              type: SEARCH_LOCATIONS_LIST,
-               payload: searchLocationsList
+            type: GET_ALL_LOCATIONS_INFORMATION,
+            payload: response.data.GetAllLocationsResult
           });
-      }).then(function () {
-      dispatch({
-        type: HIDE_SPINNER,
-        payload: false
-      });
-    }) :dispatch({
-        type: HIDE_SPINNER,
-        payload: false
-      });
-            
+          var searchLocationsList = []
+          searchLocationsList = arrayPreparation({
+            Children: response.data.GetAllLocationsResult
+          }, searchLocationsList)
+          dispatch({
+            type: SEARCH_LOCATIONS_LIST,
+            payload: searchLocationsList
+          });
+        }).then(function() {
+          dispatch({
+            type: HIDE_SPINNER,
+            payload: false
+          });
+        }) : dispatch({
+          type: HIDE_SPINNER,
+          payload: false
+        });
 
-   dispatch({
-      type:'redux-form/INITIALIZE',
-      meta:{
-        form:'BasicInfoForm',
-        keepDirty:false
-      },
-      payload:''
-    })
-        dispatch({
-      type:'redux-form/INITIALIZE',
-      meta:{
-        form:'CredentialsManagementForm',
-        keepDirty:false
-      },
-      payload:''
-    })
-    dispatch(InitialEquipmentsForNewLocation())
-    dispatch({
-      type:'EMPTY_BASIC_CREDENTIAL_INTIAL_VALUES'
-    })
+
+      dispatch({
+        type: 'redux-form/INITIALIZE',
+        meta: {
+          form: 'BasicInfoForm',
+          keepDirty: false
+        },
+        payload: ''
       })
+      dispatch({
+        type: 'redux-form/INITIALIZE',
+        meta: {
+          form: 'CredentialsManagementForm',
+          keepDirty: false
+        },
+        payload: ''
+      })
+      dispatch(InitialEquipmentsForNewLocation())
+      dispatch({
+        type: 'EMPTY_BASIC_CREDENTIAL_INTIAL_VALUES'
+      })
+    })
   }
 }
 
@@ -1144,7 +1150,7 @@ export const ACTION_HANDLERS = {
 
   },
   [SEARCH_LOCATIONS_LIST]: (state, action) => {
-    console.log("searchlocationlist",action.payload)
+    console.log("searchlocationlist", action.payload)
     return Object.assign({}, state, {
       searchLocationList: action.payload
     })
@@ -1162,7 +1168,7 @@ const initialState = {
   currentLocationId: 0,
   isLoading: true,
   isEditable: 0,
-  searchLocationList:[]
+  searchLocationList: []
 };
 
 export default function locationWizardReducer(state = initialState, action) {

@@ -6,9 +6,9 @@ const basicInfoValidation = values => {
   if (!values.locationType) {
     errors.locationType = 'Location Type is required'
   }  
-  if(!values.technologytype){
+  if(!values.technologyType){
     errors.technologyType='Technology Type is required'
-  }
+  } 
     if (!values.primaryMarket) {
     errors.primaryMarket = 'Primary Market is required'
   }
