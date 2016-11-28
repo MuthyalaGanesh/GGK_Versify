@@ -725,15 +725,12 @@ export function saveCompleteLocationWizard() {
     return new Promise((resolve) => {
       let k
       let flag = 0
-      console.log('test')
       for (k in getState().form.BasicInfoForm.syncErrors) {
         if (!!getState().form.BasicInfoForm.values[`${k}`] == false) {
-          console.log(k);
           flag = 1
           break
         }
       }
-      debugger;
       var formBasicInfoValues = getState().form.BasicInfoForm.values;
       if (!!formBasicInfoValues.secondarytechnologyType &&
        formBasicInfoValues.technologyType.id == formBasicInfoValues.secondarytechnologyType.id) {
