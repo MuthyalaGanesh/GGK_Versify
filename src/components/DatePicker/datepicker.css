@@ -2366,7 +2366,7 @@
   border: 1px solid gray;
   padding: 2px; }
   .react-date-picker__year-view--theme-default .react-date-picker__year-view-month {
-    padding: 5px;
+    padding: 1px;
     cursor: pointer;
     border: 2px solid transparent; }
     .react-date-picker__year-view--theme-default .react-date-picker__year-view-month--disabled {
@@ -2418,7 +2418,7 @@
     border: none; }
 
 .react-date-picker__nav-bar .react-date-picker__history-view--theme-default {
-  font-size: 0.833em; }
+  font-size: 0.75em; }
 
 .react-date-picker__nav-bar--theme-default {
   padding-top: 5px;
@@ -2478,7 +2478,7 @@
     color: #B1B1B1;
     font-size: 0.8em; }
   .react-date-picker__month-view--theme-default .react-date-picker__month-view-cell {
-    min-width: 40px; }
+    min-width: 30px; }
   .react-date-picker__month-view--theme-default .react-date-picker__month-view-day {
     z-index: 10; }
     .react-date-picker__month-view--theme-default .react-date-picker__month-view-day .react-date-picker__month-view-day-text {
