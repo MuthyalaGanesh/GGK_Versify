@@ -78,7 +78,9 @@ export const Gateways = (props) => {
                 </div>
               <Modal show={props.gateways.showAddModal}>
                 <Modal.Header>
-                    <Modal.Title>New Gateway</Modal.Title>
+                {props.gateways.AddNewGateway ?
+                        <Modal.Title>New Gateway</Modal.Title> :
+                        <Modal.Title>Edit Gateway</Modal.Title>}
                 </Modal.Header>
                 <Modal.Body>                
                     <div className="row">
