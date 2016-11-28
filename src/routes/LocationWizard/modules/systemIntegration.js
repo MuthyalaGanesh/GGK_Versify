@@ -11,11 +11,13 @@ export const BIND_SYS_INTEGRATIONS_NEW_LOCATION = 'BIND_SYS_INTEGRATIONS_NEW_LOC
 export function AliasGiven (name, i) {
     return (dispatch, getState) => {
         return new Promise((resolve) => {
-            var data = !getState().systemIntegration.systemdata ? getState().systemIntegration.systemdata : {}
+            console.log(!!getState().systemIntegration.systemdata)
+            var data = !!getState().systemIntegration.systemdata ? getState().systemIntegration.systemdata : {}
             var secondarydata = getState().systemIntegration.selectedSystemIntegrationTypes
             var selecteddata = []
+            console.log(data)
             secondarydata.map((values, j) => {
-                if (i !== j) {
+                if (i != j) {
                     selecteddata.push(values)
                 } else {
                     selecteddata.push(Object.assign({}, secondarydata[i], {
@@ -25,6 +27,7 @@ export function AliasGiven (name, i) {
                 }
             })
             data[`${name}`] = getState().form.SystemIntegrationForm.values[`${name}`]
+            console.log(data)
             dispatch({
                 type: ALIAS_SAVE,
                 payload: {
@@ -44,7 +47,7 @@ export function BindSysIntegrationsForNewLocation () {
 export function getUnselectedSystemIntegrations (allSystemIntegrations) {
     var UnSelected = []
     allSystemIntegrations.map(si => {
-        if (si.LocationMappingId < 0 && si.ExternalSystemName !== 'VTrader-Temp') {
+        if (si.LocationMappingId < 0 && si.ExternalSystemName != 'VTrader-Temp') {
             UnSelected.push(si)
         }
     })
@@ -60,13 +63,13 @@ export function editSystemIntegration (locationSystemIntegrations) {
                     var valuePresence = 1
                     if (locationSystemIntegrations.locationsInfo[i]) {
                         locationSystemIntegrations.marketDrivenMappings.map(mdm => {
-                            if (mdm.ExternalSystemName ===
+                            if (mdm.ExternalSystemName ==
                                 locationSystemIntegrations.locationsInfo[i].ExternalSystemName) {
                                 valuePresence++
                             }
                         })
-                        if (valuePresence === 1) {
-                            if (locationSystemIntegrations.locationsInfo[i].ExternalSystemName !== 'VTrader-Temp') {
+                        if (valuePresence == 1) {
+                            if (locationSystemIntegrations.locationsInfo[i].ExternalSystemName != 'VTrader-Temp') {
                                 selectedSystemIntegrations.push(locationSystemIntegrations.locationsInfo[i])
                                 data[`${locationSystemIntegrations.locationsInfo[i].ExternalSystemName}`] =
                                     locationSystemIntegrations.locationsInfo[i].AliasName
@@ -100,28 +103,32 @@ export function deleteSystemIntegration (name, i) {
             let secondarydata = getState().systemIntegration.systemIntegrationTypes
             let options = getState().systemIntegration.unSelectedSystemIntegrationTypes
             let selecteddata = []
+            var systemdataobject = getState().systemIntegration.systemdata
+                systemdataobject[`${name}`] = null
             data.map((value, j) => {
-                if (i !== j) {
+                if (i != j) {
                     selecteddata.push(value)
                 }
+
             })
             for (i in secondarydata) {
-                if (name === secondarydata[i].ExternalSystemName) {
+                if (name == secondarydata[i].ExternalSystemName) {
                     flag = 1
                     break
                 }
             }
-            if (flag === 1) {
+            if (flag == 1) {
                 options.push(Object.assign({}, secondarydata[i], { LocationMappingId: -1 }))
             }
             dispatch({
                 type: DELETE_SYS_INTEGRATION,
                 payload: {
+                    systemdata:systemdataobject,
                     unSelectedSystemIntegrationTypes: options,
                     selectedSystemIntegrationTypes: selecteddata
                 }
             })
-            dispatch(AliasGiven(name))
+            
             dispatch({
                 type: 'redux-form/INITIALIZE',
                 meta: { form: 'SystemIntegrationForm' },
@@ -140,21 +147,42 @@ export function AddSystemIntegration () {
             let flag = 0
             var options = []
             for (i in data) {
-                if (getState().form.SystemIntegrationForm.values.newSystemIntegration.ExternalSystemName ===
+                if (getState().form.SystemIntegrationForm.values.newSystemIntegration.ExternalSystemName ==
                     data[i].ExternalSystemName) {
                     flag = 1
                     break
                 }
             }
-            if (flag === 1) {
+            if (flag == 1) {
+                console.log('flag')
                 data.map((value, j) => {
-                    if (i !== j) {
+                    if (i != j) {
                         options.push(value)
                     }
+                  
                 })
-                let ExternalSystemName = getState().form.SystemIntegrationForm
+                     secondarydata.push(
+                    Object.assign({}, getState().form.SystemIntegrationForm.values.newSystemIntegration, {
+                        LocationMappingId: 0
+                    }))
+                
+            } else {
+                options = data
+                console.log('else')
+                  
+            for (i in secondarydata) {
+                if (getState().form.SystemIntegrationForm.values.newSystemIntegration.ExternalSystemName ==
+                    secondarydata[i].ExternalSystemName) {
+                    console.log(secondarydata[i].ExternalSystemName)
+                    flag = 1
+                    break
+                }
+            }
+            if (flag != 1) {
+                console.log('flag')
+              let ExternalSystemName = getState().form.SystemIntegrationForm
                     .values.newSystemIntegration.ExternalSystemName
-                secondarydata.push({
+               secondarydata.push({
                     LocationMappingId: 0,
                     ExternalSystemName: ExternalSystemName,
                     AliasName: '',
@@ -163,14 +191,8 @@ export function AddSystemIntegration () {
                     ParameterList: '',
                     FlaggedForDeletion: true
                 })
-            } else {
-                options = data
-
-                secondarydata.push(
-                    Object.assign({}, getState().form.SystemIntegrationForm.values.newSystemIntegration, {
-                        LocationMappingId: 0
-                    }))
             }
+        }
             dispatch({
                 type: ADD_SYSTEM_INTEGRATION,
                 payload: {
@@ -178,6 +200,7 @@ export function AddSystemIntegration () {
                     selectedSystemIntegrationTypes: secondarydata
                 }
             })
+            console.log(getState().systemIntegration.systemdata)
             dispatch({
                 type: 'redux-form/INITIALIZE',
                 meta: { form: 'SystemIntegrationForm' },
@@ -223,6 +246,7 @@ export const ACTION_HANDLERS = {
     },
     [DELETE_SYS_INTEGRATION]: (state, action) => {
         return Object.assign({}, state, {
+            systemdata:action.payload.systemdata,
             selectedSystemIntegrationTypes: action.payload.selectedSystemIntegrationTypes,
             unSelectedSystemIntegrationTypes: action.payload.unSelectedSystemIntegrationTypes,
             isChanged: true
