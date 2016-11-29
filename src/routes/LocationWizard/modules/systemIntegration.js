@@ -10,35 +10,31 @@ export const GET_SYSTEM_INTEGRATION_TYPE_SERVICE = 'GET_SYSTEM_INTEGRATION_TYPE_
 export const BIND_SYS_INTEGRATIONS_NEW_LOCATION = 'BIND_SYS_INTEGRATIONS_NEW_LOCATION'
 export function AliasGiven(name, i) {
     return (dispatch, getState) => {
-        
+
         return new Promise((resolve) => {
             let aliasName = getState().form.SystemIntegrationForm.values[`${name}`]
-            if (aliasName && aliasName.replace(/\s/g, '').length) {
-                var data = !!getState().systemIntegration.systemdata ? getState().systemIntegration.systemdata : {}
-                var secondarydata = getState().systemIntegration.selectedSystemIntegrationTypes
-                var selecteddata = []
-                secondarydata.map((values, j) => {
-                    if (i != j) {
-                        selecteddata.push(values)
-                    } else {
-                        let aliasName = getState().form.SystemIntegrationForm.values[`${name}`]
-                        selecteddata.push(Object.assign({}, secondarydata[i], {
-                            AliasName: aliasName,
-                            FlaggedForDeletion: false
-                        }))
-                    }
-                })
-                data[`${name}`] = getState().form.SystemIntegrationForm.values[`${name}`]
-                if (data[`${name}`] && data[`${name}`].replace(/\s/g, '').length) {
-                    dispatch({
-                        type: ALIAS_SAVE,
-                        payload: {
-                            systemdata: data,
-                            selectedSystemIntegrationTypes: selecteddata
-                        }
-                    })
+            var data = !!getState().systemIntegration.systemdata ? getState().systemIntegration.systemdata : {}
+            var secondarydata = getState().systemIntegration.selectedSystemIntegrationTypes
+            var selecteddata = []
+            secondarydata.map((values, j) => {
+                if (i != j) {
+                    selecteddata.push(values)
+                } else {
+                    let aliasName = getState().form.SystemIntegrationForm.values[`${name}`]
+                    selecteddata.push(Object.assign({}, secondarydata[i], {
+                        AliasName: aliasName,
+                        FlaggedForDeletion: false
+                    }))
                 }
-            }
+            })
+            data[`${name}`] = getState().form.SystemIntegrationForm.values[`${name}`]
+            dispatch({
+                type: ALIAS_SAVE,
+                payload: {
+                    systemdata: data,
+                    selectedSystemIntegrationTypes: selecteddata
+                }
+            })
         })
     }
 }
