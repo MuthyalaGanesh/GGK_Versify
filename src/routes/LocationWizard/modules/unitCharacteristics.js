@@ -18,20 +18,20 @@ export const GET_UNIT_CHARACTERSTICS = 'GET_UNIT_CHARACTERSTICS'
 export const GET_SELECTED_AND_DEFAULT_UNIT_CHARACTERSTICS = 'GET_SELECTED_AND_DEFAULT_UNIT_CHARACTERSTICS'
 export const BIND_INITIAL_ATTRIBUTES_NEW_LOCATION = 'BIND_INITIAL_ATTRIBUTES_NEW_LOCATION'
 /*helps in binding initial values*/
-export function BindUnitCharacteristicsInitialValues (locationObj) {
+export function BindUnitCharacteristicsInitialValues(locationObj) {
   return {
     type: BIND_INITIAL_ATTRIBUTES,
     payload: locationObj
   }
 }
 
-export function BindValuesForNewLocation () {
+export function BindValuesForNewLocation() {
   return {
     type: BIND_INITIAL_ATTRIBUTES_NEW_LOCATION
   }
 }
 
-export function ToggleAddEditModal (index) {
+export function ToggleAddEditModal(index) {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       dispatch({
@@ -48,14 +48,14 @@ export function ToggleAddEditModal (index) {
     })
   }
 }
-function dateConversion (date) {
+function dateConversion(date) {
   var data = date.split('T')
   var preresult = data[0].split('-')
   var result = preresult[1] + '/' + preresult[2] + '/' + preresult[0]
   return result
 }
 
-export function removeEditableAttribute (index) {
+export function removeEditableAttribute(index) {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       dispatch({
@@ -76,7 +76,7 @@ export function removeEditableAttribute (index) {
   }
 }
 
-export function updateRow (event) {
+export function updateRow(event) {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       dispatch({
@@ -94,7 +94,7 @@ export function updateRow (event) {
   }
 }
 
-export function AddUnitCharateristic () {
+export function AddUnitCharateristic() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       dispatch({
@@ -105,7 +105,7 @@ export function AddUnitCharateristic () {
   }
 }
 
-export function characteristicNameSelected () {
+export function characteristicNameSelected() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       dispatch({
@@ -118,21 +118,21 @@ export function characteristicNameSelected () {
   }
 }
 
-export function deleteConfirmation (index) {
+export function deleteConfirmation(index) {
   return {
     type: DELETE_MODAL,
     payload: index
   }
 }
 
-export function DeleteUnitCharateristic () {
+export function DeleteUnitCharateristic() {
   return {
     type: DELETE_UNIT_CHARACTERISTIC,
     payload: true
   }
 }
 
-export function DateSwap (editableAttributes) {
+export function DateSwap(editableAttributes) {
   var displayDateAttributes = {
     EffectiveEndDate: editableAttributes[0].EffectiveEndDate,
     EffectiveStartDate: editableAttributes[0].EffectiveStartDate,
@@ -160,7 +160,7 @@ export function DateSwap (editableAttributes) {
   return displayDateAttributes
 }
 
-export function DateValidations (editableAttributes) {
+export function DateValidations(editableAttributes) {
   var errorStatus = null
   var dateValidations = []
   if (editableAttributes && editableAttributes.length > 0) {
@@ -205,7 +205,7 @@ export const ACTION_HANDLERS = {
     var newState = Object.assign({}, state, { isChanged: false })
     var attributes = action.payload
     var selectedDefault = []
-    if (!attributes || (attributes && attributes.length === 0)) {
+    if (!attributes || (attributes && attributes.length == 0)) {
       newState.selectedunitCharacteristics = []
       var selectedUC = []
       newState.defaultUnitCharacteristics.map(duc => {
@@ -218,13 +218,13 @@ export const ACTION_HANDLERS = {
       newState.selectedunitCharacteristics = []
       attributes.map(att => {
         newState.unitCharacteristics.map(uc => {
-          if (uc.id === att.AttributeId) {
+          if (uc.id == att.AttributeId) {
             uc.isDeletable = true
             uc.isSavable = true
             uc.LocationId = att.LocationId
             uc.displayAttributes = {}
             newState.defaultUnitCharacteristics.map(duc => {
-              if (duc.id === att.AttributeId) {
+              if (duc.id == att.AttributeId) {
                 uc.isDeletable = false
                 if (!selectedDefault.includes(duc.id)) {
                   selectedDefault.push(duc.id)
@@ -250,13 +250,13 @@ export const ACTION_HANDLERS = {
             }
             var valuePresence = 1
             newState.selectedunitCharacteristics.map(suc => {
-              if (suc.id === att.AttributeId) {
+              if (suc.id == att.AttributeId) {
                 suc.editableAttributes.push(editableAttributes)
                 suc.displayAttributes = DateSwap(suc.editableAttributes)
                 valuePresence++
               }
             })
-            if (valuePresence === 1) {
+            if (valuePresence == 1) {
               uc.editableAttributes = []
               uc.editableAttributes.push(editableAttributes)
               uc.displayAttributes = DateSwap(uc.editableAttributes)
@@ -283,9 +283,9 @@ export const ACTION_HANDLERS = {
     return newState
   },
   [TOGGLE_MODAL]: (state, action) => {
-    if (action.payload !== null) {
+    if (action.payload != null) {
       if (!isNaN(action.payload)) {
-        if (action.payload === -1) {
+        if (action.payload == -1) {
           var newState = Object.assign({}, state, {
             showModal: !state.showModal,
             isEditable: true,
@@ -300,11 +300,11 @@ export const ACTION_HANDLERS = {
           newState.unitCharacteristics.map((allUC) => {
             var valuePresence = 1
             newState.selectedunitCharacteristics.map((selUC) => {
-              if (selUC.id === allUC.id) {
+              if (selUC.id == allUC.id) {
                 valuePresence++
               }
             })
-            if (valuePresence === 1) {
+            if (valuePresence == 1) {
               allUC.isDeletable = true
               allUC.isSavable = true
               newState.unSelectedUnitCharacteristics.push(allUC)
@@ -312,7 +312,7 @@ export const ACTION_HANDLERS = {
           })
           return newState
         } else {
-          if (action.payload !== null &&
+          if (action.payload != null &&
             !isNaN(action.payload) &&
             state.selectedunitCharacteristics) {
             state.editableUnitCharacter = state.selectedunitCharacteristics[action.payload]
@@ -328,14 +328,14 @@ export const ACTION_HANDLERS = {
       } else {
         if (state.editableUnitCharacter) {
           state.selectedunitCharacteristics.map((suc) => {
-            if (suc.id === state.editableUnitCharacter.id) {
+            if (suc.id == state.editableUnitCharacter.id) {
               var editableAttributes = []
               var validatingAttribute = []
               if (state.editableUnitCharacter.editableAttributes) {
                 state.editableUnitCharacter.editableAttributes.map((ea, index) => {
                   validatingAttribute.push(ea)
                   var dateValidationsObj = DateValidations(validatingAttribute)
-                  if (index === 0) {
+                  if (index == 0) {
                     if (ea.Value && ea.EffectiveEndDate && ea.EffectiveStartDate) {
                       editableAttributes.push(ea)
                     }
@@ -369,7 +369,7 @@ export const ACTION_HANDLERS = {
   },
 
   [DELETE_MODAL]: (state, action) => {
-    if (action.payload !== null) {
+    if (action.payload != null) {
       state.deletingUnitIndex = action.payload
     }
     return Object.assign({}, state, {
@@ -381,7 +381,7 @@ export const ACTION_HANDLERS = {
       var newSelectedUC = []
       var deletedUnitCharacteristics = []
       state.selectedunitCharacteristics.map((suc, i) => {
-        if (i !== state.deletingUnitIndex) {
+        if (i != state.deletingUnitIndex) {
           newSelectedUC.push(suc)
         } else {
           suc.editableAttributes ? suc.editableAttributes.map(ea => {
@@ -410,7 +410,7 @@ export const ACTION_HANDLERS = {
       var errorStatus = null
       var dateValidations = []
       newState.selectedunitCharacteristics.map((uc, index) => {
-        if (index === state.editableIndex) {
+        if (index == state.editableIndex) {
           state.editableUnitCharacter.isSavable = true
           newState.selectedunitCharacteristics[index] = state.editableUnitCharacter
           var finalAttributes = []
@@ -437,7 +437,8 @@ export const ACTION_HANDLERS = {
                   : (action.payload.values.editableData[i - 1] &&
                     action.payload.values.editableData[i - 1].effectiveEndDate
                     ? action.payload.values.editableData[i - 1].effectiveEndDate
-                    : (finalAttributes ? finalAttributes[0].EffectiveEndDate : null)),
+                    : (finalAttributes ? finalAttributes[(finalAttributes.length - 1)]
+                      ? finalAttributes[(finalAttributes.length - 1)].EffectiveEndDate : finalAttributes[0] ? finalAttributes[0].EffectiveEndDate : null : null)),
                 Value: ed.ucvalue,
                 LocationAttributeId: ed.LocationAttributeId ? ed.LocationAttributeId : 0
               }
@@ -450,15 +451,15 @@ export const ACTION_HANDLERS = {
           errorStatus = dateValidationsObj.errorStatus
           dateValidations = dateValidationsObj.dateValidations
         }
-        if (!errorStatus && dateValidations.length === 0) {
+        if (!errorStatus && dateValidations.length == 0) {
           uc.displayAttributes = DateSwap(uc.editableAttributes)
         }
       })
       return Object.assign({}, newState, {
-        editableUnitCharacter: (!errorStatus && dateValidations.length === 0)
+        editableUnitCharacter: (!errorStatus && dateValidations.length == 0)
           ? null : state.editableUnitCharacter,
         error: errorStatus,
-        showModal: (!errorStatus && dateValidations.length === 0)
+        showModal: (!errorStatus && dateValidations.length == 0)
           ? (!state.showModal) : (state.showModal),
         dateRangeValidation: dateValidations,
         isChanged: true
@@ -469,13 +470,13 @@ export const ACTION_HANDLERS = {
     var newState = Object.assign({}, state, {
       error: null
     })
-    if (action.payload !== null && action.payload !== undefined) {
+    if (action.payload != null && action.payload != undefined) {
       newState.unitCharacteristics.map((uc) => {
         var updatedRow = {}
 
         if (uc.defaultUnitOfMeasureId && state.allUOMvalues) {
           state.allUOMvalues.map(uom => {
-            if (uom.id === uc.defaultUnitOfMeasureId) {
+            if (uom.id == uc.defaultUnitOfMeasureId) {
               updatedRow.uom = uom.name
             }
           })
@@ -484,7 +485,7 @@ export const ACTION_HANDLERS = {
         }
         updatedRow.description = uc.description
         updatedRow.displayName = uc.display
-        if (uc.id === parseInt(action.payload.id)) {
+        if (uc.id == parseInt(action.payload.id)) {
           if (!state.editableUnitCharacter) {
             newState.UOMLabel = updatedRow.uom
             newState.descriptionLabel = updatedRow.description
@@ -510,9 +511,9 @@ export const ACTION_HANDLERS = {
       var dateValidations = []
       var deletedUC = []
       newState.unitCharacteristics.map((uc) => {
-        if (uc.id === parseInt(action.payload.values.charateristicName.id)) {
+        if (uc.id == parseInt(action.payload.values.charateristicName.id)) {
           newState.deletedUnitCharacteristics ? newState.deletedUnitCharacteristics.map(duc => {
-            if (duc.id !== uc.id) {
+            if (duc.id != uc.id) {
               deletedUC.push(duc)
             }
           }) : null
@@ -536,7 +537,9 @@ export const ACTION_HANDLERS = {
                   ? ed.effectiveStartDate : (action.payload.values.editableData[i - 1] &&
                     action.payload.values.editableData[i - 1].effectiveEndDate
                     ? action.payload.values.editableData[i - 1].effectiveEndDate
-                    : (uc.editableAttributes[0].EffectiveEndDate)),
+                    : (uc.editableAttributes ? (uc.editableAttributes[uc.editableAttributes.length - 1]
+                      ? uc.editableAttributes[uc.editableAttributes.length - 1].EffectiveEndDate
+                      : uc.editableAttributes[0].EffectiveEndDate) : null)),
                 Value: ed.ucvalue,
                 LocationAttributeId: 0
               }
@@ -547,7 +550,7 @@ export const ACTION_HANDLERS = {
           errorStatus = dateValidationsObj.errorStatus
           dateValidations = dateValidationsObj.dateValidations
           uc.UOM = newState.UOMLabel
-          if (!errorStatus && dateValidations.length === 0) {
+          if (!errorStatus && dateValidations.length == 0) {
             uc.displayAttributes = DateSwap(uc.editableAttributes)
             newState.selectedunitCharacteristics.push(uc)
           }
@@ -555,10 +558,10 @@ export const ACTION_HANDLERS = {
       })
       return Object.assign({}, newState, {
         error: errorStatus,
-        showModal: (!errorStatus && dateValidations.length === 0)
+        showModal: (!errorStatus && dateValidations.length == 0)
           ? (!state.showModal) : (state.showModal),
         dateRangeValidation: dateValidations,
-        deletedUnitCharacteristics: (!errorStatus && dateValidations.length === 0)
+        deletedUnitCharacteristics: (!errorStatus && dateValidations.length == 0)
           ? deletedUC : state.deletedUnitCharacteristics,
         isChanged: true
       })
@@ -569,16 +572,16 @@ export const ACTION_HANDLERS = {
     }
   },
   [REMOVE_EDIT_ATTRIBUTE]: (state, action) => {
-    if (action.payload !== null && action.payload !== undefined && !isNaN(action.payload)) {
+    if (action.payload != null && action.payload != undefined && !isNaN(action.payload)) {
       var newEditableAttributes = []
       var newEditableUnitCharacter = {}
       var deletableAtributes = []
       var newState = Object.assign({}, state)
       newState.selectedunitCharacteristics.map((suc) => {
-        if (suc.id === state.editableUnitCharacter.id) {
+        if (suc.id == state.editableUnitCharacter.id) {
           newEditableUnitCharacter = suc
           suc.editableAttributes.map((ea, index) => {
-            if (index !== action.payload) {
+            if (index != action.payload) {
               newEditableAttributes.push({
                 Value: ea.Value,
                 EffectiveEndDate: ea.EffectiveEndDate,
@@ -618,13 +621,17 @@ export const ACTION_HANDLERS = {
     })
   },
   [GET_SELECTED_AND_DEFAULT_UNIT_CHARACTERSTICS]: (state, action) => {
+    var selectedUC = [];
+    action.payload.map(ap => {
+      selectedUC.push(ap)
+    })
     return Object.assign({}, state, {
-      selectedunitCharacteristics: action.payload,
+      selectedunitCharacteristics: selectedUC,
       defaultUnitCharacteristics: action.payload
     })
   }
 }
-export function getDefaultUnitCharacteristics (allUOMValues) {
+export function getDefaultUnitCharacteristics(allUOMValues) {
   var unitCharacteristicsJson = []
   return (dispatch, getState) => {
     return new Promise((resolve) => {
@@ -635,14 +642,14 @@ export function getDefaultUnitCharacteristics (allUOMValues) {
         })
 
         response.data.map((uc) => {
-          if (uc.name.toLowerCase() === 'capacity' ||
-            uc.name.toLowerCase() === 'eco min' ||
-            uc.name.toLowerCase() === 'eco max') {
+          if (uc.name.toLowerCase() == 'capacity' ||
+            uc.name.toLowerCase() == 'eco min' ||
+            uc.name.toLowerCase() == 'eco max') {
             uc.editableAttributes = [{}]
             uc.isDeletable = false
             uc.isSavable = false
             allUOMValues.map((uom) => {
-              if (uc.defaultUnitOfMeasureId === uom.id) {
+              if (uc.defaultUnitOfMeasureId == uom.id) {
                 uc.UOM = uom.name
               }
             })
@@ -658,10 +665,10 @@ export function getDefaultUnitCharacteristics (allUOMValues) {
   }
 }
 
-export function getDefaultUnitCharacteristicsService () {
+export function getDefaultUnitCharacteristicsService() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      getState().unitCharacteristics.allUOMvalues.length === 0
+      getState().unitCharacteristics.allUOMvalues.length == 0
         ? getAllUOMValues().then(function (response) {
           dispatch({
             type: GET_ALL_UOM_VALUES,
@@ -698,7 +705,7 @@ const initialState = {
   isChanged: false
 }
 
-export default function unitCharacteristicsReducer (state = initialState, action) {
+export default function unitCharacteristicsReducer(state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type]
   return handler ? handler(state, action) : state
 }
