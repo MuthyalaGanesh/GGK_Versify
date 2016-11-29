@@ -520,6 +520,14 @@ function SystemIntegrationObjectPreparation(stateTree, dispatch) {
         ? ssit.FlaggedForDeletion = false : ssit.FlaggedForDeletion = true
       systemIntegrationObj.push(ssit)
     })
+    if (stateTree.systemIntegration.deletedSystemIntegrations &&
+      stateTree.systemIntegration.deletedSystemIntegrations.length > 0) {
+      stateTree.systemIntegration.deletedSystemIntegrations.map(dsi => {
+        dsi.AliasName = ""
+        dsi.FlaggedForDeletion = true
+        systemIntegrationObj.push(dsi)
+      })
+    }
   } else {
     dispatch({
       type: 'ERROR',
