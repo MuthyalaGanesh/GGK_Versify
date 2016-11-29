@@ -729,6 +729,9 @@ export function saveCompleteLocationWizard() {
           }
         }
         var formBasicInfoValues = getState().form.BasicInfoForm.values;
+        if (formBasicInfoValues.ownerShipPercentage == 0) {
+          flag = 1;
+        }
         if (!!formBasicInfoValues.secondarytechnologyType &&
           formBasicInfoValues.technologyType.id == formBasicInfoValues.secondarytechnologyType.id) {
           flag = 1;

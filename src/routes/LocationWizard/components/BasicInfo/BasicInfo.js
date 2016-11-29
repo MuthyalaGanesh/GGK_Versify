@@ -166,7 +166,11 @@ return (
 
                   <Field name="ownerShipPercentage"
                   component="input"
-                  className={error && (formdata.BasicInfoForm.hasOwnProperty('values') ? formdata.BasicInfoForm.values.hasOwnProperty('ownerShipPercentage') ? formdata.BasicInfoForm.values.ownerShipPercentage !='' ? (parseFloat(formdata.BasicInfoForm.values.ownerShipPercentage ) > 100):true:true : true)
+                  className={error && 
+                    (formdata.BasicInfoForm.hasOwnProperty('values') 
+                    ? formdata.BasicInfoForm.values.hasOwnProperty('ownerShipPercentage') 
+                    ? formdata.BasicInfoForm.values.ownerShipPercentage !='' 
+                    ? (parseFloat(formdata.BasicInfoForm.values.ownerShipPercentage ) > 100 || parseFloat(formdata.BasicInfoForm.values.ownerShipPercentage ) <= 0):true:true : true)
                   ? "form-control error"
                   :"form-control"}
                   type="number"
