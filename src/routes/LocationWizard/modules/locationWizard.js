@@ -165,7 +165,7 @@ function CheckLocationNameIsExists(allLocations, locationName, locationId) {
     if (isLocationNameExists) {
       return false;
     }
-    if (item.Name == (locationName || '').trim()) {
+    if (item.Name.toLowerCase() == (locationName || '').trim().toLowerCase()) {
       if (!(locationId > 0 && item.LocationId == locationId) && !isLocationNameExists) {
         isLocationNameExists = true;
         return false;
@@ -721,25 +721,34 @@ export function saveCompleteLocationWizard() {
     return new Promise((resolve) => {
       let k
       let flag = 0
-      for (k in getState().form.BasicInfoForm.syncErrors) {
-        if (!!getState().form.BasicInfoForm.values[`${k}`] == false) {
-          flag = 1
-          break
+      if (getState().form.BasicInfoForm.values != "") {
+        for (k in getState().form.BasicInfoForm.syncErrors) {
+          if (!!getState().form.BasicInfoForm.values[`${k}`] == false) {
+            flag = 1
+            break
+          }
         }
-      }
-      var formBasicInfoValues = getState().form.BasicInfoForm.values;
-      if (!!formBasicInfoValues.secondarytechnologyType &&
-        formBasicInfoValues.technologyType.id == formBasicInfoValues.secondarytechnologyType.id) {
-        flag = 1;
-      }
-      if (flag == 0) {
-        saveObjectPreparationAndCall(getState, dispatch)
+        var formBasicInfoValues = getState().form.BasicInfoForm.values;
+        if (!!formBasicInfoValues.secondarytechnologyType &&
+          formBasicInfoValues.technologyType.id == formBasicInfoValues.secondarytechnologyType.id) {
+          flag = 1;
+        }
+        if (flag == 0) {
+          saveObjectPreparationAndCall(getState, dispatch)
+        } else {
+          dispatch({
+            type: 'ERROR',
+            payload: 1
+          })
+        }
       } else {
+
         dispatch({
           type: 'ERROR',
           payload: 1
         })
       }
+
 
     })
   }
