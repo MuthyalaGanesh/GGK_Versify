@@ -11,7 +11,8 @@ import {
     AddUnitCharateristic,
     characteristicNameSelected,
     removeEditableAttribute,
-    ToggleAddEditModal } from '../../modules/unitCharacteristics'
+    ToggleAddEditModal,edit ,
+  pushEditableAtribute} from '../../modules/unitCharacteristics'
 
 const mapDispatchToProps = {
   bindUnitCharateristics,
@@ -21,7 +22,8 @@ const mapDispatchToProps = {
   AddUnitCharateristic,
   characteristicNameSelected,
   removeEditableAttribute,
-  ToggleAddEditModal
+  ToggleAddEditModal,edit,
+  pushEditableAtribute
 }
 
 const mapStateToProps = (state) => ({

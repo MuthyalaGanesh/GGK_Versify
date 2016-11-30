@@ -3,7 +3,6 @@ import { Field, reduxForm } from 'redux-form'
 import { DateField } from 'react-date-picker'
 import './datepicker.css'
 export const DatePickerField = (props) =>{
-console.log(props.defaultValue)
  return(
     <div>
     <DateField onChange={props.input.onChange}

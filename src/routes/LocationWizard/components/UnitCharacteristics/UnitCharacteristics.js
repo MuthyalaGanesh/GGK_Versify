@@ -8,7 +8,8 @@ import InputField from 'components/InputField/InputField'
 import DropdownListField from 'components/DropdownList/DropdownListField'
 import TextAreaField from 'components/TextAreaField/TextAreaField'
 
-const EffectiveDateValues = (props) => (
+const EffectiveDateValues = (props) => { 
+   return (
   <div>
     <Table striped bordered condensed hover>
       <thead>
@@ -24,187 +25,48 @@ const EffectiveDateValues = (props) => (
         </tr>
       </thead>
       <tbody>
-        {props.defaultValues ? props.defaultValues.map((dv, i) =>
-          <tr>
+        {props.editableAttributes.map((dv, i) =>
+          <tr key={i}>
               <td><Field
                   name={`ucvalue[${i}]`}
                   component={InputField}
                   className='form-control'
-                  defaultvalue={dv.Value}
-                  touched = {props.touched.hasOwnProperty('UnitCharacteristicsForm')
-                      ? props.touched.UnitCharacteristicsForm.hasOwnProperty('values')
-                          ? props.touched.UnitCharacteristicsForm.values.hasOwnProperty('ucvalue')
-                              ? props.touched.UnitCharacteristicsForm.values.ucvalue[i] : false : false : false}/>
-                  {
-                      props.defaultValues[i].Value ? null : (props.unitCharacteristics.error &&
-                          !(props.touched.hasOwnProperty('UnitCharacteristicsForm')
-                              ? props.touched.UnitCharacteristicsForm.hasOwnProperty('values')
-                                  ? props.touched.UnitCharacteristicsForm.values.hasOwnProperty('ucvalue') : false : false))
-                          ? <span className='errorMessage'>Value is required</span> : null
-                  }
+                  touched={1}
+                  />
+                  
               </td>
               <td> <Field
                   name={`effectiveStartDate[${i}]`}
                   component={DatePickerField}
-                  defaultValue={dv.EffectiveStartDate}/>
-                  {
-                      props.defaultValues[i].EffectiveStartDate ? null : (props.unitCharacteristics.error &&
-                          !(props.touched.hasOwnProperty('UnitCharacteristicsForm')
-                              ? props.touched.UnitCharacteristicsForm.hasOwnProperty('values')
-                                  ? props.touched.UnitCharacteristicsForm.values.hasOwnProperty('effectiveStartDate')
-                                      ? (props.touched.UnitCharacteristicsForm.values.effectiveStartDate[i]) : false : false : false)) ?
-                          <span className='errorMessage'>Effective Start Date  is required</span> : null
-                  }
+                  />
+                  
               </td>
               <td><Field
                   name={`effectiveEndDate[${i}]`}
                   component={DatePickerField}
-                  defaultValue={dv.EffectiveEndDate}/>
-                  {
-                      props.defaultValues[i].EffectiveEndDate ? null : (props.unitCharacteristics.error
-                          && !(props.touched.hasOwnProperty('UnitCharacteristicsForm')
-                              ? props.touched.UnitCharacteristicsForm.hasOwnProperty('values')
-                                  ? props.touched.UnitCharacteristicsForm.values.hasOwnProperty('effectiveEndDate')
-                                      ? (props.touched.UnitCharacteristicsForm.values.effectiveEndDate[i]) : false : false : false))
-                          ? <span className='errorMessage'>Effective End Date  is required</span> : null }
+                  />
+                 
               </td>
-              <td>{i == 0 ? <i onClick={() => props.fields.push({})
+              <td>{i == 0 ? <i onClick={() => {props.pushEditableAtribute()}
               }
                   className='fa fa-plus-circle fa-2x'></i> : <i type='button'
                       title='Remove'
                       className='fa fa-trash-o fa-2x'
                       onClick={
-                          () => props.removeEditableAttribute(i)
+                          () => props.removeEditableAttribute(dv,i)
                       }></i>}
               </td>
           </tr>
-      ) : <tr>
-              <td><Field
-                  name='ucvalue[0]'
-                  component={InputField}
-                  className='form-control'
-                  touched = {
-                      props.touched.hasOwnProperty('UnitCharacteristicsForm')
-                          ? props.touched.UnitCharacteristicsForm.hasOwnProperty('fields')
-                              ? props.touched.UnitCharacteristicsForm.fields.hasOwnProperty('ucvalue[0]') : false : false }/>
-                  {(props.unitCharacteristics.error && !(props.touched.hasOwnProperty('UnitCharacteristicsForm')
-                      ? props.touched.UnitCharacteristicsForm.hasOwnProperty('values')
-                          ? props.touched.UnitCharacteristicsForm.values.hasOwnProperty('ucvalue')
-                              ? props.touched.UnitCharacteristicsForm.values.ucvalue[0] : false : false : false))
-                      ? <span className='errorMessage'>Value is required</span> : null
-                  }
-              </td>
-              <td> <Field
-                  name='effectiveStartDate[0]'
-                  component={DatePickerField}/>
-                  {
-                      (props.unitCharacteristics.error &&
-                          !(props.touched.hasOwnProperty('UnitCharacteristicsForm')
-                              ? props.touched.UnitCharacteristicsForm.hasOwnProperty('values')
-                                  ? props.touched.UnitCharacteristicsForm.values.hasOwnProperty('effectiveStartDate')
-                                      ? props.touched.UnitCharacteristicsForm.values.effectiveStartDate[0] : false : false : false))
-                          ? <span className='errorMessage'>Effective Start Date is required</span> : null
-                  }
-              </td>
-              <td><Field
-                  name='effectiveEndDate[0]'
-                  component={DatePickerField}/>
-                  {
-                      (props.unitCharacteristics.error && !(props.touched.hasOwnProperty('UnitCharacteristicsForm')
-                          ? props.touched.UnitCharacteristicsForm.hasOwnProperty('values')
-                              ? props.touched.UnitCharacteristicsForm.values.hasOwnProperty('effectiveEndDate')
-                                  ? props.touched.UnitCharacteristicsForm.values.effectiveEndDate[0] : false : false : false))
-                          ? <span className='errorMessage'>Effective End Date is required</span> : null
-                  }
-              </td>
-              <td>
-                  <i onClick={() => props.fields.push({}) } className='fa fa-plus-circle fa-2x'></i>
-              </td>
-          </tr>}
-      {props.fields.map((editableData, index) =>
-          <tr key={ index }>
-              <td><Field
-                  name={`${editableData}.ucvalue`}
-                  component={InputField}
-                  className='form-control'
-                  touched = {
-                      props.touched.hasOwnProperty('UnitCharacteristicsForm')
-                          ? props.touched.UnitCharacteristicsForm.hasOwnProperty('fields')
-                              ? props.touched.UnitCharacteristicsForm.fields.hasOwnProperty('editableData')
-                                  ? props.touched.UnitCharacteristicsForm.values.editableData : false : false : false }/>
-                  {(props.unitCharacteristics.error && !(props.touched.hasOwnProperty('UnitCharacteristicsForm')
-                      ? props.touched.UnitCharacteristicsForm.hasOwnProperty('values')
-                          ? props.touched.UnitCharacteristicsForm.values.hasOwnProperty('editableData')
-                              ? props.touched.UnitCharacteristicsForm.values.editableData[index].ucvalue : false : false : false))
-                      ? <span className='errorMessage'>Value is required</span> : null
-                  }
-              </td>
-              <td> <Field
-                  name={`${editableData}.effectiveStartDate`}
-                  component={DatePickerField}
-                  defaultValue={
-                      props.touched.hasOwnProperty('UnitCharacteristicsForm') &&
-                          props.touched.UnitCharacteristicsForm.hasOwnProperty('values') &&
-                          props.touched.UnitCharacteristicsForm.values.hasOwnProperty('editableData') &&
-                          props.touched.UnitCharacteristicsForm.values.editableData[index - 1] &&
-                          props.touched.UnitCharacteristicsForm.values.editableData[index - 1].effectiveEndDate
-                          ? props.touched.UnitCharacteristicsForm.values.editableData[index - 1].effectiveEndDate
-                          : props.defaultValues && props.defaultValues.length > 0 &&
-                              props.defaultValues[props.defaultValues.length - 1] &&
-                              props.defaultValues[props.defaultValues.length - 1].EffectiveEndDate
-                              ? props.defaultValues[props.defaultValues.length - 1].EffectiveEndDate
-                              : (props.touched.hasOwnProperty('UnitCharacteristicsForm') &&
-                                  props.touched.UnitCharacteristicsForm.hasOwnProperty('values') &&
-                                  props.touched.UnitCharacteristicsForm.values.hasOwnProperty('effectiveEndDate') &&
-                                  props.touched.UnitCharacteristicsForm.values.effectiveEndDate[0]
-                                  ? props.touched.UnitCharacteristicsForm.values.effectiveEndDate[0] : new Date())
-                  }
-                  />
-                  {
-                      (props.unitCharacteristics.error && !(props.touched.hasOwnProperty('UnitCharacteristicsForm') &&
-                          props.touched.UnitCharacteristicsForm.hasOwnProperty('values') &&
-                          props.touched.UnitCharacteristicsForm.values.hasOwnProperty('editableData') &&
-                          props.touched.UnitCharacteristicsForm.values.editableData[index - 1] &&
-                          props.touched.UnitCharacteristicsForm.values.editableData[index - 1].effectiveEndDate
-                          ? props.touched.UnitCharacteristicsForm.values.editableData[index - 1].effectiveEndDate
-                          : props.defaultValues && props.defaultValues.length > 0 &&
-                              props.defaultValues[props.defaultValues.length - 1] &&
-                              props.defaultValues[props.defaultValues.length - 1].EffectiveEndDate
-                              ? (props.defaultValues[props.defaultValues.length - 1].EffectiveEndDate)
-                              : (props.touched.UnitCharacteristicsForm.values &&
-                                  props.touched.UnitCharacteristicsForm.values.hasOwnProperty('effectiveEndDate')
-                                  ? props.touched.UnitCharacteristicsForm.values.effectiveEndDate[0] : null)))
-                          ? <span className='errorMessage'>Effective Start Date is required</span> : null
-                  }
-              </td>
-              <td><Field
-                  name={`${editableData}.effectiveEndDate`}
-                  component={DatePickerField}
-                  />
-                  {
-                      (props.unitCharacteristics.error &&
-                          !(props.touched.hasOwnProperty('UnitCharacteristicsForm')
-                              ? props.touched.UnitCharacteristicsForm.hasOwnProperty('values')
-                                  ? props.touched.UnitCharacteristicsForm.values.hasOwnProperty('editableData')
-                                      ? props.touched.UnitCharacteristicsForm.values.editableData[index].effectiveEndDate
-                                      : false : false : false))
-                          ? <span className='errorMessage'>Effective End Date is required</span> : null
-                  }</td>
-              <td>
-                  <i type='button'
-                      title='Remove'
-                      className='fa fa-trash-o fa-2x'
-                      onClick={() => props.fields.remove(index) }></i>
-              </td>
-          </tr>
-        ) }
+      ) }
+      
      </tbody>
         </Table>
     </div>
 )
+}
 export const UnitCharacteristics = (props) => {
   const unitCharacteristicsData = props.unitCharacteristics;
-  const touched = props.formdata;
+
   return (
         <div className='row tab-pane fade in active' id='unitcharacteristics'>
             <div className='col-xs-12'>
@@ -217,16 +79,14 @@ export const UnitCharacteristics = (props) => {
                                     <strong>Add Unit Charateristic</strong>
                                 </Tooltip>}>
                                 <span className='fa fa-plus-circle fa-2x'
-                                    onClick={() => props.ToggleAddEditModal(-1) }>
+                                    onClick={() => props.ToggleAddEditModal({type:'add'}) }>
                                 </span>
                             </OverlayTrigger>
                         </div>
                     </div>
                     <div className='box-body'>
                         <div className='margin-bottom-sm padding-top'>
-                            {unitCharacteristicsData.selectedunitCharacteristics &&
-                                unitCharacteristicsData.selectedunitCharacteristics.length >
-                                0 ?
+                            
                                 <Table striped bordered condensed hover responsive>
                                     <thead>
                                         <tr>
@@ -249,20 +109,20 @@ export const UnitCharacteristics = (props) => {
                                                         <td className='text-align-col'>{uc.name}</td>
                                                         <td className='text-align-col'>{uc.display}</td>
                                                         <td>{uc.description}</td>
-                                                        <td>{uc.displayAttributes
-                                                            ? uc.displayAttributes.Value : null}</td>
+                                                        <td>{uc.editableAttributes
+                                                            ? uc.editableAttributes[0].ucvalue : null}</td>
                                                         <td className='text-align-col'>{uc.UOM}</td>
-                                                        <td>{uc.displayAttributes
-                                                            ? uc.displayAttributes.EffectiveStartDate : null}</td>
-                                                        <td>{uc.displayAttributes
-                                                            ? uc.displayAttributes.EffectiveEndDate : null}</td>
+                                                        <td>{uc.editableAttributes
+                                                            ? uc.editableAttributes[0].effectiveStartDate : null}</td>
+                                                        <td>{uc.editableAttributes
+                                                            ? uc.editableAttributes[0].effectiveEndDate : null}</td>
                                                         <td className='text-align-col'>
                                                             <OverlayTrigger placement='left' overlay={
                                                                 <Tooltip id='tooltip'>
                                                                     <strong>Edit {uc.Name}</strong>
                                                                 </Tooltip>}>
                                                                 <i className='fa fa-edit fa-2x'
-                                                                    onClick={() => { props.ToggleAddEditModal(index) } }></i>
+                                                                    onClick={() => { props.ToggleAddEditModal({type:'edit',index:index}) ; props.edit(uc.name,index) } }></i>
                                                             </OverlayTrigger>
                                                         </td>
                                                         <td>
@@ -274,7 +134,7 @@ export const UnitCharacteristics = (props) => {
                                                                             <strong>Delete {uc.Name}</strong>
                                                                         </Tooltip>}>
                                                                     <i className='fa fa-trash-o fa-2x'
-                                                                        onClick={() => { props.deleteConfirmation(index) } }></i>
+                                                                        onClick={() => { props.deleteConfirmation(uc.name,index) } }></i>
                                                                 </OverlayTrigger> : null
                                                             }
                                                         </td>
@@ -282,14 +142,13 @@ export const UnitCharacteristics = (props) => {
                                         }
                                     </tbody>
                                 </Table>
-                                : null
-                            }
+                            
                         </div>
                     </div>
                 </div>
 
             </div>
-            <Modal show={props.unitCharacteristics.showModal}>
+      <Modal show={unitCharacteristicsData.showModal}>
                 <form>
                     <Modal.Header>
                         {
@@ -311,28 +170,12 @@ export const UnitCharacteristics = (props) => {
                                         data={unitCharacteristicsData.unSelectedUnitCharacteristics}
                                         valueKey='id'
                                         labelKey='display'
-                                        disabled={
-                                            props.unitCharacteristics.editableUnitCharacter
-                                                ? !props.unitCharacteristics.editableUnitCharacter.isDeletable : false
+                                        disabled={ unitCharacteristicsData.disable
                                         }
                                         placeholder='Select Unit Charateristic'
                                         onChangeEvent={props.characteristicNameSelected}
-                                        defaultvalue={
-                                            props.unitCharacteristics.editableUnitCharacter &&
-                                                props.unitCharacteristics.editableUnitCharacter.id
-                                                ? props.unitCharacteristics.editableUnitCharacter : null
-                                        }/>
+                                       />
 
-                                    {
-                                        props.unitCharacteristics.editableUnitCharacter &&
-                                            props.unitCharacteristics.editableUnitCharacter.id
-                                            ? null : (props.unitCharacteristics.error
-                                                && !(touched.hasOwnProperty('UnitCharacteristicsForm')
-                                                    ? touched.UnitCharacteristicsForm.hasOwnProperty('values')
-                                                        ? touched.UnitCharacteristicsForm.values.hasOwnProperty('charateristicName')
-                                                            ? touched.UnitCharacteristicsForm.values.charateristicName : false : false : false))
-                                                ? <span className='errorMessage'>select unit characteristic</span> : null
-                                    }
                                 </div>
                             </div>
 
@@ -341,13 +184,9 @@ export const UnitCharacteristics = (props) => {
                                     <label>Display name</label>
                                 </div>
                                 <div className='col-xs-6'>
-                                    <Field component={InputField} type='text' readOnly={true}
+                                    <Field component={InputField} type='text' readOnly={true} touched={1}
                                         className='form-control' name='displayNameLabel'
-                                        defaultvalue={
-                                            props.unitCharacteristics.editableUnitCharacter
-                                                ? props.unitCharacteristics.editableUnitCharacter.display
-                                                : props.unitCharacteristics.displayNameLabel
-                                        }/>
+                                        />
 
                                 </div>
                             </div>
@@ -359,11 +198,7 @@ export const UnitCharacteristics = (props) => {
                                 <div className='col-xs-6'>
                                     <Field component={TextAreaField} readOnly={true}
                                         className='form-control' name='descriptionLabel' readOnly={true}
-                                        defaultValue={
-                                            props.unitCharacteristics.editableUnitCharacter
-                                                ? props.unitCharacteristics.editableUnitCharacter.description
-                                                : props.unitCharacteristics.descriptionLabel
-                                        } rows='4'/>
+                                         rows='4'/>
 
                                 </div>
                             </div>
@@ -373,49 +208,25 @@ export const UnitCharacteristics = (props) => {
                                     <label>UOM</label>
                                 </div>
                                 <div className='col-xs-6'>
-                                    <Field component={InputField} type='text' readOnly={true}
+                                    <Field component={InputField} type='text' readOnly={true} touched={1}
                                         className='form-control' name='UOMLabel'
-                                        defaultvalue={
-                                            props.unitCharacteristics.editableUnitCharacter
-                                                ? props.unitCharacteristics.editableUnitCharacter.UOM
-                                                : props.unitCharacteristics.UOMLabel
-                                        }/>
+                                        />
 
                                 </div>
                             </div>
-                            <FieldArray name='editableData'
-                                component={EffectiveDateValues}
-                                defaultValues={
-                                    props.unitCharacteristics.editableUnitCharacter
-                                        ? props.unitCharacteristics.editableUnitCharacter.editableAttributes : null
-                                }
-                                removeEditableAttribute={props.removeEditableAttribute}
-                                isEditable={props.unitCharacteristics.isEditable}
-                                touched={touched}
-                                unitCharacteristics={props.unitCharacteristics}/>
-
+                            <EffectiveDateValues editableAttributes={props.unitCharacteristics.editableAttributes} removeEditableAttribute={(element,i)=>props.removeEditableAttribute(element,i)} pushEditableAtribute ={()=> {props.pushEditableAtribute()}} />
                         </div>
-                        <div className='errorMessage'>
-                            {
-                                props.unitCharacteristics.error &&
-                                    props.unitCharacteristics.dateRangeValidation &&
-                                    props.unitCharacteristics.dateRangeValidation.length > 0
-                                    ? props.unitCharacteristics.dateRangeValidation.map(drv => (
-                                        <div><span>{drv}</span><br/></div>
-                                    ))
-                                    : null
-                            }
-                        </div>
+                        
                     </Modal.Body>
 
                     <Modal.Footer>
                         <div>
                             {
-                                props.unitCharacteristics.isEditable
+                                !props.unitCharacteristics.isEditable
                                     ? <button className='btn btn-success' type='button' onClick={props.AddUnitCharateristic}>Add</button>
                                     : <button className='btn btn-success' type='button' onClick={props.updateRow}>Update</button>
                             }
-                            <button className='btn btn-warning' type='button' onClick={props.ToggleAddEditModal}>Close</button>
+                            <button className='btn btn-warning' type='button' onClick={()=>props.ToggleAddEditModal({type:'close'})}>Close</button>
                         </div>
                     </Modal.Footer>
                 </form>
@@ -443,6 +254,7 @@ export const UnitCharacteristics = (props) => {
                     </div>
                 </Modal.Footer>
             </Modal>
+
 
         </div>
 
