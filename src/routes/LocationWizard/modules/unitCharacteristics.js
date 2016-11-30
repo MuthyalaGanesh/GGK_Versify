@@ -585,7 +585,8 @@ export const ACTION_HANDLERS = {
               newEditableAttributes.push({
                 Value: ea.Value,
                 EffectiveEndDate: ea.EffectiveEndDate,
-                EffectiveStartDate: ea.EffectiveStartDate
+                EffectiveStartDate: ea.EffectiveStartDate,
+                LocationAttributeId: ea.LocationAttributeId
               })
             } else {
               ea.Value = ''

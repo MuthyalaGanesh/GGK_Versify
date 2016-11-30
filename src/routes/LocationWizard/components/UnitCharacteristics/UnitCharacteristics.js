@@ -32,9 +32,9 @@ const EffectiveDateValues = (props) => (
                   className='form-control'
                   defaultvalue={dv.Value}
                   touched = {props.touched.hasOwnProperty('UnitCharacteristicsForm')
-                      ? props.touched.UnitCharacteristicsForm.hasOwnProperty('values')
-                          ? props.touched.UnitCharacteristicsForm.values.hasOwnProperty('ucvalue')
-                              ? props.touched.UnitCharacteristicsForm.values.ucvalue[i] : false : false : false}/>
+                      ? props.touched.UnitCharacteristicsForm.hasOwnProperty('fields')
+                          ? props.touched.UnitCharacteristicsForm.fields.hasOwnProperty('ucvalue')
+                              ? props.touched.UnitCharacteristicsForm.fields.ucvalue[i] : false : false : false}/>
                   {
                       props.defaultValues[i].Value ? null : (props.unitCharacteristics.error &&
                           !(props.touched.hasOwnProperty('UnitCharacteristicsForm')
