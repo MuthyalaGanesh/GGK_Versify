@@ -42,6 +42,14 @@ webpackConfig.output = {
   publicPath : config.compiler_public_path
 }
 
+
+// ------------------------------------
+// Bundle External
+// ------------------------------------
+webpackConfig.externals = {
+   './static/baseaddress':'baseaddress'
+  }
+
 // ------------------------------------
 // Plugins
 // ------------------------------------
