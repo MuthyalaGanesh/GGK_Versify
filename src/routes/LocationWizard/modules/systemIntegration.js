@@ -69,11 +69,9 @@ export function editSystemIntegration(locationSystemIntegrations) {
                             }
                         })
                         if (valuePresence == 1) {
-                            if (locationSystemIntegrations.locationsInfo[i].ExternalSystemName != 'VTrader-Temp') {
-                                selectedSystemIntegrations.push(locationSystemIntegrations.locationsInfo[i])
-                                data[`${locationSystemIntegrations.locationsInfo[i].ExternalSystemName}`] =
-                                    locationSystemIntegrations.locationsInfo[i].AliasName
-                            }
+                            selectedSystemIntegrations.push(locationSystemIntegrations.locationsInfo[i])
+                            data[`${locationSystemIntegrations.locationsInfo[i].ExternalSystemName}`] =
+                                locationSystemIntegrations.locationsInfo[i].AliasName
                         }
                     }
                 }
