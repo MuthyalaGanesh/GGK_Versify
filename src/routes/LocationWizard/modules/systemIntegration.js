@@ -69,9 +69,11 @@ export function editSystemIntegration(locationSystemIntegrations) {
                             }
                         })
                         if (valuePresence == 1) {
-                            selectedSystemIntegrations.push(locationSystemIntegrations.locationsInfo[i])
-                            data[`${locationSystemIntegrations.locationsInfo[i].ExternalSystemName}`] =
-                                locationSystemIntegrations.locationsInfo[i].AliasName
+                            if (locationSystemIntegrations.locationsInfo[i].ExternalSystemName != 'VTrader-Temp') {
+                                selectedSystemIntegrations.push(locationSystemIntegrations.locationsInfo[i])
+                                data[`${locationSystemIntegrations.locationsInfo[i].ExternalSystemName}`] =
+                                    locationSystemIntegrations.locationsInfo[i].AliasName
+                            }
                         }
                     }
                 }
@@ -260,7 +262,8 @@ export function getSystemIntegrationTypesService() {
 export const ACTION_HANDLERS = {
     [BIND_SYS_INTEGRATIONS_NEW_LOCATION]: (state, action) => {
         var selectedSysInt = []
-        return Object.assign({}, state, { selectedSystemIntegrationTypes: selectedSysInt })
+        var unSelectedSysInt = getUnselectedSystemIntegrations(state.systemIntegrationTypes);
+        return Object.assign({}, state, { selectedSystemIntegrationTypes: selectedSysInt, unSelectedSystemIntegrationTypes: unSelectedSysInt, systemdata: {} })
     },
     [ALIAS_SAVE]: (state, action) => {
         return Object.assign({}, state, {
