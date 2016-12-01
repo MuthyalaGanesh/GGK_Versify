@@ -1,5 +1,6 @@
-const baseaddress = require('./static/baseaddress')
-const baseAddress = baseaddress.env.BaseAddress;
+import config from "../config.json"
+
+const baseAddress = config.serverConfig.BaseAddress
 
 export const ApiUrl = {
 	LOCATIONS: baseAddress + "/Locations",
