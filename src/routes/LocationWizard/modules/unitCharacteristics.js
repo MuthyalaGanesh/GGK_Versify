@@ -161,7 +161,6 @@ export function BindUnitCharacteristicsInitialValues(locationObj) {
                 isEditable: true,
                 tosend:true,
                 LocationId:values.LocationId,
-                LocationAttributeId:values.LocationAttributeId,
                 editableAttributes: [],
                 deletableAttributes:[],
                 displayAttributes: {}
@@ -194,7 +193,6 @@ export function BindUnitCharacteristicsInitialValues(locationObj) {
                   isVisible: true,
                   LocationId:values.LocationId,
                   deletableAttributes:[],
-                  LocationAttributeId:values.LocationAttributeId,
                   defaultUnitOfMeasureId: values.UnitOfMeasureId,
                   display: values.AttributeName,
                   UOM: values.UnitOfMeasureName,
@@ -208,6 +206,7 @@ export function BindUnitCharacteristicsInitialValues(locationObj) {
                 selectedunitCharacteristics[i].editableAttributes.push({
                   ucvalue: values.Value,
                   effectiveStartDate: returndate(values.EffectiveStartDate),
+                  LocationAttributeId:values.LocationAttributeId,
                   effectiveEndDate: returndate(values.EffectiveEndDate),
                   tosend:true
                 })
@@ -315,6 +314,7 @@ export function updateRow() {
         let secondarydata = []
         let errorflag = false
         getState().unitCharacteristics.selectedunitCharacteristics.map((values, j) => {
+          console.log(values)
           if (i != j) {
             data.push(values)
           } else {
@@ -326,7 +326,7 @@ export function updateRow() {
                 ucvalue: value,
                 effectiveStartDate: formdata.effectiveStartDate[i],
                 effectiveEndDate: formdata.effectiveEndDate[i],
-                LocationAttributeId:!!values.LocationAttributeId? values.LocationAttributeId :0
+                LocationAttributeId: !!values.editableAttributes[i]?!!values.editableAttributes[i].LocationAttributeId?values.editableAttributes[i].LocationAttributeId:0:0
               })
             })
 
