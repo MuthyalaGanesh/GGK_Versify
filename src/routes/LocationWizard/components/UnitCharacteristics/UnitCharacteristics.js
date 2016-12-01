@@ -9,6 +9,8 @@ import DropdownListField from 'components/DropdownList/DropdownListField'
 import TextAreaField from 'components/TextAreaField/TextAreaField'
 
 const EffectiveDateValues = (props) => { 
+    console.log(props.error)
+    console.log(props.formdata)
    return (
   <div>
     <Table striped bordered condensed hover>
@@ -33,19 +35,19 @@ const EffectiveDateValues = (props) => {
                   className='form-control'
                   touched={1}
                   />
-                  
+                  {props.error && (!!props.formdata  ?props.formdata.hasOwnProperty('values') ?  props.formdata.values.hasOwnProperty('ucvalue')?!!props.formdata.values.ucvalue[i]? props.formdata.values.ucvalue[i] !='' ?false:true :true :true : true : true) ?  <span className='errorMessage'>Value is required</span>  : null }
               </td>
               <td> <Field
                   name={`effectiveStartDate[${i}]`}
                   component={DatePickerField}
                   />
-                  
+                   {props.error && (!!props.formdata  ?props.formdata.hasOwnProperty('values') ?  props.formdata.values.hasOwnProperty('effectiveStartDate')?!!props.formdata.values.effectiveStartDate[i]? props.formdata.values.effectiveStartDate[i] !=null ?false:true :true :true : true:true) ?  <span className='errorMessage'>EffectiveEndDate is required</span>  : null }
               </td>
               <td><Field
                   name={`effectiveEndDate[${i}]`}
                   component={DatePickerField}
                   />
-                 
+                  {props.error && (!!props.formdata  ?props.formdata.hasOwnProperty('values') ?  props.formdata.values.hasOwnProperty('effectiveEndDate')?!!props.formdata.values.effectiveEndDate[i]? props.formdata.values.effectiveEndDate[i] !=null ?false:true :true :true : true:true) ?  <span className='errorMessage'>EffectiveEndDate is required</span>  : null }
               </td>
               <td>{i == 0 ? <i onClick={() => {props.pushEditableAtribute()}
               }
@@ -109,13 +111,13 @@ export const UnitCharacteristics = (props) => {
                                                         <td className='text-align-col'>{uc.name}</td>
                                                         <td className='text-align-col'>{uc.display}</td>
                                                         <td>{uc.description}</td>
-                                                        <td>{uc.editableAttributes
-                                                            ? uc.editableAttributes[0].ucvalue : null}</td>
+                                                        <td>{uc.displayAttributes
+                                                            ? uc.displayAttributes.ucvalue : null}</td>
                                                         <td className='text-align-col'>{uc.UOM}</td>
-                                                        <td>{uc.editableAttributes
-                                                            ? uc.editableAttributes[0].effectiveStartDate : null}</td>
-                                                        <td>{uc.editableAttributes
-                                                            ? uc.editableAttributes[0].effectiveEndDate : null}</td>
+                                                        <td>{uc.displayAttributes
+                                                            ? uc.displayAttributes.effectiveStartDate : null}</td>
+                                                        <td>{uc.displayAttributes
+                                                            ? uc.displayAttributes.effectiveEndDate : null}</td>
                                                         <td className='text-align-col'>
                                                             <OverlayTrigger placement='left' overlay={
                                                                 <Tooltip id='tooltip'>
@@ -214,9 +216,19 @@ export const UnitCharacteristics = (props) => {
 
                                 </div>
                             </div>
-                            <EffectiveDateValues editableAttributes={props.unitCharacteristics.editableAttributes} removeEditableAttribute={(element,i)=>props.removeEditableAttribute(element,i)} pushEditableAtribute ={()=> {props.pushEditableAtribute()}} />
+                            <EffectiveDateValues editableAttributes={props.unitCharacteristics.editableAttributes} error={props.unitCharacteristics.error} formdata={props.formdata.UnitCharacteristicsForm}removeEditableAttribute={(element,i)=>props.removeEditableAttribute(element,i)} pushEditableAtribute ={()=> {props.pushEditableAtribute()}} />
                         </div>
-                        
+                        <div className='errorMessage'>
+                            {
+                                props.unitCharacteristics.error &&
+                                    props.unitCharacteristics.errorMessage &&
+                                    props.unitCharacteristics.errorMessage.length > 0
+                                    ? props.unitCharacteristics.errorMessage.map((drv,i) => (
+                                        <div key={i}><span>{drv}</span><br/></div>
+                                    ))
+                                    : null
+                            }
+                        </div>
                     </Modal.Body>
 
                     <Modal.Footer>
@@ -243,7 +255,7 @@ export const UnitCharacteristics = (props) => {
                     <div className='pull-right'>
                         <button className='btn btn-warning'
                             type='button'
-                            onClick={props.deleteConfirmation}>
+                            onClick={()=>props.deleteConfirmation('close',-1)}>
                             Close
                         </button>
                         <button className='btn btn-danger'
