@@ -91,14 +91,20 @@ export function removeEditableAttribute(element, i) {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       let data = []
+      let deletableAttributes = Arraycreator(getState().unitCharacteristics.deletableAttributes)
       getState().unitCharacteristics.editableAttributes.map((values, j) => {
         if (i != j) {
           data.push(values)
+        }else{
+          if(!!values.tosend && values.tosend){
+          deletableAttributes.push(value)
         }
+      }
       })
       dispatch({
         type: EDITABLE_ATTRIBUTE,
-        payload: data
+        payload: data,
+        deletableAttributes:deletableAttributes
       })
     })
   }
@@ -128,13 +134,17 @@ export function BindUnitCharacteristicsInitialValues(locationObj) {
                 isDeletable: false,
                 isSavable: false,
                 isEditable: true,
+                tosend:true,
+                LocationAttributeId:values.LocationAttributeId,
                 editableAttributes: [],
                 displayAttributes: {}
               })
               selectedunitCharacteristics[0].editableAttributes.push({
                 ucvalue: values.Value,
                 effectiveStartDate: returndate(values.EffectiveStartDate),
-                effectiveEndDate: returndate(values.EffectiveEndDate)
+                effectiveEndDate: returndate(values.EffectiveEndDate),
+                tosend:true,
+                LocationAttributeId:values.LocationAttributeId
               })
             } else {
               selectedunitCharacteristics.map((data) => {
@@ -143,7 +153,9 @@ export function BindUnitCharacteristicsInitialValues(locationObj) {
                   data.editableAttributes.push({
                     ucvalue: values.Value,
                     effectiveStartDate: returndate(values.EffectiveStartDate),
-                    effectiveEndDate: returndate(values.EffectiveEndDate)
+                    effectiveEndDate: returndate(values.EffectiveEndDate),
+                    tosend:true,
+                    LocationAttributeId:values.LocationAttributeId
                   })
                 }
               })
@@ -156,7 +168,8 @@ export function BindUnitCharacteristicsInitialValues(locationObj) {
                   defaultUnitOfMeasureId: values.UnitOfMeasureId,
                   display: values.AttributeName,
                   UOM: values.UnitOfMeasureName,
-                  isDeletable: false,
+                  isDeletable: (values.AttributeName.toLowerCase()=='capacity' || values.AttributeName.toLowerCase()=='eco min' || values.AttributeName.toLowerCase()=='eco max')? false:true,
+                  tosend:true,
                   isSavable: false,
                   isEditable: true,
                   editableAttributes: [],
@@ -165,7 +178,9 @@ export function BindUnitCharacteristicsInitialValues(locationObj) {
                 selectedunitCharacteristics[i].editableAttributes.push({
                   ucvalue: values.Value,
                   effectiveStartDate: returndate(values.EffectiveStartDate),
-                  effectiveEndDate: returndate(values.EffectiveEndDate)
+                  effectiveEndDate: returndate(values.EffectiveEndDate),
+                  tosend:true,
+                  LocationAttributeId:values.LocationAttributeId
                 })
               }
             }
@@ -254,6 +269,7 @@ export function updateRow() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       let formdata = getState().form.UnitCharacteristicsForm.values
+      let deletableAttributes = Arraycreator(getState().unitCharacteristics.deletableAttributes)
       let checklength = getState().unitCharacteristics.editableAttributes.length
       if ( formdata.length == 0 || !formdata.hasOwnProperty('charateristicName')||  formdata.length <5 ||checklength != formdata.ucvalue.length || checklength != formdata.effectiveStartDate.length || checklength != formdata.effectiveEndDate.length) {
         dispatch({
@@ -268,7 +284,7 @@ export function updateRow() {
         let data = []
         let secondarydata = []
         let errorflag = false
-        getState().unitCharacteristics.selectedunitCharacteristics.map((value, j) => {
+        getState().unitCharacteristics.selectedunitCharacteristics.map((values, j) => {
           if (i != j) {
             data.push(value)
           } else {
@@ -279,7 +295,8 @@ export function updateRow() {
               secondarydata.push({
                 ucvalue: value,
                 effectiveStartDate: formdata.effectiveStartDate[i],
-                effectiveEndDate: formdata.effectiveEndDate[i]
+                effectiveEndDate: formdata.effectiveEndDate[i],
+                LocationAttributeId:values.LocationAttributeId
               })
             })
 
@@ -287,7 +304,8 @@ export function updateRow() {
               isSavable: true,
               isEditable: true,
               editableAttributes: secondarydata,
-              displayAttributes: DateSwap(secondarydata)
+              displayAttributes: DateSwap(secondarydata),
+              deletableAttributes:deletableAttributes
             }))
           }
         })
@@ -349,6 +367,7 @@ export function AddUnitCharateristic() {
             toadd.isSavable = true
             toadd.isEditable = true
             toadd.editableAttributes = []
+            toadd.deletableAttributes=[]
             toadd.displayAttributes = {}
           }
         })
@@ -360,7 +379,8 @@ export function AddUnitCharateristic() {
           toadd.editableAttributes.push({
             ucvalue: value,
             effectiveStartDate: data.effectiveStartDate[i],
-            effectiveEndDate: data.effectiveEndDate[i]
+            effectiveEndDate: data.effectiveEndDate[i],
+            tosend:false
           })
         })
 
@@ -548,6 +568,7 @@ export function DeleteUnitCharateristic() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       let selectedunitCharacteristics = []
+      let deletedUnitCharacteristics = []
       let i = getState().unitCharacteristics.tobedeleted.index
       let unSelectedUnitCharacteristics = Arraycreator(getState().unitCharacteristics.unSelectedUnitCharacteristics)
       getState().unitCharacteristics.selectedunitCharacteristics.map((value, j) => {
@@ -558,6 +579,9 @@ export function DeleteUnitCharateristic() {
             isSavable: false,
             editableAttributes: [{}]
           }))
+          if(value.tosend){
+            deletedUnitCharacteristics.push(value)
+          }
         }
       })
 
@@ -566,6 +590,7 @@ export function DeleteUnitCharateristic() {
         payload: {
           selectedunitCharacteristics: selectedunitCharacteristics,
           unSelectedUnitCharacteristics: unSelectedUnitCharacteristics,
+          deletedUnitCharacteristics: deletedUnitCharacteristics,
           showDeleteModal: false
         }
       })
@@ -599,7 +624,8 @@ export function edit(name, i) {
       }
       dispatch({
         type: EDITABLE_ATTRIBUTE,
-        payload: data[i].editableAttributes
+        payload: data[i].editableAttributes,
+        deletableAttributes:data[i].deletableAttributes,
 
       })
       intializedata.ucvalue = []
@@ -651,6 +677,7 @@ export function getDefaultUnitCharacteristics(allUOMvalues) {
             uc.name.toLowerCase() == 'eco min' ||
             uc.name.toLowerCase() == 'eco max') {
             uc.editableAttributes = [{}]
+            uc.deletableAttributes=[]
             uc.isDeletable = false
             uc.isSavable = false
             let i = 0
@@ -670,6 +697,7 @@ export function getDefaultUnitCharacteristics(allUOMvalues) {
                 break
               }
             }
+            uc.tosend=false
             uc.isDeletable = true
             uc.isSavable = false
             options.push(uc)
@@ -736,7 +764,8 @@ export const ACTION_HANDLERS = {
   },
   [EDITABLE_ATTRIBUTE]: (state, action) => {
     return Object.assign({}, state, {
-      editableAttributes: action.payload
+      editableAttributes: action.payload,
+      deletableAttributes:action.deletableAttributes
     })
   },
   [ADD_ROW]: (state, action) => {
@@ -760,7 +789,8 @@ export const ACTION_HANDLERS = {
       unSelectedUnitCharacteristics: action.unSelectedUnitCharacteristics,
       showModal: action.showModal,
       error: false,
-      errorMessage: []
+      errorMessage: [],
+      deletableAttributes:[]
     })
   },
   [TO_BE_DELETED]: (state, action) => {
@@ -774,7 +804,8 @@ export const ACTION_HANDLERS = {
       showDeleteModal: action.payload.showDeleteModal,
       tobedeleted: {},
       selectedunitCharacteristics: action.payload.selectedunitCharacteristics,
-      unSelectedUnitCharacteristics: action.payload.unSelectedUnitCharacteristics
+      unSelectedUnitCharacteristics: action.payload.unSelectedUnitCharacteristics,
+      deletedUnitCharacteristics:action.payload.deletedUnitCharacteristics,
     })
   },
   [BIND_INITIAL_ATTRIBUTES]: (state, action) => {
@@ -809,6 +840,7 @@ const initialState = {
   defaultUnitCharacteristics: [],
   finalUnitCharacteristics: [],
   deletedUnitCharacteristics: [],
+  deletableAttributes:[],
   showModal: false,
   showDeleteModal: false,
   editableUnitCharacter: {},

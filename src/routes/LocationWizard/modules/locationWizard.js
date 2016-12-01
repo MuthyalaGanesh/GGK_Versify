@@ -552,9 +552,9 @@ function unitCharacterSticObjectPreparation(stateTree, dispatch) {
             LocationAttributeId: ea.LocationAttributeId != 0 ? ea.LocationAttributeId : 0,
             UnitOfMeasureId: suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
             UnitOfMeasureName: suc.UOM,
-            Value: ea.Value ? ea.Value : "",
-            EffectiveStartDate: !!ea.EffectiveStartDate ? '/Date(' + (new Date(ea.EffectiveStartDate)).getTime() + ')/' : null,
-            EffectiveEndDate: !!ea.EffectiveEndDate ? '/Date(' + (new Date(ea.EffectiveEndDate)).getTime() + ')/' : null,
+            Value: ea.ucvalue ? ea.ucvalue : "",
+            EffectiveStartDate: !!ea.effectiveStartDate ? '/Date(' + (new Date(ea.effectiveStartDate)).getTime() + ')/' : null,
+            EffectiveEndDate: !!ea.effectiveEndDate ? '/Date(' + (new Date(ea.effectiveEndDate)).getTime() + ')/' : null,
             DisplayName: suc.display
           }))
         }
@@ -572,8 +572,8 @@ function unitCharacterSticObjectPreparation(stateTree, dispatch) {
               UnitOfMeasureId: suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
               UnitOfMeasureName: suc.UOM,
               Value: "",
-              EffectiveStartDate: !!ea.EffectiveStartDate ? '/Date(' + (new Date(ea.EffectiveStartDate)).getTime() + ')/' : null,
-              EffectiveEndDate: !!ea.EffectiveEndDate ? '/Date(' + (new Date(ea.EffectiveEndDate)).getTime() + ')/' : null,
+              EffectiveStartDate: !!ea.effectiveStartDate ? '/Date(' + (new Date(ea.effectiveStartDate)).getTime() + ')/' : null,
+              EffectiveEndDate: !!ea.effectiveEndDate ? '/Date(' + (new Date(ea.effectiveEndDate)).getTime() + ')/' : null,
               DisplayName: suc.display
             }))
           }
@@ -601,8 +601,8 @@ function unitCharacterSticObjectPreparation(stateTree, dispatch) {
             UnitOfMeasureId: suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
             UnitOfMeasureName: suc.UOM,
             Value: "",
-            EffectiveStartDate: !!ea.EffectiveStartDate ? '/Date(' + (new Date(ea.EffectiveStartDate)).getTime() + ')/' : null,
-            EffectiveEndDate: !!ea.EffectiveEndDate ? '/Date(' + (new Date(ea.EffectiveEndDate)).getTime() + ')/' : null,
+            EffectiveStartDate: !!ea.effectiveStartDate ? '/Date(' + (new Date(ea.effectiveStartDate)).getTime() + ')/' : null,
+            EffectiveEndDate: !!ea.effectiveEndDate ? '/Date(' + (new Date(ea.effectiveEndDate)).getTime() + ')/' : null,
             DisplayName: suc.display
           }))
         }
@@ -620,8 +620,8 @@ function unitCharacterSticObjectPreparation(stateTree, dispatch) {
               UnitOfMeasureId: suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
               UnitOfMeasureName: suc.UOM,
               Value: "",
-              EffectiveStartDate: !!ea.EffectiveStartDate ? '/Date(' + (new Date(ea.EffectiveStartDate)).getTime() + ')/' : null,
-              EffectiveEndDate: !!ea.EffectiveEndDate ? '/Date(' + (new Date(ea.EffectiveEndDate)).getTime() + ')/' : null,
+              EffectiveStartDate: !!ea.effectiveStartDate ? '/Date(' + (new Date(ea.effectiveStartDate)).getTime() + ')/' : null,
+              EffectiveEndDate: !!ea.effectiveEndDate ? '/Date(' + (new Date(ea.effectiveEndDate)).getTime() + ')/' : null,
               DisplayName: suc.display
             }))
           }
