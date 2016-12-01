@@ -1,5 +1,4 @@
 export const ConstantValues = {
-	URL_BASE: 'https://web-dev-04.versifysolutions.com/GGKAPI/Services/API.svc',
 	DEFAULT_WORKFLOW_TYPE: 'Derates',
 	PASSWORD_REGEX : /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9]{6,20}$/,
 	ERROR_NAME: 'Please specify Name',

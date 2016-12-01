@@ -647,9 +647,9 @@ export function getDefaultUnitCharacteristics(allUOMvalues) {
 
 
         response.data.map((uc) => {
-          if (uc.name.toLowerCase() === 'capacity' ||
-            uc.name.toLowerCase() === 'eco min' ||
-            uc.name.toLowerCase() === 'eco max') {
+          if (uc.name.toLowerCase() == 'capacity' ||
+            uc.name.toLowerCase() == 'eco min' ||
+            uc.name.toLowerCase() == 'eco max') {
             uc.editableAttributes = [{}]
             uc.isDeletable = false
             uc.isSavable = false

@@ -135,7 +135,7 @@ export function leftMenuDropdownClickEvent(id, event) {
       })
     } else {
       dispatch(showSpinner())
-      setTimeout(function() {
+      setTimeout(function () {
         dispatch(LoadAndRefreshForms(id, event));
         scrollSpy.update();
       }, 1)
@@ -261,11 +261,11 @@ export function LoadAndRefreshForms(id, event) {
           findLocation(allLocationdata, id);
           var locationObj = currentLocation;
           currentLocation = null;
-          getOMSLocationwizardData(id).then(function(response) {
+          getOMSLocationwizardData(id).then(function (response) {
             let editObject = response.data;
             let locationsInfo = editObject.GetOMSLocationWizardDataResult.AssignedLocationMappings;
             let dataHistorianParticularLocationObject = editObject.GetOMSLocationWizardDataResult.AssignedScadaPoints;
-            getMarketDrivenMappings(locationObj.PrimaryMarketId).then(function(response) {
+            getMarketDrivenMappings(locationObj.PrimaryMarketId).then(function (response) {
               var marketDrivenMappings = response.data
               var editSysIntegration = new Object({
                 locationsInfo: locationsInfo,
@@ -427,7 +427,7 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, marketDrivenMapping
     }
     itemDatawithMarketDrivenMappings.push(itemData);
   });
-  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function(b) {
+  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function (b) {
     return b.ExternalSystemName
   })
   var staticPjmemktToAdd = {
@@ -516,8 +516,18 @@ function SystemIntegrationObjectPreparation(stateTree, dispatch) {
   var systemIntegrationObj = []
   if (stateTree.systemIntegration) {
     stateTree.systemIntegration.selectedSystemIntegrationTypes.map(ssit => {
+      (ssit.AliasName && ssit.AliasName.replace(/\s/g, '').length)
+        ? ssit.FlaggedForDeletion = false : ssit.FlaggedForDeletion = true
       systemIntegrationObj.push(ssit)
     })
+    if (stateTree.systemIntegration.deletedSystemIntegrations &&
+      stateTree.systemIntegration.deletedSystemIntegrations.length > 0) {
+      stateTree.systemIntegration.deletedSystemIntegrations.map(dsi => {
+        dsi.AliasName = ""
+        dsi.FlaggedForDeletion = true
+        systemIntegrationObj.push(dsi)
+      })
+    }
   } else {
     dispatch({
       type: 'ERROR',
@@ -729,6 +739,9 @@ export function saveCompleteLocationWizard() {
           }
         }
         var formBasicInfoValues = getState().form.BasicInfoForm.values;
+        if (formBasicInfoValues.ownerShipPercentage == 0) {
+          flag = 1;
+        }
         if (!!formBasicInfoValues.secondarytechnologyType &&
           formBasicInfoValues.technologyType.id == formBasicInfoValues.secondarytechnologyType.id) {
           flag = 1;
@@ -819,12 +832,12 @@ function saveObjectPreparationAndCall(getState, dispatch) {
     var finalData = JSON.stringify(finalSaveObject)
     console.log("finalSaveObject", finalData)
     dispatch({
-        type: SHOW_SPINNER,
-        payload: true
-      })
-      /*SAVE LOCATION*/
+      type: SHOW_SPINNER,
+      payload: true
+    })
+    /*SAVE LOCATION*/
     try {
-      finalLocationSaveObject(finalSaveObject).then(function(response) {
+      finalLocationSaveObject(finalSaveObject).then(function (response) {
         console.log("success", response);
         if (response.status === 200) {
           /*ADD Location ID to Object*/
@@ -833,7 +846,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
           getState().form.BasicInfoForm.values.locationId = newLocationID;
 
           let locationsInfo = response.data.SaveOMSLocationWizardDataResult.AssignedLocationMappings;
-          getMarketDrivenMappings(locationObj.PrimaryMarketId).then(function(response) {
+          getMarketDrivenMappings(locationObj.PrimaryMarketId).then(function (response) {
             var marketDrivenMappings = response.data
             var editSysIntegration = new Object({
               locationsInfo: locationsInfo,
@@ -879,7 +892,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
             }
             console.log("saveObjectwithEquipment", JSON.stringify(saveObjectwithEquipment));
             if (saveObjectwithEquipment.saveData.Equipments.length > 0) {
-              finalLocationSaveObject(saveObjectwithEquipment).then(function(response) {
+              finalLocationSaveObject(saveObjectwithEquipment).then(function (response) {
                 if (response.status === 200) {
                   console.log("equipment saved", response);
                   var equipments = response.data.SaveOMSLocationWizardDataResult.Equipment;
@@ -899,7 +912,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
               openSavePopup: true
             }
           });
-          basicInfoDropdowns.getParentLocations().then(function(response) {
+          basicInfoDropdowns.getParentLocations().then(function (response) {
             dispatch({
               type: GET_ALL_LOCATIONS_INFORMATION,
               payload: response.data.GetAllLocationsResult
@@ -912,7 +925,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
               type: SEARCH_LOCATIONS_LIST,
               payload: searchLocationsList
             });
-          }).then(function() {
+          }).then(function () {
             /*Expnd ADD Node in left menu*/
             dispatch({
               type: DEFAULT_NODE_EXPANDED,
@@ -937,7 +950,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
             payload: false
           })
         }
-      }).catch(function(error) {
+      }).catch(function (error) {
         dispatch({
           type: HIDE_SPINNER,
           payload: false
@@ -982,7 +995,7 @@ function toArray(obj) {
 
 function changeObjectTypeOfLocations(allLocations) {
   var changedLocationsObject = [];
-  allLocations.forEach(function(item) {
+  allLocations.forEach(function (item) {
     changedLocationsObject.push({
       key: item.Id,
       value: item.Id,
@@ -1033,7 +1046,7 @@ export function getLocationsInformation() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       getState().location.allLocations.length == 0 ?
-        basicInfoDropdowns.getParentLocations().then(function(response) {
+        basicInfoDropdowns.getParentLocations().then(function (response) {
           dispatch({
             type: GET_ALL_LOCATIONS_INFORMATION,
             payload: response.data.GetAllLocationsResult
@@ -1046,7 +1059,7 @@ export function getLocationsInformation() {
             type: SEARCH_LOCATIONS_LIST,
             payload: searchLocationsList
           });
-        }).then(function() {
+        }).then(function () {
           dispatch({
             type: HIDE_SPINNER,
             payload: false
