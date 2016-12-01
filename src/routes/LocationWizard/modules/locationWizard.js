@@ -539,18 +539,19 @@ function SystemIntegrationObjectPreparation(stateTree, dispatch) {
 
 
 function unitCharacterSticObjectPreparation(stateTree, dispatch) {
+debugger
   var unitCharacteristicsObj = [];
   if (stateTree.unitCharacteristics && stateTree.unitCharacteristics.selectedunitCharacteristics) {
     stateTree.unitCharacteristics.selectedunitCharacteristics.map(suc => {
       suc.editableAttributes.map(ea => {
         if (suc.isSavable) {
           unitCharacteristicsObj.push(new Object({
-            LocationId: suc.LocationId != 0 ? suc.LocationId : 0,
+            LocationId: !!suc.LocationID ? suc.LocationId : 0,
             AttributeId: suc.id != 0 ? suc.id : 0,
             AttributeName: suc.name,
             AttributeDescription: suc.description,
-            LocationAttributeId: ea.LocationAttributeId != 0 ? ea.LocationAttributeId : 0,
-            UnitOfMeasureId: suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
+            LocationAttributeId: !!ea.LocationAttributeId  ? ea.LocationAttributeId : 0,
+            UnitOfMeasureId: !!suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
             UnitOfMeasureName: suc.UOM,
             Value: ea.ucvalue ? ea.ucvalue : "",
             EffectiveStartDate: !!ea.effectiveStartDate ? '/Date(' + (new Date(ea.effectiveStartDate)).getTime() + ')/' : null,
@@ -564,11 +565,11 @@ function unitCharacterSticObjectPreparation(stateTree, dispatch) {
         suc.deletableAttributes.map(ea => {
           if (suc.isSavable) {
             unitCharacteristicsObj.push(new Object({
-              LocationId: suc.LocationId != 0 ? suc.LocationId : 0,
-              AttributeId: suc.id != 0 ? suc.id : 0,
+              LocationId: !!suc.LocationID ? suc.LocationId : 0,
+              AttributeId: !!suc.id  ? suc.id : 0,
               AttributeName: suc.name,
               AttributeDescription: suc.description,
-              LocationAttributeId: ea.LocationAttributeId != 0 ? ea.LocationAttributeId : 0,
+              LocationAttributeId: !!ea.LocationAttributeId  ? ea.LocationAttributeId : 0,
               UnitOfMeasureId: suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
               UnitOfMeasureName: suc.UOM,
               Value: "",
@@ -593,12 +594,12 @@ function unitCharacterSticObjectPreparation(stateTree, dispatch) {
       suc.editableAttributes.map(ea => {
         if (suc.isSavable) {
           unitCharacteristicsObj.push(new Object({
-            LocationId: suc.LocationId != 0 ? suc.LocationId : 0,
-            AttributeId: suc.id != 0 ? suc.id : 0,
+            LocationId: !!suc.LocationId ? suc.LocationId : 0,
+            AttributeId: !!suc.id  ? suc.id : 0,
             AttributeName: suc.name,
             AttributeDescription: suc.description,
-            LocationAttributeId: ea.LocationAttributeId != 0 ? ea.LocationAttributeId : 0,
-            UnitOfMeasureId: suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
+            LocationAttributeId: !!ea.LocationAttributeId ? ea.LocationAttributeId : 0,
+            UnitOfMeasureId: !!suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
             UnitOfMeasureName: suc.UOM,
             Value: "",
             EffectiveStartDate: !!ea.effectiveStartDate ? '/Date(' + (new Date(ea.effectiveStartDate)).getTime() + ')/' : null,
@@ -612,12 +613,12 @@ function unitCharacterSticObjectPreparation(stateTree, dispatch) {
         suc.deletableAttributes.map(ea => {
           if (suc.isSavable) {
             unitCharacteristicsObj.push(new Object({
-              LocationId: suc.LocationId != 0 ? suc.LocationId : 0,
-              AttributeId: suc.id != 0 ? suc.id : 0,
+              LocationId: !!suc.LocationId  ? suc.LocationId : 0,
+              AttributeId: !!suc.id  ? suc.id : 0,
               AttributeName: suc.name,
               AttributeDescription: suc.description,
-              LocationAttributeId: ea.LocationAttributeId != 0 ? ea.LocationAttributeId : 0,
-              UnitOfMeasureId: suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
+              LocationAttributeId: !!ea.LocationAttributeId  ? ea.LocationAttributeId : 0,
+              UnitOfMeasureId: !!suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
               UnitOfMeasureName: suc.UOM,
               Value: "",
               EffectiveStartDate: !!ea.effectiveStartDate ? '/Date(' + (new Date(ea.effectiveStartDate)).getTime() + ')/' : null,
@@ -629,6 +630,7 @@ function unitCharacterSticObjectPreparation(stateTree, dispatch) {
       }
     })
   }
+console.log(unitCharacteristicsObj)
   return unitCharacteristicsObj;
 }
 

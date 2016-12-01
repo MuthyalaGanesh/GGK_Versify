@@ -135,6 +135,7 @@ export function BindUnitCharacteristicsInitialValues(locationObj) {
                 isSavable: false,
                 isEditable: true,
                 tosend:true,
+                LocationId:values.LocationId,
                 LocationAttributeId:values.LocationAttributeId,
                 editableAttributes: [],
                 displayAttributes: {}
@@ -165,6 +166,8 @@ export function BindUnitCharacteristicsInitialValues(locationObj) {
                   name: values.AttributeName,
                   description: values.AttributeDescription,
                   isVisible: true,
+                  LocationId:values.LocationId,
+
                   defaultUnitOfMeasureId: values.UnitOfMeasureId,
                   display: values.AttributeName,
                   UOM: values.UnitOfMeasureName,
@@ -296,7 +299,7 @@ export function updateRow() {
                 ucvalue: value,
                 effectiveStartDate: formdata.effectiveStartDate[i],
                 effectiveEndDate: formdata.effectiveEndDate[i],
-                LocationAttributeId:values.LocationAttributeId
+                LocationAttributeId:!!values.LocationAttributeId?values.LocationAttributeId :0
               })
             })
 
@@ -347,6 +350,7 @@ export function AddUnitCharateristic() {
     return new Promise((resolve) => {
       let data = getState().form.UnitCharacteristicsForm.values
       let checklength = getState().unitCharacteristics.editableAttributes.length
+      let LocationId = getState().unitCharacteristics.selectedunitCharacteristics[0].LocationId
       if (!!data ==false ||data.length == 0 || !data.hasOwnProperty('charateristicName')||  data.length <5 || checklength != data.ucvalue.length || checklength != data.effectiveStartDate.length || checklength != data.effectiveEndDate.length) {
         dispatch({
           type: ERROR,
@@ -366,6 +370,7 @@ export function AddUnitCharateristic() {
             toadd.isDeletable = true
             toadd.isSavable = true
             toadd.isEditable = true
+            toadd.LocationId=LocationId
             toadd.editableAttributes = []
             toadd.deletableAttributes=[]
             toadd.displayAttributes = {}
@@ -380,7 +385,8 @@ export function AddUnitCharateristic() {
             ucvalue: value,
             effectiveStartDate: data.effectiveStartDate[i],
             effectiveEndDate: data.effectiveEndDate[i],
-            tosend:false
+            tosend:false,
+            LocationAttributeId:0
           })
         })
 
@@ -577,10 +583,13 @@ export function DeleteUnitCharateristic() {
         } else {
           unSelectedUnitCharacteristics.push(Object.assign({}, value, {
             isSavable: false,
-            editableAttributes: [{}]
+            editableAttributes: [{}],
+            deletableAttributes:[{}]
           }))
           if(value.tosend){
-            deletedUnitCharacteristics.push(value)
+            deletedUnitCharacteristics.push(Object.assign({}, value, {
+            isSavable: true,
+          }))
           }
         }
       })
@@ -680,6 +689,8 @@ export function getDefaultUnitCharacteristics(allUOMvalues) {
             uc.deletableAttributes=[]
             uc.isDeletable = false
             uc.isSavable = false
+            uc.LocationId = 0
+
             let i = 0
             for (i in allUOMvalues) {
               if (uc.defaultUnitOfMeasureId === allUOMvalues[i].id) {
