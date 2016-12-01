@@ -10,7 +10,7 @@ export const SELECTED_UNIT_CHARACTERISTICS = 'SELECTED_UNIT_CHARACTERISTICS'
 export const TOGGLE_MODAL = 'TOGGLE_MODAL'
 export const EDITABLE_ATTRIBUTE = 'EDITABLE_ATTRIBUTE'
 export const ADD_ROW = 'ADD_ROW'
-export const ERROR = 'ERROR'
+export const ERROR = 'ERROR_UNIT'
 export const UPDATE_ROW = 'UPDATE_ROW'
 export const CURRENT_EDIT = 'CURRENT_EDIT'
 export const TO_BE_DELETED = 'TO_BE_DELETED'
@@ -91,15 +91,37 @@ export function removeEditableAttribute(element, i) {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       let data = []
-      let deletableAttributes = Arraycreator(getState().unitCharacteristics.deletableAttributes)
+      let ucvalue=[]
+      let effectiveStartDate=[]
+      let effectiveEndDate=[]
+      let formdata = getState().form.UnitCharacteristicsForm.values
+      console.log(getState().unitCharacteristics.deletableAttributes)
+      let deletableAttributes = getState().unitCharacteristics.deletableAttributes.length >0 ?Arraycreator(getState().unitCharacteristics.deletableAttributes) : []
       getState().unitCharacteristics.editableAttributes.map((values, j) => {
         if (i != j) {
           data.push(values)
+        !!formdata? !!formdata.ucvalue ?!!formdata.ucvalue[j]? ucvalue.push(formdata.ucvalue[j]):null : null :null
+        !!formdata? !!formdata.effectiveStartDate ?!!formdata.effectiveStartDate[j]? effectiveStartDate.push(formdata.effectiveStartDate[j]):null : null :null
+        !!formdata? !!formdata.effectiveEndDate ?!!formdata.effectiveEndDate[j]? effectiveEndDate.push(formdata.effectiveEndDate[j]):null : null :null
         }else{
           if(!!values.tosend && values.tosend){
-          deletableAttributes.push(value)
+          deletableAttributes.push(values)
         }
       }
+      })
+
+
+  dispatch({
+        type: 'redux-form/INITIALIZE',
+        meta: {
+          form: 'UnitCharacteristicsForm',
+          keepDirty: false
+        },
+        payload: Object.assign({}, formdata, {
+          ucvalue:ucvalue,
+          effectiveStartDate: effectiveStartDate,
+          effectiveEndDate: effectiveEndDate
+        })
       })
       dispatch({
         type: EDITABLE_ATTRIBUTE,
@@ -115,13 +137,16 @@ export function BindUnitCharacteristicsInitialValues(locationObj) {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       console.log(locationObj)
+      console.log('................................................')
       let selectedunitCharacteristics = []
       let unSelectedUnitCharacteristics = []
+      var LocationAttributeId
       if (locationObj.length == 0) {
         selectedunitCharacteristics = Arraycreator(getState().unitCharacteristics.defaultUnitCharacteristics)
       } else {
         locationObj.map((values, i) => {
             let flag = 0
+             LocationAttributeId = values.LocationAttributeId
             if (selectedunitCharacteristics.length == 0) {
               selectedunitCharacteristics.push({
                 id: values.AttributeId,
@@ -135,8 +160,10 @@ export function BindUnitCharacteristicsInitialValues(locationObj) {
                 isSavable: false,
                 isEditable: true,
                 tosend:true,
+                LocationId:values.LocationId,
                 LocationAttributeId:values.LocationAttributeId,
                 editableAttributes: [],
+                deletableAttributes:[],
                 displayAttributes: {}
               })
               selectedunitCharacteristics[0].editableAttributes.push({
@@ -165,6 +192,9 @@ export function BindUnitCharacteristicsInitialValues(locationObj) {
                   name: values.AttributeName,
                   description: values.AttributeDescription,
                   isVisible: true,
+                  LocationId:values.LocationId,
+                  deletableAttributes:[],
+                  LocationAttributeId:values.LocationAttributeId,
                   defaultUnitOfMeasureId: values.UnitOfMeasureId,
                   display: values.AttributeName,
                   UOM: values.UnitOfMeasureName,
@@ -179,8 +209,7 @@ export function BindUnitCharacteristicsInitialValues(locationObj) {
                   ucvalue: values.Value,
                   effectiveStartDate: returndate(values.EffectiveStartDate),
                   effectiveEndDate: returndate(values.EffectiveEndDate),
-                  tosend:true,
-                  LocationAttributeId:values.LocationAttributeId
+                  tosend:true
                 })
               }
             }
@@ -213,6 +242,7 @@ export function BindUnitCharacteristicsInitialValues(locationObj) {
 
         })
         if (flag != 1) {
+          values.LocationAttributeId=LocationAttributeId
           selectedunitCharacteristics.push(values)
         }
       })
@@ -269,7 +299,7 @@ export function updateRow() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       let formdata = getState().form.UnitCharacteristicsForm.values
-      let deletableAttributes = Arraycreator(getState().unitCharacteristics.deletableAttributes)
+      let deletableAttributes =getState().unitCharacteristics.deletableAttributes.length >0 ? Arraycreator(getState().unitCharacteristics.deletableAttributes) :[]
       let checklength = getState().unitCharacteristics.editableAttributes.length
       if ( formdata.length == 0 || !formdata.hasOwnProperty('charateristicName')||  formdata.length <5 ||checklength != formdata.ucvalue.length || checklength != formdata.effectiveStartDate.length || checklength != formdata.effectiveEndDate.length) {
         dispatch({
@@ -286,7 +316,7 @@ export function updateRow() {
         let errorflag = false
         getState().unitCharacteristics.selectedunitCharacteristics.map((values, j) => {
           if (i != j) {
-            data.push(value)
+            data.push(values)
           } else {
             formdata.ucvalue.map((value, i) => {
               if(value == ''){
@@ -296,7 +326,7 @@ export function updateRow() {
                 ucvalue: value,
                 effectiveStartDate: formdata.effectiveStartDate[i],
                 effectiveEndDate: formdata.effectiveEndDate[i],
-                LocationAttributeId:values.LocationAttributeId
+                LocationAttributeId:!!values.LocationAttributeId? values.LocationAttributeId :0
               })
             })
 
@@ -347,6 +377,7 @@ export function AddUnitCharateristic() {
     return new Promise((resolve) => {
       let data = getState().form.UnitCharacteristicsForm.values
       let checklength = getState().unitCharacteristics.editableAttributes.length
+      let LocationId = getState().unitCharacteristics.selectedunitCharacteristics[0].LocationId
       if (!!data ==false ||data.length == 0 || !data.hasOwnProperty('charateristicName')||  data.length <5 || checklength != data.ucvalue.length || checklength != data.effectiveStartDate.length || checklength != data.effectiveEndDate.length) {
         dispatch({
           type: ERROR,
@@ -366,6 +397,7 @@ export function AddUnitCharateristic() {
             toadd.isDeletable = true
             toadd.isSavable = true
             toadd.isEditable = true
+            toadd.LocationId=LocationId
             toadd.editableAttributes = []
             toadd.deletableAttributes=[]
             toadd.displayAttributes = {}
@@ -380,7 +412,8 @@ export function AddUnitCharateristic() {
             ucvalue: value,
             effectiveStartDate: data.effectiveStartDate[i],
             effectiveEndDate: data.effectiveEndDate[i],
-            tosend:false
+            tosend:false,
+            LocationAttributeId:0
           })
         })
 
@@ -426,10 +459,11 @@ export function ToggleAddEditModal(action) {
         })
 
         let data = [{}]
+
         dispatch({
           type: EDITABLE_ATTRIBUTE,
-          payload: data
-
+          payload: data,
+          deletableAttributes:[]
         })
         dispatch({
           type: TOGGLE_MODAL,
@@ -467,6 +501,7 @@ export function ToggleAddEditModal(action) {
 export function pushEditableAtribute() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
+      let deletableAttributes = getState().unitCharacteristics.deletableAttributes
       console.log(!!getState().form.UnitCharacteristicsForm.values)
       let data = Arraycreator(getState().unitCharacteristics.editableAttributes)
 
@@ -484,7 +519,8 @@ export function pushEditableAtribute() {
       data.push({})
       dispatch({
         type: EDITABLE_ATTRIBUTE,
-        payload: data
+        payload: data,
+        deletableAttributes:deletableAttributes
 
       })
 
@@ -577,10 +613,13 @@ export function DeleteUnitCharateristic() {
         } else {
           unSelectedUnitCharacteristics.push(Object.assign({}, value, {
             isSavable: false,
-            editableAttributes: [{}]
+            editableAttributes: [{}],
+            deletableAttributes:[]
           }))
           if(value.tosend){
-            deletedUnitCharacteristics.push(value)
+            deletedUnitCharacteristics.push(Object.assign({}, value, {
+            isSavable: true,
+          }))
           }
         }
       })
@@ -680,6 +719,8 @@ export function getDefaultUnitCharacteristics(allUOMvalues) {
             uc.deletableAttributes=[]
             uc.isDeletable = false
             uc.isSavable = false
+            uc.LocationId = 0
+
             let i = 0
             for (i in allUOMvalues) {
               if (uc.defaultUnitOfMeasureId === allUOMvalues[i].id) {

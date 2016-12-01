@@ -9,8 +9,7 @@ import DropdownListField from 'components/DropdownList/DropdownListField'
 import TextAreaField from 'components/TextAreaField/TextAreaField'
 
 const EffectiveDateValues = (props) => { 
-    console.log(props.error)
-    console.log(props.formdata)
+
    return (
   <div>
     <Table striped bordered condensed hover>
