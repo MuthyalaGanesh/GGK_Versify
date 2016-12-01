@@ -7,31 +7,6 @@ import {
 } from "./serviceCall"
 import axios from 'axios'
 
-
-
-/*function mapWorkFlowInfo() {
-    
-    let workFlowData = XMLHttpRequestSyncGet(Constants.WORKFLOW_DATA).GetWorkflowDataResult.WorkflowGroupsWorkflows;
-    let workFlows = XMLHttpRequestSyncGet(Constants.WORKFLOW_GROUPS);
-    var finalArray = _.map(workFlows, function(workflow) {
-        return _.extend(workflow, _.omit(_.find(workFlowData, {
-            Key: workflow.id
-        }), 'Key'));
-    });
-    let workFlowGroup = []
-    finalArray.map((final) => {
-        let newData = {};
-        newData.WorkflowGroupLocationId = 0
-        newData.WorkflowGroupId = final.id
-        newData.WorkflowGroupName = final.name
-        newData.isActive = final.isActive
-        newData.workflowTypeId = final.workflowTypeId
-        newData.title = final.Value != null && final.Value.length > 0 ? final.Value.join('\n') : null
-        workFlowGroup.push(newData)
-    });
-    return workFlowGroup;
-}
-*/
 export function getLocationTypes() {
   return axios({
     method: 'get',
@@ -72,7 +47,6 @@ export function getMarketDrivenMappings(marketId = null) {
       method: 'get',
       url: url
     })
-    // return XMLHttpRequestSyncGet(Constants.LWMARKETDRIVEN_MAPPINGS, marketId != null ? "isoMarketId=" + marketId : null);
 }
 
 export function getOwners() {
@@ -112,7 +86,6 @@ export function getOMSLocationwizardData(locationId = null) {
       method: 'get',
       url: url
     })
-    //  return XMLHttpRequestSyncGet(Constants.OMSLOCATIONWIZARD_DATA, locationId != null ? "locationId=" + locationId : null);
 }
 
 export function getUnitCharacteristics() {
@@ -120,7 +93,6 @@ export function getUnitCharacteristics() {
       method: 'get',
       url: Constants.ATTRIBUTES,
     })
-    //return XMLHttpRequestSyncGet(Constants.ATTRIBUTES);
 }
 
 
@@ -130,7 +102,6 @@ export function getAllUOMValues() {
       method: 'get',
       url: Constants.UNITS_OF_MEASURE,
     })
-    //return XMLHttpRequestSyncGet(Constants.UNITS_OF_MEASURE);
 }
 
 export function getSystemIntegrationTypes() {
@@ -138,7 +109,6 @@ export function getSystemIntegrationTypes() {
       method: 'get',
       url: Constants.OMS_LOCATION_WIZARD_DATA,
     })
-    // return XMLHttpRequestSyncGet(Constants.OMS_LOCATION_WIZARD_DATA);
 }
 
 export const basicInfoDropdowns = {

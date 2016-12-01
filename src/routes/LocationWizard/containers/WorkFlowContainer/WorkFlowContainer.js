@@ -12,6 +12,6 @@ const mapDispatchToProps = {
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(reduxForm({
-    form: 'WorkFlowForm',  //Form name is first form
+    form: 'WorkFlowForm', 
     destroyOnUnmount: false,
 })(WorkFlow));

@@ -92,7 +92,9 @@ export const DataHistorian = (props) => {
                 </div>
                 <Modal show={props.dataHistorian.showAddDataHistorianModal}>
                 <Modal.Header>
-                    <Modal.Title>New Data Historian</Modal.Title>
+                            {props.dataHistorian.AddNewDataHistorian  ?       
+                            <Modal.Title>New Data Historian</Modal.Title> :
+                            <Modal.Title>Edit Data Historian</Modal.Title>}                    
                 </Modal.Header>
                 <Modal.Body>
                     <div className="row">

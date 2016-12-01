@@ -55,6 +55,7 @@ export const HIDE_ALERT = 'HIDE_ALERT';
 export const SAVE_RESPONSE_HANDLER = 'SAVE_RESPONSE_HANDLER';
 export const SHOW_SPINNER = 'SHOW_SPINNER';
 export const HIDE_SPINNER = 'HIDE_SPINNER';
+export const SEARCH_LOCATIONS_LIST = 'SEARCH_LOCATIONS_LIST';
 var currentLocation = null;
 var isLocationNameExists = false;
 
@@ -115,26 +116,26 @@ export function leftMenuDropdownClickEvent(id, event) {
   return (dispatch, getState) => {
     scroll.scrollToTop();
     if (getState().form.BasicInfoForm.hasOwnProperty('anyTouched') ||
-         getState().form.CredentialsManagementForm.hasOwnProperty('anyTouched') || 
-         getState().form.EquipmentsForm.hasOwnProperty('anyTouched') || 
-         getState().workFlows.isChanged || 
-         getState().users.saveRoles.length > 0 || 
-         getState().gateways.saveGateway.length > 0 ||
-         getState().dataHistorian.saveScada.length > 0 ||
-         getState().equipments.isChanged ||
-         getState().systemIntegration.isChanged ||
-         getState().unitCharacteristics.isChanged
-         ) {
-              dispatch({
-                type: SHOW_ALERT,
-                payload: {
-                  locationState: getState().location,
-                  currentLocationId: id
-                }
+      getState().form.CredentialsManagementForm.hasOwnProperty('anyTouched') ||
+      getState().form.EquipmentsForm.hasOwnProperty('anyTouched') ||
+      getState().workFlows.isChanged ||
+      getState().users.saveRoles.length > 0 ||
+      getState().gateways.saveGateway.length > 0 ||
+      getState().dataHistorian.saveScada.length > 0 ||
+      getState().equipments.isChanged ||
+      getState().systemIntegration.isChanged ||
+      getState().unitCharacteristics.isChanged
+    ) {
+      dispatch({
+        type: SHOW_ALERT,
+        payload: {
+          locationState: getState().location,
+          currentLocationId: id
+        }
       })
     } else {
       dispatch(showSpinner())
-      setTimeout(function() {
+      setTimeout(function () {
         dispatch(LoadAndRefreshForms(id, event));
         scrollSpy.update();
       }, 1)
@@ -164,7 +165,7 @@ function CheckLocationNameIsExists(allLocations, locationName, locationId) {
     if (isLocationNameExists) {
       return false;
     }
-    if (item.Name == locationName.trim()) {
+    if (item.Name.toLowerCase() == (locationName || '').trim().toLowerCase()) {
       if (!(locationId > 0 && item.LocationId == locationId) && !isLocationNameExists) {
         isLocationNameExists = true;
         return false;
@@ -253,7 +254,7 @@ export function LoadAndRefreshForms(id, event) {
         payload: ''
       })
 
-      //If Location Id > 0, only bind data. otherwise load new forms
+      /*If Location Id > 0, only bind data. otherwise load new forms*/
       if (id > 0) {
         try {
           var allLocationdata = getState().location.allLocations;
@@ -309,21 +310,21 @@ export function LoadAndRefreshForms(id, event) {
         }
       } else {
         dispatch({
-                type: 'redux-form/INITIALIZE',
-                meta: {
-                  form: 'BasicInfoForm',
-                  keepDirty: false
-                },
-                payload: ''
-              })
-              dispatch({
-                type: 'redux-form/INITIALIZE',
-                meta: {
-                  form: 'CredentialsManagementForm',
-                  keepDirty: false
-                },
-                payload: ''
-              })
+          type: 'redux-form/INITIALIZE',
+          meta: {
+            form: 'BasicInfoForm',
+            keepDirty: false
+          },
+          payload: ''
+        })
+        dispatch({
+          type: 'redux-form/INITIALIZE',
+          meta: {
+            form: 'CredentialsManagementForm',
+            keepDirty: false
+          },
+          payload: ''
+        })
 
         dispatch(getDefaultCredentialBasicData())
         dispatch({
@@ -366,7 +367,7 @@ function basicInforObjectPreparation(values, currentLocationObj) {
     CreateUser: values.createUser || null,
     UpdateDate: '/Date(' + todayDate.getTime() + ')/',
     UpdateUser: values.updateUser || 'GGK',
-    IsDispatchLevel: currentLocationObj.IsDispatchLevel ||false,
+    IsDispatchLevel: currentLocationObj.IsDispatchLevel || false,
     IsScheduleLevel: currentLocationObj.IsScheduleLevel || false,
     IsOutageLevel: values.isOutageLevel,
     IsAFWLevel: currentLocationObj.IsAFWLevel || false,
@@ -388,11 +389,11 @@ function basicInforObjectPreparation(values, currentLocationObj) {
     PhysicalTz: values.physicalTimezone.id || values.physicalTimezone,
     Status: currentLocationObj.Status || null,
     StatusDate: currentLocationObj.StatusDate || null,
-    OwnershipPct: values.ownerShipPercentage != '' ? values.ownerShipPercentage:0,
+    OwnershipPct: values.ownerShipPercentage != '' ? values.ownerShipPercentage : 0,
     ShortName: currentLocationObj.ShortName || null,
     CAISOMarketId: currentLocationObj.CAISOMarketId || null,
     GADSUnitId: currentLocationObj.GADSUnitId || null,
-    LocationScadaPoints:currentLocationObj.LocationScadaPoints || null,
+    LocationScadaPoints: currentLocationObj.LocationScadaPoints || null,
     CustomValue1: 0,
     CustomValue2: 0,
     CustomValue3: 0,
@@ -415,18 +416,18 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, marketDrivenMapping
     if (credentialsObj.hasOwnProperty(item.DisplayName)) {
       if (item.IsDropDown) {
         if (typeof credentialsObj[item.DisplayName] == "string") {
-          itemData.value = credentialsObj[item.DisplayName];
+          itemData.value = credentialsObj[item.DisplayName] || '';
         } else {
-          itemData.value = credentialsObj[item.DisplayName].key;
+          itemData.value = credentialsObj[item.DisplayName] != null ? credentialsObj[item.DisplayName].key : '';
         }
 
       } else {
-        itemData.value = credentialsObj[item.DisplayName];
+        itemData.value = credentialsObj[item.DisplayName] || '';
       }
     }
     itemDatawithMarketDrivenMappings.push(itemData);
   });
-  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function(b) {
+  var groupByItems = _.groupBy(itemDatawithMarketDrivenMappings, function (b) {
     return b.ExternalSystemName
   })
   var staticPjmemktToAdd = {
@@ -465,7 +466,7 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, marketDrivenMapping
     locationMappingData.push(locationMappingDataItem);
   })
 
-  //ADD default location mappings
+  /*ADD default location mappings*/
   if (!(locationId > 0)) {
     locationMappingData.push(staticVTraderToAdd);
   }
@@ -487,7 +488,7 @@ function prepareCredentialsAndIdentifiersObj(credentialsObj, marketDrivenMapping
     })
     finalLocationMappingData.push(mappedItem);
   });
-  //Final  Credentials And Identifiers Object
+  /*Final  Credentials And Identifiers Object*/
   credentialsAndIdentifiersObj = [{
     LocationMappingRecords: finalLocationMappingData
   }];
@@ -501,7 +502,7 @@ function equipmentObjectPreparation(stateTree, dispatch, locationId) {
       locationId > 0 ? ie.ParentLocationId = locationId : null
       equipmentsObj.push(ie)
     })
-   
+
     return equipmentsObj;
   } else {
     dispatch({
@@ -515,10 +516,18 @@ function SystemIntegrationObjectPreparation(stateTree, dispatch) {
   var systemIntegrationObj = []
   if (stateTree.systemIntegration) {
     stateTree.systemIntegration.selectedSystemIntegrationTypes.map(ssit => {
+      (ssit.AliasName && ssit.AliasName.replace(/\s/g, '').length)
+        ? ssit.FlaggedForDeletion = false : ssit.FlaggedForDeletion = true
       systemIntegrationObj.push(ssit)
     })
-
-    console.log(systemIntegrationObj, "SystemIntegrations")
+    if (stateTree.systemIntegration.deletedSystemIntegrations &&
+      stateTree.systemIntegration.deletedSystemIntegrations.length > 0) {
+      stateTree.systemIntegration.deletedSystemIntegrations.map(dsi => {
+        dsi.AliasName = ""
+        dsi.FlaggedForDeletion = true
+        systemIntegrationObj.push(dsi)
+      })
+    }
   } else {
     dispatch({
       type: 'ERROR',
@@ -530,22 +539,23 @@ function SystemIntegrationObjectPreparation(stateTree, dispatch) {
 
 
 function unitCharacterSticObjectPreparation(stateTree, dispatch) {
+debugger
   var unitCharacteristicsObj = [];
   if (stateTree.unitCharacteristics && stateTree.unitCharacteristics.selectedunitCharacteristics) {
     stateTree.unitCharacteristics.selectedunitCharacteristics.map(suc => {
       suc.editableAttributes.map(ea => {
         if (suc.isSavable) {
           unitCharacteristicsObj.push(new Object({
-            LocationId: suc.LocationId != 0 ? suc.LocationId : 0,
+            LocationId: !!suc.LocationId ? suc.LocationId : 0,
             AttributeId: suc.id != 0 ? suc.id : 0,
             AttributeName: suc.name,
             AttributeDescription: suc.description,
-            LocationAttributeId: ea.LocationAttributeId != 0 ? ea.LocationAttributeId : 0,
-            UnitOfMeasureId: suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
+            LocationAttributeId: !!ea.LocationAttributeId  ? ea.LocationAttributeId : 0,
+            UnitOfMeasureId: !!suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
             UnitOfMeasureName: suc.UOM,
-            Value: ea.Value ? ea.Value : "",
-            EffectiveStartDate: !!ea.EffectiveStartDate ? '/Date(' + (new Date(ea.EffectiveStartDate)).getTime() + ')/' : null,
-            EffectiveEndDate: !!ea.EffectiveEndDate ? '/Date(' + (new Date(ea.EffectiveEndDate)).getTime() + ')/' : null,
+            Value: ea.ucvalue ? ea.ucvalue : "",
+            EffectiveStartDate: !!ea.effectiveStartDate ? '/Date(' + (new Date(ea.effectiveStartDate)).getTime() + ')/' : null,
+            EffectiveEndDate: !!ea.effectiveEndDate ? '/Date(' + (new Date(ea.effectiveEndDate)).getTime() + ')/' : null,
             DisplayName: suc.display
           }))
         }
@@ -555,16 +565,16 @@ function unitCharacterSticObjectPreparation(stateTree, dispatch) {
         suc.deletableAttributes.map(ea => {
           if (suc.isSavable) {
             unitCharacteristicsObj.push(new Object({
-              LocationId: suc.LocationId != 0 ? suc.LocationId : 0,
-              AttributeId: suc.id != 0 ? suc.id : 0,
+              LocationId: !!suc.LocationId ? suc.LocationId : 0,
+              AttributeId: !!suc.id  ? suc.id : 0,
               AttributeName: suc.name,
               AttributeDescription: suc.description,
-              LocationAttributeId: ea.LocationAttributeId != 0 ? ea.LocationAttributeId : 0,
+              LocationAttributeId: !!ea.LocationAttributeId  ? ea.LocationAttributeId : 0,
               UnitOfMeasureId: suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
               UnitOfMeasureName: suc.UOM,
               Value: "",
-              EffectiveStartDate: !!ea.EffectiveStartDate ? '/Date(' + (new Date(ea.EffectiveStartDate)).getTime() + ')/' : null,
-              EffectiveEndDate: !!ea.EffectiveEndDate ? '/Date(' + (new Date(ea.EffectiveEndDate)).getTime() + ')/' : null,
+              EffectiveStartDate: !!ea.effectiveStartDate ? '/Date(' + (new Date(ea.effectiveStartDate)).getTime() + ')/' : null,
+              EffectiveEndDate: !!ea.effectiveEndDate ? '/Date(' + (new Date(ea.effectiveEndDate)).getTime() + ')/' : null,
               DisplayName: suc.display
             }))
           }
@@ -584,16 +594,16 @@ function unitCharacterSticObjectPreparation(stateTree, dispatch) {
       suc.editableAttributes.map(ea => {
         if (suc.isSavable) {
           unitCharacteristicsObj.push(new Object({
-            LocationId: suc.LocationId != 0 ? suc.LocationId : 0,
-            AttributeId: suc.id != 0 ? suc.id : 0,
+            LocationId: !!suc.LocationId ? suc.LocationId : 0,
+            AttributeId: !!suc.id  ? suc.id : 0,
             AttributeName: suc.name,
             AttributeDescription: suc.description,
-            LocationAttributeId: ea.LocationAttributeId != 0 ? ea.LocationAttributeId : 0,
-            UnitOfMeasureId: suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
+            LocationAttributeId: !!ea.LocationAttributeId ? ea.LocationAttributeId : 0,
+            UnitOfMeasureId: !!suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
             UnitOfMeasureName: suc.UOM,
             Value: "",
-            EffectiveStartDate: !!ea.EffectiveStartDate ? '/Date(' + (new Date(ea.EffectiveStartDate)).getTime() + ')/' : null,
-            EffectiveEndDate: !!ea.EffectiveEndDate ? '/Date(' + (new Date(ea.EffectiveEndDate)).getTime() + ')/' : null,
+            EffectiveStartDate: !!ea.effectiveStartDate ? '/Date(' + (new Date(ea.effectiveStartDate)).getTime() + ')/' : null,
+            EffectiveEndDate: !!ea.effectiveEndDate ? '/Date(' + (new Date(ea.effectiveEndDate)).getTime() + ')/' : null,
             DisplayName: suc.display
           }))
         }
@@ -603,16 +613,16 @@ function unitCharacterSticObjectPreparation(stateTree, dispatch) {
         suc.deletableAttributes.map(ea => {
           if (suc.isSavable) {
             unitCharacteristicsObj.push(new Object({
-              LocationId: suc.LocationId != 0 ? suc.LocationId : 0,
-              AttributeId: suc.id != 0 ? suc.id : 0,
+              LocationId: !!suc.LocationId  ? suc.LocationId : 0,
+              AttributeId: !!suc.id  ? suc.id : 0,
               AttributeName: suc.name,
               AttributeDescription: suc.description,
-              LocationAttributeId: ea.LocationAttributeId != 0 ? ea.LocationAttributeId : 0,
-              UnitOfMeasureId: suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
+              LocationAttributeId: !!ea.LocationAttributeId  ? ea.LocationAttributeId : 0,
+              UnitOfMeasureId: !!suc.defaultUnitOfMeasureId ? suc.defaultUnitOfMeasureId : 0,
               UnitOfMeasureName: suc.UOM,
               Value: "",
-              EffectiveStartDate: !!ea.EffectiveStartDate ? '/Date(' + (new Date(ea.EffectiveStartDate)).getTime() + ')/' : null,
-              EffectiveEndDate: !!ea.EffectiveEndDate ? '/Date(' + (new Date(ea.EffectiveEndDate)).getTime() + ')/' : null,
+              EffectiveStartDate: !!ea.effectiveStartDate ? '/Date(' + (new Date(ea.effectiveStartDate)).getTime() + ')/' : null,
+              EffectiveEndDate: !!ea.effectiveEndDate ? '/Date(' + (new Date(ea.effectiveEndDate)).getTime() + ')/' : null,
               DisplayName: suc.display
             }))
           }
@@ -620,7 +630,7 @@ function unitCharacterSticObjectPreparation(stateTree, dispatch) {
       }
     })
   }
-  console.log(unitCharacteristicsObj, "UnitCharacteristics")
+console.log(unitCharacteristicsObj)
   return unitCharacteristicsObj;
 }
 
@@ -662,7 +672,6 @@ function gateWayObjectPreparation(stateTree, dispatch) {
       type: 'ERROR',
       payload: 1
     })
-  console.log("gateways..", gatewayObj)
   return gatewayObj
 }
 
@@ -722,26 +731,39 @@ function credentialdatavalidation(data) {
 export function saveCompleteLocationWizard() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      let k 
-      let flag=0
-      console.log('test')
-      for (k in getState().form.BasicInfoForm.syncErrors){
-        console.log(!!getState().form.BasicInfoForm.values[`${k}`])
-       if(!!getState().form.BasicInfoForm.values[`${k}`]==false){
-          console.log(k)
-          flag = 1
-          break 
-       } 
-      }
-      if(flag==0){
+      let k
+      let flag = 0
+      if (getState().form.BasicInfoForm.values != "") {
+        for (k in getState().form.BasicInfoForm.syncErrors) {
+          if (!!getState().form.BasicInfoForm.values[`${k}`] == false) {
+            flag = 1
+            break
+          }
+        }
+        var formBasicInfoValues = getState().form.BasicInfoForm.values;
+        if (formBasicInfoValues.ownerShipPercentage == 0) {
+          flag = 1;
+        }
+        if (!!formBasicInfoValues.secondarytechnologyType &&
+          formBasicInfoValues.technologyType.id == formBasicInfoValues.secondarytechnologyType.id) {
+          flag = 1;
+        }
+        if (flag == 0) {
           saveObjectPreparationAndCall(getState, dispatch)
-      }
-      else{
+        } else {
+          dispatch({
+            type: 'ERROR',
+            payload: 1
+          })
+        }
+      } else {
+
         dispatch({
-          type:'ERROR',
-          payload:1
+          type: 'ERROR',
+          payload: 1
         })
       }
+
 
     })
   }
@@ -781,7 +803,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
     var locationId = values.locationId || 0;
     var primaryMarketTypeId = values.primaryMarket.id || values.primaryMarket;
     var basicInfoObj = basicInforObjectPreparation(values, getState().basic.CurrentLocation);
-    //get MarketDrivenMappings from API based on marketType ID
+    /*get MarketDrivenMappings from API based on marketType ID*/
     var credentialsAndIdentifier = prepareCredentialsAndIdentifiersObj(getState().form.CredentialsManagementForm ? getState().form.CredentialsManagementForm.values : {},
       getState().basic.MarketDrivenMappings,
       getState().basic.InitialAssignedLocationMappings,
@@ -812,15 +834,15 @@ function saveObjectPreparationAndCall(getState, dispatch) {
     var finalData = JSON.stringify(finalSaveObject)
     console.log("finalSaveObject", finalData)
     dispatch({
-        type: SHOW_SPINNER,
-        payload: true
-      })
-      //SAVE LOCATION
+      type: SHOW_SPINNER,
+      payload: true
+    })
+    /*SAVE LOCATION*/
     try {
       finalLocationSaveObject(finalSaveObject).then(function (response) {
         console.log("success", response);
         if (response.status === 200) {
-          //ADD Location ID to Object
+          /*ADD Location ID to Object*/
           var newLocationID = response.data.SaveOMSLocationWizardDataResult.Location.Id;
           var locationObj = response.data.SaveOMSLocationWizardDataResult.Location
           getState().form.BasicInfoForm.values.locationId = newLocationID;
@@ -857,7 +879,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
           dispatch(bindLocationData(response.data.SaveOMSLocationWizardDataResult.AssignedScadaPoints, newLocationID));
           dispatch(bindWorkLocationData(response.data.SaveOMSLocationWizardDataResult.AssignedWorkflowGroups));
           dispatch(bindUserLocationData(response.data.SaveOMSLocationWizardDataResult.AssignedContacts, newLocationID));
-          //Save equipment
+          /*Save equipment*/
           if (locationId == 'undefined' || locationId == 0) {
             basicInfoObj.Id = newLocationID
             basicInfoObj.LocationId = newLocationID;
@@ -883,7 +905,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
 
           }
 
-          //Refresh left menu        
+          /*Refresh left menu*/
           dispatch({
             type: SAVE_RESPONSE_HANDLER,
             payload: {
@@ -897,9 +919,16 @@ function saveObjectPreparationAndCall(getState, dispatch) {
               type: GET_ALL_LOCATIONS_INFORMATION,
               payload: response.data.GetAllLocationsResult
             });
+            var searchLocationsList = []
+            searchLocationsList = arrayPreparation({
+              Children: response.data.GetAllLocationsResult
+            }, searchLocationsList)
+            dispatch({
+              type: SEARCH_LOCATIONS_LIST,
+              payload: searchLocationsList
+            });
           }).then(function () {
-            //Expnd ADD Node in left menu
-            console.log('new locationID', newLocationID)
+            /*Expnd ADD Node in left menu*/
             dispatch({
               type: DEFAULT_NODE_EXPANDED,
               payload: newLocationID
@@ -959,7 +988,7 @@ function saveObjectPreparationAndCall(getState, dispatch) {
 
 function toArray(obj) {
   var array = [];
-  // iterate backwards ensuring that length is an UInt32
+  /* iterate backwards ensuring that length is an UInt32*/
   for (var i = obj.length >>> 0; i--;) {
     array[i] = obj[i];
   }
@@ -994,53 +1023,81 @@ function AddDefaultParent(objectfuncntion) {
   return returnObj
 }
 
+function arrayPreparation(data, array) {
+  var secondarydat = array
+  if (data.hasOwnProperty('Id')) {
+    secondarydat.push({
+      id: data.Id,
+      name: data.Name
+    })
+  }
+
+  if (data.Children.length == 0) {
+
+    return secondarydat
+  } else {
+    data.Children.map((data, i) => {
+
+      secondarydat = arrayPreparation(data, secondarydat)
+    })
+    return secondarydat
+  }
+
+}
 export function getLocationsInformation() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-     getState().location.allLocations.length == 0 ?
-      basicInfoDropdowns.getParentLocations().then(function (response) {
-        dispatch({
-          type: GET_ALL_LOCATIONS_INFORMATION,
-          payload: response.data.GetAllLocationsResult
+      getState().location.allLocations.length == 0 ?
+        basicInfoDropdowns.getParentLocations().then(function (response) {
+          dispatch({
+            type: GET_ALL_LOCATIONS_INFORMATION,
+            payload: response.data.GetAllLocationsResult
+          });
+          var searchLocationsList = []
+          searchLocationsList = arrayPreparation({
+            Children: response.data.GetAllLocationsResult
+          }, searchLocationsList)
+          dispatch({
+            type: SEARCH_LOCATIONS_LIST,
+            payload: searchLocationsList
+          });
+        }).then(function () {
+          dispatch({
+            type: HIDE_SPINNER,
+            payload: false
+          });
+        }) : dispatch({
+          type: HIDE_SPINNER,
+          payload: false
         });
-      }).then(function () {
+
       dispatch({
-        type: HIDE_SPINNER,
-        payload: false
-      });
-    }) :dispatch({
-        type: HIDE_SPINNER,
-        payload: false
-      });
-            
-    console.log("test0000000")
-   dispatch({
-      type:'redux-form/INITIALIZE',
-      meta:{
-        form:'BasicInfoForm',
-        keepDirty:false
-      },
-      payload:''
-    })
-        dispatch({
-      type:'redux-form/INITIALIZE',
-      meta:{
-        form:'CredentialsManagementForm',
-        keepDirty:false
-      },
-      payload:''
-    })
-    dispatch(InitialEquipmentsForNewLocation())
-    dispatch({
-      type:'EMPTY_BASIC_CREDENTIAL_INTIAL_VALUES'
-    })
+        type: 'redux-form/INITIALIZE',
+        meta: {
+          form: 'BasicInfoForm',
+          keepDirty: false
+        },
+        payload: ''
       })
+      dispatch({
+        type: 'redux-form/INITIALIZE',
+        meta: {
+          form: 'CredentialsManagementForm',
+          keepDirty: false
+        },
+        payload: ''
+      })
+      dispatch(InitialEquipmentsForNewLocation())
+      dispatch({
+        type: 'EMPTY_BASIC_CREDENTIAL_INTIAL_VALUES'
+      })
+    })
   }
 }
 
 export const ACTION_HANDLERS = {
   [TOGGLE_LEFTMENU_CLICK]: (state, action) => {
-    //Handling adding claases  sidebar-open,sidebar-collapse based on screen resolution
+    /*Handling adding claases  sidebar-open,sidebar-collapse based on screen resolution*/
     var bodyClassList = toArray(document.getElementsByTagName('body')[0].classList);
     var w = window,
       d = document,
@@ -1099,7 +1156,6 @@ export const ACTION_HANDLERS = {
     })
   },
   [SAVE_RESPONSE_HANDLER]: (state, action) => {
-    //action.response:.message:.isSaved: 
     if (action.payload.openSavePopup) {
       return Object.assign({}, state, {
         showLocationSaveResponsePopup: true,
@@ -1115,6 +1171,11 @@ export const ACTION_HANDLERS = {
 
 
   },
+  [SEARCH_LOCATIONS_LIST]: (state, action) => {
+    return Object.assign({}, state, {
+      searchLocationList: action.payload
+    })
+  }
 }
 
 const initialState = {
@@ -1127,7 +1188,8 @@ const initialState = {
   responseMessage: '',
   currentLocationId: 0,
   isLoading: true,
-  isEditable: 0
+  isEditable: 0,
+  searchLocationList: []
 };
 
 export default function locationWizardReducer(state = initialState, action) {

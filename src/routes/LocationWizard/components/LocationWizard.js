@@ -39,7 +39,10 @@ return (
     </div> 
     : null}
    
-    <LocationLeftMenu Locations={props.location.allLocations} leftMenuDropdownClickEvent={props.leftMenuDropdownClickEvent} defaultNodeExpanded ={props.location.defaultNodeExpanded} />
+    <LocationLeftMenu Locations={props.location.allLocations} 
+                      leftMenuDropdownClickEvent={props.leftMenuDropdownClickEvent} 
+                      defaultNodeExpanded ={props.location.defaultNodeExpanded}
+                      searchLocationList={props.location.searchLocationList} />
     <section id="content_header" className="content-header col-xs-12 col-md-10">
          <Link to='#' onClick={props.toggleMenuClick} id="sidebar_toggle" className="sidebar-toggle" data-toggle="offcanvas" role="button">
           <span className="glyphicon glyphicon-align-justify">

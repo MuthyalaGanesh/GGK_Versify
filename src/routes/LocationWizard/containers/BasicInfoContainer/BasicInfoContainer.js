@@ -26,6 +26,7 @@ const mapStateToProps = (state) => ({
     initialValues: state.basic.BasicInfo
 })
 
+
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
     form: 'BasicInfoForm', //Form name is first form
     destroyOnUnmount: false,    

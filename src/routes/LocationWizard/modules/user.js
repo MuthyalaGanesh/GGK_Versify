@@ -286,9 +286,6 @@ export function getUserInfoService() {
         getUserInfo().then(function(contactsResponse) {
           getRoleInfo().then(function(rolesResponse) {
             let allcontacts = contactsResponse.data.GetAutoCompleteContactsResult.Contacts
-            allcontacts.map((contactInfo) => {
-              contactInfo.displayText = contactInfo.Name + ' (' + contactInfo.Login + ')'
-            })
             let userInfo = {
               Roles: rolesResponse.data.GetRolesResult.Roles,
               Contacts: allcontacts
@@ -358,8 +355,8 @@ export function selectRole() {
       } else if (getState().form.UsersForm.values.RoleByRoles) {
         let roleinfo = {};
         roleinfo.roleByRole = getState().form.UsersForm.values.RoleByRoles
-        if (fetchedRoles.findIndex((fetchedId) => fetchedId === roleinfo.roleByRole.Id) < 0) {           
-          getContactsByRole(locationId,roleinfo.roleByRole.Id).then(function(response) {
+        if (fetchedRoles.findIndex((fetchedId) => fetchedId === roleinfo.roleByRole.Id) < 0) {
+          getContactsByRole(locationId, roleinfo.roleByRole.Id).then(function(response) {
             if (response.data && response.data.GetLWContactsByRoleResult && response.data.GetLWContactsByRoleResult.Contacts) {
               let result = response.data.GetLWContactsByRoleResult.Contacts
               result.map((contact) => {
@@ -415,7 +412,7 @@ export function selectContact() {
         let roleinfo = {};
         roleinfo.contactsByContacts = getState().form.UsersForm.values.ContactsByContact
         if (fetchedContacts.findIndex((fetchedId) => fetchedId === roleinfo.contactsByContacts.Id) < 0) {
-          getRolesByContact(locationId,roleinfo.contactsByContacts.Id).then(function(response) {
+          getRolesByContact(locationId, roleinfo.contactsByContacts.Id).then(function(response) {
             if (response.data && response.data.GetLWRolesByContactResult) {
               roleinfo.roles = response.data.GetLWRolesByContactResult.Roles
               roleinfo.sharedRoles = response.data.GetLWRolesByContactResult.ContactsWhoShareRoles
@@ -425,7 +422,7 @@ export function selectContact() {
               payload: roleinfo
             })
           }).catch(function(error) {
-            alert("error" + JSON.stringify(error));
+            console.log("error" + JSON.stringify(error));
           });
         } else {
           dispatch({
@@ -534,9 +531,6 @@ export const ACTION_HANDLERS = {
     let validationMessages = {}
     validationMessages.success = ConstantValues.NEWCONTACT_SUCCESS
     userInformation.Contacts = getContacts()
-    userInformation.Contacts.map((contactInfo) => {
-              contactInfo.displayText = contactInfo.Name + ' (' + contactInfo.Login + ')'
-            })
     return Object.assign({}, state, {
       error: null,
       validationMessages: validationMessages,
@@ -815,12 +809,11 @@ export const ACTION_HANDLERS = {
   },
   [BIND_LOCATION_USER_DATA]: (state, action) => {
     let userInfo = state.userInformation
-    if (userInfo.roles) {
+    if (userInfo.Roles) {
       userInfo.Roles.map((role) => {
         role.ContactIds = []
       })
     }
-
     return Object.assign({}, state, {
       userInfo: userInfo,
       locationId: action.payload.locationId,

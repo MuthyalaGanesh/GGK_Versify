@@ -4,33 +4,34 @@ export const APPLY_EQUIPMENT = 'APPLY_EQUIPMENT'
 export const DELETE_EQUIPMENT = 'DELETE_EQUIPMENT'
 export const STATE_CHANGE_EDIT_FOR_EQUIPMENT = 'STATE_CHANGE_EDIT_FOR_EQUIPMENT'
 export const INITIAL_EQUIPMENT_NEW_LOCATION = 'INITIAL_EQUIPMENT_NEW_LOCATION'
-export function AddEquipment() {
+export function AddEquipment () {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       dispatch({
         type: ADD_EQUIPMENT,
-        payload: getState().form.EquipmentsForm && getState().form.EquipmentsForm.values ? getState().form.EquipmentsForm.values.newEquipment : null
+        payload: getState().form.EquipmentsForm && getState().form.EquipmentsForm.values
+          ? getState().form.EquipmentsForm.values.newEquipment : null
       })
       dispatch({
         type: 'redux-form/INITIALIZE',
-        meta: { form: "EquipmentsForm", },
-        payload: ""
+        meta: { form: 'EquipmentsForm' },
+        payload: ''
       })
     })
   }
 }
-export function InitialEquipmentsForNewLocation() {
+export function InitialEquipmentsForNewLocation () {
   return {
     type: INITIAL_EQUIPMENT_NEW_LOCATION
   }
 }
-export function BindInitialEquipments(equipments) {
+export function BindInitialEquipments (equipments) {
   return {
     type: STATE_CHANGE_EDIT_FOR_EQUIPMENT,
     payload: equipments
   }
 }
-export function EditEquipment(index) {
+export function EditEquipment (index) {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       dispatch({
@@ -39,20 +40,24 @@ export function EditEquipment(index) {
       })
       dispatch({
         type: 'redux-form/INITIALIZE',
-        meta: { form: "EquipmentsForm", },
+        meta: { form: 'EquipmentsForm' },
         payload: {
-          editedEquipment: getState().equipments && getState().equipments.editableEquipment ? getState().equipments.editableEquipment.Name : null
+          editedEquipment: getState().equipments &&
+            getState().equipments.editableEquipment
+            ? getState().equipments.editableEquipment.Name : null
         }
       })
     })
   }
 }
-export function ApplyEditEquipment() {
+export function ApplyEditEquipment () {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       dispatch({
         type: APPLY_EQUIPMENT,
-        payload: getState().form.EquipmentsForm && getState().form.EquipmentsForm.values ? getState().form.EquipmentsForm.values.editedEquipment : null
+        payload: getState().form.EquipmentsForm &&
+          getState().form.EquipmentsForm.values
+          ? getState().form.EquipmentsForm.values.editedEquipment : null
       })
     })
   }
@@ -77,40 +82,39 @@ export const ACTION_HANDLERS = {
       return Object.assign({}, state, {
         insertedEquipment: equipments,
         ParentLocationId: parentLocationId,
-        isChanged:false
+        isChanged: false
       })
     }
     return Object.assign({}, state)
   },
   [ADD_EQUIPMENT]: (state, action) => {
-
-    if (action.payload && action.payload.replace(/\s/g, '').length && typeof action.payload == "string") {
-      var valuePresence = 1;
-      var newEquipmentData = [];
+    if (action.payload && action.payload.replace(/\s/g, '').length && typeof action.payload === 'string') {
+      var valuePresence = 1
+      var newEquipmentData = []
       if (!state.insertedEquipment) {
-        state.insertedEquipment = [];
+        state.insertedEquipment = []
       }
       state.insertedEquipment.map((eq) => {
-        newEquipmentData.push(eq);
-        if (eq.Name.toLowerCase() == action.payload.toLowerCase()) {
-          valuePresence++;
+        newEquipmentData.push(eq)
+        if (eq.Name.toLowerCase() === action.payload.toLowerCase()) {
+          valuePresence++
         }
       })
-      if (valuePresence == 1) {
-        newEquipmentData.push(new Object({
+      if (valuePresence === 1) {
+        newEquipmentData.push({
           Id: 0,
           Name: action.payload,
           ParentLocationId: state.ParentLocationId,
           IsDirty: false
-        }));
+        })
       }
-      return Object.assign({}, state, { insertedEquipment: newEquipmentData,isChanged:true })
+      return Object.assign({}, state, { insertedEquipment: newEquipmentData, isChanged: true })
     }
     return Object.assign({}, state)
   },
   [EDIT_EQUIPMENT]: (state, action) => {
-    if (action.payload != null && action.payload != undefined && !isNaN(action.payload)) {
-      state.editableEquipment = state.insertedEquipment[action.payload];
+    if (action.payload !== null && action.payload !== undefined && !isNaN(action.payload)) {
+      state.editableEquipment = state.insertedEquipment[action.payload]
     }
     return Object.assign({}, state, { showEditModal: !state.showEditModal })
   },
@@ -119,24 +123,27 @@ export const ACTION_HANDLERS = {
       var updatedEquipments = []
       var valuePresence = 1
       state.insertedEquipment.map((eq) => {
-        if (eq.Name.toLowerCase() == action.payload.toLowerCase()) {
-          valuePresence++;
+        if (eq.Name.toLowerCase() === action.payload.toLowerCase()) {
+          valuePresence++
         }
       })
       state.insertedEquipment.map((eq) => {
-        if (eq.Name == state.editableEquipment.Name) {
-          updatedEquipments.push(valuePresence == 1 ? new Object({
+        if (eq.Name === state.editableEquipment.Name) {
+          updatedEquipments.push(valuePresence === 1 ? {
             Id: eq.Id,
             Name: action.payload,
             ParentLocationId: eq.ParentLocationId,
             IsDirty: false
-          }) : eq);
-        }
-        else {
+          } : eq)
+        } else {
           updatedEquipments.push(eq)
         }
       })
-      return Object.assign({}, state, { insertedEquipment: updatedEquipments, showEditModal: !state.showEditModal,isChanged:true})
+      return Object.assign({}, state, {
+        insertedEquipment: updatedEquipments,
+        showEditModal: !state.showEditModal,
+        isChanged: true
+      })
     }
     return Object.assign({}, state, { showEditModal: !state.showEditModal })
   }
@@ -144,15 +151,15 @@ export const ACTION_HANDLERS = {
 }
 
 const initialState = {
-  error: "",
+  error: '',
   insertedEquipment: [],
   editableEquipment: [],
   showEditModal: false,
   ParentLocationId: 0,
-  isChanged:false
-};
+  isChanged: false
+}
 
-export default function equipmentsReducer(state = initialState, action) {
-  const handler = ACTION_HANDLERS[action.type];
-  return handler ? handler(state, action) : state;
+export default function equipmentsReducer (state = initialState, action) {
+  const handler = ACTION_HANDLERS[action.type]
+  return handler ? handler(state, action) : state
 }

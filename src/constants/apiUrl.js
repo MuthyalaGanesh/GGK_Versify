@@ -1,6 +1,6 @@
 import config from "../config.json"
 
-const baseAddress = config.serverConfig.BaseAddress;
+const baseAddress = config.serverConfig.BaseAddress
 
 export const ApiUrl = {
 	LOCATIONS: baseAddress + "/Locations",

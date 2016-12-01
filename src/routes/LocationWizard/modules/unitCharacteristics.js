@@ -2,584 +2,781 @@ import {
   getAllUOMValues,
   getUnitCharacteristics
 } from 'api/locationWizardApi'
-import moment from 'moment';
+import moment from 'moment'
 
-export const DELETE_MODAL = 'DELETE_MODAL'
-export const DELETE_UNIT_CHARACTERISTIC = 'DELETE_UNIT_CHARACTERISTIC'
+export const GET_ALL_UOM_VALUES = 'GET_ALL_UOM_VALUES'
+export const GET_UNIT_CHARACTERSTICS = 'GET_UNIT_CHARACTERSTICS'
+export const SELECTED_UNIT_CHARACTERISTICS = 'SELECTED_UNIT_CHARACTERISTICS'
+export const TOGGLE_MODAL = 'TOGGLE_MODAL'
+export const EDITABLE_ATTRIBUTE = 'EDITABLE_ATTRIBUTE'
+export const ADD_ROW = 'ADD_ROW'
+export const ERROR = 'ERROR_UNIT'
 export const UPDATE_ROW = 'UPDATE_ROW'
-export const ADD_NEW_ROW = 'ADD_NEW_ROW'
-export const CHARACTERISTIC_SELECTED = "CHARACTERISTIC_SELECTED"
-export const INSERT_ROW = "INSERT_ROW"
-export const REMOVE_EDIT_ATTRIBUTE = "REMOVE_EDIT_ATTRIBUTE"
-export const TOGGLE_MODAL = "TOGGLE_MODAL"
-export const BIND_INITIAL_ATTRIBUTES = "BIND_INITIAL_ATTRIBUTES"
-export const GET_ALL_UOM_VALUES = "GET_ALL_UOM_VALUES"
-export const GET_UNIT_CHARACTERSTICS = "GET_UNIT_CHARACTERSTICS"
-export const GET_SELECTED_AND_DEFAULT_UNIT_CHARACTERSTICS = "GET_SELECTED_AND_DEFAULT_UNIT_CHARACTERSTICS"
-export const BIND_INITIAL_ATTRIBUTES_NEW_LOCATION = "BIND_INITIAL_ATTRIBUTES_NEW_LOCATION"
-//helps in binding initial values
-export function BindUnitCharacteristicsInitialValues(locationObj) {
-  return {
-    type: BIND_INITIAL_ATTRIBUTES,
-    payload: locationObj
-  };
-};
+export const CURRENT_EDIT = 'CURRENT_EDIT'
+export const TO_BE_DELETED = 'TO_BE_DELETED'
+export const DELETE_ROW = 'DELETE_ROW'
+export const BIND_INITIAL_ATTRIBUTES = 'BIND_INITIAL_ATTRIBUTES'
+export const BIND_INITIAL_ATTRIBUTES_NEW_LOCATION = 'BIND_INITIAL_ATTRIBUTES_NEW_LOCATION'
 
-export function BindValuesForNewLocation() {
-  return {
-    type: BIND_INITIAL_ATTRIBUTES_NEW_LOCATION
-  }
+function Arraycreator(data) {
+  let array = []
+  data.map((value) => array.push(value))
+  return array
 }
 
-//toggling Add/edit modal popup
-export function ToggleAddEditModal(index) {
-  return (dispatch, getState) => {
-    return new Promise((resolve) => {
-      dispatch({
-        type: TOGGLE_MODAL,
-        payload: index
-      })
-      dispatch({
-        type: 'redux-form/DESTROY',
-        meta: {
-          form: "UnitCharacteristicsForm"
-        },
-        payload: ""
-      })
-    })
-  }
-}
 function dateConversion(date) {
-
   var data = date.split('T')
   var preresult = data[0].split('-')
   var result = preresult[1] + '/' + preresult[2] + '/' + preresult[0]
   return result
 }
 
-//remove editable attribute 
-export function removeEditableAttribute(index) {
+function returndate(value) {
+  var array = value.split('/')
+  var preresult = array[1].split('(')
+  var result = preresult[1].split(')')
+  parseInt(result[0])
+  return dateConversion(new Date(parseInt(result[0])).toISOString())
+}
+ function DateValidations (editableAttributes) {
+  var errorStatus = false
+  var dateValidations = []
+  if (editableAttributes && editableAttributes.length > 0) {
+    editableAttributes.map((ea, i) => {
+      if (!ea.effectiveEndDate || !ea.effectiveStartDate || !ea.ucvalue) {
+        errorStatus = true
+      } else {
+        var dateVariations = (editableAttributes[i - 1] && editableAttributes[i - 1].effectiveEndDate
+          ? (new Date(editableAttributes[i - 1].effectiveEndDate) - new Date(ea.effectiveStartDate)) : (i > 0)
+            ? (new Date(editableAttributes[0].effectiveEndDate) - new Date(ea.effectiveStartDate)) : null)
+        if (dateVariations) {
+          errorStatus = true
+          dateValidations.push(dateVariations < 0
+            ? 'Effective end date and start dates should not have gaps'
+            : 'Effective end date and start dates should not overlap')
+        }
+        if ((new Date(ea.effectiveEndDate) - new Date(ea.effectiveStartDate)) < 0) {
+          errorStatus = true
+          dateValidations.push('Effective start date must be less than effective End date')
+        }
+      }
+    })
+  }
   return {
-    type: REMOVE_EDIT_ATTRIBUTE,
-    payload: index
+    errorStatus: errorStatus,
+    dateValidations: dateValidations
   }
 }
-//updating edited row
-export function updateRow(event) {
+
+export function BindValuesForNewLocation() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
+
+      let selectedunitCharacteristics = Arraycreator(getState().unitCharacteristics.defaultUnitCharacteristics)
+      let unSelectedUnitCharacteristics = Arraycreator(getState().unitCharacteristics.allexceptdefaultoptions)
+
       dispatch({
-        type: UPDATE_ROW,
-        payload: getState().form.UnitCharacteristicsForm
-      })
-      dispatch({
-        type: 'redux-form/DESTROY',
-        meta: {
-          form: "UnitCharacteristicsForm"
-        },
-        payload: ""
+        type: BIND_INITIAL_ATTRIBUTES_NEW_LOCATION,
+        payload: {
+          selectedunitCharacteristics,
+          unSelectedUnitCharacteristics
+        }
       })
     })
   }
 }
-//Adding new unit characteristic
+
+
+export function removeEditableAttribute(element, i) {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      let data = []
+      let ucvalue=[]
+      let effectiveStartDate=[]
+      let effectiveEndDate=[]
+      let formdata = getState().form.UnitCharacteristicsForm.values
+      console.log(getState().unitCharacteristics.deletableAttributes)
+      let deletableAttributes = getState().unitCharacteristics.deletableAttributes.length >0 ?Arraycreator(getState().unitCharacteristics.deletableAttributes) : []
+      getState().unitCharacteristics.editableAttributes.map((values, j) => {
+        if (i != j) {
+          data.push(values)
+        !!formdata? !!formdata.ucvalue ?!!formdata.ucvalue[j]? ucvalue.push(formdata.ucvalue[j]):null : null :null
+        !!formdata? !!formdata.effectiveStartDate ?!!formdata.effectiveStartDate[j]? effectiveStartDate.push(formdata.effectiveStartDate[j]):null : null :null
+        !!formdata? !!formdata.effectiveEndDate ?!!formdata.effectiveEndDate[j]? effectiveEndDate.push(formdata.effectiveEndDate[j]):null : null :null
+        }else{
+          if(!!values.tosend && values.tosend){
+          deletableAttributes.push(values)
+        }
+      }
+      })
+
+
+  dispatch({
+        type: 'redux-form/INITIALIZE',
+        meta: {
+          form: 'UnitCharacteristicsForm',
+          keepDirty: false
+        },
+        payload: Object.assign({}, formdata, {
+          ucvalue:ucvalue,
+          effectiveStartDate: effectiveStartDate,
+          effectiveEndDate: effectiveEndDate
+        })
+      })
+      dispatch({
+        type: EDITABLE_ATTRIBUTE,
+        payload: data,
+        deletableAttributes:deletableAttributes
+      })
+    })
+  }
+}
+
+
+export function BindUnitCharacteristicsInitialValues(locationObj) {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      console.log(locationObj)
+      console.log('................................................')
+      let selectedunitCharacteristics = []
+      let unSelectedUnitCharacteristics = []
+      var LocationAttributeId
+      if (locationObj.length == 0) {
+        selectedunitCharacteristics = Arraycreator(getState().unitCharacteristics.defaultUnitCharacteristics)
+      } else {
+        locationObj.map((values, i) => {
+            let flag = 0
+             LocationAttributeId = values.LocationAttributeId
+            if (selectedunitCharacteristics.length == 0) {
+              selectedunitCharacteristics.push({
+                id: values.AttributeId,
+                name: values.AttributeName,
+                description: values.AttributeDescription,
+                isVisible: true,
+                defaultUnitOfMeasureId: values.UnitOfMeasureId,
+                display: values.AttributeName,
+                UOM: values.UnitOfMeasureName,
+                isDeletable: false,
+                isSavable: false,
+                isEditable: true,
+                tosend:true,
+                LocationId:values.LocationId,
+                editableAttributes: [],
+                deletableAttributes:[],
+                displayAttributes: {}
+              })
+              selectedunitCharacteristics[0].editableAttributes.push({
+                ucvalue: values.Value,
+                effectiveStartDate: returndate(values.EffectiveStartDate),
+                effectiveEndDate: returndate(values.EffectiveEndDate),
+                tosend:true,
+                LocationAttributeId:values.LocationAttributeId
+              })
+            } else {
+              selectedunitCharacteristics.map((data) => {
+                if (data.id == values.AttributeId) {
+                  flag = 1
+                  data.editableAttributes.push({
+                    ucvalue: values.Value,
+                    effectiveStartDate: returndate(values.EffectiveStartDate),
+                    effectiveEndDate: returndate(values.EffectiveEndDate),
+                    tosend:true,
+                    LocationAttributeId:values.LocationAttributeId
+                  })
+                }
+              })
+              if (flag != 1) {
+                selectedunitCharacteristics.push({
+                  id: values.AttributeId,
+                  name: values.AttributeName,
+                  description: values.AttributeDescription,
+                  isVisible: true,
+                  LocationId:values.LocationId,
+                  deletableAttributes:[],
+                  defaultUnitOfMeasureId: values.UnitOfMeasureId,
+                  display: values.AttributeName,
+                  UOM: values.UnitOfMeasureName,
+                  isDeletable: (values.AttributeName.toLowerCase()=='capacity' || values.AttributeName.toLowerCase()=='eco min' || values.AttributeName.toLowerCase()=='eco max')? false:true,
+                  tosend:true,
+                  isSavable: false,
+                  isEditable: true,
+                  editableAttributes: [],
+                  displayAttributes: {}
+                })
+                selectedunitCharacteristics[i].editableAttributes.push({
+                  ucvalue: values.Value,
+                  effectiveStartDate: returndate(values.EffectiveStartDate),
+                  LocationAttributeId:values.LocationAttributeId,
+                  effectiveEndDate: returndate(values.EffectiveEndDate),
+                  tosend:true
+                })
+              }
+            }
+
+          }
+
+        )
+      }
+      console.log(selectedunitCharacteristics)
+
+      getState().unitCharacteristics.allexceptdefaultoptions.map((values) => {
+        let flag = 0
+        selectedunitCharacteristics.map((data) => {
+          data.displayAttributes = DateSwap(data.editableAttributes)
+          if (data.id == values.id) {
+            flag = 1
+          }
+        })
+        if (flag != 1) {
+          unSelectedUnitCharacteristics.push(values)
+        }
+      })
+
+      getState().unitCharacteristics.defaultUnitCharacteristics.map((values) => {
+        let flag = 0
+        selectedunitCharacteristics.map((data) => {
+          if (values.id == data.id) {
+            flag = 1
+          }
+
+        })
+        if (flag != 1) {
+          values.LocationAttributeId=LocationAttributeId
+          selectedunitCharacteristics.push(values)
+        }
+      })
+
+
+
+      console.log(selectedunitCharacteristics)
+
+
+
+      dispatch({
+        type: BIND_INITIAL_ATTRIBUTES,
+        payload: {
+          selectedunitCharacteristics,
+          unSelectedUnitCharacteristics
+        }
+      })
+
+
+    })
+  }
+}
+
+
+export function DateSwap(editableAttributes) {
+  var displayDateAttributes = {
+    effectiveEndDate: editableAttributes[0].effectiveEndDate,
+    effectiveStartDate: editableAttributes[0].effectiveStartDate,
+    ucvalue: editableAttributes[0].ucvalue
+  }
+  var todayDate = new Date()
+  var effDate = new Date(editableAttributes[0].effectiveStartDate)
+  var timeDiff = Math.abs(effDate.getTime() - todayDate.getTime())
+  var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24))
+  var minDiff = diffDays < 0 ? (-1)(diffDays) : diffDays
+  editableAttributes.map((ea, i) => {
+    var effDate = new Date(ea.effectiveStartDate)
+    var timeDiff = Math.abs(effDate.getTime() - todayDate.getTime())
+    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24))
+    diffDays = diffDays < 0 ? (-1)(diffDays) : diffDays
+    if (diffDays < minDiff) {
+      minDiff = diffDays
+      displayDateAttributes = {
+        effectiveEndDate: ea.effectiveEndDate,
+        effectiveStartDate: ea.effectiveStartDate,
+        ucvalue: ea.ucvalue
+      }
+    }
+  })
+  return displayDateAttributes
+}
+
+export function updateRow() {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      let formdata = getState().form.UnitCharacteristicsForm.values
+      let deletableAttributes =getState().unitCharacteristics.deletableAttributes.length >0 ? Arraycreator(getState().unitCharacteristics.deletableAttributes) :[]
+      let checklength = getState().unitCharacteristics.editableAttributes.length
+      if ( formdata.length == 0 || !formdata.hasOwnProperty('charateristicName')||  formdata.length <5 ||checklength != formdata.ucvalue.length || checklength != formdata.effectiveStartDate.length || checklength != formdata.effectiveEndDate.length) {
+        dispatch({
+          type: ERROR,
+          payload: []
+
+        })
+
+      } else {
+        let i = getState().unitCharacteristics.currentediting.index
+        let unSelectedUnitCharacteristics = []
+        let data = []
+        let secondarydata = []
+        let errorflag = false
+        getState().unitCharacteristics.selectedunitCharacteristics.map((values, j) => {
+          console.log(values)
+          if (i != j) {
+            data.push(values)
+          } else {
+            formdata.ucvalue.map((value, i) => {
+              if(value == ''){
+                errorflag = true
+              }
+              secondarydata.push({
+                ucvalue: value,
+                effectiveStartDate: formdata.effectiveStartDate[i],
+                effectiveEndDate: formdata.effectiveEndDate[i],
+                LocationAttributeId: !!values.editableAttributes[i]?!!values.editableAttributes[i].LocationAttributeId?values.editableAttributes[i].LocationAttributeId:0:0
+              })
+            })
+
+            data.push(Object.assign({}, formdata.charateristicName, {
+              isSavable: true,
+              isEditable: true,
+              editableAttributes: secondarydata,
+              displayAttributes: DateSwap(secondarydata),
+              deletableAttributes:deletableAttributes
+            }))
+          }
+        })
+
+
+        getState().unitCharacteristics.unSelectedUnitCharacteristics.map((value, i) => {
+          if (value.id != formdata.charateristicName.id) {
+            unSelectedUnitCharacteristics.push(value)
+          }
+
+        })
+
+        let errorobj = DateValidations(secondarydata)
+        if(errorflag ||  errorobj.errorStatus ){
+          console.log(errorobj.dateValidations)
+          dispatch({
+            type:ERROR,
+            payload:errorobj.dateValidations
+          })
+
+        }else{
+
+        dispatch({
+          type: UPDATE_ROW,
+          payload: data,
+          unSelectedUnitCharacteristics: unSelectedUnitCharacteristics,
+          showModal: false,
+        })
+}
+      }
+    })
+  }
+}
+
+
+
 export function AddUnitCharateristic() {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
-      dispatch({
-        type: INSERT_ROW,
-        payload: getState().form.UnitCharacteristicsForm
-      })
+      let data = getState().form.UnitCharacteristicsForm.values
+      let checklength = getState().unitCharacteristics.editableAttributes.length
+      let LocationId = getState().unitCharacteristics.selectedunitCharacteristics[0].LocationId
+      if (!!data ==false ||data.length == 0 || !data.hasOwnProperty('charateristicName')||  data.length <5 || checklength != data.ucvalue.length || checklength != data.effectiveStartDate.length || checklength != data.effectiveEndDate.length) {
+        dispatch({
+          type: ERROR,
+          payload: []
 
+        })
+
+      } else {
+        let unSelectedUnitCharacteristics = []
+        let toadd
+        let errorflag = false
+        getState().unitCharacteristics.unSelectedUnitCharacteristics.map((value, i) => {
+          if (value.id != data.charateristicName.id) {
+            unSelectedUnitCharacteristics.push(value)
+          } else {
+            toadd = value
+            toadd.isDeletable = true
+            toadd.isSavable = true
+            toadd.isEditable = true
+            toadd.LocationId=LocationId
+            toadd.editableAttributes = []
+            toadd.deletableAttributes=[]
+            toadd.displayAttributes = {}
+          }
+        })
+
+        data.ucvalue.map((value, i) => {
+          if(value == ''){
+                errorflag = true
+              }
+          toadd.editableAttributes.push({
+            ucvalue: value,
+            effectiveStartDate: data.effectiveStartDate[i],
+            effectiveEndDate: data.effectiveEndDate[i],
+            tosend:false,
+            LocationAttributeId:0
+          })
+        })
+
+
+        let selectedunitCharacteristics = Arraycreator(getState().unitCharacteristics.selectedunitCharacteristics)
+        selectedunitCharacteristics.push(Object.assign({}, toadd, {
+          displayAttributes: DateSwap(toadd.editableAttributes)
+        }))
+        let errorobj = DateValidations(toadd.editableAttributes)
+        if(errorflag || errorobj.errorStatus ){
+          console.log(errorobj.dateValidations)
+          dispatch({
+            type:ERROR,
+            payload:errorobj.dateValidations
+          })
+
+        }else{
+        dispatch({
+          type: ADD_ROW,
+          payload: {
+            selectedunitCharacteristics: selectedunitCharacteristics,
+            unSelectedUnitCharacteristics: unSelectedUnitCharacteristics,
+            showModal: false
+          }
+        })
+}
+      }
     })
   }
 }
-//helps in prepopulating Unit characteristic details on the selection of charateristicName
-export function characteristicNameSelected() {
+
+export function ToggleAddEditModal(action) {
   return (dispatch, getState) => {
     return new Promise((resolve) => {
+      if (action.type == 'add') {
+        dispatch({
+          type: 'redux-form/DESTROY',
+          meta: {
+            form: 'UnitCharacteristicsForm',
+          },
+          payload: ''
+
+        })
+
+        let data = [{}]
+
+        dispatch({
+          type: EDITABLE_ATTRIBUTE,
+          payload: data,
+          deletableAttributes:[]
+        })
+        dispatch({
+          type: TOGGLE_MODAL,
+          payload: {
+            showModal: true,
+            disable: false,
+            isEditable: false
+          }
+        })
+      }
+      if (action.type == 'edit') {
+        console.log('edit')
+        dispatch({
+          type: TOGGLE_MODAL,
+          payload: {
+            showModal: true,
+            disable: false,
+            isEditable: true
+          }
+        })
+      }
+      if (action.type == 'close') {
+        dispatch({
+          type: TOGGLE_MODAL,
+          payload: {
+            showModal: false,
+            disable: false
+          }
+        })
+      }
+    })
+  }
+}
+
+export function pushEditableAtribute() {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      let deletableAttributes = getState().unitCharacteristics.deletableAttributes
+      console.log(!!getState().form.UnitCharacteristicsForm.values)
+      let data = Arraycreator(getState().unitCharacteristics.editableAttributes)
+
+      let formdata = !!getState().form.UnitCharacteristicsForm.values ? getState().form.UnitCharacteristicsForm.values : {
+        ucvalue: [null],
+        effectiveStartDate: [null],
+        effectiveEndDate: [null]
+      }
+      console.log(!!getState().form.UnitCharacteristicsForm.values)
+      let ucvalue = !!formdata.ucvalue ? Arraycreator(formdata.ucvalue) : [null]
+      console.log(!!getState().form.UnitCharacteristicsForm.values)
+      let effectiveStartDate = formdata.effectiveStartDate.length > 0 ? Arraycreator(formdata.effectiveStartDate) : [null]
+      console.log(!!getState().form.UnitCharacteristicsForm.values)
+      let effectiveEndDate = formdata.effectiveEndDate.length > 0 ? Arraycreator(formdata.effectiveEndDate) : [null]
+      data.push({})
       dispatch({
-        type: CHARACTERISTIC_SELECTED,
-        payload: getState().form.UnitCharacteristicsForm &&
-          getState().form.UnitCharacteristicsForm.values ?
-          getState().form.UnitCharacteristicsForm.values.charateristicName : null
+        type: EDITABLE_ATTRIBUTE,
+        payload: data,
+        deletableAttributes:deletableAttributes
+
       })
+
+      effectiveEndDate[effectiveEndDate.length - 1] == null ? effectiveStartDate.push(new Date()) : effectiveStartDate.push(effectiveEndDate[effectiveEndDate.length - 1])
+
+
+      console.log(effectiveEndDate)
+      dispatch({
+        type: 'redux-form/INITIALIZE',
+        meta: {
+          form: 'UnitCharacteristicsForm',
+          keepDirty: false
+        },
+        payload: Object.assign({}, formdata, {
+          effectiveStartDate: effectiveStartDate,
+          effectiveEndDate: effectiveEndDate
+        })
+      })
+
     })
   }
 }
 
-//confirming delete unitCharacteristic(delete modal)
-export function deleteConfirmation(index) {
-  return {
-    type: DELETE_MODAL,
-    payload: index
-  }
-};
-//deleting unit charateristic
-export function DeleteUnitCharateristic() {
-  return {
-    type: DELETE_UNIT_CHARACTERISTIC,
-    payload: true
-  };
-};
-//Making Near Date First
-export function DateSwap(editableAttributes) {
-  var displayDateAttributes = new Object({
-    EffectiveEndDate: editableAttributes[0].EffectiveEndDate,
-    EffectiveStartDate: editableAttributes[0].EffectiveStartDate,
-    Value: editableAttributes[0].Value
-  })
-  var todayDate = new Date();
-  var effDate = new Date(editableAttributes[0].EffectiveStartDate);
-  var timeDiff = Math.abs(effDate.getTime() - todayDate.getTime());
-  var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-  var minDiff = diffDays < 0 ? (-1)(diffDays) : diffDays;
+export function characteristicNameSelected(e) {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      let data = getState().form.UnitCharacteristicsForm.values
 
-  editableAttributes.map((ea, i) => {
-    var effDate = new Date(ea.EffectiveStartDate);
-    var timeDiff = Math.abs(effDate.getTime() - todayDate.getTime());
-    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-    diffDays = diffDays < 0 ? (-1)(diffDays) : diffDays
-
-    if (diffDays < minDiff) {
-      minDiff = diffDays;
-
-      displayDateAttributes = new Object({
-        EffectiveEndDate: ea.EffectiveEndDate,
-        EffectiveStartDate: ea.EffectiveStartDate,
-        Value: ea.Value
-      })
-
-    }
-  })
-  return displayDateAttributes;
-}
-export const ACTION_HANDLERS = {
-  [BIND_INITIAL_ATTRIBUTES_NEW_LOCATION]: (state, action) => {
-    var newState = Object.assign({}, state)
-    newState.selectedunitCharacteristics = [];
-    var selectedUC = [];
-    newState.defaultUnitCharacteristics.map(duc => {
-      duc.editableAttributes = [{}];
-      duc.displayAttributes = {};
-      selectedUC.push(duc)
-    })
-    return Object.assign({}, state, { selectedunitCharacteristics: selectedUC,isChanged:false });
-  },
-  [BIND_INITIAL_ATTRIBUTES]: (state, action) => {
-    var newState = Object.assign({}, state,{isChanged:false})
-    var attributes = action.payload
-    var selectedDefault = []
-    if (!attributes || (attributes && attributes.length == 0)) {
-      newState.selectedunitCharacteristics = [];
-      var selectedUC = [];
-      newState.defaultUnitCharacteristics.map(duc => {
-        duc.editableAttributes = [{}];
-        duc.displayAttributes = {};
-        selectedUC.push(duc)
-      })
-      newState.selectedunitCharacteristics = selectedUC;
-    } else {
-      newState.selectedunitCharacteristics = [];
-      attributes.map(att => {
-        newState.unitCharacteristics.map(uc => {
-          if (uc.id == att.AttributeId) {
-            uc.isDeletable = true;
-            uc.isSavable = true;
-            uc.LocationId = att.LocationId
-            uc.displayAttributes = {}
-            newState.defaultUnitCharacteristics.map(duc => {
-              if (duc.id == att.AttributeId) {
-                uc.isDeletable = false;
-                if (!selectedDefault.includes(duc.id)) {
-                  selectedDefault.push(duc.id)
-                }
-              }
-            })
-            uc.defaultUnitOfMeasureId = att.UnitOfMeasureId
-            uc.UOM = att.UnitOfMeasureName
-            var editableAttributes = {
-              EffectiveEndDate: dateConversion((new Date(parseInt(att.EffectiveEndDate.substring(att.EffectiveEndDate.indexOf("(") + 1, (att.EffectiveEndDate.indexOf(")")))))).toISOString()),
-              EffectiveStartDate: dateConversion((new Date(parseInt(att.EffectiveStartDate.substring(att.EffectiveStartDate.indexOf("(") + 1, (att.EffectiveStartDate.indexOf(")")))))).toISOString()),
-              Value: att.Value,
-              LocationAttributeId: att.LocationAttributeId
-            }
-            var valuePresence = 1;
-            newState.selectedunitCharacteristics.map(suc => {
-              if (suc.id == att.AttributeId) {
-                suc.editableAttributes.push(editableAttributes);
-                suc.displayAttributes = DateSwap(suc.editableAttributes)
-                valuePresence++;
-              }
-            })
-            if (valuePresence == 1) {
-              uc.editableAttributes = [];
-              uc.editableAttributes.push(editableAttributes);
-              //making nearby date first
-              uc.displayAttributes = DateSwap(uc.editableAttributes)
-              newState.selectedunitCharacteristics.push(uc);
-            }
-          }
-        })
-      })
-      if (selectedDefault.length > 0) {
-        newState.defaultUnitCharacteristics.map(duc => {
-          if (!selectedDefault.includes(duc.id)) {
-            duc.displayAttributes = {}
-            duc.editableAttributes = [{}];
-            newState.selectedunitCharacteristics.push(duc);
-          }
-        })
-      }
-      else {
-        newState.defaultUnitCharacteristics.map(duc => {
-          duc.displayAttributes = {}
-          newState.selectedunitCharacteristics.push(duc)
-        })
-      }
-    }
-    return newState;
-  },
-  [TOGGLE_MODAL]: (state, action) => {
-    if (action.payload != null) {
-      if (!isNaN(action.payload)) {
-        if (action.payload == -1) {
-          var newState = Object.assign({}, state, {
-            showModal: !state.showModal,
-            isEditable: true,
-            editableUnitCharacter: null,
-            error: null,
-            isChanged:true
-          })
-          newState.UOMLabel = "",
-            newState.descriptionLabel = "",
-            newState.displayNameLabel = ""
-
-          newState.unSelectedUnitCharacteristics = [];
-          newState.unitCharacteristics.map((allUC) => {
-            var valuePresence = 1;
-
-            newState.selectedunitCharacteristics.map((selUC) => {
-              if (selUC.id == allUC.id) {
-                valuePresence++;
-              }
-            })
-            if (valuePresence == 1) {
-              allUC.isDeletable = true;
-              allUC.isSavable = true;
-              newState.unSelectedUnitCharacteristics.push(allUC);
-            }
-          })
-          return newState;
-        } else {
-          var editIndex = 0
-          if (action.payload != null && !isNaN(action.payload) && state.selectedunitCharacteristics) {
-            state.editableUnitCharacter = state.selectedunitCharacteristics[action.payload]
-            state.editableIndex = action.payload;
-          }
-          return Object.assign({}, state, {
-            showModal: !state.showModal,
-            isEditable: false,
-            error: null,
-            isChanged:true
-          })
+      dispatch({
+        type: 'redux-form/INITIALIZE',
+        meta: {
+          form: 'UnitCharacteristicsForm',
+          keepDirty: false
+        },
+        payload: {
+          charateristicName: e,
+          displayNameLabel: e.display,
+          descriptionLabel: e.description,
+          UOMLabel: e.UOM,
+          ucvalue: data.ucvalue,
+          effectiveStartDate: data.effectiveStartDate,
+          effectiveEndDate: data.effectiveEndDate
         }
+
+      })
+
+    })
+  }
+}
+
+
+export function deleteConfirmation(name, i) {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      if (i != -1) {
+        dispatch({
+          type: TO_BE_DELETED,
+          payload: {
+            name: name,
+            index: i
+          },
+          showDeleteModal: true
+        })
       } else {
-        if (state.editableUnitCharacter) {
-          state.selectedunitCharacteristics.map((suc) => {
-            if (suc.id == state.editableUnitCharacter.id) {
-              var editableAttributes = [];
-              if (state.editableUnitCharacter.editableAttributes) {
-                state.editableUnitCharacter.editableAttributes.map((ea, index) => {
-                  if (index == 0) {
-                    if (ea.Value && ea.EffectiveEndDate && ea.EffectiveStartDate) {
-                      editableAttributes.push(ea)
-                    }
-                  }
-                  if (editableAttributes && editableAttributes.length > 0 && index > 0) {
-                    if (ea.Value && ea.EffectiveEndDate && ea.EffectiveStartDate) {
-                      editableAttributes.push(ea)
-                    }
-                  }
-                })
-              }
-              if (editableAttributes.length > 0) {
-                suc.editableAttributes = editableAttributes;
-                suc.displayAttributes = DateSwap(suc.editableAttributes);
-              }
-              else {
-                suc.editableAttributes = [{}];
-                suc.displayAttributes = [];
-              }
-            }
-          })
-        }
-        return Object.assign({}, state, {
-          showModal: !state.showModal, editableUnitCharacter: null,
-          error: null,
+        dispatch({
+          type: TO_BE_DELETED,
+          payload: {
+            name: name,
+            index: i
+          },
+          showDeleteModal: false
         })
       }
-    }
-  },
 
-  //opening delete modal
-  [DELETE_MODAL]: (state, action) => {
-    if (action.payload != null) {
-      state.deletingUnitIndex = action.payload;
-    }
-    return Object.assign({}, state, {
-      showDeleteModal: !state.showDeleteModal
     })
-  },
-  //deleting object after confirmation
-  [DELETE_UNIT_CHARACTERISTIC]: (state, action) => {
-    if (action.payload) {
-      var newSelectedUC = [];
-      var deletedUnitCharacteristics = [];
-      state.selectedunitCharacteristics.map((suc, i) => {
-        if (i != state.deletingUnitIndex) {
-          newSelectedUC.push(suc)
-        }
-        else {
-          suc.editableAttributes ? suc.editableAttributes.map(ea => {
-            ea.Value = null,
-              ea.EffectiveEndDate = null,
-              ea.EffectiveStartDate = null
-          }) : null
-          deletedUnitCharacteristics.push(suc)
-        }
-      })
-    }
-    return Object.assign({}, state, {
-      showDeleteModal: !state.showDeleteModal,
-      selectedunitCharacteristics: newSelectedUC,
-      deletedUnitCharacteristics: deletedUnitCharacteristics,
-      isChanged:true
-    })
-  },
-  //update edited row
-  [UPDATE_ROW]: (state, action) => {
-    var newState = Object.assign({}, state, {
-      showModal: !state.showModal,
-      error: null,
-      dateRangeValidation: []
-    })
+  }
+}
 
-    if (action.payload) {
-      var errorStatus = null;
-      var dateValidations = [];
-      newState.selectedunitCharacteristics.map((uc, index) => {
-        if (index == state.editableIndex) {
-          state.editableUnitCharacter.isSavable = true;
-          newState.selectedunitCharacteristics[index] = state.editableUnitCharacter;
-          var finalAttributes = []
-          state.editableUnitCharacter.editableAttributes.map((eda, index) => {
-            var initialAttribute = {
-              Value: (action.payload.values && action.payload.values.ucvalue && action.payload.values.ucvalue[index]) ? action.payload.values.ucvalue[index] : eda.Value,
-              EffectiveStartDate: (action.payload.values && action.payload.values.effectiveStartDate && action.payload.values.effectiveStartDate[index]) ? action.payload.values.effectiveStartDate[index] : eda.EffectiveStartDate,
-              EffectiveEndDate: (action.payload.values && action.payload.values.effectiveEndDate && action.payload.values.effectiveEndDate[index]) ? action.payload.values.effectiveEndDate[index] : eda.EffectiveEndDate,
-              LocationAttributeId: eda.LocationAttributeId ? eda.LocationAttributeId : 0
-            }
-            finalAttributes.push(initialAttribute)
-          })
 
-          if (action.payload.values && action.payload.values.editableData) {
-            action.payload.values.editableData.map((ed, i) => {
-              var newEditableAttributes = {
-                EffectiveEndDate: ed.effectiveEndDate,
-                EffectiveStartDate: ed.effectiveStartDate ? ed.effectiveStartDate : (action.payload.values.editableData[i - 1] && action.payload.values.editableData[i - 1].effectiveEndDate ?
-                  action.payload.values.editableData[i - 1].effectiveEndDate : (finalAttributes ? finalAttributes[0].EffectiveEndDate : null)),
-                Value: ed.ucvalue,
-                LocationAttributeId: ed.LocationAttributeId ? ed.LocationAttributeId : 0
-              }
-              finalAttributes.push(newEditableAttributes);
-            })
-          }
-          uc.editableAttributes = [];
-          uc.editableAttributes = finalAttributes;
-          uc.editableAttributes.map((ea, i) => {
-            if (!ea.EffectiveEndDate || !ea.EffectiveStartDate || !ea.Value) {
-              errorStatus = 1;
-            } else {
-              var dateVariations = (uc.editableAttributes[i - 1] && uc.editableAttributes[i - 1].EffectiveEndDate ? (new Date(uc.editableAttributes[i - 1].EffectiveEndDate) - new Date(ea.EffectiveStartDate)) : (i > 0) ? (new Date(uc.editableAttributes[0].EffectiveEndDate) - new Date(ea.EffectiveStartDate)) : null);
-              if (dateVariations) {
-                errorStatus = 1;
-                dateValidations.push(dateVariations < 0 ?
-                  "Effective end date and start dates should not have gaps" : "Effective end date and start dates should not overlap")
-              }
-              if ((new Date(ea.EffectiveEndDate) - new Date(ea.EffectiveStartDate)) < 0) {
-                errorStatus = 1;
-                dateValidations.push("Effective start date must be less than effective End date");
-              }
-            }
-          })
-        }
-        if (!errorStatus && dateValidations.length == 0) {
-          uc.displayAttributes = DateSwap(uc.editableAttributes);
-        }
-      })
-      return Object.assign({}, newState, {
-        editableUnitCharacter: (!errorStatus && dateValidations.length == 0) ? null : state.editableUnitCharacter,
-        error: errorStatus,
-        showModal: (!errorStatus && dateValidations.length == 0) ?
-          (!state.showModal) : (state.showModal),
-        dateRangeValidation: dateValidations,
-        isChanged:true
-      });
-    }
-  },
-  //helps in prepopulating unit characteristic values after changing unit character
-  [CHARACTERISTIC_SELECTED]: (state, action) => {
-    var newState = Object.assign({}, state, {
-      error: null
-    })
-    if (action.payload != null && action.payload != undefined) {
-      newState.unitCharacteristics.map((uc) => {
-        var updatedRow = {}
-
-        if (uc.defaultUnitOfMeasureId && state.allUOMvalues) {
-          state.allUOMvalues.map(uom => {
-            if (uom.id == uc.defaultUnitOfMeasureId) {
-              updatedRow.uom = uom.name
-            }
-          })
+export function DeleteUnitCharateristic() {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      let selectedunitCharacteristics = []
+      let deletedUnitCharacteristics = []
+      let i = getState().unitCharacteristics.tobedeleted.index
+      let unSelectedUnitCharacteristics = Arraycreator(getState().unitCharacteristics.unSelectedUnitCharacteristics)
+      getState().unitCharacteristics.selectedunitCharacteristics.map((value, j) => {
+        if (i != j) {
+          selectedunitCharacteristics.push(value)
         } else {
-          updatedRow.uom = "String"
-        }
-        updatedRow.description = uc.description
-        updatedRow.displayName = uc.display
-
-        if (uc.id == parseInt(action.payload.id)) {
-          if (!state.editableUnitCharacter) {
-            newState.UOMLabel = updatedRow.uom
-            newState.descriptionLabel = updatedRow.description
-            newState.displayNameLabel = updatedRow.displayName
-          } else {
-            var attributes = newState.editableUnitCharacter.editableAttributes;
-            newState.editableUnitCharacter = uc;
-            newState.editableUnitCharacter.UOM = updatedRow.uom
-            newState.editableUnitCharacter.editableAttributes = attributes;
+          unSelectedUnitCharacteristics.push(Object.assign({}, value, {
+            isSavable: false,
+            editableAttributes: [{}],
+            deletableAttributes:[]
+          }))
+          if(value.tosend){
+            deletedUnitCharacteristics.push(Object.assign({}, value, {
+            isSavable: true,
+          }))
           }
-
         }
       })
 
-    }
-    return newState
-  },
-  [INSERT_ROW]: (state, action) => {
-    var newState = Object.assign({}, state, {
-      error: null,
-      dateRangeValidation: []
+      dispatch({
+        type: DELETE_ROW,
+        payload: {
+          selectedunitCharacteristics: selectedunitCharacteristics,
+          unSelectedUnitCharacteristics: unSelectedUnitCharacteristics,
+          deletedUnitCharacteristics: deletedUnitCharacteristics,
+          showDeleteModal: false
+        }
+      })
+
     })
-    if (action.payload && action.payload.values && action.payload.values.charateristicName) {
-      var errorStatus = null;
-      var dateValidations = []
-      var deletedUC = []
-      newState.unitCharacteristics.map((uc) => {
-        if (uc.id == parseInt(action.payload.values.charateristicName.id)) {
-          newState.deletedUnitCharacteristics ? newState.deletedUnitCharacteristics.map(duc => {
-            if (duc.id != uc.id) {
-              deletedUC.push(duc)
-            }
-          }) : null
-          uc.editableAttributes = [];
-          uc.editableAttributes.push({
-            EffectiveEndDate: action.payload.values && action.payload.values.effectiveEndDate ? action.payload.values.effectiveEndDate[0] : null,
-            EffectiveStartDate: action.payload.values && action.payload.values.effectiveStartDate ? action.payload.values.effectiveStartDate[0] : null,
-            Value: action.payload.values && action.payload.values.ucvalue ? action.payload.values.ucvalue[0] : null,
-            LocationAttributeId: 0
-          });
+  }
 
-          if (action.payload.values && action.payload.values.editableData) {
-            action.payload.values.editableData.map((ed, i) => {
-              var newEditableAttributes = {
-                EffectiveEndDate: ed.effectiveEndDate,
-                EffectiveStartDate: ed.effectiveStartDate ? ed.effectiveStartDate : (action.payload.values.editableData[i - 1] && action.payload.values.editableData[i - 1].effectiveEndDate ? action.payload.values.editableData[i - 1].effectiveEndDate : (uc.editableAttributes[0].EffectiveEndDate)),
-                Value: ed.ucvalue,
-                LocationAttributeId: 0
+}
+
+export function edit(name, i) {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      let data = Arraycreator(getState().unitCharacteristics.selectedunitCharacteristics)
+
+
+      let intializedata = {
+        charateristicName: data[i],
+        displayNameLabel: data[i].display,
+        descriptionLabel: data[i].description,
+        UOMLabel: data[i].UOM,
+      }
+      if (!data[i].isDeletable || !data[i].isEditable) {
+        dispatch({
+          type: TOGGLE_MODAL,
+          payload: {
+            showModal: true,
+            disable: true,
+            isEditable: true
+          }
+        })
+      }
+      dispatch({
+        type: EDITABLE_ATTRIBUTE,
+        payload: data[i].editableAttributes,
+        deletableAttributes:data[i].deletableAttributes,
+
+      })
+      intializedata.ucvalue = []
+      intializedata.effectiveStartDate = []
+      intializedata.effectiveEndDate = []
+      data[i].editableAttributes.map((values, i) => {
+        intializedata.ucvalue.push(values.ucvalue)
+        intializedata.effectiveEndDate.push(values.effectiveEndDate)
+        intializedata.effectiveStartDate.push(values.effectiveStartDate)
+      })
+      console.log(intializedata)
+      dispatch({
+        type: CURRENT_EDIT,
+        payload: {
+          name: name,
+          index: i
+        },
+        unSelectedUnitCharacteristics: Arraycreator(getState().unitCharacteristics.allexceptdefaultoptions)
+      })
+      dispatch({
+        type: 'redux-form/INITIALIZE',
+        meta: {
+          form: 'UnitCharacteristicsForm',
+          keepDirty: false
+        },
+        payload: intializedata
+      })
+
+    })
+  }
+}
+
+
+export function getDefaultUnitCharacteristics(allUOMvalues) {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      getUnitCharacteristics().then(function(response) {
+        let selectedunitCharacteristics = []
+        let options = []
+        let defaultUnitCharacteristics = []
+        dispatch({
+          type: GET_UNIT_CHARACTERSTICS,
+          payload: response.data
+        })
+
+
+        response.data.map((uc) => {
+          if (uc.name.toLowerCase() == 'capacity' ||
+            uc.name.toLowerCase() == 'eco min' ||
+            uc.name.toLowerCase() == 'eco max') {
+            uc.editableAttributes = [{}]
+            uc.deletableAttributes=[]
+            uc.isDeletable = false
+            uc.isSavable = false
+            uc.LocationId = 0
+
+            let i = 0
+            for (i in allUOMvalues) {
+              if (uc.defaultUnitOfMeasureId === allUOMvalues[i].id) {
+                uc.UOM = allUOMvalues[i].name
+                break
               }
-              uc.editableAttributes.push(newEditableAttributes);
-            })
+            }
+            selectedunitCharacteristics.push(uc)
+            defaultUnitCharacteristics.push(uc)
+          } else {
+            let i = 0
+            for (i in allUOMvalues) {
+              if (uc.defaultUnitOfMeasureId === allUOMvalues[i].id) {
+                uc.UOM = allUOMvalues[i].name
+                break
+              }
+            }
+            uc.tosend=false
+            uc.isDeletable = true
+            uc.isSavable = false
+            options.push(uc)
           }
 
-          uc.editableAttributes.map((ea, i) => {
-            if (!ea.EffectiveEndDate || !ea.EffectiveStartDate || !ea.Value) {
-              errorStatus = 1;
-            } else {
-              var dateVariations = (uc.editableAttributes[i - 1] && uc.editableAttributes[i - 1].EffectiveEndDate ? (new Date(uc.editableAttributes[i - 1].EffectiveEndDate) - new Date(ea.EffectiveStartDate)) : (i > 0) ? (new Date(uc.editableAttributes[0].EffectiveEndDate) - new Date(ea.EffectiveStartDate)) : null);
-              if (dateVariations) {
-                errorStatus = 1;
-                dateValidations.push(dateVariations < 0 ?
-                  "Effective end date and start dates should not have gaps" : "Effective end date and start dates should not overlap")
-              }
-              if ((new Date(ea.EffectiveEndDate) - new Date(ea.EffectiveStartDate)) < 0) {
-                errorStatus = 1;
-                dateValidations.push("Effective start date must be less than effective End date");
-              }
-            }
-          })
-          uc.UOM = newState.UOMLabel
-          if (!errorStatus && dateValidations.length == 0) {
-            uc.displayAttributes = DateSwap(uc.editableAttributes);
-            newState.selectedunitCharacteristics.push(uc)
+        })
+        dispatch({
+          type: SELECTED_UNIT_CHARACTERISTICS,
+          payload: {
+            selectedunitCharacteristics: selectedunitCharacteristics,
+            defaultUnitCharacteristics: defaultUnitCharacteristics,
+            unSelectedUnitCharacteristics: options,
+            allexceptdefaultoptions: Arraycreator(options)
           }
-        }
-      })
+        })
 
-      return Object.assign({}, newState, {
-        error: errorStatus,
-        showModal: (!errorStatus && dateValidations.length == 0) ? (!state.showModal) : (state.showModal),
-        dateRangeValidation: dateValidations,
-        deletedUnitCharacteristics: (!errorStatus && dateValidations.length == 0) ? deletedUC : state.deletedUnitCharacteristics,
-        isChanged:true
       })
-    } else {
-      return Object.assign({}, newState, {
-        error: 1
-      })
-    }
+    })
+  }
+}
 
-  },
-  [REMOVE_EDIT_ATTRIBUTE]: (state, action) => {
-    if (action.payload != null && action.payload != undefined && !isNaN(action.payload)) {
-      var newEditableAttributes = []
-      var newEditableUnitCharacter = []
-      var deletableAtributes = []
-      var newState = Object.assign({}, state)
-      newState.selectedunitCharacteristics.map((suc) => {
-        if (suc.id == state.editableUnitCharacter.id && newEditableUnitCharacter.length == 0) {
-          newEditableUnitCharacter.push(suc);
-          suc.editableAttributes.map((ea, index) => {
-            if (index != action.payload) {
-              newEditableAttributes.push(ea)
-            }
-            else {
-              ea.Value = "";
-              ea.EffectiveEndDate = null;
-              ea.EffectiveStartDate = null;
-              if (ea.LocationAttributeId > 0) {
-                deletableAtributes.push(ea)
-              }
-            }
-          })
-          newEditableUnitCharacter[0].editableAttributes = [];
-          newEditableUnitCharacter[0].deletableAttributes = [];
-          newEditableUnitCharacter[0].deletableAttributes = deletableAtributes;
-          newEditableUnitCharacter[0].editableAttributes = newEditableAttributes;
-        }
-      })
 
-      state.editableUnitCharacter = [];
-    }
-    return Object.assign({}, state, {
-      editableUnitCharacter: newEditableUnitCharacter[0],
-      isChanged:true
-    });
-  },
+export function getDefaultUnitCharacteristicsService() {
+  return (dispatch, getState) => {
+    return new Promise((resolve) => {
+      getState().unitCharacteristics.allUOMvalues.length === 0 ? getAllUOMValues().then(function(response) {
+        dispatch({
+          type: GET_ALL_UOM_VALUES,
+          payload: response.data
+        })
+        dispatch(getDefaultUnitCharacteristics(response.data))
+      }) : null
+    })
+  }
+}
 
+export const ACTION_HANDLERS = {
   [GET_ALL_UOM_VALUES]: (state, action) => {
-
     return Object.assign({}, state, {
       allUOMvalues: action.payload
     })
@@ -589,71 +786,94 @@ export const ACTION_HANDLERS = {
       unitCharacteristics: action.payload
     })
   },
-  [GET_SELECTED_AND_DEFAULT_UNIT_CHARACTERSTICS]: (state, action) => {
+  [SELECTED_UNIT_CHARACTERISTICS]: (state, action) => {
+    return Object.assign({}, state, {
+      selectedunitCharacteristics: action.payload.selectedunitCharacteristics,
+      unSelectedUnitCharacteristics: action.payload.unSelectedUnitCharacteristics,
+      allexceptdefaultoptions: action.payload.allexceptdefaultoptions,
+      defaultUnitCharacteristics: action.payload.defaultUnitCharacteristics
+    })
+  },
+  [TOGGLE_MODAL]: (state, action) => {
+    return Object.assign({}, state, {
+      showModal: action.payload.showModal,
+      disable: action.payload.disable,
+      isEditable: action.payload.isEditable,
+      error:false,
+      errorMessage:[]
+    })
+  },
+  [EDITABLE_ATTRIBUTE]: (state, action) => {
+    return Object.assign({}, state, {
+      editableAttributes: action.payload,
+      deletableAttributes:action.deletableAttributes
+    })
+  },
+  [ADD_ROW]: (state, action) => {
+    return Object.assign({}, state, {
+      selectedunitCharacteristics: action.payload.selectedunitCharacteristics,
+      unSelectedUnitCharacteristics: action.payload.unSelectedUnitCharacteristics,
+      showModal: action.payload.showModal,
+      error: false,
+      errorMessage: []
+    })
+  },
+  [CURRENT_EDIT]: (state, action) => {
+    return Object.assign({}, state, {
+      currentediting: action.payload,
+      unSelectedUnitCharacteristics: action.unSelectedUnitCharacteristics
+    })
+  },
+  [UPDATE_ROW]: (state, action) => {
     return Object.assign({}, state, {
       selectedunitCharacteristics: action.payload,
-      defaultUnitCharacteristics: action.payload
+      unSelectedUnitCharacteristics: action.unSelectedUnitCharacteristics,
+      showModal: action.showModal,
+      error: false,
+      errorMessage: [],
+      deletableAttributes:[]
     })
-  }
-
-}
-export function getDefaultUnitCharacteristics(allUOMValues) {
-  var unitCharacteristicsJson = []
-  return (dispatch, getState) => {
-    return new Promise((resolve) => {
-      getUnitCharacteristics().then(function (response) {
-
-        dispatch({
-          type: GET_UNIT_CHARACTERSTICS,
-          payload: response.data
-        })
-
-        response.data.map((uc) => {
-          if (uc.name.toLowerCase() == "capacity" || uc.name.toLowerCase() == "eco min" || uc.name.toLowerCase() == "eco max") {
-            uc.editableAttributes = [{}]
-            uc.isDeletable = false;
-            uc.isSavable = false;
-            allUOMValues.map((uom) => {
-              if (uc.defaultUnitOfMeasureId == uom.id) {
-                uc.UOM = uom.name;
-              }
-            })
-            unitCharacteristicsJson.push(uc);
-          }
-        })
-        dispatch({
-          type: GET_SELECTED_AND_DEFAULT_UNIT_CHARACTERSTICS,
-          payload: unitCharacteristicsJson
-        })
-
-      })
+  },
+  [TO_BE_DELETED]: (state, action) => {
+    return Object.assign({}, state, {
+      showDeleteModal: action.showDeleteModal,
+      tobedeleted: action.payload
     })
-  }
-
-}
-
-export function getDefaultUnitCharacteristicsService() {
-
-  return (dispatch, getState) => {
-    return new Promise((resolve) => {
-      getState().unitCharacteristics.allUOMvalues.length == 0 ?
-        getAllUOMValues().then(function (response) {
-          dispatch({
-            type: GET_ALL_UOM_VALUES,
-            payload: response.data
-          });
-          dispatch(getDefaultUnitCharacteristics(response.data))
-
-        }) : null
-      dispatch(BindValuesForNewLocation())
+  },
+  [DELETE_ROW]: (state, action) => {
+    return Object.assign({}, state, {
+      showDeleteModal: action.payload.showDeleteModal,
+      tobedeleted: {},
+      selectedunitCharacteristics: action.payload.selectedunitCharacteristics,
+      unSelectedUnitCharacteristics: action.payload.unSelectedUnitCharacteristics,
+      deletedUnitCharacteristics:action.payload.deletedUnitCharacteristics,
     })
-  }
+  },
+  [BIND_INITIAL_ATTRIBUTES]: (state, action) => {
+    return Object.assign({}, state, {
+      selectedunitCharacteristics: action.payload.selectedunitCharacteristics,
+      unSelectedUnitCharacteristics: action.payload.unSelectedUnitCharacteristics
+    })
+  },
+  [BIND_INITIAL_ATTRIBUTES_NEW_LOCATION]: (state, action) => {
+    return Object.assign({}, state, {
+      selectedunitCharacteristics: action.payload.selectedunitCharacteristics,
+      unSelectedUnitCharacteristics: action.payload.unSelectedUnitCharacteristics
+    })
+  },
+  [ERROR]: (state, action) => {
+    return Object.assign({}, state, {
+      error: true,
+      errorMessage: action.payload
+    })
+  },
 }
 
 
 
 const initialState = {
-  error: "",
+  error: false,
+  errorMessage:[],
   unitCharacteristics: [],
   allUOMvalues: [],
   selectedunitCharacteristics: [],
@@ -661,22 +881,23 @@ const initialState = {
   defaultUnitCharacteristics: [],
   finalUnitCharacteristics: [],
   deletedUnitCharacteristics: [],
+  deletableAttributes:[],
   showModal: false,
   showDeleteModal: false,
-  deletingUnitIndex: 0,
   editableUnitCharacter: {},
   showEditModal: false,
   startDate: moment(),
-  UOMLabel: "",
-  descriptionLabel: "",
-  displayNameLabel: "",
   isEditable: false,
-  editableIndex: 0,
+  disable: false,
+  tobedeleted: {},
+  editableAttributes: null,
   dateRangeValidation: [],
-  isChanged:false
-};
+  currentediting: {},
+  allexceptdefaultoptions: [],
+  isChanged: false
+}
 
 export default function unitCharacteristicsReducer(state = initialState, action) {
-  const handler = ACTION_HANDLERS[action.type];
-  return handler ? handler(state, action) : state;
+  const handler = ACTION_HANDLERS[action.type]
+  return handler ? handler(state, action) : state
 }
